@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniQuest Dashboard</title>
-    <link rel="stylesheet" href="ser_dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/components/ser_dashboard.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
 </head>
