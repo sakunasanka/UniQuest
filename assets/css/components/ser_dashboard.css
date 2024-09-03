@@ -9,8 +9,33 @@ body {
     padding: 20px;
 }
 
-.dashboard h1 {
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
+}
+
+.activate-btn {
+    background-color: #E9992F;
+    border: none;
+    padding: 10px 20px;
+    color: #000;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+}
+
+.activate-btn:hover {
+    background-color: #FFB74C;
+}
+
+.activate-btn img {
+    width: 30px;
+    height: 30px;
 }
 
 .grid-container {
@@ -26,12 +51,13 @@ body {
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
-    transition: transform 0.3s ease, box-shadow 0.3s ea
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .card h2 {
@@ -58,4 +84,38 @@ body {
 .card-subtext {
     color: #888;
     font-size: 14px;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Applications card stats */
+.applications-stats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.new-stat, .new-label {
+    color: #E9992F;
+    text-align: center;
+    font-size: 24px;
+}
+
+.new-label{
+    margin-right: 20px;
+}
+
+.active-stat, .active-label {
+    color: #1DB954;
+    text-align: center;
+    font-size: 24px;
+}
+
+.active-stat{
+    margin-left: 20px;
 }
