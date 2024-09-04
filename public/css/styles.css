@@ -2,3 +2,6 @@
 
 /* components */
 @import url("components/adminSidePanel.css");
+
+/* pages */
+@import url("pages/admin/students_mng.css");

@@ -1,0 +1,150 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    background-color: #2a2a2a; /* Dark header background */
+    height: 60px; /* Adjust according to your needs */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-block {
+    background-color: #444; /* Green logo background */
+    height: 100%;
+    width: 200px; /* Adjust width as needed */
+}
+
+.nav-block {
+    background-color: #444; /* Dark grey nav block */
+    height: 100%;
+    flex-grow: 1;
+}
+
+.main-container {
+    display: flex;
+    height: calc(100vh - 120px); /* Adjust height based on header and footer */
+}
+
+.content-area {
+    background-color: #ffffff; /* Content area background */
+    flex-grow: 1;
+    padding: 25px; /* Adjust padding as needed */
+}
+
+.table-block {
+    background-color: #e7e7e7; /* White tabs/content area */
+    height: fit-content;
+    /* min-height: 92%; */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px;
+}
+
+.tabs-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.tab {
+    background-color: #f5f5f5;
+    color: #00000080;
+    font-size: 24px;
+    width: 333.3px;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    cursor: pointer;
+}
+
+.tab.active,
+.tab:hover {
+    background-color: #e7e7e7;
+    color: #000000;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.total-count {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.add-student-btn {
+    background-color: #32a852;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.students-table {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.students-table th, .students-table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #e7e7e7;
+}
+
+.status.active {
+    color: #32a852;
+}
+
+.status.inactive {
+    color: #ff4d4d;
+}
+
+.action-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.action-btn.view {
+    background-image: url('view-icon.png'); /* Replace with the correct icon path */
+}
+
+.action-btn.deactivate {
+    background-image: url('deactivate-icon.png'); /* Replace with the correct icon path */
+}
+
+.action-btn.activate {
+    background-image: url('activate-icon.png'); /* Replace with the correct icon path */
+}
+
+.action-btn {
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.footer {
+    background-color: #2a2a2a; /* Dark footer background */
+    height: 60px; /* Adjust according to your needs */
+    text-align: center;
+    color: #fff;
+    line-height: 60px; /* Center the text vertically */
+    z-index: 100;
+}
