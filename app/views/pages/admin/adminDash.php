@@ -1,12 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/adminDash.css">
-</head>
-<body>
+<?php require APPROOT . '/views/components/header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/adminDash.css">
+
+<header class="header">
+    <div class="logo-block"></div>
+    <div class="nav-block"></div>
+</header>
+
+<!-- Sidebar and Content Layout -->
+<div class="main-container">
+    <!-- Sidebar -->
+    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    
+    <!-- Content Area -->
+    <main class="content-area">
     <div class="dashboard-container">
         <!-- Dashboard stats -->
         
@@ -56,5 +62,12 @@
             <h1><?php echo 15; ?></h1>
         </div>
     </div>
-</body>
-</html>
+    </main>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    © 2024 UniQuest. All rights reserved. | <a href="#">Terms of Services</a> | <a href="#">Privacy policy</a>
+</footer>
+
+<?php require APPROOT . '/views/components/footer.php'; ?>
