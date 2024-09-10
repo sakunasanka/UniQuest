@@ -31,4 +31,8 @@ class Admin extends Controller
         $this->view('pages/admin/ptjobs_mng');
     }
 
+    public function intern_mng()
+    {
+        $this->view('pages/admin/intern_mng');
+    }
 }
