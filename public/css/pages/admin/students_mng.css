@@ -107,19 +107,21 @@ table td {
 
 .action-btn.edit {
     color: #E9992F;
-    margin: 0 5px;
 }
 
 .action-btn.view {
     color: #0045FF;
+    margin-right: 5px;
 }
 
 .action-btn.deactivate {
     color: #ff0000;
+    margin-left: 5px;
 }
 
 .action-btn.activate {
     color: #52CA20;
+    margin-left: 5px;
 }
 
 .footer {
