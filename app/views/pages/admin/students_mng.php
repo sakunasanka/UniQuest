@@ -1,28 +1,26 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
 <header class="header">
-    <div class="logo-block"></div>
-    <div class="nav-block"></div>
+
 </header>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
-    
+
     <!-- Content Area -->
     <main class="content-area">
-        <div class="tabs-header">
-            <button class="tab active" style="border-radius: 10px 0px 0px 10px;">Students</button>
-            <button class="tab">Companies</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;">Verification Team</button>
-        </div>
+        <?php require APPROOT . '/views/components/admin/topPanelUser.php'; ?>
         <div class="table-block">
             <div class="content-header">
-                <span class="total-count">Total: 3</span>
-                <button class="add-student-btn">Add Student</button>
+                <span class="total-count">Total: 10</span>
+                <button class="add-btn">
+                    <span class="material-symbols-outlined">person_add</span>
+                    <span class="add-btn-text">Add Student</span>
+                </button>
             </div>
-            <table class="students-table">
+            <table>
                 <thead>
                     <tr>
                         <th>User Name</th>
@@ -40,20 +38,35 @@
                         <td>076 4834398</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
-                        <td>
-                            <button class="action-btn view"></button>
-                            <button class="action-btn deactivate"></button>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit" data-tooltip="Edit Profile">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
+                                person_remove
+                            </span>
                         </td>
                     </tr>
+
                     <tr>
                         <td>Sakith</td>
                         <td>sakiththewmika@gmail.com</td>
                         <td>076 4834398</td>
                         <td>2024/05/16</td>
                         <td><span class="status inactive">Deactive</span></td>
-                        <td>
-                            <button class="action-btn view"></button>
-                            <button class="action-btn activate"></button>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn activate">
+                                person_add
+                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -62,20 +75,160 @@
                         <td>076 4834398</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
-                        <td>
-                            <button class="action-btn view"></button>
-                            <button class="action-btn deactivate"></button>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate">
+                                person_remove
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sakith</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>076 4834398</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status inactive">Deactive</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn activate">
+                                person_add
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sakith</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>076 4834398</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Active</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate">
+                                person_remove
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sakith</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>076 4834398</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status inactive">Deactive</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn activate">
+                                person_add
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sakith</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>076 4834398</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Active</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate">
+                                person_remove
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sakith</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>076 4834398</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Active</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate">
+                                person_remove
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sakith</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>076 4834398</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Active</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate">
+                                person_remove
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sakith</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>076 4834398</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Active</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate">
+                                person_remove
+                            </span>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <div class="pagination">
+                <button class="page-btn prev">&laquo;</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn next">&raquo;</button>
+            </div>
         </div>
     </main>
 </div>
 
 <!-- Footer -->
 <footer class="footer">
-    © 2024 UniQuest. All rights reserved. | <a href="#">Terms of Services</a> | <a href="#">Privacy policy</a>
+
 </footer>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
