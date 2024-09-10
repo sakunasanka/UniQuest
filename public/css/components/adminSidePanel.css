@@ -1,8 +1,8 @@
 .sidebar {
-  background-color: #ffffff; /* White sidebar background */
-  width: 250px; /* Adjust width as needed */
-  border-right: 1px solid #ddd; /* Light border */
+  background-color: #ffffff; 
+  border-right: 1px solid #ddd; 
   padding-top: 20px;
+  flex: 0 1 250px;
 }
 
 .nav-menu {
