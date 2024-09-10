@@ -1,7 +1,7 @@
 <?php
 class Core
 {
-    //URL format /controller/method/params
+    //URL format UniQuest/controller/method/params
     protected $currentController = 'Home';
     protected $currentMethod = 'index';
     protected $params = [];
