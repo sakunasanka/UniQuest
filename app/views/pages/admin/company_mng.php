@@ -21,7 +21,7 @@
                 <span class="total-count">Total: 10</span>
                 <button class="add-btn">
                     <span class="material-symbols-outlined">person_add</span>
-                    <span class="add-btn-text">Add Student</span>
+                    <span class="add-btn-text">Add Company</span>
                 </button>
             </div>
             <table>

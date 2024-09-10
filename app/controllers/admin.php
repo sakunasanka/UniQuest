@@ -16,4 +16,9 @@ class Admin extends Controller
         $this->view('pages/admin/students_mng');
     }
 
+    public function company_mng()
+    {
+        $this->view('pages/admin/company_mng');
+    }
+    
 }
