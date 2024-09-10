@@ -9,6 +9,7 @@
 <body>
     <div class="dashboard-container">
         <!-- Dashboard stats -->
+        
         <div class="dashboard-card">
             <h3>Registered Students</h3>
             <p>The total number of students registered on UniQuest.</p>

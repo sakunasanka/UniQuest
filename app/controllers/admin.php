@@ -18,7 +18,7 @@ class Admin extends Controller
 
     public function admin_dash()
     {
-        $this->view('components/adminDash');
+        $this->view('pages/admin/adminDash');
     }
 
 }
