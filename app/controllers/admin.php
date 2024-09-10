@@ -20,5 +20,9 @@ class Admin extends Controller
     {
         $this->view('pages/admin/company_mng');
     }
-    
+
+    public function verTeam_mng()
+    {
+        $this->view('pages/admin/verTeam_mng');
+    }
 }
