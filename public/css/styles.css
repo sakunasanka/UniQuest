@@ -7,3 +7,5 @@
 
 /* pages */
 @import url("pages/admin/students_mng.css");
+@import url("pages/student/login.css");
+@import url("pages/service_provider/login.css");
