@@ -12,9 +12,9 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/admin/user_ver_all">All</button>
-            <button class="tab" data-path="/uniquest/admin/user_ver_pending">Pending</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/admin/user_ver_not">Not Approved</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/admin/job_ver_all">All</button>
+            <button class="tab" data-path="/uniquest/admin/job_ver_pending">Pending</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/admin/job_ver_not">Not Approved</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -23,9 +23,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th>User Name</th>
-                        <th>Email</th>
-                        <th>Account Type</th>
+                        <th>Title</th>
+                        <th>Company Email</th>
+                        <th>Job Type</th>
                         <th>Requested Date</th>
                         <th>Status</th>
                         <th>View</th>
@@ -33,9 +33,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>User 1</td>
+                        <td>Title 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Student</td>
+                        <td>Part Time</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -45,9 +45,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>User 2</td>
+                        <td>Title 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Company</td>
+                        <td>Internship</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -57,9 +57,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>User 1</td>
+                        <td>Title 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Student</td>
+                        <td>Part Time</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -69,9 +69,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>User 2</td>
+                        <td>Title 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Company</td>
+                        <td>Internship</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -81,9 +81,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>User 1</td>
+                        <td>Title 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Student</td>
+                        <td>Part Time</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">

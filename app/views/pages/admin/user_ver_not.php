@@ -18,7 +18,7 @@
         </div>
         <div class="table-block">
             <div class="content-header">
-                <span class="total-count">Total: 10</span>
+                <span class="total-count">Total: 5</span>
             </div>
             <table>
                 <thead>
@@ -57,9 +57,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>User 2</td>
+                        <td>User 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Company</td>
+                        <td>Student</td>
                         <td>2024/05/16</td>
                         <td><span class="status inactive">Not Approved</span></td>
                         <td class="action">
@@ -69,9 +69,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>User 1</td>
+                        <td>User 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Student</td>
+                        <td>Company</td>
                         <td>2024/05/16</td>
                         <td><span class="status inactive">Not Approved</span></td>
                         <td class="action">

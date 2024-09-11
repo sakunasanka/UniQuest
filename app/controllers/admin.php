@@ -40,4 +40,19 @@ class Admin extends Controller
     {
         $this->view('pages/admin/user_ver_not');
     }
+
+    public function job_ver_all()
+    {
+        $this->view('pages/admin/job_ver_all');
+    }
+
+    public function job_ver_pending()
+    {
+        $this->view('pages/admin/job_ver_pending');
+    }
+
+    public function job_ver_not()
+    {
+        $this->view('pages/admin/job_ver_not');
+    }
 }
