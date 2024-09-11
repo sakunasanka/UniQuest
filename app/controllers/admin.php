@@ -25,4 +25,9 @@ class Admin extends Controller
     {
         $this->view('pages/admin/verTeam_mng');
     }
+
+    public function job_complaint()
+    {
+        $this->view('pages/admin/job_complaint');
+    }
 }
