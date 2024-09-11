@@ -93,21 +93,21 @@ table td {
     color: #32a852;
     border-radius: 5px;
     padding: 5px 10px;
-    background-color: #32a85275;
+    background-color: #32a85250;
 }
 
 .status.inactive {
     color: #ff4d4d;
     border-radius: 5px;
     padding: 5px 10px;
-    background-color: #ff4d4d75;
+    background-color: #ff4d4d50;
 }
 
 .status.pending {
     color: #E9992F;
     border-radius: 5px;
     padding: 5px 10px;
-    background-color: #E9992F75;
+    background-color: #E9992F50;
 }
 
 .action-btn {

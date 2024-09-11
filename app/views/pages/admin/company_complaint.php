@@ -27,7 +27,8 @@
                         <th>Complaint</th>
                         <th>Student Name</th>
                         <th>Complained Date</th>
-                        <th>Status/Actions</th>
+                        <th>Status</th>
+                        <th>View</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,8 +38,8 @@
                         <td>Complaint 1</td>
                         <td>Student 1</td>
                         <td>2024/05/16</td>
+                        <td><span class="status active">Resolved</span></td>
                         <td class="action">
-                            <span class="status active">Resolved</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -50,8 +51,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status pending">Pending</span></td>
                         <td class="action">
-                            <span class="status pending">Pending</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -63,8 +64,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status active">Resolved</span></td>
                         <td class="action">
-                            <span class="status active">Resolved</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -76,8 +77,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status pending">Pending</span></td>
                         <td class="action">
-                            <span class="status pending">Pending</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -89,8 +90,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status active">Resolved</span></td>
                         <td class="action">
-                            <span class="status active">Resolved</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -102,8 +103,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status pending">Pending</span></td>
                         <td class="action">
-                            <span class="status pending">Pending</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -115,8 +116,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status active">Resolved</span></td>
                         <td class="action">
-                            <span class="status active">Resolved</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -128,8 +129,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status active">Resolved</span></td>
                         <td class="action">
-                            <span class="status active">Resolved</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -141,8 +142,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status active">Resolved</span></td>
                         <td class="action">
-                            <span class="status active">Resolved</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
@@ -154,8 +155,8 @@
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
+                        <td><span class="status active">Resolved</span></td>
                         <td class="action">
-                            <span class="status active">Resolved</span>
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
