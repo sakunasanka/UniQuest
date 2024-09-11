@@ -30,4 +30,9 @@ class Admin extends Controller
     {
         $this->view('pages/admin/job_complaint');
     }
+
+    public function company_complaint()
+    {
+        $this->view('pages/admin/company_complaint');
+    }
 }
