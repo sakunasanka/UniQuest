@@ -1,9 +1,5 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<header class="header">
-
-</header>
-
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
