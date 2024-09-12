@@ -9,7 +9,7 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?> 
     
     <!-- Content Area -->
     <main class="content-area">
@@ -66,8 +66,5 @@
 </div>
 
 <!-- Footer -->
-<footer class="footer">
-    © 2024 UniQuest. All rights reserved. | <a href="#">Terms of Services</a> | <a href="#">Privacy policy</a>
-</footer>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

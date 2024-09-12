@@ -3,6 +3,7 @@
   width: 250px; /* Adjust width as needed */
   border-right: 1px solid #ddd; /* Light border */
   padding-top: 20px;
+  height: 100%;
 }
 
 .nav-menu {

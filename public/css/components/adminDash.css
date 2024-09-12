@@ -49,10 +49,17 @@ body {
 }
 
 .dashboard-card h1 {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     color: #28a745;
 }
 
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: row;
+}
 /* Responsive Design for Smaller Screens */
 @media (max-width: 992px) {
     .dashboard-container {
