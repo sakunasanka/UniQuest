@@ -34,5 +34,34 @@ class Admin extends Controller
     public function intern_mng()
     {
         $this->view('pages/admin/intern_mng');
+      
+    public function user_ver_all()
+    {
+        $this->view('pages/admin/user_ver_all');
+    }
+
+    public function user_ver_pending()
+    {
+        $this->view('pages/admin/user_ver_pending');
+    }
+
+    public function user_ver_not()
+    {
+        $this->view('pages/admin/user_ver_not');
+    }
+
+    public function job_ver_all()
+    {
+        $this->view('pages/admin/job_ver_all');
+    }
+
+    public function job_ver_pending()
+    {
+        $this->view('pages/admin/job_ver_pending');
+    }
+
+    public function job_ver_not()
+    {
+        $this->view('pages/admin/job_ver_not');
     }
 }
