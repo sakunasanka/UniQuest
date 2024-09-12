@@ -23,7 +23,7 @@
         <div class="right-side">
             <h2>Student</h2>
             <a  href ="/uniquest/student/login" >
-                 <img src="...../public/images/student.png" alt="student">
+                <img src="<?php echo URLROOT; ?>/images/student.png" alt="student">
             </a>
         </div>
     </div>

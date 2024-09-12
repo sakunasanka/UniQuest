@@ -10,7 +10,7 @@
         <div class="left-side">
             <h2>Service Provider</h2>
             <a href  ="/uniquest/service_provider/login" >
-                <img src="....../public/images/service-provider.png" alt="service-provider">
+                <img src="<?php echo URLROOT; ?>/images/service-provider.png" alt="service-provider">
             </a>
         </div>
         <div class="right-side">
