@@ -5,11 +5,6 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
-.header {
-    background-color: #2a2a2a;
-    height: 60px; 
-}
-
 .main-container {
     display: flex;
     flex-direction: row;
