@@ -1,8 +1,9 @@
 .sidebar {
   background-color: #ffffff; 
   border-right: 1px solid #ddd; 
-  padding-top: 50px;
+  padding-top: 8%;
   flex: 0 1 250px;
+  height: 100%;
 }
 
 .nav-menu {
