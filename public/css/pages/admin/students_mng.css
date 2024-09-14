@@ -31,6 +31,7 @@ body, html {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    gap: 20px; 
 }
 
 .total-count {
@@ -135,7 +136,7 @@ table td {
 
 .input-container {
     position: relative;
-    flex-grow: 1;
+    flex-grow: 1; 
 }
 
 .icon {
@@ -155,7 +156,7 @@ table td {
     padding: 12px 20px 12px 40px; 
     border: 2px solid #ddd;
     border-radius: 10px;
-    width: 92%;
+    width: 100%;
 }
 
 .search:focus {
