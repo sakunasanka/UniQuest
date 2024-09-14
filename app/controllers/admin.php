@@ -75,9 +75,14 @@ class Admin extends Controller
         $this->view('pages/admin/job_ver_not');
     }
 
-    public function admin_dash()
+    public function dashboard()
     {
         $this->view('pages/admin/adminDash');
+    }
+
+    public function analytics()
+    {
+        $this->view('pages/admin/analytics');
     }
 
 }
