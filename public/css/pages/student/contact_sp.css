@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 0 20px;
+}
+
+.contact-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    border-radius: 15px;
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 40px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.contact-left {
+    flex: 1;
+    padding: 40px;
+}
+
+.contact-left h1 {
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+
+.contact-left p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+
+.contact-left form {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.contact-left label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+.contact-left input, .contact-left textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.contact-left textarea {
+    resize: none;
+    height: 150px;
+}
+
+.contact-left button {
+    padding: 15px;
+    background-color: #4bd681;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.contact-left select {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.contact-left button:hover {
+    background-color: #3cb56e;
+}
+
+.contact-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.contact-right img {
+    max-width: 80%;
+    height: auto;
+}
+
