@@ -1,4 +1,4 @@
-function myFunction() {
+function seachByName() {
     // Declare variables
     var input, filter, table, tr, td, i, txtValue;
     input = document.querySelector(".search");
@@ -22,5 +22,5 @@ function myFunction() {
 
 // Ensure that the function is available when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector(".search").addEventListener("keyup", myFunction);
+    document.querySelector(".search").addEventListener("keyup", seachByName);
 });

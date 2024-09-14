@@ -28,12 +28,12 @@
             <table>
                 <thead>
                     <tr>
-                        <th>User Name</th>
-                        <th>Email</th>
-                        <th>Mobile Number</th>
-                        <th>Registered Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th onclick="sortTable(0)">User Name</th>
+                        <th onclick="sortTable(1)">Email</th>
+                        <th onclick="sortTable(2)">Mobile Number</th>
+                        <th onclick="sortTable(3)">Registered Date</th>
+                        <th onclick="sortTable(4)">Status</th>
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,7 +59,7 @@
                         <td>Pamali</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/06/16</td>
                         <td><span class="status inactive">Deactive</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -77,7 +77,7 @@
                         <td>Sakuna</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/06/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -95,7 +95,7 @@
                         <td>Sakuna</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/06/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -113,7 +113,7 @@
                         <td>Sehara</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/06/16</td>
                         <td><span class="status inactive">Deactive</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -167,7 +167,7 @@
                         <td>Gayeshan</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/07/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -185,7 +185,7 @@
                         <td>Sehara</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/07/16</td>
                         <td><span class="status inactive">Deactive</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -203,7 +203,7 @@
                         <td>Sakith</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/07/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -221,7 +221,7 @@
                         <td>Pamali</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/07/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -239,7 +239,7 @@
                         <td>Damsara</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/06/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -275,7 +275,7 @@
                         <td>Sakith</td>
                         <td>uniquest@gmail.com</td>
                         <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>2024/06/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
@@ -308,5 +308,6 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSearchNames.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

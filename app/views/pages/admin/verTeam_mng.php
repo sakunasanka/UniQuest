@@ -27,13 +27,13 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th>User Name</th>
-                        <th>Email</th>
-                        <th>Mobile Number</th>
-                        <th>Registered Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                <tr>
+                        <th onclick="sortTable(0)">User Name</th>
+                        <th onclick="sortTable(1)">Email</th>
+                        <th onclick="sortTable(2)">Mobile Number</th>
+                        <th onclick="sortTable(3)">Registered Date</th>
+                        <th onclick="sortTable(4)">Status</th>
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,5 +164,6 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSearchNames.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
