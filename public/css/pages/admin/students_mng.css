@@ -5,11 +5,6 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
-.header {
-    background-color: #2a2a2a;
-    height: 60px; 
-}
-
 .main-container {
     display: flex;
     flex-direction: row;
@@ -28,7 +23,7 @@ body, html {
     height: fit-content;
     border-radius: 10px; 
     padding: 15px;
-    min-height: 500px;
+    min-height: 400px;
 }
 
 .content-header {
@@ -52,7 +47,7 @@ body, html {
     background-color: #32a852;
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -73,6 +68,7 @@ table th {
     padding: 15px;
     text-align: center;
     border: 1px solid #e7e7e7;
+    cursor: pointer;
 }
 
 tbody tr:hover {
@@ -120,23 +116,49 @@ table td {
 
 .action-btn.edit {
     color: #E9992F;
-    margin: 0 5px;
 }
 
 .action-btn.view {
     color: #0045FF;
+    margin-right: 5px;
 }
 
 .action-btn.deactivate {
     color: #ff0000;
+    margin-left: 5px;
 }
 
 .action-btn.activate {
     color: #52CA20;
+    margin-left: 5px;
 }
 
-.footer {
-    background-color: #2a2a2a;
-    height: 60px;
-    z-index: 100;
+.input-container {
+    position: relative;
+    flex-grow: 1;
+}
+
+.icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.hidden {
+    display: none;
+}
+
+.search {
+    font-size: 16px;
+    padding: 12px 20px 12px 40px; 
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    width: 92%;
+}
+
+.search:focus {
+    outline: none;
+    border: 2px solid #32a852;
 }
