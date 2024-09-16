@@ -4,31 +4,55 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-text">
-            <h1>Welcome for Part-Time Jobs and Internship Students</h1>
-            <p>Connect with the best opportunities and grow your career.</p>
+            <h1>Welcome to UniQuest!</h1>
+            <p>Empowering students with part time jobs and internship opportunities.</p>
             <a href="#" class="cta-button">Read More</a>
         </div>
         <div class="hero-image">
-            <img src="<?php echo URLROOT; ?>/images/home-bg.png" alt="background image">
+           <!-- <img src="<?php echo URLROOT; ?>/images/home-bg.png" alt="background image"> -->
         </div>
     </section>
 
     <!-- Services Section -->
     <section class="services">
-        <h2>For Uniquest!</h2>
-        <p>We offer part-time job opportunities for students.</p>
+        <h2>Our services</h2>
+        <p>We offer part-time job opportunities for university students.</p>
         <div class="service-cards">
             <div class="service-card">
-                <h3>Part-Time Opportunities</h3>
+                <h3>Part time jobs</h3>
                 <p>Explore part-time jobs at companies that align with your studies.</p>
                 <a href="#">Learn More</a>
             </div>
             <div class="service-card">
-                <h3>For Students</h3>
+                <h3>Internships</h3>
                 <p>Get matched with internships and part-time jobs.</p>
                 <a href="#">Learn More</a>
             </div>
         </div>
+    </section>
+
+    <!-- Students Section -->
+    <section class="students">
+        <h2>For Students</h2>
+        <p>Welcome to UniQuest! We simplify opportunities for university students by connecting you with part-time jobs and internships that align with your studies. With our easy-to-use platform, you can quickly discover roles that suit your schedule and career goals.</p>
+        <ul>
+            <li>Explore jobs and internships tailored for students.</li>
+            <li>Build your professional network and gain real-world experience.</li>
+            <li>Sign up today and take your first step toward your future career!</li>
+        </ul>
+        <a href="#" class="cta-button">Learn More</a>
+    </section>
+
+    <!-- Service Providers Section -->
+    <section class="service-providers">
+        <h2>For Service Providers</h2>
+        <p>Join UniQuest as a service provider and gain access to a diverse pool of talented students eager to work and learn. Our platform offers premium features to help you find the best candidates for your needs.</p>
+        <ul>
+            <li>Post your first two jobs for free.</li>
+            <li>Access premium features like report generation, unlimited job listings, and more.</li>
+            <li>Connect with motivated students ready to contribute to your business.</li>
+        </ul>
+        <a href="#" class="cta-button">Get Started</a>
     </section>
 
     <!-- Footer Section -->

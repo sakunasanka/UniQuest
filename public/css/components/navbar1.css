@@ -11,7 +11,8 @@
     padding: 10px 20px;
     height: 80px;
     display: flex;
-    align-items: center
+    align-items: center;
+    margin: none;
 }
 
 .navbar-container {
