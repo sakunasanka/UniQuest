@@ -34,7 +34,7 @@ body {
     background-size: cover;
     background-position: center;
     color: #fff;
-    height: 40vh;
+    height: 45vh;
 }
 
 .hero-text {
@@ -57,10 +57,19 @@ body {
     height: auto;
 }
 
+.content{
+    justify-content: space-between;
+    padding: 40px;
+    margin-top: 1%;
+    background-image: linear-gradient(rgba(3, 46, 18, 0.8), rgba(3, 46, 18, 0.8)), url('../../../images/hero.png');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
 /* Services Section */
 .services {
     padding: 60px;
-    background-color: #2D2D2D;
     text-align: center;
 }
 
@@ -74,6 +83,7 @@ body {
     justify-content: center;
     gap: 30px;
     margin-top: 40px;
+    text-align: center;
 }
 
 .service-card {
@@ -101,7 +111,6 @@ body {
 /* Students Section */
 .students {
     padding: 60px;
-    background-color: #2D2D2D;
     text-align: left; /* Align text and bullets to the left */
 }
 
@@ -129,7 +138,6 @@ body {
 /* Service Providers Section */
 .service-providers {
     padding: 60px;
-    background-color: #2D2D2D;
     text-align: left; /* Align text and bullets to the left */
 }
 
@@ -156,7 +164,7 @@ body {
 
 /* Footer */
 .footer {
-    background-color: #122a4b;
+    background-color: #2d2d2d;
     padding: 20px;
     text-align: center;
     color: #fff;
