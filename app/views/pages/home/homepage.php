@@ -21,11 +21,11 @@
             <div class="service-cards">
                 <div class="service-card">
                     <h3>Part time jobs</h3>
-                    <p>Explore part-time jobs at companies that align with your studies.</p>
+                    <p>Find part-time positions that fit your academic schedule and career interests. Our platform connects you with companies seeking talented students who can balance work with their studies.</p>
                 </div>
                 <div class="service-card">
                     <h3>Internships</h3>
-                    <p>Get matched with internships and part-time jobs.</p>
+                    <p>Browse through internship opportunities that offer practical experience in your field of study. Our platform helps you discover internships that provide meaningful work and professional development.</p>
                 </div>
             </div>
         </section>
