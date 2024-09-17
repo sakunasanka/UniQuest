@@ -43,3 +43,7 @@
 .nav-btn.active {
   background-color: #038a27;
 }
+
+.dropdown-menu .nav-btn {
+  padding-left: 45px; /* Adjust padding-left as needed */
+}
