@@ -1,0 +1,50 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #2D2D2D; /* Dark background to match the design */
+    padding: 10px 20px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: 100vw;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.logo img {
+    margin-right: 10px; /* Space between logo and text */
+    height: 40px; /* Adjust the height of the logo */
+}
+
+.nav-button a {
+    background-color: #4CAF50; /* Green button color */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.nav-button a:hover {
+    background-color: #45A049; /* Slightly darker green on hover */
+}
