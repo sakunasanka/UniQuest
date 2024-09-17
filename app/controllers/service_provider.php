@@ -16,4 +16,9 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/contact_admin');
     }
 
+    public function premium()
+    {
+        $this->view('pages/service_provider/premiumFeatures');
+    }
+
 }
