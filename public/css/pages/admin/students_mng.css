@@ -1,21 +1,20 @@
-body, html {
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .main-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     flex-direction: row;
-    
-}
-
-.content-area {
-    background-color: #ffffff; 
-    padding: 25px; 
-    flex: 4;
-
+    margin-top: 0;
 }
 
 .table-block {

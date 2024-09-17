@@ -1,11 +1,6 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/adminDash.css">
 
-<header class="header">
-    <div class="logo-block"></div>
-    <div class="nav-block"></div>
-</header>
-
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
