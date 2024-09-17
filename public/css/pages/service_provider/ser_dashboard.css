@@ -119,3 +119,19 @@ body {
 .active-stat{
     margin-left: 20px;
 }
+
+.green-icon {
+    color: #32a852; /* Green color for Jobs, Applications, Analytics, and Reviews */
+    font-size: 50px; /* Adjust the size as needed */
+    margin-bottom: 10px;
+}
+
+.black-icon {
+    color: #000; /* Black color for the Activate Premium button */
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.activate-btn img, .activate-btn .white-icon {
+    margin-left: 10px;
+}
