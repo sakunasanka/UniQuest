@@ -1,8 +1,13 @@
 .sidebar {
   background-color: #32a852; 
   /* border-right: 1px solid #32a852;  */
-  padding-top: 50px;
   flex: 0 1 220px;
+  height: calc(100vh - 80px); /* Full height of the screen minus header height */
+  position: fixed;
+  top: 80px;
+  left: 0;
+  padding-top: 20px;
+  width: 220px;
 }
 
 .nav-menu {
