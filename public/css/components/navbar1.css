@@ -11,7 +11,9 @@
     padding: 10px 20px;
     height: 80px;
     display: flex;
-    align-items: center
+    align-items: center;
+    position: fixed;
+    width: 100vw;
 }
 
 .navbar-container {
