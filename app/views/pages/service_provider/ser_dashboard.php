@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniQuest Dashboard</title>
-    <link rel="stylesheet" href="../../assets/css/components/ser_dashboard.css">
-    <link rel="stylesheet" href="../../assets/css/components/styles.css">
-</head>
-<body>
-    <main class="dashboard">
+<?php require APPROOT . '/views/components/header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/ser_dashboard.css">
+
+    <main class="content-area">
         <div class="header-section">
             <h1>Welcome!</h1>
             <button class="activate-btn" id="activate-premium">
@@ -66,6 +59,4 @@
             </div>
         </div>
     </main>
-
-</body>
-</html>
+<?php require APPROOT . '/views/components/footer.php'; ?>
