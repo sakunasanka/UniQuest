@@ -4,7 +4,7 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?> 
+    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?> 
     
     <!-- Content Area -->
     <main class="content-area">
