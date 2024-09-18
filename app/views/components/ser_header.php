@@ -16,13 +16,6 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#" class="hov">Home</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
-                    <div class="dropdown-content">
-                        <a href="#">Part-time Jobs</a>
-                        <a href="#">Internships</a>
-                    </div>
-                </li>
                 <li><a href="#" class="hov">About Us</a></li>
                 <li><a href="#" class="hov">Contact Us</a></li>
             </ul>
