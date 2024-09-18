@@ -2,6 +2,7 @@
 .navbar {
     background-color: #2D2D2D;
     padding: 15px 30px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -26,11 +27,20 @@
     margin-right: 15px;
 }
 
-/* Navbar Links */
+/* Navbar Container */
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Navbar Links (adjusted to right) */
 .nav-links {
     list-style: none;
     display: flex;
     align-items: center;
+    margin-left: auto; /* Moves the links to the right side */
 }
 
 .nav-links li {
@@ -45,7 +55,7 @@
     border-radius: 5px;
 }
 
-.nav-links a:hover {
+.nav-links .hov:hover {
     background-color: #4CAF50;
 }
 
@@ -60,6 +70,7 @@
     background-color: #4CAF50;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
     z-index: 1;
 }
 
@@ -67,33 +78,47 @@
     color: white;
     padding: 12px 16px;
     text-decoration: none;
+    cursor: pointer;
     display: block;
 }
 
 .dropdown-content a:hover {
     background-color: #45A049;
+    cursor: pointer;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* Icons */
-.nav-icons {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+/* Style for the expand_more icon */
+.dropbtn .material-symbols-outlined {
+    vertical-align: middle;
 }
 
-.material-symbols-outlined {
+/* Material Icons */
+.nav-icons .material-symbols-outlined {
     color: white;
     font-size: 30px;
 }
 
+/* Icons Container Styling */
+.nav-icons {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.nav-icons a {
+    margin-left: 50px;
+    text-decoration: none;
+}
+
+/* Notification Badge */
 .notification-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 40px;
+    right: 48px;
     background-color: red;
     color: white;
     font-size: 0.8rem;
@@ -110,9 +135,14 @@
 
     .nav-links {
         flex-direction: column;
+        margin-left: 0; /* Remove auto margin for mobile */
     }
 
     .nav-links li {
         margin: 10px 0;
+    }
+
+    .nav-icons {
+        margin-top: 10px;
     }
 }

@@ -13,19 +13,18 @@
         <div class="navbar-container">
             <div class="logo">
                 <img src="<?php echo URLROOT; ?>/images/UniQuest3.png" alt="UniQuest Logo">
-                <span>UniQuest</span>
             </div>
             <ul class="nav-links">
-                <li><a href="#">Home</a></li>
+                <li><a href="#" class="hov">Home</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropbtn">Explore</a>
+                    <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
                     <div class="dropdown-content">
                         <a href="#">Part-time Jobs</a>
                         <a href="#">Internships</a>
                     </div>
                 </li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="#" class="hov">About Us</a></li>
+                <li><a href="#" class="hov">Contact Us</a></li>
             </ul>
             <div class="nav-icons">
                 <a href="#"><span class="material-symbols-outlined">account_circle</span></a>
@@ -34,4 +33,5 @@
             </div>
         </div>
     </nav>
-
+</body>
+</html>
