@@ -1,4 +1,6 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/ser_header.php'; ?>
+
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
 
 <!-- header -->
 
