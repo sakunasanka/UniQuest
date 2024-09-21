@@ -25,5 +25,10 @@ class Student extends Controller
     {
         $this->view('pages/student/students_mng');
     }
+
+    public function jobsApply()
+    {
+        $this->view('pages/student/jobsApply');
+    }
 }
 
