@@ -21,4 +21,9 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/ser_dashboard');
     }
 
+    public function report()
+    {
+        $this->view('pages/service_provider/job_report');
+    }
+
 }

@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+.content-area {
+    padding: 50px;
+}
+
+.report-header {
+    display: block;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.report-header p{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #000;
+}
+
+p {
+    color: #888;
+}
+
+.download-btn {
+    background-color: #32a852;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.download-btn .material-symbols-outlined {
+    margin-right: 5px;
+}
+
+.report-date {
+    background-color: #e0e0e0;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #000;
+}
+
+.job-details {
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 20px;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.job-detail-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.card {
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 5px;
+    width: 48%;
+}
+
+.applicant-demographics {
+    margin-bottom: 30px;
+}
+
+.demographic-grid {
+    display: flex;
+    gap: 15px;
+}
+
+.demographic-card {
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 5px;
+    width: 30%;
+}
