@@ -1,8 +1,13 @@
 .sidebar {
-  background-color: #ffffff; 
-  border-right: 1px solid #ddd; 
-  padding-top: 50px;
-  flex: 0 1 250px;
+  background-color: #32a852; 
+  /* border-right: 1px solid #32a852;  */
+  flex: 0 1 220px;
+  height: calc(100vh - 80px); /* Full height of the screen minus header height */
+  position: fixed;
+  top: 80px;
+  left: 0;
+  padding-top: 20px;
+  width: 250px;
 }
 
 .nav-menu {
@@ -12,21 +17,33 @@
 }
 
 .nav-btn {
-  background-color: #f5f5f5;
-  color: #000000;
+  display: flex;
+  /* background-color: #f5f5f5; */
+  background: transparent;
+  color: #ffffff;
   font-size: 14px;
-  margin: 10px 25px;
-  width: 200px;
+  margin: 5px 10px;
+  width: 225px;
+  text-align: left;
+  align-items: center;
   padding: 10px 20px;
-  border: 1px solid #ececec;
+  /* border: 1px solid #ececec; */
+  border: none;
   border-radius: 10px;
   transition: background-color 0.2s, border-color 0.2s;
   cursor: pointer;
-  box-shadow: 1px 1px 5px #e5e5e5;
+  /* box-shadow: 1px 1px 5px #e5e5e5; */
+}
+
+.nav-btn span  {
+  padding-right: 10px;
 }
 
 .nav-btn:hover,
 .nav-btn.active {
-  background-color: #1db954;
-  /* border-color: #1DB954; */
+  background-color: #038a27;
+}
+
+.dropdown-menu .nav-btn {
+  padding-left: 45px; /* Adjust padding-left as needed */
 }
