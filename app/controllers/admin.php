@@ -80,4 +80,9 @@ class Admin extends Controller
         $this->view('pages/admin/adminDash');
     }
 
+    public function jobPost()
+    {
+        $this->view('pages/admin/jobPost');
+    }
+
 }
