@@ -30,7 +30,7 @@
             <div class="card">
                 <p>Total Applicants: 243</p>
             </div>
-            <div class="card">
+            <div class="card" id="card">
                 <p>Application Rate: 18.7%</p>
             </div>
         </div>
