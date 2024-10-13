@@ -7,42 +7,78 @@
 
 /* Navbar Styles */
 .navbar {
-    background-color: #2D2D2D; /* Dark background to match the design */
-    padding: 10px 20px;
+    background-color: #2D2D2D; /* Dark background */
+    padding: 15px 30px;
     height: 80px;
     display: flex;
-    align-items: center
+    align-items: center;
+    justify-content: space-between;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
 }
 
+/* Navbar Container */
 .navbar-container {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
 }
 
+/* Logo Styling */
 .logo {
     display: flex;
     align-items: center;
-    color: #fff;
-    font-size: 1.5rem;
+    color: #ffffff;
+    font-size: 1.8rem;
     font-weight: bold;
 }
 
 .logo img {
-    margin-right: 10px; /* Space between logo and text */
-    height: 40px; /* Adjust the height of the logo */
+    height: 50px; /* Adjusted logo height */
+    margin-right: 15px; /* Space between logo image and text */
 }
 
+/* Navbar Button */
 .nav-button a {
-    background-color: #4CAF50; /* Green button color */
+    background-color: #4CAF50; /* Green color for the button */
     color: white;
-    padding: 10px 20px;
+    padding: 12px 25px;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 6px;
     font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
 .nav-button a:hover {
     background-color: #45A049; /* Slightly darker green on hover */
+}
+
+/* Responsive Navbar (Mobile) */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 20px;
+        height: auto;
+    }
+
+    .navbar-container {
+        flex-direction: column;
+    }
+
+    .nav-button {
+        margin-top: 10px;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    .nav-button a {
+        padding: 10px 20px;
+    }
 }
