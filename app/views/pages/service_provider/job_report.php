@@ -40,25 +40,18 @@
         <h2>Applicant Demographics</h2>
         <div class="demographic-grid">
             <div class="demographic-card">
-                <h3>Gender</h3>
-                <p>Male: 58%</p>
-                <p>Female: 42%</p>
+                <canvas id="genderChart"></canvas>
             </div>
             <div class="demographic-card">
-                <h3>Age</h3>
-                <p>21: 37.7%</p>
-                <p>22: 22.3%</p>
-                <p>23: 8.5%</p>
-                <p>24: 31.3%</p>
+                <canvas id="ageChart"></canvas>
             </div>
             <div class="demographic-card">
-                <h3>Location</h3>
-                <p>Galle: 38%</p>
-                <p>Matara: 36%</p>
-                <p>Colombo: 36%</p>
+                <canvas id="locationChart"></canvas>
             </div>
         </div>
     </section>
+
 </main>
 
+<script src="<?php echo URLROOT; ?>/js/service_provider/report_charts.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>

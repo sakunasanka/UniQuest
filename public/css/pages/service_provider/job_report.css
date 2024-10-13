@@ -41,6 +41,10 @@ p {
     align-items: center;
 }
 
+.download-btn:hover {
+    background-color: #137d4a;
+}
+
 .download-btn .material-symbols-outlined {
     margin-right: 5px;
 }
@@ -78,19 +82,22 @@ h2 {
 
 .demographic-grid {
     display: flex;
-    gap: 15px;
+    gap: 30px;
 }
 
 .demographic-card {
-    background-color: #299b63;
-    color: #fff;
+    background-color: #fff;
+    color: #000;
     padding: 20px;
     border-radius: 5px;
     width: 30%;
+    border: 2px solid;
+    border-color: #32a852;
+    border-radius: 8px;
 }
 
 .demographic-card p{
-    color: #fff;
+    color: #000;
     padding: 5px;
     display: flex;
 }
@@ -110,4 +117,8 @@ h2 {
 
 #card{
     max-width: 48.5%;
+}
+
+.demographic-card canvas {
+    height: 200px; 
 }
