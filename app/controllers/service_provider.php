@@ -16,9 +16,10 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/contact_admin');
     }
 
-    public function dashboard()
+    public function edit_profile()
     {
-        $this->view('pages/service_provider/ser_dashboard');
+        $this->view('pages/service_provider/edit_profile');
     }
+    
 
 }
