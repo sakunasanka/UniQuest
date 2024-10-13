@@ -6,9 +6,7 @@
 @import url("components/pagination.css");
 
 /* pages */
-@import url("pages/admin/students_mng.css");
-@import url("pages/student/login.css");
-@import url("pages/service_provider/login.css");
+
 @import url("pages/student/contact_sp.css");
 @import url("pages/student/contact_admin.css");
 @import url("pages/service_provider/contact_admin.css");
