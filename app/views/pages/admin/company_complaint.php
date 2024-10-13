@@ -1,8 +1,6 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/ser_header.php'; ?>
 
-<header class="header">
-
-</header>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
