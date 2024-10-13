@@ -169,3 +169,10 @@ button[type="submit"]:hover {
         width: 100%;
     }
 }
+
+.form-group label[for="male"],
+.form-group label[for="female"] {
+    display: inline-block;
+    width: auto;
+    margin-right: 10px;
+}
