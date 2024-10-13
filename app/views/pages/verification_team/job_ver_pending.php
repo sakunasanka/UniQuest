@@ -92,13 +92,13 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- <div class="pagination">
+            <div class="pagination">
                 <button class="page-btn prev">&laquo;</button>
                 <button class="page-btn active">1</button>
                 <button class="page-btn">2</button>
                 <button class="page-btn">3</button>
                 <button class="page-btn next">&raquo;</button>
-            </div> -->
+            </div>
         </div>
     </main>
 </div>
@@ -107,5 +107,7 @@
 
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
