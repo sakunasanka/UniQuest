@@ -1,0 +1,137 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+.dashboard {
+    padding: 20px;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.activate-btn {
+    background-color: #E9992F;
+    border: none;
+    padding: 10px 20px;
+    color: #000;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+}
+
+.activate-btn:hover {
+    background-color: #FFB74C;
+}
+
+.activate-btn img {
+    width: 30px;
+    height: 30px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.card {
+    flex: 1 1 48%;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.card h2 {
+    margin: 10px 0;
+}
+
+.card-stats {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.down {
+    color: red;
+    margin-left: 10px;
+}
+
+.up {
+    color: green;
+    margin-left: 10px;
+}
+
+.card-subtext {
+    color: #888;
+    font-size: 14px;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Applications card stats */
+.applications-stats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.new-stat, .new-label {
+    color: #E9992F;
+    text-align: center;
+    font-size: 24px;
+}
+
+.new-label{
+    margin-right: 20px;
+}
+
+.active-stat, .active-label {
+    color: #1DB954;
+    text-align: center;
+    font-size: 24px;
+}
+
+.active-stat{
+    margin-left: 20px;
+}
+
+.green-icon {
+    color: #32a852; /* Green color for Jobs, Applications, Analytics, and Reviews */
+    font-size: 50px; /* Adjust the size as needed */
+    margin-bottom: 10px;
+}
+
+.black-icon {
+    color: #000; /* Black color for the Activate Premium button */
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.activate-btn img, .activate-btn .white-icon {
+    margin-left: 10px;
+}
