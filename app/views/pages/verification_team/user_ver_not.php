@@ -1,7 +1,6 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<!-- header -->
-
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
