@@ -1,0 +1,96 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Main form container */
+.vreg_form-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 1200px;
+    height:600px;
+    margin-top: 100px;
+    margin-left: 200px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Form header styling */
+.vreg_form-header {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Status dropdown styling */
+.vreg_status-dropdown {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+/* Form group styling */
+.vreg_form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Label styling */
+.vreg_label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Input and select styling */
+.vreg_input {
+    width: 100%;
+    background-color:rgb(247, 248, 255);
+    padding: 8px;
+    border: 1px solid #c7bbbb;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+
+/* NIC styling (inline fields) */
+.vreg_nic-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.vreg_nic-container .vreg_input {
+    width: 48%;
+}
+
+/* Button styling */
+.vreg_button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+.vreg_accept {
+    background-color: #28a745;
+    color: white;
+}
+
+.vreg_reject {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Button container */
+.vreg_button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
