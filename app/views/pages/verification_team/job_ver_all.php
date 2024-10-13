@@ -1,6 +1,6 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<!-- header -->
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -168,5 +168,7 @@
 
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
