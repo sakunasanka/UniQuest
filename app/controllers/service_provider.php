@@ -20,5 +20,9 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/ser_dashboard');
     }
+    public function edit_job()
+    {
+        $this->view('pages/service_provider/edit_job');
+    }
 
 }
