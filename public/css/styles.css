@@ -5,19 +5,3 @@
 @import url("components/adminTopPanel.css");
 @import url("components/pagination.css");
 
-/* pages */
-@import url("pages/admin/students_mng.css");
-@import url("pages/student/login.css");
-@import url("pages/service_provider/login.css");
-@import url("pages/student/contact_sp.css");
-@import url("pages/student/contact_admin.css");
-@import url("pages/service_provider/contact_admin.css");
-
-.content-area {
-    margin-left: 250px; /* Make room for the sidebar */
-    padding: 40px;
-    width: calc(100% - 250px); /* Ensure content takes full width minus sidebar */
-    min-height: calc(100vh - 80px); /* Ensures content area takes the available vertical space */
-    box-sizing: border-box; /* Prevents overflowing */
-    margin-top: 80px;
-}
