@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITENAME ?></title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar2.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
