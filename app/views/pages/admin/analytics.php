@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/analytics.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/analytics.css">
 
 <header class="header">
     <div class="logo-block"></div>
@@ -56,26 +56,22 @@
         <!-- Charts -->
         <div class="charts">
             <div class="card chart-card">
-                <h3>User Registrations</h3>
                 <canvas id="registrationsChart"></canvas>
             </div>
             <div class="card chart-card">
-                <h3>Job Listings</h3>
                 <canvas id="jobListingsChart"></canvas>
             </div>
             <div class="card chart-card">
-                <h3>Revenue</h3>
                 <canvas id="revenueChart"></canvas>
             </div>
             <div class="card chart-card">
-                <h3>User Logins</h3>
                 <canvas id="loginsChart"></canvas>
             </div>
         </div>
     </main>
 </div>
 
-<script src="<?php echo URLROOT; ?>/js/components/analytics.js"></script>
+<script src="<?php echo URLROOT; ?>/js/admin/analytics.js"></script>
 
 <!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>
