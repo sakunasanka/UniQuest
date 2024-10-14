@@ -1,9 +1,9 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/verfication_team/stu_registration.css">
 
 <!-- Sidebar and Content Layout -->
-<div class="main-container">
+<div class="content-area">
     <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?> 
 

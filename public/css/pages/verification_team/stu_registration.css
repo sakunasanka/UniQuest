@@ -11,7 +11,8 @@ body {
 }
 
 /* Main form container */
-.vreg_form-container {
+/* .vreg_form-container {
+    flex: 1 1 48%;
     background-color: white;
     border-radius: 10px;
     padding: 20px;
@@ -21,7 +22,7 @@ body {
     margin-left: 200px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-}
+} */
 
 /* Form header styling */
 .vreg_form-header {
