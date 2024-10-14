@@ -5,11 +5,12 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
     <!-- Content Area -->
      <div class="content-area">
-    <div class="complaint-form-container">
+     <div class="complaint-container">
+        <div class="complaint-form-container">
             <h2>Report an Issue</h2>
             <p>Let us know about any problem with Providers</p>
 
