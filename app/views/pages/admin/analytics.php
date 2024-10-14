@@ -13,23 +13,43 @@
     
     <!-- Content Area -->
     <main class="content-area">
-            <!-- Stats -->
+        <!-- Stats -->
         <div class="stats">
             <div class="card stat-card">
-                <h3>Total Active Students</h3>
-                <p>650</p>
+                <div>
+                    <h3>Total Active Students</h3>
+                    <p>650</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">groups</span>
+                </div>
             </div>
             <div class="card stat-card">
-                <h3>Total Active Companies</h3>
-                <p>320</p>
+                <div>
+                    <h3>Total Active Companies</h3>
+                    <p>320</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">store</span>
+                </div>
             </div>
             <div class="card stat-card">
-                <h3>Total Active Part Time Jobs</h3>
-                <p>300</p>
+                <div>
+                    <h3>Total Active Part Time Jobs</h3>
+                    <p>300</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">work</span>
+                </div>
             </div>
             <div class="card stat-card">
-                <h3>Total Active Internships</h3>
-                <p>300</p>
+                <div>
+                    <h3>Total Active Internships</h3>
+                    <p>300</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">school</span>
+                </div>
             </div>
         </div>
 
@@ -58,5 +78,4 @@
 <script src="<?php echo URLROOT; ?>/js/components/analytics.js"></script>
 
 <!-- Footer -->
-
 <?php require APPROOT . '/views/components/footer.php'; ?>
