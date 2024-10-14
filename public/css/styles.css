@@ -10,7 +10,7 @@
 @import url("pages/student/contact_sp.css");
 @import url("pages/student/contact_admin.css");
 @import url("pages/service_provider/contact_admin.css");
-@import url("pages/verification_team/jp_registration.css");
+@import url("pages/verification_team/stu_registration.css");
 
 .content-area {
     margin-left: 250px; /* Make room for the sidebar */

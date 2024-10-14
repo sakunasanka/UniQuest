@@ -12,9 +12,9 @@ class verification_team extends Controller
     }
 
 
-    public function jp_registration()
+    public function stu_registration()
     {
-        $this->view('pages/verification_team/jp_registration');
+        $this->view('pages/verification_team/stu_registration');
     }
 
    
