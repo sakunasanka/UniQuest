@@ -17,8 +17,8 @@
         <div class="stats">
             <div class="card stat-card">
                 <div>
-                    <h3>Total Active Students</h3>
-                    <p>650</p>
+                    <h3>Total Jobs</h3>
+                    <p>05</p>
                 </div>
                 <div class="icon">
                     <span class="material-symbols-outlined large-icon">groups</span>
@@ -26,8 +26,8 @@
             </div>
             <div class="card stat-card">
                 <div>
-                    <h3>Total Active Companies</h3>
-                    <p>320</p>
+                    <h3>Active Jobs</h3>
+                    <p>03</p>
                 </div>
                 <div class="icon">
                     <span class="material-symbols-outlined large-icon">store</span>
@@ -35,17 +35,8 @@
             </div>
             <div class="card stat-card">
                 <div>
-                    <h3>Total Active Part Time Jobs</h3>
-                    <p>300</p>
-                </div>
-                <div class="icon">
-                    <span class="material-symbols-outlined large-icon">work</span>
-                </div>
-            </div>
-            <div class="card stat-card">
-                <div>
-                    <h3>Total Active Internships</h3>
-                    <p>300</p>
+                    <h3>Applicants</h3>
+                    <p>16</p>
                 </div>
                 <div class="icon">
                     <span class="material-symbols-outlined large-icon">school</span>
@@ -71,7 +62,7 @@
     </main>
 </div>
 
-<script src="<?php echo URLROOT; ?>/js/admin/analytics.js"></script>
+<script src="<?php echo URLROOT; ?>/js/service_provider/ser_analytics.js"></script>
 
 <!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>

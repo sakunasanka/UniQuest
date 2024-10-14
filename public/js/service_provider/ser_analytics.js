@@ -140,12 +140,12 @@ var loginsCtx = document.getElementById('loginsChart').getContext('2d');
 var loginsChart = new Chart(loginsCtx, {
     type: 'doughnut',
     data: {
-        labels: ['Students', 'Companies'],
+        labels: ['Male', 'Female'],
         datasets: [
             {
                 label: 'User Logins',
                 backgroundColor: ['rgba(72, 207, 173, 0.6)', 'rgba(45, 156, 128, 0.6)'],
-                data: [200, 120],
+                data: [10, 6],
             }
         ]
     },
