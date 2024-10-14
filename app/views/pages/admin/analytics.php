@@ -1,5 +1,5 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/analytics.css">
+<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/analytics.css">
 
 <header class="header">
     <div class="logo-block"></div>
@@ -13,50 +13,65 @@
     
     <!-- Content Area -->
     <main class="content-area">
-            <!-- Stats -->
+        <!-- Stats -->
         <div class="stats">
             <div class="card stat-card">
-                <h3>Total Active Students</h3>
-                <p>650</p>
+                <div>
+                    <h3>Total Active Students</h3>
+                    <p>650</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">groups</span>
+                </div>
             </div>
             <div class="card stat-card">
-                <h3>Total Active Companies</h3>
-                <p>320</p>
+                <div>
+                    <h3>Total Active Companies</h3>
+                    <p>320</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">store</span>
+                </div>
             </div>
             <div class="card stat-card">
-                <h3>Total Active Part Time Jobs</h3>
-                <p>300</p>
+                <div>
+                    <h3>Total Active Part Time Jobs</h3>
+                    <p>300</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">work</span>
+                </div>
             </div>
             <div class="card stat-card">
-                <h3>Total Active Internships</h3>
-                <p>300</p>
+                <div>
+                    <h3>Total Active Internships</h3>
+                    <p>300</p>
+                </div>
+                <div class="icon">
+                    <span class="material-symbols-outlined large-icon">school</span>
+                </div>
             </div>
         </div>
 
         <!-- Charts -->
         <div class="charts">
             <div class="card chart-card">
-                <h3>User Registrations</h3>
                 <canvas id="registrationsChart"></canvas>
             </div>
             <div class="card chart-card">
-                <h3>Job Listings</h3>
                 <canvas id="jobListingsChart"></canvas>
             </div>
             <div class="card chart-card">
-                <h3>Revenue</h3>
                 <canvas id="revenueChart"></canvas>
             </div>
             <div class="card chart-card">
-                <h3>User Logins</h3>
                 <canvas id="loginsChart"></canvas>
             </div>
         </div>
     </main>
 </div>
 
-<script src="<?php echo URLROOT; ?>/js/components/analytics.js"></script>
+<script src="<?php echo URLROOT; ?>/js/admin/analytics.js"></script>
 
 <!-- Footer -->
-
 <?php require APPROOT . '/views/components/footer.php'; ?>
