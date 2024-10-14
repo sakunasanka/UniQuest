@@ -30,5 +30,9 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/login');
     }
+    public function review()
+    {
+        $this->view('pages/service_provider/review');
+    }
 
 }
