@@ -16,4 +16,9 @@ class Student extends Controller
         $this->view('pages/student/students_mng');
     }
 
+    public function make_complain()
+    {
+        $this->view('pages/student/make_complain');
+    }
+
 }
