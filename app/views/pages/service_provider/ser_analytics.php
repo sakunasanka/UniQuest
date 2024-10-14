@@ -18,25 +18,25 @@
             <div class="card stat-card">
                 <div>
                     <h3>Total Jobs</h3>
-                    <p>05</p>
+                    <p>50</p>
                 </div>
                 <div class="icon">
-                    <span class="material-symbols-outlined large-icon">groups</span>
+                    <span class="material-symbols-outlined large-icon">work</span>
                 </div>
             </div>
             <div class="card stat-card">
                 <div>
                     <h3>Active Jobs</h3>
-                    <p>03</p>
+                    <p>08</p>
                 </div>
                 <div class="icon">
-                    <span class="material-symbols-outlined large-icon">store</span>
+                    <span class="material-symbols-outlined large-icon">work</span>
                 </div>
             </div>
             <div class="card stat-card">
                 <div>
                     <h3>Applicants</h3>
-                    <p>16</p>
+                    <p>26</p>
                 </div>
                 <div class="icon">
                     <span class="material-symbols-outlined large-icon">school</span>
