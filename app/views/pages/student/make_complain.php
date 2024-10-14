@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/stu_header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/make_complain.css">
 
@@ -35,12 +35,6 @@
 </div>
 </div>
 
-
-
-<footer class="footer">
-
-</footer>
-
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
-<?php require APPROOT . '/views/components/footer.php'; ?>    <main class="content-area">
+<?php require APPROOT . '/views/components/footer.php'; ?>
