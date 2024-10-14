@@ -1,5 +1,5 @@
 .sidebar {
-  background-color: #32a852; 
+  background-color: #299b63; 
   /* border-right: 1px solid #32a852;  */
   flex: 0 1 220px;
   height: calc(100vh - 80px); /* Full height of the screen minus header height */
@@ -7,7 +7,7 @@
   top: 80px;
   left: 0;
   padding-top: 20px;
-  width: 220px;
+  width: 250px;
 }
 
 .nav-menu {
@@ -23,7 +23,7 @@
   color: #ffffff;
   font-size: 14px;
   margin: 5px 10px;
-  width: 200px;
+  width: 225px;
   text-align: left;
   align-items: center;
   padding: 10px 20px;
@@ -41,5 +41,9 @@
 
 .nav-btn:hover,
 .nav-btn.active {
-  background-color: #038a27;
+  background-color: #137d4a;
+}
+
+.dropdown-menu .nav-btn {
+  padding-left: 45px; /* Adjust padding-left as needed */
 }

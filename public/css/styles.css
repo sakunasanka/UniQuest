@@ -12,9 +12,9 @@
 @import url("pages/service_provider/contact_admin.css");
 
 .content-area {
-    margin-left: 220px; /* Make room for the sidebar */
+    margin-left: 250px; /* Make room for the sidebar */
     padding: 40px;
-    width: calc(100% - 220px); /* Ensure content takes full width minus sidebar */
+    width: calc(100% - 250px); /* Ensure content takes full width minus sidebar */
     min-height: calc(100vh - 80px); /* Ensures content area takes the available vertical space */
     box-sizing: border-box; /* Prevents overflowing */
     margin-top: 80px;
