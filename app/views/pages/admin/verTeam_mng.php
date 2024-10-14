@@ -22,7 +22,7 @@
                     <span class="material-symbols-outlined icon">search</span>
                     <input type="text" class="search" placeholder="Search for User Names...">
                 </div>
-                <button class="add-btn">
+                <button class="add-btn" data-path="/uniquest/admin/add_member">
                     <span class="material-symbols-outlined">person_add</span>
                     <span class="add-btn-text">Add Member</span>
                 </button>
@@ -164,5 +164,6 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSearchNames.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
