@@ -1,4 +1,3 @@
-/* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -6,170 +5,156 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: "Outfit", sans-serif;
     background-color: #f4f4f4;
-    color: #fff;
+    color: #333;
     width: 100vw;
     padding: 0;
+    overflow-x: hidden;
 }
 
+a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+/* Button Styles */
 .cta-button {
     background-color: #299b63;
     color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 24px;
+    border-radius: 25px;
     text-decoration: none;
     font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.cta-button i {
+    vertical-align: middle;
+    margin-right: 5px;
 }
 
 .cta-button:hover {
     background-color: #137d4a;
+    transform: translateY(-3px);
 }
 
 /* Hero Section */
 .hero {
     display: flex;
-    justify-content: space-between;
-    padding: 40px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 80px 20px;
     background-image: linear-gradient(rgba(3, 46, 18, 0.8), rgba(3, 46, 18, 0.8)), url('../../../images/home-bg.png');
     background-size: cover;
     background-position: center;
-    color: #fff;
     height: 60vh;
 }
 
-.hero-text {
-    max-width: 50%;
-    margin-top: 5vh;
-}
-
 .hero-text h1 {
-    font-size: 48px;
+    font-size: 56px;
     margin-bottom: 20px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
 }
 
 .hero-text p {
-    font-size: 18px;
-    margin-bottom: 20px;
+    font-size: 22px;
+    margin-bottom: 30px;
+    color: #eaeaea;
 }
 
-.hero-image img {
-    max-width: 100%;
-    height: auto;
-}
-
-.content{
-    justify-content: space-between;
+.content {
     padding: 40px;
-    margin-top: 1%;
-    background-size: cover;
-    background-position: center;
-    color: #000;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Services Section */
 .services {
-    padding: 20px;
+    padding: 40px;
     text-align: center;
-    color: #299b63;
 }
 
 .services h2 {
-    font-size: 36px;
+    font-size: 40px;
     margin-bottom: 20px;
+    color: #299b63;
 }
 
 .service-cards {
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: 40px;
+    flex-wrap: wrap;
     margin-top: 40px;
-    text-align: center;
 }
 
 .service-card {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 300px;
-    color: #666;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 320px;
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .service-card h3 {
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 10px;
+    color: #299b63;
 }
 
 .service-card p {
     font-size: 16px;
+    color: #555;
 }
 
-.service-card a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* Students Section */
-.students {
+/* Students and Service Providers Section */
+.students, .service-providers {
     padding: 40px;
-    text-align: left; /* Align text and bullets to the left */
-    color: #2d2d2d;
+    color: #333;
 }
 
-.students h2 {
+.students h2, .service-providers h2 {
     font-size: 36px;
     margin-bottom: 20px;
+    color: #299b63;
 }
 
-.students p {
+.students h2 i, .service-providers h2 i {
+    vertical-align: middle; 
+    margin-left: 10px; 
+    font-size: 36px; 
+}
+
+.students p, .service-providers p {
     font-size: 18px;
     margin-bottom: 20px;
 }
 
-.students ul {
-    list-style-type: disc; /* Bullet points */
-    padding-left: 20px; /* Indent the bullets from the left */
+.service-card ul {
+    list-style-type: disc;
+    padding-left: 20px;
     margin-bottom: 20px;
+    font-size: 16px;
 }
 
-.students ul li {
-    font-size: 16px;
+.service-card ul li {
     margin-bottom: 10px;
 }
 
-/* Service Providers Section */
-.service-providers {
-    padding: 40px;
-    text-align: left; /* Align text and bullets to the left */
-    color: #2d2d2d;
-}
-
-.service-providers h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-}
-
-.service-providers p {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.service-providers ul {
-    list-style-type: disc; /* Bullet points */
-    padding-left: 20px; /* Indent the bullets from the left */
-    margin-bottom: 20px;
-}
-
-.service-providers ul li {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-/* Footer */
-.footer {
-    background-color: #2d2d2d;
-    padding: 20px;
-    text-align: center;
-    color: #fff;
+.large-icon {
+    font-size: 40px !important;
 }
