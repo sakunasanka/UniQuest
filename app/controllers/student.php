@@ -11,9 +11,25 @@ class Student extends Controller
         echo 'student/index';
     }
 
-    public function students_mng()
+    public function contact_sp()
+    {
+        $this->view('pages/student/contact_sp');
+    }
+
+    public function contact_admin()
+    {
+        $this->view('pages/student/contact_admin');
+    }
+    
+     public function students_mng()
     {
         $this->view('pages/student/students_mng');
     }
-
+  
+    public function login()
+    {
+        $this->view('pages/student/login');
+    }
+  
 }
+
