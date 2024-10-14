@@ -16,7 +16,7 @@
                 <img src="<?php echo URLROOT; ?>/images/UniQuest3.png" alt="UniQuest Logo">
             </div>
             <div class="nav-button">
-                <a href="#" class="get-started">Get Started</a>
+                <a href="/uniquest/student/login" class="get-started">Get Started</a>
             </div>
         </div>
     </nav>
