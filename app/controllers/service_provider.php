@@ -31,4 +31,9 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/login');
     }
 
+    public function analytics()
+    {
+        $this->view('pages/service_provider/ser_analytics');
+    }
+
 }
