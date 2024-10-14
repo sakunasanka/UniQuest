@@ -26,6 +26,11 @@ class Student extends Controller
         $this->view('pages/student/students_mng');
     }
   
+    public function noti_alert()
+    {
+        $this->view('pages/student/noti_alert');
+    }
+  
     public function login()
     {
         $this->view('pages/student/login');
