@@ -11,10 +11,9 @@ body {
     font-family: 'Outfit', sans-serif;
     background: #ffffff;
     min-height: 100vh;
-    display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 0;
     overflow-y: auto; /* Allow page to scroll */
 }
 
@@ -27,7 +26,15 @@ body {
     overflow: hidden;
     height: 80vh; /* Remove fixed height */
     min-height: 800px; /* Allow the form to expand with scrolling */
-    max-height: 85vh;
+    max-height: 60vh;
+}
+
+.main-container-without-side {
+    margin: 0;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;   
+    align-items: center;       
 }
 
 .image-section {
