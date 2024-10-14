@@ -24,7 +24,7 @@
                     <button type="submit">Log in</button>
                 </form>
                 <div class="register-link">
-                    <span>Do not have an account?</span> <a href="#">Register now</a>
+                    <span>Do not have an account?</span> <a href="/uniquest/student/register">Register now</a>
                 </div>
             </div>
         </div>
