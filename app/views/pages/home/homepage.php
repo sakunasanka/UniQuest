@@ -8,9 +8,6 @@
             <p>Empowering students with part time jobs and internship opportunities.</p>
             <a href="#" class="cta-button">Read More</a>
         </div>
-        <div class="hero-image">
-           <!-- <img src="<?php echo URLROOT; ?>/images/home-bg.png" alt="background image"> -->
-        </div>
     </section>
 
     <!-- Services Section -->

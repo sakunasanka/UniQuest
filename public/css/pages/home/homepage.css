@@ -7,13 +7,14 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #d8d8d8;
+    background-color: #f4f4f4;
     color: #fff;
     width: 100vw;
+    padding: 0;
 }
 
 .cta-button {
-    background-color: #20a24e;
+    background-color: #299b63;
     color: #fff;
     padding: 10px 20px;
     border-radius: 5px;
@@ -22,7 +23,7 @@ body {
 }
 
 .cta-button:hover {
-    background-color: #16893e;
+    background-color: #137d4a;
 }
 
 /* Hero Section */
@@ -34,7 +35,7 @@ body {
     background-size: cover;
     background-position: center;
     color: #fff;
-    height: 45vh;
+    height: 60vh;
 }
 
 .hero-text {
@@ -61,7 +62,6 @@ body {
     justify-content: space-between;
     padding: 40px;
     margin-top: 1%;
-    background-image: url('../../../images/hero_tra.png');
     background-size: cover;
     background-position: center;
     color: #000;
@@ -71,7 +71,7 @@ body {
 .services {
     padding: 20px;
     text-align: center;
-    color: #16893e;
+    color: #299b63;
 }
 
 .services h2 {
@@ -88,11 +88,11 @@ body {
 }
 
 .service-card {
-    background-color: #20a24e;
+    background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     max-width: 300px;
-    color: #fff;
+    color: #666;
 }
 
 .service-card h3 {
