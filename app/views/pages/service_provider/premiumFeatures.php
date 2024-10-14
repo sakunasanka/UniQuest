@@ -1,15 +1,7 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/ser_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/premiumFeatures.css">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Plan Upgrade</title>
-    <link rel="stylesheet" href="../../assets/css/components/premiumFeatures.css">
-</head>
-<body>
+<?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
     <div class="content-area">
         <h1>Upgrade to a Premium Plan</h1>
         <p>Take your job posting experience to the next level with our premium plans.</p>
@@ -45,7 +37,7 @@
 
             <div class="plan-card">
                 <h2>Enterprise</h2>
-                <p class="plan-subtitle">For large and established businesses</p>
+                <p class="plan-subtitle">For large businesses</p>
                 <hr class="option-bar">  
                 <ul>
                     <li>✓ Unlimited job listings</li>
@@ -53,10 +45,10 @@
                     <li>✓ Generate Job Report</li>
                 </ul>
                 <hr class="option-bar">
-                <div class="plan-price">LKR 5000 <span>per month</span></div>
+                <div class="plan-price">LKR 5000 <span> per month</span></div>
                 <button class="upgrade-btn">Upgrade to Enterprise</button>
             </div>
         </div>
     </div>
-</body>
-</html>
+
+<?php require APPROOT . '/views/components/footer.php'; ?>    
