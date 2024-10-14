@@ -60,5 +60,10 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/rejected_applications');
     }
+  
+    public function premium()
+    {
+        $this->view('pages/service_provider/premiumFeatures');
+    }
 
 }

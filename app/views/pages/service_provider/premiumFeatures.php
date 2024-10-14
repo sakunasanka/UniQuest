@@ -1,0 +1,62 @@
+<?php require APPROOT . '/views/components/header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/premiumFeatures.css">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Plan Upgrade</title>
+    <link rel="stylesheet" href="../../assets/css/components/premiumFeatures.css">
+</head>
+<body>
+    <div class="content-area">
+        <h1>Upgrade to a Premium Plan</h1>
+        <p>Take your job posting experience to the next level with our premium plans.</p>
+        
+        <div class="plan-cards">
+            <div class="plan-card">
+                <h2>Starter</h2>
+                <p class="plan-subtitle">Perfect for small businesses</p>
+                <hr class="option-bar">  
+                <ul>
+                    <li>✓ Post up to 2 job listings</li>
+                    <li>✓ 20 candidate applications</li>
+                    <li>✓ Generate Job Report</li>
+                </ul>
+                <hr class="option-bar">  
+                <div class="plan-price">Free</div>
+                <button class="current-plan-btn">Current Plan</button>
+            </div>
+
+            <div class="plan-card">
+                <h2>Professional</h2>
+                <p class="plan-subtitle">For growing businesses</p>
+                <hr class="option-bar">  
+                <ul>
+                    <li>✓ Post up to 20 job listings</li>
+                    <li>✓ 50 candidate applications</li>
+                    <li>✓ Generate Job Report</li>
+                </ul>
+                <hr class="option-bar">
+                <div class="plan-price">LKR 3000 <span>per month</span></div>
+                <button class="upgrade-btn">Upgrade to Professional</button>
+            </div>
+
+            <div class="plan-card">
+                <h2>Enterprise</h2>
+                <p class="plan-subtitle">For large and established businesses</p>
+                <hr class="option-bar">  
+                <ul>
+                    <li>✓ Unlimited job listings</li>
+                    <li>✓ Unlimited candidate applications</li>
+                    <li>✓ Generate Job Report</li>
+                </ul>
+                <hr class="option-bar">
+                <div class="plan-price">LKR 5000 <span>per month</span></div>
+                <button class="upgrade-btn">Upgrade to Enterprise</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
