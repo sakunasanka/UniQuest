@@ -36,4 +36,14 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/login');
     }
 
+    public function ongoing_jobs()
+    {
+        $this->view('pages/service_provider/ongoing_jobs');
+    }
+
+    public function offered_jobs()
+    {
+        $this->view('pages/service_provider/offered_jobs');
+    }
+
 }
