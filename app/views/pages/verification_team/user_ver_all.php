@@ -1,17 +1,18 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
 
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/admin/job_complaint">Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/admin/company_complaint">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/verification_team/user_ver_all">All</button>
+            <button class="tab" data-path="/uniquest/verification_team/user_ver_pending">Pending</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/verification_team/user_ver_not">Not Approved</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -20,143 +21,133 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Company Email</th>
-                        <th>Complaint</th>
-                        <th>Student Name</th>
-                        <th>Complained Date</th>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Account Type</th>
+                        <th>Requested Date</th>
                         <th>Status</th>
                         <th>View</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Job 1</td>
+                        <td>User 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 1</td>
-                        <td>Student 1</td>
+                        <td>Student</td>
                         <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
+                        <td><span class="status active">Approved</span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
+                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
                                 preview
                             </span>
                         </td>
                     </tr>
+
                     <tr>
-                        <td>Intern 1</td>
+                        <td>User 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>Company</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status inactive">Not Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Company</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status inactive">Not Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                preview
+                                account_box
                             </span>
                         </td>
                     </tr>
                     <tr>
-                        <td>job 2</td>
+                        <td>User 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>Student</td>
                         <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
+                        <td><span class="status inactive">Not Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                preview
+                                account_box
                             </span>
                         </td>
                     </tr>
                     <tr>
-                        <td>Intern 1</td>
+                        <td>User 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>Company</td>
                         <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
+                        <td><span class="status active">Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                preview
+                                account_box
                             </span>
                         </td>
                     </tr>
                     <tr>
-                        <td>job 2</td>
+                        <td>User 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Job 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>Student</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                preview
+                                account_box
                             </span>
                         </td>
                     </tr>
                     <tr>
-                        <td>job 2</td>
+                        <td>User 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>Company</td>
                         <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
+                        <td><span class="status active">Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                preview
+                                account_box
                             </span>
                         </td>
                     </tr>
                     <tr>
-                        <td>Intern 1</td>
+                        <td>User 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>Student</td>
                         <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
+                        <td><span class="status active">Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>job 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>job 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
+                                account_box
                             </span>
                         </td>
                     </tr>
@@ -173,6 +164,11 @@
     </main>
 </div>
 
+<!-- Footer -->
+
+
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
