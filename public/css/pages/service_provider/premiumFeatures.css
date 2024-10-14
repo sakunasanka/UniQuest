@@ -24,15 +24,18 @@ p {
     display: flex;
     justify-content: center;
     gap: 40px;
+    margin-top: 5%;
 }
 
 .plan-card {
     background-color: #F1F1F1;
     border-radius: 8px;
     padding: 20px;
-    width: 270px;
+    width: 300px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: left;
+    display: flex; /* Flexbox for vertical alignment */
+    flex-direction: column; /* Align items vertically */
 }
 
 .plan-card h2 {
@@ -60,12 +63,16 @@ p {
 
 .plan-price {
     font-size: 1.5em;
-    margin-bottom: 20px;
+    margin: 20px 0; 
+    height: 40px; 
+    display: flex; 
+    align-items: center; 
 }
 
 .plan-price span {
     font-size: 0.8em;
     color: #888;
+    margin-left: 5px;
 }
 
 .current-plan-btn, .upgrade-btn {
@@ -75,20 +82,23 @@ p {
     border-radius: 5px;
     font-size: 1em;
     border: none;
+    margin-top: auto; 
 }
 
-.upgrade-btn{
+.upgrade-btn {
     cursor: pointer;
 }
 
 .current-plan-btn {
     background-color: #2D8886;
     color: #fff;
+    height: 45px; 
 }
 
 .upgrade-btn {
     background-color: #000;
     color: #fff;
+    height: 45px; 
 }
 
 .upgrade-btn:hover {
