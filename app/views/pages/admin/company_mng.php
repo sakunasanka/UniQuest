@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/ser_header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
 
@@ -321,9 +321,6 @@
         </div>
     </main>
 </div>
-
-<!-- Footer -->
-
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
