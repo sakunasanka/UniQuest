@@ -30,6 +30,10 @@ class Student extends Controller
     {
         $this->view('pages/student/login');
     }
+    public function rate_review_company()
+    {
+        $this->view('pages/student/rate_review_company');
+    }
   
 }
 
