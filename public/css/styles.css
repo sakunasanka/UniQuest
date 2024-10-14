@@ -23,3 +23,10 @@
 .main-container {
     min-height: calc(100vh - 150px) !important; /* Ensure content area takes the available vertical space */
 }
+
+.main-container-without-side {
+    min-height: calc(100vh - 150px) !important;
+    padding: 40px !important;
+    margin-top: 80px !important;
+    box-sizing: border-box;
+}
