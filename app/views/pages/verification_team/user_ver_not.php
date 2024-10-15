@@ -16,17 +16,20 @@
         </div>
         <div class="table-block">
             <div class="content-header">
-                <span class="total-count">Total: 5</span>
+                <div class="input-container">
+                    <span class="material-symbols-outlined icon">search</span>
+                    <input type="text" class="search" placeholder="Search for User Names...">
+                </div>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>User Name</th>
-                        <th>Email</th>
-                        <th>Account Type</th>
-                        <th>Requested Date</th>
-                        <th>Status</th>
-                        <th>View</th>
+                        <th onclick="sortTable(0)">User Name</th>
+                        <th onclick="sortTable(1)">Email</th>
+                        <th onclick="sortTable(2)">Account Type</th>
+                        <th onclick="sortTable(3)">Requested Date</th>
+                        <th onclick="sortTable(4)">Status</th>
+                        <th class="no-sort">View</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -108,6 +111,7 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSearchNames.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
