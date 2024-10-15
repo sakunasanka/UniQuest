@@ -5,36 +5,38 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
     <!-- Content Area -->
      <div class="content-area">
      <div class="complaint-container">
-        <div class="complaint-form-container">
-            <h2>Report an Issue</h2>
-            <p>Let us know about any problem with Providers</p>
+    <!-- Complaint Form Section -->
+    <div class="complaint-form-container">
+        <h2>Report an Issue</h2>
+        <p>Let us know about any problem with Providers</p>
+        
+        <!-- Form -->
+        <form action="<?php echo URLROOT; ?>/submit_report" method="POST">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company" placeholder="Enter Company name" required>
+            
+            <label for="job_posting">Job Posting</label>
+            <input type="text" id="job_posting" name="job_posting" placeholder="Enter job posting details" required>
+            
+            <label for="issue">Issue</label>
+            <textarea id="issue" name="issue" rows="5" placeholder="Describe the issue" required></textarea>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="complaint-submit-btn">Submit Report</button>
+        </form>
+    </div>
 
-            <form action="submit_complaint.php" method="post">
-                <label for="company-name">Company</label>
-                <input type="text" id="company-name" name="company" placeholder="Enter Company name" required>
-
-                <label for="job-posting">Job Posting</label>
-                <input type="text" id="job-posting" name="job_posting" placeholder="Enter job posting details" required>
-
-                <label for="issue-description">Issue</label>
-                <textarea id="issue-description" name="issue" rows="4" placeholder="Describe the issue" required></textarea>
-
-                <button type="submit" class="complaint-submit-btn">Submit Report</button>
-            </form>
-        </div>
-
-        <div class="complaint-image-container">
-            <img src="report_icon.png" alt="Report Icon">
-        </div>
+    <!-- Image Section -->
+    <div class="complaint-image-container">
+        <img src="<?php echo URLROOT; ?>/public/images/complain.png" alt="Report Issue Image">
     </div>
 </div>
-</div>
 
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
