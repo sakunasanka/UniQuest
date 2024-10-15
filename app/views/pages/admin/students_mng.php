@@ -1,8 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
-<!-- header -->
-
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -17,10 +14,7 @@
         </div>
         <div class="table-block">
             <div class="content-header">
-                <div class="input-container">
-                    <span class="material-symbols-outlined icon">search</span>
-                    <input type="text" class="search" placeholder="Search for User Names...">
-                </div>
+                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
                 <button class="add-btn">
                     <span class="material-symbols-outlined">person_add</span>
                     <span class="add-btn-text">Add Student</span>
@@ -292,20 +286,12 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="pagination">
-                <button class="page-btn prev">&laquo;</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn next">&raquo;</button>
-            </div>
+            <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSearchNames.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
