@@ -140,7 +140,7 @@ table td {
 
 .input-container {
     position: relative;
-    flex-grow: 1;
+    flex-grow: 1; 
 }
 
 .icon {

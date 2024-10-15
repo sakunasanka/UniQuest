@@ -1,33 +1,43 @@
+<aside class="sidebar">
+    <nav class="nav-menu">
+        <!-- Dashboard -->
+        <button class="nav-btn" data-path="/uniquest/service_provider/dashboard">
+            <span class="material-symbols-outlined"> work </span>
+            Browse Opportunities
+        </button>
 
-<body>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/studentSidePanel.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <div class="sidebar">
-        <button class="menu-btn"><i class="fas fa-briefcase"></i> Browse Opportunities</button>
-        <div class="dropdown">
-            <button class="menu-btn dropdown-btn"><i class="fas fa-file-alt"></i> My Applications</button>
-            <div class="dropdown-content">
-                <button class="dropdown-item"><i class="fas fa-list"></i> All</button>
-                <button class="dropdown-item"><i class="fas fa-check"></i> Accepted</button>
-                <button class="dropdown-item"><i class="fas fa-times"></i> Rejected</button>
+        <!-- Applications with Dropdown -->
+        <div class="nav-dropdown">
+            <button class="nav-btn dropdown-toggle">
+                <span class="material-symbols-outlined"> assignment </span>
+                My Applications
+                <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
+            </button>
+            <div class="dropdown-menu">
+            <button class="nav-btn" data-path="/uniquest/student/all_app">All</button>
+                <button class="nav-btn" data-path="/uniquest/student/accepted_app">Accepted</button>
+                <button class="nav-btn" data-path="/uniquest/student/rejected_app">Rejected</button>
             </div>
         </div>
-        <button class="menu-btn"><i class="fas fa-bookmark"></i> Saved Opportunities</button>
-        <button class="menu-btn"><i class="fas fa-calendar-alt"></i> View Calendar</button>
-        <button class="menu-btn"><i class="fas fa-chart-line"></i> Trending Companies</button>
-        <button class="menu-btn"><i class="fas fa-exclamation-circle"></i> Make a complaint</button>
-        <button class="menu-btn"><i class="fas fa-life-ring"></i> Help and Support</button>
-    </div>
 
-</body>
-</html>
+        <!-- Saved -->
+        <button class="nav-btn" data-path="/uniquest/service_provider/analytics">
+            <span class="material-symbols-outlined"> bookmark </span>
+            Saved Opportunities
+        </button>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $(".dropdown-btn").click(function(){
-                $(this).next(".dropdown-content").slideToggle("fast");
-            });
-        });
-     </script>
+        <!-- Trending companies -->
+        <button class="nav-btn" data-path="/uniquest/service_provider/reviews">
+            <span class="material-symbols-outlined"> trending_up </span>
+            Trending Companies
+        </button>
+
+        <!-- Help and Support -->
+        <button class="nav-btn" data-path="/uniquest/service_provider/support">
+            <span class="material-symbols-outlined"> help_outline </span>
+            Help and Support
+        </button>
+    </nav>
+</aside>
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/serviceSidePanel.js"></script>
