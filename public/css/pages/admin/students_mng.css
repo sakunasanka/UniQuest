@@ -142,3 +142,23 @@ table td {
 .hidden {
     display: none;
 }
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header-text h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.header-text h3 {
+    font-size: 22px;
+    color: #999999;
+    font-weight: 500;
+}
