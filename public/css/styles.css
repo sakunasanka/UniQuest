@@ -3,13 +3,16 @@
 /* components */
 @import url("components/adminSidePanel.css");
 @import url("components/adminTopPanel.css");
+@import url("components/studentSidePanel.css");
 @import url("components/pagination.css");
+@import url("components/tableSearchBar.css");
 
 /* pages */
-
+@import url("pages/admin/students_mng.css");
 @import url("pages/student/contact_sp.css");
 @import url("pages/student/contact_admin.css");
 @import url("pages/service_provider/contact_admin.css");
+@import url("pages/service_provider/jobs_table.css");
 
 .content-area {
     margin-left: 250px; /* Make room for the sidebar */
@@ -22,4 +25,11 @@
 
 .main-container {
     min-height: calc(100vh - 150px) !important; /* Ensure content area takes the available vertical space */
+}
+
+.main-container-without-side {
+    min-height: calc(100vh - 150px) !important;
+    padding: 40px !important;
+    margin-top: 80px !important;
+    box-sizing: border-box;
 }
