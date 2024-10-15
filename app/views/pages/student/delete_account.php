@@ -14,7 +14,6 @@
         <img src="<?php echo URLROOT; ?>/public/images/user.png" alt="Profile Picture" class="profile-pic">
         <ul>
             <li><a href="profile.php">Profile</a></li>
-            <li><a href="deactivate_account.php">Deactivate Account</a></li>
             <li><a href="signout.php">Sign out</a></li>
         </ul>
     </div>
@@ -37,6 +36,6 @@
             </div>
         </form>
     </div>
-
+    </div>
 </div>
 <?php require APPROOT . '/views/components/footer.php'; ?>

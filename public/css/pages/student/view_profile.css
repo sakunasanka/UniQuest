@@ -5,13 +5,18 @@
     font-family: Arial, sans-serif;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 0;
+}
+
 /* Wrapper for the layout */
 .page-wrapper {
     display: flex;
     align-items: flex-start;
-    padding: 20px;
+    padding: 0 20px;
     gap: 40px; /* Space between sidebar and main content */
-    min-height: 100vh;
     background-color: #f5f5f5;
 }
 
@@ -19,9 +24,7 @@
 .sidebr {
     width: 100vh;
     height:75vh;
-    
     padding: 20px;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,7 +58,6 @@
 
 .profile-container {
     width: 200vh;
-    height:75vh;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
@@ -63,7 +65,6 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 
 h3 {
     font-size: 18px;
@@ -78,41 +79,31 @@ h3 {
     margin-bottom: 20px;
 }
 
+/* Info row styling with flexbox for alignment */
 .info-row {
-    margin-bottom: 10px;
     display: flex;
-    align-items: center; /* Center items vertically */
-    padding: 5px 0;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.label-container {
-    flex: 1; /* Allow the label to take available space */
-    display: flex; /* Use flexbox for the label container */
-    justify-content: space-between; /* Distribute space between label and colon */
-}
 label {
-    
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin: 0 10px; /* Add space between label and colon */
+    width: 150px; 
 }
 
 .colon {
-    display: flex;
-    justify-content: center; /* Center the colon */
-    width: 20px; /* Fixed width for colon to maintain space */
+    width: 20px; 
+    text-align: center; 
 }
 
 .kk {
-    padding-left:20px;
-    font-size: 14px;
+    font-size: 16px;
     color: #555;
-    text-align: center;
-    margin-right: 0 10px;
-    /* Allow span to take remaining space */
+    text-align: left;
+    flex-grow: 1; 
 }
-
 
 .edit-btn {
     background-color: #FFA500;
@@ -123,13 +114,14 @@ label {
     cursor: pointer;
     font-size: 14px;
     display: block;
-    margin: 20px auto 0; /* Center the button */
+    margin: 20px auto 0; 
     transition: background-color 0.3s;
 }
 
 .edit-btn:hover {
     background-color: #FF8C00;
 }
+
 .changep_password-form-container {
     max-width: 400px;
     margin: 0 auto;
