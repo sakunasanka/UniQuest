@@ -5,12 +5,14 @@
 @import url("components/adminTopPanel.css");
 @import url("components/studentSidePanel.css");
 @import url("components/pagination.css");
+@import url("components/tableSearchBar.css");
 
 /* pages */
 
 @import url("pages/student/contact_sp.css");
 @import url("pages/student/contact_admin.css");
 @import url("pages/service_provider/contact_admin.css");
+@import url("pages/service_provider/jobs_table.css");
 
 .content-area {
     margin-left: 250px; /* Make room for the sidebar */
