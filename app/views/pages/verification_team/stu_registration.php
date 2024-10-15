@@ -7,61 +7,55 @@
     <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?> 
 
-    <div class="vreg_form-container">
-        <h2 class="vreg_form-header">Student Registration</h2>
-        
-        <!-- Status Dropdown -->
-        <div class="vreg_status-dropdown">
-            <select name="status" class="vreg_input">
-                <option value="to_verify">To Verify</option>
-            </select>
+    <!-- Sidebar and Content Layout -->
+    <div class="content-area">
+        <!-- Sidebar (Optional) -->
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+
+        <!-- Main Container -->
+        <div class="container">
+            <h1>Student Registration</h1>
+
+            <!-- Dropdown Status Button -->
+            <div class="status-dropdown">
+                <button class="status-btn">To Verify ▼</button>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="registration-form">
+                <div class="input-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" value="Hashan Madushanka" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="nic">NIC</label>
+                    <input type="text" id="nic" value="200233445566" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="hashan@edu.cmb.ac.lk" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="mobile">Mobile No:</label>
+                    <input type="text" id="mobile" value="0777123456" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="university">University</label>
+                    <input type="text" id="university" value="Colombo University" required>
+                </div>
+
+                <!-- Buttons -->
+                <div class="action-buttons">
+                    <button class="accept-btn">Accept</button>
+                    <button class="reject-btn">Reject</button>
+                </div>
+            </div>
         </div>
-
-        <!-- Form Fields -->
-        <form action="submit_registration.php" method="POST">
-            <!-- Name Field -->
-            <div class="vreg_form-group">
-                <label for="name" class="vreg_label">Name</label>
-                <input type="text" id="name" name="name" class="vreg_input" value="kavishka senarathna" required>
-            </div>
-
-            <!-- NIC Field -->
-            <div class="vreg_form-group vreg_nic-container">
-                <label for="nic" class="vreg_label">NIC</label>
-                <input type="text" id="nic1" name="nic1" class="vreg_input" value="nic.png" required>
-                <!-- <input type="text" id="nic2" name="nic2" class="vreg_input"  required> -->
-            </div>
-
-            <!-- Email Field -->
-            <div class="vreg_form-group">
-                <label for="email" class="vreg_label">Email</label>
-                <input type="email" id="email" name="email" class="vreg_input"  value="kavishkasenarathna@student.lk" required>
-            </div>
-
-            <!-- Mobile Number Field -->
-            <div class="vreg_form-group">
-                <label for="mobile" class="vreg_label">Mobile No:</label>
-                <input type="text" id="mobile" name="mobile" class="vreg_input"  value="0771234567" required>
-            </div>
-
-            <!-- University Field -->
-            <div class="vreg_form-group">
-                <label for="university" class="vreg_label">University</label>
-                <input type="text" id="university" name="university" class="vreg_input" value="University of Colombo" required>
-            </div>
-
-            <!-- Buttons for Accept/Reject -->
-            <div class="vreg_button-container">
-                <button type="submit" name="action" value="accept" class="vreg_button vreg_accept">Accept</button>
-                <button type="submit" name="action" value="reject" class="vreg_button vreg_reject">Reject</button>
-            </div>
-        </form>
     </div>
+
+    <?php require APPROOT . '/views/components/footer.php'; ?>
 </div>
-<footer class="footer">
-
-</footer>
-
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-
-<?php require APPROOT . '/views/components/footer.php'; ?>

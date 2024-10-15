@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+
+}
+
+.content-area {
+    display: flex;
+    flex-direction: row;
+}
+
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 1000vh;
+    height:80vh;
+    margin-top:30px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.status-dropdown {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.status-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.registration-form {
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black; /* Changed input text color to black */
+    border: 1px solid #ddd;
+}
+
+input:focus {
+    border-color: #4a7aff;
+    outline: none;
+}
+
+.more-button {
+    text-align: right;
+}
+
+.more-btn {
+    background-color: #4a7aff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.confirmation-dialog {
+    background-color: #d4d4d4;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+.confirmation-dialog p {
+    font-size: 14px;
+    color: #555;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.accept-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.reject-btn {
+    background-color: #28a745;
+  
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.accept-btn:hover, .reject-btn:hover {
+    opacity: 0.9;
+}

@@ -1,97 +1,110 @@
-/* General body styling */
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-/* Main form container */
-/* .vreg_form-container {
-    flex: 1 1 48%;
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-    width: 1200px;
-    height:600px;
-    margin-top: 100px;
-    margin-left: 200px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-} */
+.content-area {
+    display: flex;
+}
 
-/* Form header styling */
-.vreg_form-header {
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 500px; /* Adjust to match the size of the screenshot */
+    margin-top: 30px;
+    width:100vh;
+    margin-left:0px;
+}
+
+h1 {
     font-size: 24px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-/* Status dropdown styling */
-.vreg_status-dropdown {
-    display: inline-block;
+.status-dropdown {
     margin-bottom: 20px;
-}
-
-/* Form group styling */
-.vreg_form-group {
-    margin-bottom: 15px;
     text-align: left;
 }
 
-/* Label styling */
-.vreg_label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-/* Input and select styling */
-.vreg_input {
-    width: 100%;
-    background-color:rgb(247, 248, 255);
-    padding: 8px;
-    border: 1px solid #757272;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-
-/* NIC styling (inline fields) */
-.vreg_nic-container {
-    display: flex;
-   
-}
-
-.vreg_nic-container .vreg_input {
-    width:80%;
-}
-
-/* Button styling */
-.vreg_button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
+.status-btn {
+    background-color: #28a745;
+    color: white;
     border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-.vreg_accept {
+.registration-form {
+    background-color: #d1cece;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+}
+
+input:focus {
+    border-color: #4a7aff;
+    outline: none;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.accept-btn, .reject-btn {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.accept-btn {
     background-color: #28a745;
     color: white;
 }
 
-.vreg_reject {
+.reject-btn {
     background-color: #dc3545;
     color: white;
 }
 
-/* Button container */
-.vreg_button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+.accept-btn:hover, .reject-btn:hover {
+    opacity: 0.9;
 }
