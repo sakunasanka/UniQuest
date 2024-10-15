@@ -54,7 +54,7 @@ body {
     width: 100%;
     background-color:rgb(247, 248, 255);
     padding: 8px;
-    border: 1px solid #c7bbbb;
+    border: 1px solid #757272;
     border-radius: 5px;
     box-sizing: border-box;
 }
@@ -63,11 +63,11 @@ body {
 /* NIC styling (inline fields) */
 .vreg_nic-container {
     display: flex;
-    justify-content: space-between;
+   
 }
 
 .vreg_nic-container .vreg_input {
-    width: 48%;
+    width:80%;
 }
 
 /* Button styling */

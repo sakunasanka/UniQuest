@@ -17,6 +17,17 @@ class verification_team extends Controller
         $this->view('pages/verification_team/stu_registration');
     }
 
-   
+    public function jp_registration()
+    {
+        $this->view('pages/verification_team/jp_registration');
+    }
+    public function post()
+    {
+        $this->view('pages/verification_team/post');
+    }
+    public function checking_details()
+    {
+        $this->view('pages/verification_team/checking_details');
+    }
 
 }
