@@ -30,5 +30,5 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/login');
     }
-
+   
 }
