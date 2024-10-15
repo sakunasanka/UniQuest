@@ -129,7 +129,7 @@
                 </div>
                 <div class="form-row">
                 <div class="input-container"></div>
-                    <button class="add-btn" type="submit">
+                    <button class="save-btn" type="submit">
                         <span class="material-symbols-outlined">save</span>
                         <span class="add-btn-text">Save</span>
                     </button>
