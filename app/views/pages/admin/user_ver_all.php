@@ -49,7 +49,7 @@
                         <td><span class="status inactive">Not Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -61,7 +61,7 @@
                         <td><span class="status active">Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -73,7 +73,7 @@
                         <td><span class="status inactive">Not Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -85,7 +85,7 @@
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -97,7 +97,7 @@
                         <td><span class="status inactive">Not Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -109,7 +109,7 @@
                         <td><span class="status active">Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -121,7 +121,7 @@
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -133,7 +133,7 @@
                         <td><span class="status active">Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
@@ -145,7 +145,7 @@
                         <td><span class="status active">Approved</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
