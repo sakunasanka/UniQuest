@@ -8,35 +8,34 @@
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
     <!-- Content Area -->
-     <div class="content-area">
-     <div class="complaint-container">
-    <!-- Complaint Form Section -->
-    <div class="complaint-form-container">
-        <h2>Report an Issue</h2>
-        <p>Let us know about any problem with Providers</p>
+    <div class="content-area">
+        <div class="complaint-container">
+        <!-- Complaint Form Section -->
+            <div class="complaint-form-container">
+                <h2>Report an Issue</h2>
+                <p>Let us know about any problem with Providers</p>
         
-        <!-- Form -->
-        <form action="<?php echo URLROOT; ?>/submit_report" method="POST">
-            <label for="company">Company</label>
-            <input type="text" id="company" name="company" placeholder="Enter Company name" required>
+                <!-- Form -->
+                <form action="<?php echo URLROOT; ?>/submit_report" method="POST">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" placeholder="Enter Company name" required>
             
-            <label for="job_posting">Job Posting</label>
-            <input type="text" id="job_posting" name="job_posting" placeholder="Enter job posting details" required>
+                    <label for="job_posting">Job Posting</label>
+                    <input type="text" id="job_posting" name="job_posting" placeholder="Enter job posting details" required>
             
-            <label for="issue">Issue</label>
-            <textarea id="issue" name="issue" rows="5" placeholder="Describe the issue" required></textarea>
+                    <label for="issue">Issue</label>
+                    <textarea id="issue" name="issue" rows="5" placeholder="Describe the issue" required></textarea>
             
-            <!-- Submit Button -->
-            <button type="submit" class="complaint-submit-btn">Submit Report</button>
-        </form>
-    </div>
+                    <!-- Submit Button -->
+                    <button type="submit" class="complaint-submit-btn">Submit Report</button>
+                </form>
+            </div>
 
-    <!-- Image Section -->
-    <div class="complaint-image-container">
-        <img src="<?php echo URLROOT; ?>/public/images/complain.png" alt="Report Issue Image">
+        <!-- Image Section -->
+        <div class="complaint-image-container">
+            <img src="<?php echo URLROOT; ?>/public/images/complain.png" alt="Report Issue Image">
+        </div>
     </div>
-</div>
-
 </div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

@@ -3,10 +3,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4; 
-    display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
 }
 
 .complaint-container {
@@ -18,8 +16,10 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 1000px;
-    width: 100%;
     gap: 20px;
+    margin: 5% auto;
+    justify-content: center;
+    align-items: center;
 }
 
 .complaint-form-container {
