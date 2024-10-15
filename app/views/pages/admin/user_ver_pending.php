@@ -103,11 +103,6 @@
     </main>
 </div>
 
-<!-- Footer -->
-<footer class="footer">
-
-</footer>
-
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
