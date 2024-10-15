@@ -1,9 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/add_member.css">
-
-<!-- header -->
-
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -54,7 +50,7 @@
                     </div>
                     <div class="input-container">
                         <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password">
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Enter Confirm Password">
                     </div>
                 </div>
                 <div class="form-row">
