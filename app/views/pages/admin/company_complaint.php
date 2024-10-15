@@ -15,24 +15,27 @@
         </div>
         <div class="table-block">
             <div class="content-header">
-                <span class="total-count">Total: 10</span>
+                <div class="input-container">
+                    <span class="material-symbols-outlined icon">search</span>
+                    <input type="text" class="search" placeholder="Search for Titles...">
+                </div>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Company</th>
-                        <th>Company Email</th>
-                        <th>Complaint</th>
-                        <th>Student Name</th>
-                        <th>Complained Date</th>
-                        <th>Status</th>
-                        <th>View</th>
+                        <th onclick="sortTable(0)">Company</th>
+                        <th onclick="sortTable(1)">Company Email</th>
+                        <th onclick="sortTable(2)">Complaint</th>
+                        <th onclick="sortTable(3)">Student Name</th>
+                        <th onclick="sortTable(4)">Complained Date</th>
+                        <th onclick="sortTable(5)">Status</th>
+                        <th class="no-sort">View</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Company 1</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 1</td>
                         <td>Student 1</td>
                         <td>2024/05/16</td>
@@ -45,7 +48,7 @@
                     </tr>
                     <tr>
                         <td>Company 2</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -58,7 +61,7 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -71,7 +74,7 @@
                     </tr>
                     <tr>
                         <td>Company 2</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -84,7 +87,7 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -97,7 +100,7 @@
                     </tr>
                     <tr>
                         <td>Company 1</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -110,7 +113,7 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -123,7 +126,7 @@
                     </tr>
                     <tr>
                         <td>Company 2</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -136,7 +139,7 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -149,7 +152,7 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Complaint 2</td>
                         <td>Student 2</td>
                         <td>2024/05/16</td>
@@ -174,5 +177,8 @@
 </div>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSearchNames.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
