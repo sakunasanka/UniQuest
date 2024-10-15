@@ -1,102 +1,132 @@
-/* * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
 }
 
-.container {
+/* Wrapper for the layout */
+.page-wrapper {
     display: flex;
-    width: 800px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.sidebr {
-    width: 200px;
-    background-color: #f4f4f4;
+    align-items: flex-start;
     padding: 20px;
-    text-align: center;
+    gap: 40px; /* Space between sidebar and main content */
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+/* Sidebar styling */
+.sidebr {
+    width: 100vh;
+    height:75vh;
+    
+    padding: 20px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .profile-pic {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+    width: 100%;
+    border-radius: 8px;
     margin-bottom: 20px;
 }
 
-.sidebar ul {
+.sidebr ul {
     list-style: none;
+    width: 100%;
 }
 
-.sidebar ul li {
+.sidebr ul li {
     margin: 15px 0;
+    text-align: center;
 }
 
-.sidebar ul li a {
+.sidebr ul li a {
     text-decoration: none;
+    color: #0076cb;
+    font-size: 16px;
+}
+
+.sidebr ul li a:hover {
+    text-decoration: underline;
+}
+
+.profile-container {
+    width: 200vh;
+    height:75vh;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+h3 {
+    font-size: 18px;
     color: #333;
     font-weight: bold;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 5px;
 }
 
-.main-content {
-    padding: 40px;
-    flex-grow: 1;
-}
-
-.main-content h2 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.warning {
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
-    padding: 15px;
+.info-section {
     margin-bottom: 20px;
 }
 
-.warning p {
-    color: #856404;
-}
-
-label {
-    display: block;
-    margin-bottom: 20px;
-}
-
-input[type="checkbox"] {
-    margin-right: 10px;
-}
-
-.buttons {
+.info-row {
+    margin-bottom: 10px;
     display: flex;
-    gap: 10px;
+    align-items: center; /* Center items vertically */
+    padding: 5px 0;
 }
 
-.delete-btn {
-    background-color: #dc3545;
-    color: white;
+.label-container {
+    flex: 1; /* Allow the label to take available space */
+    display: flex; /* Use flexbox for the label container */
+    justify-content: space-between; /* Distribute space between label and colon */
+}
+label {
+    
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 10px; /* Add space between label and colon */
+}
+
+.colon {
+    display: flex;
+    justify-content: center; /* Center the colon */
+    width: 20px; /* Fixed width for colon to maintain space */
+}
+
+.kk {
+    padding-left:20px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    margin-right: 0 10px;
+    /* Allow span to take remaining space */
+}
+
+
+.edit-btn {
+    background-color: #FFA500;
+    color: #fff;
     border: none;
     padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
-    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    margin: 20px auto 0; /* Center the button */
+    transition: background-color 0.3s;
 }
 
-.cancel-btn {
-    background-color: #6c757d;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-} */
+.edit-btn:hover {
+    background-color: #FF8C00;
+}
