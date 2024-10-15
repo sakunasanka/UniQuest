@@ -15,7 +15,7 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <button class="add-btn">
+                <button class="add-btn" data-path="/uniquest/admin/add_member">
                     <span class="material-symbols-outlined">person_add</span>
                     <span class="add-btn-text">Add Member</span>
                 </button>
@@ -149,5 +149,6 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

@@ -26,6 +26,11 @@ class Admin extends Controller
         $this->view('pages/admin/verTeam_mng');
     }
 
+    public function add_member()
+    {
+        $this->view('pages/admin/add_member');
+    }
+
     public function job_complaint()
     {
         $this->view('pages/admin/job_complaint');
@@ -35,6 +40,7 @@ class Admin extends Controller
     {
         $this->view('pages/admin/company_complaint');
     }
+
     public function ptjobs_mng()
     {
         $this->view('pages/admin/ptjobs_mng');
