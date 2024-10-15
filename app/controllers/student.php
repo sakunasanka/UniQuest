@@ -25,15 +25,24 @@ class Student extends Controller
     {
         $this->view('pages/student/students_mng');
     }
+  
+    public function login()
+    {
+        $this->view('pages/student/login');
+    }
+    public function rate_review_company()
+    {
+        $this->view('pages/student/rate_review_company');
+    }
 
     public function register()
     {
         $this->view('pages/student/register');
     }
-  
-    public function login()
+
+    public function make_complain()
     {
-        $this->view('pages/student/login');
+        $this->view('pages/student/make_complain');
     }
   
 }
