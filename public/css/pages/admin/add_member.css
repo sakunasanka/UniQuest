@@ -136,7 +136,19 @@ form h3 {
     border-color: #32a852;
 }
 
-.add-btn {
-    margin-top: 20px;
+.save-btn {
+    background-color: #32a852;
     padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.save-btn:hover {
+    background-color: #038a27;
 }
