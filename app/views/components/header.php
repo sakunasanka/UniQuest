@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITENAME ?></title>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar1.css">
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/home_footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 <body>
@@ -16,7 +16,7 @@
                 <img src="<?php echo URLROOT; ?>/images/UniQuest3.png" alt="UniQuest Logo">
             </div>
             <div class="nav-button">
-                <a href="#" class="get-started">Get Started</a>
+                <a href="/uniquest/student/login" class="get-started">Get Started</a>
             </div>
         </div>
     </nav>

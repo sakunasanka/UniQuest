@@ -1,7 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
-
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -16,93 +14,89 @@
         </div>
         <div class="table-block">
             <div class="content-header">
-                <span class="total-count">Total: 5</span>
+                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Company Email</th>
-                        <th>Job Type</th>
-                        <th>Requested Date</th>
-                        <th>Status</th>
-                        <th>View</th>
+                        <th onclick="sortTable(0)">Title</th>
+                        <th onclick="sortTable(1)">Company Email</th>
+                        <th onclick="sortTable(2)">Job Type</th>
+                        <th onclick="sortTable(3)">Requested Date</th>
+                        <th onclick="sortTable(4)">Status</th>
+                        <th class="no-sort">View</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Part Time</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
                     <tr>
                         <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Internship</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
                     <tr>
                         <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Part Time</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
                     <tr>
                         <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Internship</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
                     <tr>
                         <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Part Time</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
-                                account_box
+                                preview
                             </span>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <!-- <div class="pagination">
-                <button class="page-btn prev">&laquo;</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn next">&raquo;</button>
-            </div> -->
+            <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>
 
+
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
