@@ -19,7 +19,7 @@ function getRoundedMaxValue(maxValue) {
         return maxValue + stepSize; 
     }
     else if (maxValue%10 == 0) {
-        return (Math.ceil(maxValue / 10) * 10) + stepSize; 
+        return (Math.ceil(maxValue / 10) * 10) + stepSize-1; 
     }
     else {
         return Math.ceil(maxValue / 10) * 10; 
@@ -131,10 +131,10 @@ var jobListingsChart = new Chart(jobListingsCtx, {
 var revenueCtx = document.getElementById('revenueChart').getContext('2d');
 var revenueData = [
     {
-        label: 'Revenue',
+        label: 'Applications',
         backgroundColor: 'rgba(45, 156, 128, 0.6)',
         borderColor: 'rgba(45, 156, 128, 0.8)',
-        data: [10000, 15000, 12000, 22000, 20000],
+        data: [5, 10, 4, 8],
         fill: false,
         tension: 0.4,
         pointBackgroundColor: 'rgba(72, 207, 173, 1)',
@@ -148,7 +148,7 @@ var revenueMax = getRoundedMaxValue(getMaxValue(revenueData));
 var revenueChart = new Chart(revenueCtx, {
     type: 'line',
     data: {
-        labels: ['January', 'February', 'March', 'April', 'May'],
+        labels: ['Week1', 'Week2', 'Week3', 'Week4'],
         datasets: revenueData
     },
     options: {
@@ -200,6 +200,19 @@ var loginsChart = new Chart(loginsCtx, {
                 text: 'User Logins Breakdown',
                 font: {
                     size: 22
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        let total = 0;
+                        tooltipItem.dataset.data.forEach(value => {
+                            total += value;
+                        });
+                        let value = tooltipItem.raw;
+                        let percentage = (value / total * 100).toFixed(2);
+                        return tooltipItem.label + ': ' + percentage + '%';
+                    }
                 }
             }
         }
