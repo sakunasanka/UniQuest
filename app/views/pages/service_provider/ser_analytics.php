@@ -20,7 +20,7 @@
                     <h3>Total Jobs</h3>
                     <p>50</p>
                 </div>
-                <div class="icon">
+                <div class="icon_">
                     <span class="material-symbols-outlined large-icon">work</span>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                     <h3>Active Jobs</h3>
                     <p>08</p>
                 </div>
-                <div class="icon">
+                <div class="icon_">
                     <span class="material-symbols-outlined large-icon">work</span>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     <h3>Applicants</h3>
                     <p>26</p>
                 </div>
-                <div class="icon">
+                <div class="icon_">
                     <span class="material-symbols-outlined large-icon">school</span>
                 </div>
             </div>
