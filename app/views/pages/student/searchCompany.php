@@ -1,11 +1,8 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
-
-<header class="header">
-
-</header>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/searchJob.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <body>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
     <div class="container">
         <div class="left-side">
