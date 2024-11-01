@@ -5,8 +5,8 @@
             Dashboard
         </button>
 
-        <button class="nav-btn" data-paths="/uniquest/admin/students_mng,/uniquest/admin/company_mng,/uniquest/admin/verTeam_mng">
-        <span class="material-symbols-outlined"> manage_accounts </span>
+        <button class="nav-btn" data-paths="/uniquest/admin/students_mng,/uniquest/admin/company_mng,/uniquest/admin/verTeam_mng,/uniquest/admin/add_member,/uniquest/admin/add_student,/uniquest/admin/add_company">
+        <span class="material-symbols-outlined"> manage_accounts</span>
             User Management
         </button>
 
