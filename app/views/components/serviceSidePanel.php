@@ -47,7 +47,7 @@
         </button>
 
         <!-- Premium -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/premiums">
+        <button class="nav-btn" data-path="/uniquest/service_provider/premium">
         <span class="material-symbols-outlined">workspace_premium</span>
             Activate Premium
         </button>

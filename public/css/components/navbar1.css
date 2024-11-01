@@ -18,6 +18,7 @@
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
 }
 
 /* Navbar Container */
@@ -44,7 +45,7 @@
 
 /* Navbar Button */
 .nav-button a {
-    background-color: #4CAF50; /* Green color for the button */
+    background-color: #299b63; /* Green color for the button */
     color: white;
     padding: 12px 25px;
     text-decoration: none;
@@ -55,7 +56,7 @@
 }
 
 .nav-button a:hover {
-    background-color: #45A049; /* Slightly darker green on hover */
+    background-color: #137d4a; /* Slightly darker green on hover */
 }
 
 /* Responsive Navbar (Mobile) */
