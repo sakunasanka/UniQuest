@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/ser_header.php'; ?>
 
 <header class="header">
 
