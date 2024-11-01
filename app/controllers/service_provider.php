@@ -64,6 +64,7 @@ class Service_provider extends Controller
     public function premium()
     {
         $this->view('pages/service_provider/premiumFeatures');
+    }    
 
     public function analytics()
     {
