@@ -104,11 +104,11 @@ body {
     background-color: #e0912a;
 }
 
-a {
+.weblink {
     text-decoration: none;
     color: #f0a23a;
 }
 
-a:hover {
+.weblink:hover {
     color: #e0912a;
 }
