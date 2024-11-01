@@ -82,9 +82,6 @@
 
     
 </div>
-<footer class="footer">
-
-</footer>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 

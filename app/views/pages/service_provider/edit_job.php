@@ -32,8 +32,7 @@
                 <div class="form-group">
                     <label for="job_description">Job Description</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_description" name="job_description">
-                        We are looking for a reliable and punctual Delivery Rider to join our team. As a Delivery Rider, you will play a crucial role in ensuring timely and accurate delivery of goods to our customers. Your primary responsibility will be to pick up orders from our warehouse or partner locations and deliver them to customers' specified addresses while providing excellent customer service.
+                    <textarea id="job_description" name="job_description">We are looking for a reliable and punctual Delivery Rider to join our team. As a Delivery Rider, you will play a crucial role in ensuring timely and accurate delivery of goods to our customers. Your primary responsibility will be to pick up orders from our warehouse or partner locations and deliver them to customers' specified addresses while providing excellent customer service.
                     </textarea>
                 </div>
         
@@ -80,9 +79,6 @@
         </div>
     </div>
 </div>
-<footer class="footer">
-
-</footer>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
