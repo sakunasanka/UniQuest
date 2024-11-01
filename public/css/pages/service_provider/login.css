@@ -86,10 +86,20 @@ body {
     font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background-color: #ffffff;
+    color: #333;
+    outline: none; 
+}
+
+.left-side input:focus {
+    border-color: #28a745; 
+    border-width: 0.15rem;
+    background-color: #f0fff4; 
+    outline: none; 
 }
 
 .left-side button {
-    background: #4bd681;
+    background: #28a745;
     color: white;
     border: none;
     padding: 15px;
@@ -100,11 +110,11 @@ body {
 }
 
 .left-side button:hover {
-    background: #00BE7E;
+    background: #218838;
 }
 
 .left-side a {
-    color: #4bd681;
+    color: #28a745;
     text-decoration: none;
     font-size: 1.2em;
     margin-bottom: 15px;
@@ -122,6 +132,14 @@ body {
     color: #333;
     margin-top: 30px;
 }
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: -25px;
+    margin-bottom: 15px;
+}
+
 
 @media (min-width: 768px) {
     .container {
