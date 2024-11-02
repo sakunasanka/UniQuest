@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/popups/admin/deactivateJob.php'; ?> 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/adminDash.css">
 
 <!-- Sidebar and Content Layout -->
@@ -11,7 +12,7 @@
     <div class="dashboard-container">
         <!-- Dashboard stats -->
         
-        <div class="dashboard-card">
+        <div class="dashboard-card" onclick="togglePopup()">
             <h3>Registered Students</h3>
             <p>The total number of students registered on UniQuest.</p>
             <h1><?php echo 2500; ?></h1>

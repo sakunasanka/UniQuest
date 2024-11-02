@@ -3,10 +3,10 @@
     <div class="popup" id="popup-1">
         <div class="overlay"></div>
         <div class="content">
-            <p class="popup-text">Are you sure you want to activate this account?</p>
+            <p class="popup-text red-text">Are you sure you want to deactivate this account?</p>
             <div class="btn-container">
                 <a href="#" class="no-btn" onclick="togglePopup()">No</a>
-                <a href="#" class="yes-btn" >Yes</a>
+                <a href="#" class="yes-btn-red" >Yes</a>
             </div>
         </div>
     </div>
