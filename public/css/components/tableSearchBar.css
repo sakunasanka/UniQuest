@@ -1,0 +1,61 @@
+.search-bar { 
+    position: relative;
+    flex-grow: 1; 
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.search {
+    font-size: 16px;
+    padding: 12px 20px 12px 40px; 
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    width: 100%; /* Adjusted to fit dropdown */
+    margin-right: 10px;
+}
+
+.column-select {
+    position: absolute;
+    right: 11px; /* Align to the right corner of the input container */
+    background-color: #e0e0e0;
+    border: none;
+    font-size: 16px;
+    padding: 12px 5px 11px 10px;
+    border-radius: 0px 8px 8px 0px;
+    cursor: pointer;
+    color: #333;
+}
+
+.search:focus {
+    outline: none;
+    border: 2px solid #32a852;
+}
+
+.column-select:focus {
+    outline: none;
+}
+
+.column-select:hover {
+    background-color: #f0f0f0; /* Change background on hover */
+}
+
+.column-select option {
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.column-select option:hover {
+    background-color: #32a852; /* Green hover background */
+    color: #fff; /* White text on hover */
+}
