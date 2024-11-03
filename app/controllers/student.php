@@ -90,5 +90,10 @@ class Student extends Controller
         $this->view('pages/student/trendyCompany');
     }
 
+    public function saveJobs()
+    {
+        $this->view('pages/student/saveJobs');
+    }
+
 }
 
