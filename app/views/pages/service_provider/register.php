@@ -1,101 +1,84 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/register.css">
 
-<body>
-    <div class="main-container-without-side">
-        <div class="container">
-            <div class="image-section">
-                <h1>Service Provider Register</h1>
-                <img src="<?php echo URLROOT; ?>/images/service.png" alt="Student Registration">
-            </div>
-            
-            <div class="form-section">
-                <!-- Personal Details -->
-                <h2>Personal Details</h2>
-                <div class="form-group">
-                    <label for="first-name">First Name</label>
-                    <input type="text" id="first-name" name="first-name" required>
 
-                    <label for="last-name">Last Name</label>
-                    <input type="text" id="last-name" name="last-name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <input type="radio" id="male" name="gender" value="male"> <label for="male">Male</label>
-                    <input type="radio" id="female" name="gender" value="female"> <label for="female">Female</label>
-
-                    <label for="dob">Date Of Birth</label>
-                    <input type="date" id="dob" name="dob" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="nic-number">NIC Number</label>
-                    <input type="text" id="nic-number" name="nic-number" required>
-                    
-                    <label for="nic-scan">NIC Scanned Copy</label>
-                    <input type="file" id="nic-scan" name="nic-scan" accept=".jpg, .jpeg, .png, .pdf">
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" required>
-
-                    <label for="mobile">Mobile</label>
-                    <input type="text" id="mobile" name="mobile" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="personal-email">Personal Email</label>
-                    <input type="email" id="personal-email" name="personal-email" required>
-                </div>
-
-                <!-- Company Details -->
-                <h2>Company Details</h2>
-                <div class="form-group">
-                    <label for="company-name">Company Name</label>
-                    <input type="text" id="company-name" name="company-name" required>
-
-                    <label for="company-email">Company Email</label>
-                    <input type="email" id="company-email" name="company-email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="company-contact">Company Contact No</label>
-                    <input type="text" id="company-contact" name="company-contact" required>
-
-                    <label for="company-logo">Company Logo</label>
-                    <input type="file" id="company-logo" name="company-logo" accept=".jpg, .jpeg, .png">
-                </div>
-
-                <!-- Login Credentials -->
-                <h2>Login Credentials</h2>
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
-
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" name="confirm-password" required>
-                    </div>
-
-                <!-- Terms and Register Button -->
-                <div class="form-group terms">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">
-                        I agreed to all 
-                        <a href="terms.html" target="_blank">Terms</a> and 
-                        <a href="privacy.html" target="_blank">Privacy Policy</a>
-                    </label>
-                </div>
-
-                <button type="submit">Register</button>
-            </div>
+<div class="main-container-without-side">
+    <div class="container">
+        <div class="image-section">
+            <h1>Service Provider Register</h1>
+            <img src="<?php echo URLROOT; ?>/images/service.png" alt="Student Registration">
         </div>
+
+        <form class="form-section" action="<?php echo URLROOT ?>/service_provider/register" method="POST">
+            <!-- Company Details -->
+            <h2>Company Details</h2>
+            <div class="form-group">
+                <label for="company-name">Company Name</label>
+                <input type="text" id="company-name" name="companyName" value="<?php echo $data['companyName']; ?>" required>
+                <span class="error-msg"><?php echo $data['companyName_err']; ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="company-contact">Company Contact No</label>
+                <input type="text" id="company-contact" name="contactNo" value="<?php echo $data['contactNo']; ?>" required>
+                <span class="error-msg"><?php echo $data['contactNo_err']; ?></span>
+
+                <label for="company-logo">Company Logo</label>
+                <input type="file" id="company-logo" name="companyLogo" value="<?php echo $data['companyLogo']; ?>" accept=".jpg, .jpeg, .png">
+                <span class="error-msg"><?php echo $data['companyLogo_err']; ?></span>
+
+            </div>
+
+            <h3>Company Address</h3>
+            <div class="form-group">
+                <label for="street-no">Street No</label>
+                <input type="text" id="streetNo" name="streetNo" value="<?php echo $data['streetNo']; ?>" required>
+                <span class="error-msg"><?php echo $data['streetNo_err']; ?></span>
+
+                <label for="address-line1">Address Line 1</label>
+                <input type="text" id="addressLine1" name="addressLine1" value="<?php echo $data['addressLine1']; ?>" required>
+                <span class="error-msg"><?php echo $data['addressLine1_err']; ?></span>
+
+                <label for="address-line2">Address Line 2</label>
+                <input type="text" id="addressLine2" name="addressLine2" value="<?php echo $data['addressLine2']; ?>">
+                <span class="error-msg"><?php echo $data['addressLine2_err']; ?></span>
+
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" value="<?php echo $data['city']; ?>" required>
+                <span class="error-msg"><?php echo $data['city_err']; ?></span>
+            </div>
+
+            <!-- Login Credentials -->
+            <h2>Login Credentials</h2>
+            <div class="form-group">
+                <label for="company-email">Company Email</label>
+                <input type="email" id="company-email" name="email" value="<?php echo $data['email']; ?>" required>
+                <span class="error-msg"><?php echo $data['email_err']; ?></span>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" value="<?php echo $data['password']; ?>" required>
+                <span class="error-msg"><?php echo $data['password_err']; ?></span>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $data['confirm_password']; ?>" required>
+                <span class="error-msg"><?php echo $data['confirm_password_err']; ?></span>
+            </div>
+
+            <!-- Terms and Register Button -->
+            <div class="form-group terms">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I agreed to all
+                    <a href="terms.html" target="_blank">Terms</a> and
+                    <a href="privacy.html" target="_blank">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" value="register">Register</button>
+        </form>
     </div>
+</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
