@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/analytics.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/ser_analytics.css">
 
 <header class="header">
     <div class="logo-block"></div>
@@ -49,20 +49,25 @@
             <div class="card chart-card">
                 <canvas id="registrationsChart"></canvas>
             </div>
+            
+            
             <div class="card chart-card">
-                <canvas id="jobListingsChart"></canvas>
+                <canvas id="loginsChart"></canvas>
             </div>
+            
             <div class="card chart-card">
                 <canvas id="revenueChart"></canvas>
             </div>
             <div class="card chart-card">
-                <canvas id="loginsChart"></canvas>
+            <div class="text-content">
+            <h2>Important Updates</h2>
+            <p>We are launching new features this month to improve your experience. Stay tuned for more updates!</p>
+        </div>
             </div>
         </div>
     </main>
 </div>
 
-<script src="<?php echo URLROOT; ?>/js/service_provider/ser_analytics.js"></script>
-
 <!-- Footer -->
+<script src="<?php echo URLROOT; ?>/js/service_provider/ser_analytics.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>

@@ -4,13 +4,7 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-}
-
-.main-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-}    
+}  
 
 /* Card styling */
 .card {
@@ -90,4 +84,24 @@ canvas {
 
 .large-icon{
     font-size: 50px;
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%; /* Make it fill the card */
+}
+
+.text-content h2 {
+    font-size: 24px;
+    color: #299b63;
+    margin-bottom: 10px;
+}
+
+.text-content p {
+    font-size: 18px;
+    color: #666;
 }
