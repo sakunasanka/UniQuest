@@ -3,7 +3,7 @@
 <body>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <div class="search-bar-container">
         <div class="search-bar">
@@ -37,10 +37,11 @@
                     <button class="view-button">View Company</button>
 
                     <div class="card-icons">
-                    <i class="fa fa-heart"></i>
-                    <i class="fa fa-share-alt"></i>
-                    <i class="fa fa-bookmark"></i>
+                        <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                        <i class="fa fa-share-alt" aria-hidden="true"></i>
+                        <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
                     </div>
+
                 </div>
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -53,5 +54,30 @@
     </div>
 </body>
 
+<style>
+    .icon-active {
+        color: #e74c3c; /* Active color */
+    }
+</style>
+
+<script>
+    function toggleFavorite(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+
+    function toggleShare(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+
+    function toggleBookmark(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+</script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
