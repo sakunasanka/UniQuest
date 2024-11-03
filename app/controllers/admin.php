@@ -16,14 +16,29 @@ class Admin extends Controller
         $this->view('pages/admin/students_mng');
     }
 
+    public function add_student()
+    {
+        $this->view('pages/admin/add_student');
+    }
+
     public function company_mng()
     {
         $this->view('pages/admin/company_mng');
     }
 
+    public function add_company()
+    {
+        $this->view('pages/admin/add_company');
+    }
+
     public function verTeam_mng()
     {
         $this->view('pages/admin/verTeam_mng');
+    }
+
+    public function add_member()
+    {
+        $this->view('pages/admin/add_member');
     }
 
     public function job_complaint()
@@ -35,6 +50,7 @@ class Admin extends Controller
     {
         $this->view('pages/admin/company_complaint');
     }
+
     public function ptjobs_mng()
     {
         $this->view('pages/admin/ptjobs_mng');
@@ -78,6 +94,11 @@ class Admin extends Controller
     public function dashboard()
     {
         $this->view('pages/admin/adminDash');
+    }
+
+    public function analytics()
+    {
+        $this->view('pages/admin/analytics');
     }
 
 }
