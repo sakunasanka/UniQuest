@@ -59,10 +59,35 @@
                 <canvas id="revenueChart"></canvas>
             </div>
             <div class="card chart-card">
-            <div class="text-content">
-            <h2>Important Updates</h2>
-            <p>We are launching new features this month to improve your experience. Stay tuned for more updates!</p>
-        </div>
+                <div class="top-jobs-card">
+                    <h2>Top Performing Jobs</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Applications</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Software Engineer</td>
+                                    <td>280</td>
+                                </tr>
+                                <tr>
+                                    <td>Marketing Manager</td>
+                                    <td>252</td>
+                                </tr>
+                                <tr>
+                                    <td>Sales Representative</td>
+                                    <td>232</td>
+                                </tr>
+                                <tr>
+                                    <td>Product Designer</td>
+                                    <td>150</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
             </div>
         </div>
     </main>
