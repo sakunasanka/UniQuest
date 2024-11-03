@@ -1,0 +1,161 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    width: 80%;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    margin-top: 50px;
+    margin-left: 250px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin-left: 20px;
+    font-size: 2.0em;
+    color: #333;
+}
+
+.container p {
+    font-size: 1.1em;
+    margin-left: 20px;
+}
+
+/* Form Section */
+.form-section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-container {
+    width: 60%;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #555;
+    font-size: 1.1em;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #4bd681;
+}
+
+.submit-button {
+    background-color: #4bd681;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-left: 350px;
+    display: block;
+}
+
+.submit-button:hover {
+    background-color: #3cb56e;
+}
+
+.job-card {
+    width: 35%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.job-logo img {
+    width: 280px;
+    height: 280px;
+    margin-bottom: 10px;
+}
+
+.job-details h3 {
+    font-size: 1.7em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.job-details p {
+    font-size: 1.2em;
+    color: #555;
+    margin: 8px 0;
+}
+
+.job-details .job-rating {
+    font-size: 1.2em;
+    color: #fbc02d;
+}
+
+/* Social Media Icons */
+.social-media-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-media-icons a i {
+    font-size: 20px;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.2s ease-in-out;
+}
+
+.social-media-icons a i:hover {
+    color: #333;
+    transform: scale(1.2);
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.table td {
+    padding: 10px;
+    text-align: center; 
+    color: #555;
+    font-size: 1.1em;
+    border-bottom: 1px solid #ddd;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
