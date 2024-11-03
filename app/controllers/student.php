@@ -75,5 +75,15 @@ class Student extends Controller
         $this->view('pages/student/rejected_applications');
     }
   
+    public function jobs()
+    {
+        $this->view('pages/student/jobs');
+    }
+
+    public function company()
+    {
+        $this->view('pages/student/company');
+    }
+
 }
 
