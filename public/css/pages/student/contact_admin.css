@@ -19,6 +19,7 @@ body {
     max-width: 1200px;
     margin: 50px auto;
     padding: 40px;
+    margin-left: 200px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -53,13 +54,21 @@ body {
 }
 
 
-.contact-left input, .contact-left textarea {
+.contact-left input, .contact-left textarea .contact-left select {
     width: 100%;
     padding: 15px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
+}
+
+.contact-left input:focus,
+.contact-left textarea:focus, 
+.contact-left select{
+    border-color:  #299b63;
+    outline: none;
+    border-width:0.15rem;
 }
 
 .contact-left textarea {
@@ -69,11 +78,11 @@ body {
 
 .contact-left button {
     padding: 15px;
-    background-color: #4bd681;
+    background-color: #299b63;
     border: none;
     border-radius: 5px;
     color: #fff;
-    font-size: 1em;
+    font-size: 1.2em;
     cursor: pointer;
     transition: background 0.3s ease;
 }
@@ -88,7 +97,7 @@ body {
 }
 
 .contact-left button:hover {
-    background-color: #3cb56e;
+    background-color: #137d4a;
 }
 
 .contact-right {
