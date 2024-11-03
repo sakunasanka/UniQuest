@@ -35,7 +35,7 @@
             </div>
 
     <div class="reviews-section">
-            <h4>Reviews and Ratings about this company</h4>
+        <h4>Reviews and Ratings about this company</h4>
             
             <div class="review">
                 <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
@@ -62,7 +62,11 @@
             </div>
         </div>
 
+        <div class="buttons">
+                    <button class="apply-btn">Add review</button>
         </div>
+
+    </div>
 
         <div class="job-card">
             <div class="job-logo">

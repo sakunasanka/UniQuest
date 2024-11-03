@@ -99,11 +99,12 @@ p{
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    height: 80%;
 }
 
 .job-logo img {
-    width: 280px;
-    height: 280px;
+    width: 230px;
+    height: 230px;
     margin-bottom: 10px;
 }
 
@@ -179,21 +180,21 @@ p{
 }
 
 .apply-btn {
-    background-color: #1DB954;
+    background-color: #299b63;
     color: #fff;
 }
 
 .contact-btn {
-    background-color: #007bff;
+    background-color: #6eb2fc;
     color: #fff;
 }
 
 .apply-btn:hover {
-    background-color: #038a27;
+    background-color: #137d4a;
 }
 
 .contact-btn:hover {
-    background-color: #0056b3;
+    background-color: #4aa1fd;
 }
 
 .social-media-icons {
