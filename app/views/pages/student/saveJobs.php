@@ -39,10 +39,11 @@
                     <div class="job-location-details">
                         Colombo, Western Province
                     </div>
+                    
                     <div class="card-icons">
-                    <i class="fa fa-heart"></i>
-                    <i class="fa fa-share-alt"></i>
-                    <i class="fa fa-bookmark"></i>
+                        <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                        <i class="fa fa-share-alt" aria-hidden="true"></i>
+                        <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
                     </div>
                 </div>
                 <div class="social-media-icons">
@@ -55,5 +56,25 @@
         <?php endfor; ?>
     </div>
 </body>
+
+<style>
+    .icon-active {
+        color: #e74c3c; /* Active color */
+    }
+</style>
+
+<script>
+    function toggleFavorite(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+
+    function toggleBookmark(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+</script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
