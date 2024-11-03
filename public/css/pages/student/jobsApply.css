@@ -70,23 +70,27 @@ body {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: #4bd681;
+    border-color: #299b63; /* Desired border color */
+    border-width: 0.15rem;
+    outline: none;
 }
 
+
 .submit-button {
-    background-color: #4bd681;
+    background-color:#299b63 ;
     color: #fff;
-    padding: 15px 30px;
-    border-radius: 15px;
+    padding: 10px 30px;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
     margin-top: 15px;
     margin-left: 350px;
     display: block;
+    font-size: 1.5m;
 }
 
 .submit-button:hover {
-    background-color: #3cb56e;
+    background-color: #137d4a;
 }
 
 .job-card {
@@ -96,11 +100,12 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    height: 80%;
 }
 
 .job-logo img {
-    width: 280px;
-    height: 280px;
+    width: 240px;
+    height: 240px;
     margin-bottom: 10px;
 }
 
@@ -158,4 +163,12 @@ body {
 
 .table tr:last-child td {
     border-bottom: none;
+}
+
+
+.form-group span {
+    display: none;
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
 }

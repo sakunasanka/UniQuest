@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
-<?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+<?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
 
 <div class="container">
@@ -20,22 +20,30 @@
                     <label for="fullName">Full Name *</label>
                     <input type="text" id="fullName" name="fullName" required>
                 </div>
+
                 <div class="form-group">
                     <label for="mobileNumber">Mobile Number *</label>
                     <input type="text" id="mobileNumber" name="mobileNumber" required>
+                    <span class="error-message"></span>
                 </div>
+
                 <div class="form-group">
                     <label for="email">Email *</label>
                     <input type="email" id="email" name="email" required>
+                    <span class="error-message"></span>
                 </div>
+
                 <div class="form-group">
                     <label for="nic">NIC *</label>
                     <input type="text" id="nic" name="nic" required>
+                    <span class="error-message"></span>
                 </div>
+
                 <div class="form-group">
                     <label for="address">Address *</label>
                     <input type="text" id="address" name="address" required>
                 </div>
+
                 <div class="form-group">
                     <label for="gender">Gender *</label>
                     <select id="gender" name="gender" required>
@@ -44,10 +52,12 @@
                         <option value="Female">Female</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="education">Education qualifications*</label>
                     <textarea id="education" name="education" rows="2"></textarea>
                 </div>
+
                 <div class="form-group">
                     <label for="ageCheck">Are you 18+ years old? *</label>
                     <select id="ageCheck" name="ageCheck" required>
@@ -91,5 +101,71 @@
         </div>
     </div>
 </div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    let isValid = true;
+
+    // Validate Mobile Number
+    const mobileInput = document.getElementById("mobileNumber");
+    const mobilePattern = /^[0-9]{10}$/; // 10-digit number
+    if (!mobilePattern.test(mobileInput.value)) {
+        showError(mobileInput, "Please enter a valid 10-digit mobile number.");
+        isValid = false;
+    } else {
+        hideError(mobileInput);
+    }
+
+    // Validate Email
+    const emailInput = document.getElementById("email");
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(emailInput.value)) {
+        showError(emailInput, "Please enter a valid email address.");
+        isValid = false;
+    } else {
+        hideError(emailInput);
+    }
+
+    // Validate NIC
+    const nicInput = document.getElementById("nic");
+    const nicPattern = /^[0-9]{9}[vV]$|^[0-9]{12}$/;
+    if (!nicPattern.test(nicInput.value)) {
+        showError(nicInput, "Please enter a valid NIC number.");
+        isValid = false;
+    } else {
+        hideError(nicInput);
+    }
+
+    // Submit form if valid
+    if (isValid) {
+        alert("Application submitted successfully!");
+        this.submit();
+    }
+});
+
+// Show error message
+function showError(input, message) {
+    let errorElement = input.nextElementSibling;
+    if (!errorElement) {
+        errorElement = document.createElement("span");
+        errorElement.classList.add("error-message");
+        input.parentNode.appendChild(errorElement);
+    }
+    errorElement.textContent = message;
+    errorElement.style.display = "block";
+    input.style.borderColor = "red";
+}
+
+// Hide error message
+function hideError(input) {
+    const errorElement = input.nextElementSibling;
+    if (errorElement) {
+        errorElement.style.display = "none";
+    }
+    input.style.borderColor = "#ddd"; // Reset border color
+}
+</script>  
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
