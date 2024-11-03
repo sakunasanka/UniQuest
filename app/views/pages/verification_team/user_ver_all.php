@@ -1,0 +1,165 @@
+<?php require APPROOT . '/views/components/header.php'; ?>
+
+<!-- Sidebar and Content Layout -->
+<div class="main-container">
+    <!-- Sidebar -->
+    <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+
+    <!-- Content Area -->
+    <main class="content-area">
+        <div class="tabs-header">
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/verification_team/user_ver_all">All</button>
+            <button class="tab" data-path="/uniquest/verification_team/user_ver_pending">Pending</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/verification_team/user_ver_not">Not Approved</button>
+        </div>
+        <div class="table-block">
+            <div class="content-header">
+                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">User Name</th>
+                        <th onclick="sortTable(1)">Email</th>
+                        <th onclick="sortTable(2)">Account Type</th>
+                        <th onclick="sortTable(3)">Requested Date</th>
+                        <th onclick="sortTable(4)">Status</th>
+                        <th class="no-sort">View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>User 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Company</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status inactive">Not Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Company</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status inactive">Not Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status pending">Pending</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status inactive">Not Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Company</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status pending">Pending</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Company</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>User 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>Student</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Approved</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <?php require APPROOT . '/views/components/pagination.php'; ?>
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
+
+<?php require APPROOT . '/views/components/footer.php'; ?>
