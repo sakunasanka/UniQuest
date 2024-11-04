@@ -8,8 +8,8 @@
 
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
+                <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
+                <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
         </div>
         <div class="container">
             <div class="search-bar-container">
@@ -17,34 +17,28 @@
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
-                    <input type="text" placeholder="Search saved jobs, internships..." class="search-input">
+                    <input type="text" placeholder="Search saved companies..." class="search-input">
                     <div class="filters-button">
                         <i class="fa-solid fa-filter"></i>
                         <span>Filters</span>
                     </div>
                 </div>
             </div>
-            
-            <h1 class="H3">Your Saved Jobs</h1>
-
+        
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
                         <div class="card-logo">
-                            <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
+                            <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
                         </div>
                         <div class="card-content">
                             <div class="job-rating">
                                 <i class="fa fa-star"></i> 4.8
                             </div>
-                            <h3 class="job-title">Delivery Rider</h3>
-                            <p class="job-location">Negombo / Ja Ela / Kiribathgoda</p>
-                            <p class="job-salary">Rs. 2,000 (per day)</p>
-                            <p class="job-days-left">9 days left</p>
-                            
-                            <div class="job-location-details">
-                                Colombo, Western Province
-                            </div>
+                            <h3 class="job-title">Spotify</h3>
+                            <p class="job-location">Based on 126 student reviews</p>
+                            <button class="view-button">View Company</button>
+
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
@@ -60,7 +54,7 @@
                     </div>
                 <?php endfor; ?>
             </div>
-        </div>  
+        </div>
     </div>
 </div>
 
