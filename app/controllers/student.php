@@ -98,6 +98,7 @@ class Student extends Controller
     public function jobsDescription()
     {
         $this->view('pages/student/jobsDescription');
+    }
       
     public function jobsApply()
     {
