@@ -13,7 +13,7 @@
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
-                    <input type="text" placeholder="Search jobs, internships" class="search-input">
+                    <input type="text" placeholder="Search company..." class="search-input">
                     <div class="filters-button">
                         <i class="fa-solid fa-filter"></i>
                         <span>Filters</span>
