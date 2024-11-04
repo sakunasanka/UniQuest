@@ -9,7 +9,7 @@
             <img src="<?php echo URLROOT; ?>/images/service.png" alt="Student Registration">
         </div>
 
-        <form class="form-section" action="<?php echo URLROOT ?>/service_provider/register" method="POST">
+        <form class="form-section" action="<?php echo URLROOT ?>/service_provider/register" method="POST" enctype="multipart/form-data">
             <!-- Company Details -->
             <h2>Company Details</h2>
             <div class="form-group">
@@ -24,7 +24,7 @@
                 <span class="error-msg"><?php echo $data['contactNo_err']; ?></span>
 
                 <label for="company-logo">Company Logo</label>
-                <input type="file" id="company-logo" name="companyLogo" value="<?php echo $data['companyLogo']; ?>" accept=".jpg, .jpeg, .png">
+                <input type="file" id="companyLogo" name="companyLogo" value="<?php echo $data['companyLogo']; ?>" accept=".jpg, .jpeg, .png">
                 <span class="error-msg"><?php echo $data['companyLogo_err']; ?></span>
 
             </div>

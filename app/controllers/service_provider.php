@@ -35,8 +35,9 @@ class Service_provider extends Controller
                 'addressLine1' => ucfirst(trim($_POST['addressLine1'])),
                 'addressLine2' => ucfirst(trim($_POST['addressLine2'])),
                 'city' => ucfirst(trim($_POST['city'])),
+                'companyLogo' => $_FILES['companyLogo'],
+                'companyLogoName' => '',
                 'description' => '',
-                'companyLogo' => '',
                 'role' => 'Company',
                 'date' => date('Y-m-d H:i:s'),
                 'status' => 'Pending',
@@ -92,19 +93,23 @@ class Service_provider extends Controller
             $data['status_err'] = Validator::isEmpty($data['status']) ? 'Please enter status' : 
                 (!Validator::isValidStatus($data['status']) ? 'Invalid status' : '');
 
-            // Validate description
-
-            // Validate profile picture
+            //validate and upload profile picture
+            $response = ImageUploadHelper::uploadImage($data['companyLogo'], PUBROOT.'/images/profile_pictures/company');
+            if ($response['success']) {
+                $data['companyLogoName'] = $response['file_name'];
+            } else {
+                $data['companyLogo_err'] = $response['error'];
+            }
 
             // Check if there are no errors
-            if (empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['companyName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['role_err']) && empty($data['status_err'])) {
+            if (empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['companyName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['companyLogo_err'])) {
                 // Hash password
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Register user
                 if ($this->model->companyRegister($data)) {
                     // Redirect to login page
-                    Redirect::to('/login');
+                    Redirect::to(URLROOT . '/service_provider/login');
                 } else {
                     die('Something went wrong');//TODO: Handle this
                 }

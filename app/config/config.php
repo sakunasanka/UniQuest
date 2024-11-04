@@ -5,6 +5,9 @@
     //URL Root
     define('URLROOT', 'http://localhost/UniQuest');
 
+    //public Root
+    define('PUBROOT', dirname(dirname(dirname(__FILE__))).'/public');
+
     //Site Name
     define('SITENAME', 'UniQuest');
 
