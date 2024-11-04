@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -9,6 +8,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
 }
+
 .content-area{
     display: flex;
     flex-direction: column;
@@ -19,12 +19,14 @@ body {
     width: 100%;
     margin: 20px auto ;
     background-color: #ffffff;
-   margin-top: 20px;
+    margin-top: 20px;
+
    
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .date{
  text-align: center;
 }
@@ -81,3 +83,4 @@ textarea {
 input[readonly] {
     background-color: #e9ecef;
 }
+
