@@ -21,6 +21,11 @@ class Validator {
         return preg_match('/^[a-zA-Z\s]+$/', $name);
     }
 
+    //validate the company name
+    public static function isValidCompanyName($companyName) {
+        return preg_match('/^[a-zA-Z0-9\s]+$/', $companyName);
+    }
+
     //validate the password
     public static function isValidPassword($password) {
         return strlen($password) >= 8 &&
@@ -61,6 +66,11 @@ class Validator {
             $status === 'Active' ||
             $status === 'Deactivate' ||
             $status === 'Not Approved';  
+    }
+
+    //validate the gender
+    public static function isValidGender($gender) {
+        return $gender === 'Male' || 'Female';
     }
 
 }

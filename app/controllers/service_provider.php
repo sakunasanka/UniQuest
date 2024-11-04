@@ -70,7 +70,7 @@ class Service_provider extends Controller
 
             // Validate company name
             $data['companyName_err'] = Validator::isEmpty($data['companyName']) ? 'Please enter company name' : 
-                (!Validator::isValidName($data['companyName']) ? 'Company name can only contain letters and spaces' : '');
+                (!Validator::isValidCompanyName($data['companyName']) ? 'Company name can only contain letters and spaces' : '');
 
             // Validate contact number
             $data['contactNo_err'] = Validator::isEmpty($data['contactNo']) ? 'Please enter contact number' : 
