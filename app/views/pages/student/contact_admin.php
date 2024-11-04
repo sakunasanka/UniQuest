@@ -1,40 +1,41 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/contact_form.css">
 
-<header class="header">
+<div class="main-container">
+<?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
-</header>
+    <div class="content-area">
+        <div class="container">
+            <div class="contact-left">
+                <h1>Contact Us</h1>
+                <form>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" placeholder="Enter Your Name" required>
 
-<body>
-    <div class="contact-container">
-        <div class="contact-left">
-            <h1>Contact Us</h1>
-            <form>
-                <label for="name">Name:</label>
-                <input type="text" id="name" placeholder="Enter Your Name" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="Enter Your Email" required>
+                    <span class="error-message" id="emailError"></span>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" placeholder="Enter Your Email" required>
-                <span class="error-message" id="emailError"></span>
+                    <label for="topic">Topic:</label>
+                    <select id="topic" required>
+                        <option value="job">Job</option>
+                        <option value="internship">Internship</option>
+                        <option value="general">General Information</option>
+                    </select>
 
-                <label for="topic">Topic:</label>
-                <select id="topic" required>
-                    <option value="job">Job</option>
-                    <option value="internship">Internship</option>
-                    <option value="general">General Information</option>
-                </select>
+                    <label for="message">Message:</label>
+                    <textarea id="message" placeholder="Message" required></textarea>
 
-                <label for="message">Message:</label>
-                <textarea id="message" placeholder="Message" required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
 
-                <button type="submit">Send</button>
-            </form>
-        </div>
-
-        <div class="contact-right">
-            <img src="<?php echo URLROOT; ?>/images/Contact-us.png" alt="Contact Us Image">
-        </div>
+            <div class="contact-right">
+                <img src="<?php echo URLROOT; ?>/images/Contact-us.png" alt="Contact Us Image">
+            </div>
+        </div>    
     </div>
-</body>
+</div>
 
 <script>
 document.getElementById("contactForm").addEventListener("submit", function(event) {
