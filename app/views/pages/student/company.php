@@ -1,6 +1,5 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="main-container">
@@ -73,6 +72,5 @@
         icon.classList.toggle("icon-active");
     }
 </script>
-
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
