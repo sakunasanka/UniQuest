@@ -71,4 +71,24 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/ser_analytics');
     }
 
+    public function edit_job()
+    {
+        $this->view('pages/service_provider/edit_job');
+    }
+  
+    public function view_job()
+    {
+        $this->view('pages/service_provider/view_job');
+    }
+  
+    public function edit_profile()
+    {
+        $this->view('pages/service_provider/edit_profile');
+    }
+  
+    public function view_profile()
+    {
+        $this->view('pages/service_provider/view_profile');
+    }
+  
 }
