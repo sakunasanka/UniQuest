@@ -9,8 +9,6 @@
 
 /* pages */
 @import url("pages/admin/students_mng.css");
-@import url("pages/student/contact_sp.css");
-@import url("pages/student/contact_admin.css");
 @import url("pages/service_provider/contact_admin.css");
 @import url("pages/service_provider/jobs_table.css");
 @import url("pages/admin/add_member.css");
@@ -35,4 +33,3 @@
     margin-top: 80px !important;
     box-sizing: border-box;
 }
-
