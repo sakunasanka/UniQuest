@@ -12,7 +12,7 @@
     height: 80px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content:  space-between;
     width: 100vw;
     position: fixed;
     top: 0;
@@ -45,7 +45,7 @@
 
 /* Navbar Button */
 .nav-button a {
-    background-color: #4CAF50; /* Green color for the button */
+    background-color: #299b63; /* Green color for the button */
     color: white;
     padding: 12px 25px;
     text-decoration: none;
@@ -56,7 +56,7 @@
 }
 
 .nav-button a:hover {
-    background-color: #45A049; /* Slightly darker green on hover */
+    background-color: #137d4a; /* Slightly darker green on hover */
 }
 
 /* Responsive Navbar (Mobile) */
