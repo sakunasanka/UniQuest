@@ -1,12 +1,12 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/stu_header.php'; ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
+<div class="main-container">
+    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
-<?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-
-<body>
-    <div class="job-description-container">
+    <div class="content-area">
         <div class="job-description">
             <h2>Delivery Rider</h2>
             <p>Negombo / Ja Ela / Kiribathgoda</p>
@@ -35,7 +35,7 @@
             </div>
 
     <div class="reviews-section">
-            <h4>Reviews and Ratings about this company</h4>
+        <h4>Reviews and Ratings about this company</h4>
             
             <div class="review">
                 <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
@@ -62,7 +62,11 @@
             </div>
         </div>
 
+        <div class="buttons">
+                    <button class="apply-btn">Add review</button>
         </div>
+
+    </div>
 
         <div class="job-card">
             <div class="job-logo">
@@ -91,6 +95,6 @@
             </div>
         </div>
     </div>
-</body>
+</div>    
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
