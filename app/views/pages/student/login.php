@@ -16,11 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/login.css">
 
-<header class="header">
-
-</header>
-
-<body>
+    <div class="main-container-without-side">
     <div class="container">
         <div class="left-side">
             <h2>Service Provider</h2>
@@ -50,8 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-</body>
-</html>
+    </div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
   
