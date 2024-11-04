@@ -8,14 +8,14 @@
 body {
     margin: 0;
     font-family: 'Outfit', sans-serif;
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: #f8f9fa;
+}
+
+.container{
+    padding: 0 10px;
 }
 
 .search-bar-container {
-    width: 60%;
     display: flex;
     justify-content: center;
     margin: 20px 0;
@@ -27,7 +27,7 @@ body {
     display: flex;
     align-items: center;
     background-color: #ffffff;
-    padding: 5px;
+    padding: 5px 20px;
     border-radius: 30px;
     width: 60%;
     height: 60px;
@@ -65,31 +65,16 @@ body {
     margin-right: 5px;
 }
 
-.search-button {
-    background-color: #299b63;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-}
-
-.search-button:hover {
-    background-color: #137d4a;
-}
-
 .cards-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 50px;
     width: 100%;
-    max-width: 1200px;
-    max-height: 500px;
     padding: 5px;
 }
 
 .card {
-    background-color: #f9f9f9;
+    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
@@ -99,11 +84,10 @@ body {
     max-height: 600px; /* Set the desired max height */
 }
 
-
-
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
 }
 
 .card-logo img {
