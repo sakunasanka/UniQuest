@@ -12,7 +12,6 @@
 @import url("pages/service_provider/contact_admin.css");
 @import url("pages/service_provider/jobs_table.css");
 @import url("pages/admin/add_member.css");
-@import url("pages/student/trendyCompany.css");
 
 .content-area {
     margin-left: 250px; /* Make room for the sidebar */
