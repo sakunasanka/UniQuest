@@ -8,26 +8,25 @@
 body {
     margin: 0;
     font-family: 'Outfit', sans-serif;
-    background: #f8f9fa;
-}
-
-.container{
-    padding: 0 10px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .search-bar-container {
+    width: 100%;
     display: flex;
     justify-content: center;
     margin: 20px 0;
-    margin-top: 0px;
-    margin-bottom: 80px;
+    margin-top: 100px;
 }
 
 .search-bar {
     display: flex;
     align-items: center;
     background-color: #ffffff;
-    padding: 5px 20px;
+    padding: 5px;
     border-radius: 30px;
     width: 60%;
     height: 60px;
@@ -39,7 +38,6 @@ body {
     font-size: 24px;
     color: #555;
     margin-right: 10px;
-    cursor: pointer;
 }
 
 .search-input {
@@ -65,16 +63,31 @@ body {
     margin-right: 5px;
 }
 
+.search-button {
+    background-color: #4bd681;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #3cb56e;
+}
+
 .cards-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 50px;
+    gap: 30px;
     width: 100%;
-    padding: 5px;
+    max-width: 1200px;
+    max-height: 500px;
+    padding: 40px;
 }
 
 .card {
-    background-color: #fff;
+    background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
@@ -84,10 +97,11 @@ body {
     max-height: 600px; /* Set the desired max height */
 }
 
+
+
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
 }
 
 .card-logo img {
@@ -172,7 +186,7 @@ body {
 }
 
 .view-button {
-    background-color: #299b63;
+    background-color: #4bd681;
     color: #fff;
     padding: 10px 20px;
     border-radius: 20px;
@@ -182,5 +196,5 @@ body {
 }
 
 .view-button:hover {
-    background-color: #137d4a;
+    background-color: #3cb56e;
 }
