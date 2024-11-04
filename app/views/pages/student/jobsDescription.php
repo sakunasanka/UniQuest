@@ -1,12 +1,12 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/stu_header.php'; ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
+<div class="main-container">
+    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
-<?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-
-<body>
-    <div class="job-description-container">
+    <div class="content-area">
         <div class="job-description">
             <h2>Delivery Rider</h2>
             <p>Negombo / Ja Ela / Kiribathgoda</p>
@@ -95,6 +95,6 @@
             </div>
         </div>
     </div>
-</body>
+</div>    
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
