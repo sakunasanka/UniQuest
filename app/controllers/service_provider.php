@@ -3,6 +3,41 @@ class Service_provider extends Controller
 {
     private $model;
 
+    private function prepareData($post = [], $files = [])
+    {
+        return [
+            'companyName' => ucfirst(trim($post['companyName'] ?? '')),
+            'email' => trim($post['email'] ?? ''),
+            'password' => trim($post['password'] ?? ''),
+            'confirm_password' => trim($post['confirm_password'] ?? ''),
+            'contactNo' => trim($post['contactNo'] ?? ''),
+            'streetNo' => trim($post['streetNo'] ?? ''),
+            'addressLine1' => ucfirst(trim($post['addressLine1'] ?? '')),
+            'addressLine2' => ucfirst(trim($post['addressLine2'] ?? '')),
+            'city' => ucfirst(trim($post['city'] ?? '')),
+            'companyLogo' => $files['companyLogo'] ?? '',
+            'companyLogoName' => '',
+            'description' => '',
+            'role' => 'Company',
+            'date' => date('Y-m-d H:i:s'),
+            'status' => 'Pending',
+
+            'companyName_err' => '',
+            'email_err' => '',
+            'password_err' => '',
+            'confirm_password_err' => '',
+            'contactNo_err' => '',
+            'streetNo_err' => '',
+            'addressLine1_err' => '',
+            'addressLine2_err' => '',
+            'city_err' => '',
+            'description_err' => '',
+            'companyLogo_err' => '',
+            'role_err' => '',
+            'status_err' => ''
+        ];
+    }
+
     public function __construct()
     {
         // Load model
@@ -25,86 +60,38 @@ class Service_provider extends Controller
             // Sanitize POST array
             $_POST = filter_input_array(INPUT_POST);
 
-            $data = [
-                'companyName' => ucfirst(trim($_POST['companyName'])),
-                'email' => trim($_POST['email']),
-                'password' => trim($_POST['password']),
-                'confirm_password' => trim($_POST['confirm_password']),
-                'contactNo' => trim($_POST['contactNo']),
-                'streetNo' => trim($_POST['streetNo']),
-                'addressLine1' => ucfirst(trim($_POST['addressLine1'])),
-                'addressLine2' => ucfirst(trim($_POST['addressLine2'])),
-                'city' => ucfirst(trim($_POST['city'])),
-                'companyLogo' => $_FILES['companyLogo'],
-                'companyLogoName' => '',
-                'description' => '',
-                'role' => 'Company',
-                'date' => date('Y-m-d H:i:s'),
-                'status' => 'Pending',
+            // Init data
+            $data = $this->prepareData($_POST, $_FILES);
 
-                'companyName_err' => '',
-                'email_err' => '',
-                'password_err' => '',
-                'confirm_password_err' => '',
-                'contactNo_err' => '',
-                'streetNo_err' => '',
-                'addressLine1_err' => '',
-                'addressLine2_err' => '',
-                'city_err' => '',
-                'description_err' => '',
-                'companyLogo_err' => ''
-            ];
+            //check email is already registered
+            if ($this->model->findUserByEmail($data['email'])) {
+                $data['email_err'] = 'Email is already registered';
+            }
 
-            // Validate email
-            $data['email_err'] = Validator::isEmpty($data['email']) ? 'Please enter email' : 
-                (!Validator::isValidEmail($data['email']) ? 'Please enter a valid email' : 
-                ($this->model->findUserByEmail($data['email']) ? 'Email is already taken' : ''));
+            $validationResponse = Validator::isValidRegistrationData($data);
+            if (!$validationResponse['is_valid']) {
+                $data = array_merge($data, $validationResponse['error']);
+            }
 
-            // Validate password
-            $data['password_err'] = Validator::isEmpty($data['password']) ? 'Please enter password' : 
-                (!Validator::isValidPassword($data['password']) ? 'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number' : '');
-
-            // Validate confirm password
-            $data['confirm_password_err'] = Validator::isEmpty($data['confirm_password']) ? 'Please confirm password' : 
-                (!Validator::isValidConfirmPassword($data['password'], $data['confirm_password']) ? 'Passwords do not match' : '');
-
-            // Validate company name
-            $data['companyName_err'] = Validator::isEmpty($data['companyName']) ? 'Please enter company name' : 
-                (!Validator::isValidCompanyName($data['companyName']) ? 'Company name can only contain letters and spaces' : '');
-
-            // Validate contact number
-            $data['contactNo_err'] = Validator::isEmpty($data['contactNo']) ? 'Please enter contact number' : 
-                (!Validator::isValidContactNo($data['contactNo']) ? 'Please enter a valid contact number' : '');
-
-            // Validate street number
-            $data['streetNo_err'] = Validator::isEmpty($data['streetNo']) ? 'Please enter street number' : '';
-
-            // Validate address line 1
-            $data['addressLine1_err'] = Validator::isEmpty($data['addressLine1']) ? 'Please enter address line 1' : '';
-
-            // Validate city
-            $data['city_err'] = Validator::isEmpty($data['city']) ? 'Please enter city' : '';
-
-            //validate role
-            $data['role_err'] = Validator::isEmpty($data['role']) ? 'Please enter role' : 
-                (!Validator::isValidRole($data['role']) ? 'Invalid role' : '');
-
-            //validate status
-            $data['status_err'] = Validator::isEmpty($data['status']) ? 'Please enter status' : 
-                (!Validator::isValidStatus($data['status']) ? 'Invalid status' : '');
-
-            //validate and upload profile picture
-            $response = ImageUploadHelper::uploadImage($data['companyLogo'], PUBROOT.'/images/profile_pictures/company');
-            if ($response['success']) {
-                $data['companyLogoName'] = $response['file_name'];
-            } else {
-                $data['companyLogo_err'] = $response['error'];
+            $fileValidationResponse = FileUploadHelper::validateFiles(['companyLogo' => ['file' => $data['companyLogo'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS]]);
+            if (!$fileValidationResponse['is_valid']) {
+                $data = array_merge($data, $fileValidationResponse['error']);
             }
 
             // Check if there are no errors
             if (empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['companyName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['companyLogo_err'])) {
                 // Hash password
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+                // Upload company logo
+                $companyLogoResponse = FileUploadHelper::uploadFiles(['companyLogo' => ['file' => $data['companyLogo'], 'path' => PUBROOT . 'uploads/profile_pictures/company']]);
+                if ($companyLogoResponse['success']) {
+                    $data = array_merge($data, $companyLogoResponse['file_name']);
+                } else {
+                    $data = array_merge($data, $companyLogoResponse['error']);
+                    $this->view('pages/service_provider/register', $data);
+                    return;
+                }
 
                 // Register user
                 if ($this->model->companyRegister($data)) {
@@ -119,31 +106,7 @@ class Service_provider extends Controller
             }
 
         } else {
-            $data = [
-                'companyName' => '',
-                'email' => '',
-                'password' => '',
-                'confirm_password' => '',
-                'contactNo' => '',
-                'streetNo' => '',
-                'addressLine1' => '',
-                'addressLine2' => '',
-                'city' => '',
-                'description' => '',
-                'companyLogo' => '',
-
-                'companyName_err' => '',
-                'email_err' => '',
-                'password_err' => '',
-                'confirm_password_err' => '',
-                'contactNo_err' => '',
-                'streetNo_err' => '',
-                'addressLine1_err' => '',
-                'addressLine2_err' => '',
-                'city_err' => '',
-                'description_err' => '',
-                'companyLogo_err' => ''
-            ];
+            $data = $this->prepareData();
 
             // Load view
             $this->view('pages/service_provider/register', $data);

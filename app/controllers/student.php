@@ -3,6 +3,56 @@ class Student extends Controller
 {
     private $model;
 
+    private function prepareData($post = [], $files = [])
+    {
+        return [
+            'firstName' => ucfirst(trim($post['firstName'] ?? '')),
+            'lastName' => ucfirst(trim($post['lastName'] ?? '')),
+            'email' => trim($post['email'] ?? ''),
+            'password' => trim($post['password'] ?? ''),
+            'confirm_password' => trim($post['confirm_password'] ?? ''),
+            'contactNo' => trim($post['contactNo'] ?? ''),
+            'streetNo' => trim($post['streetNo'] ?? ''),
+            'addressLine1' => ucfirst(trim($post['addressLine1'] ?? '')),
+            'addressLine2' => ucfirst(trim($post['addressLine2'] ?? '')),
+            'city' => ucfirst(trim($post['city'] ?? '')),
+            'gender' => ucfirst(trim($post['gender'] ?? '')),
+            'dob' => trim($post['dob'] ?? ''),
+            'profilePic' => $files['profilePic'] ?? '',
+            'nicNo' => trim($post['nicNo'] ?? ''),
+            'nicCopy' => $files['nicCopy'] ?? '',
+            'cv' => $files['cv'] ?? '',
+            'university' => ucfirst(trim($post['university'] ?? '')),
+            'universityID' => trim($post['universityID'] ?? ''),
+            'universityIDCopy' => $files['universityIDCopy'] ?? '',
+            'role' => 'Student',
+            'status' => 'Pending',
+            'date' => date('Y-m-d H:i:s'),
+
+            'firstName_err' => '',
+            'lastName_err' => '',
+            'email_err' => '',
+            'password_err' => '',
+            'confirm_password_err' => '',
+            'contactNo_err' => '',
+            'streetNo_err' => '',
+            'addressLine1_err' => '',
+            'addressLine2_err' => '',
+            'city_err' => '',
+            'gender_err' => '',
+            'dob_err' => '',
+            'nicNo_err' => '',
+            'profilePic_err' => '',
+            'nicCopy_err' => '',
+            'cv_err' => '',
+            'university_err' => '',
+            'universityID_err' => '',
+            'universityIDCopy_err' => '',
+            'role_err' => '',
+            'status_err' => ''
+        ];
+    }
+
     public function __construct()
     {
         // Load model
@@ -59,189 +109,73 @@ class Student extends Controller
             // Process form
             $_POST = filter_input_array(INPUT_POST);
 
-            $data = [
-                'firstName' => ucfirst(trim($_POST['firstName'])),
-                'lastName' => ucfirst(trim($_POST['lastName'])),
-                'email' => trim($_POST['email']),
-                'password' => trim($_POST['password']),
-                'confirm_password' => trim($_POST['confirm_password']),
-                'contactNo' => trim($_POST['contactNo']),
-                'streetNo' => trim($_POST['streetNo']),
-                'addressLine1' => ucfirst(trim($_POST['addressLine1'])),
-                'addressLine2' => ucfirst(trim($_POST['addressLine2'])),
-                'city' => ucfirst(trim($_POST['city'])),
-                'gender' => ucfirst(trim($_POST['gender'])),
-                'dob' => trim($_POST['dob']),
-                'profilePic' => $_FILES['profilePic'],
-                'nicNo' => trim($_POST['nicNo']),
-                'nicCopy' => $_FILES['nicCopy'],
-                'cv' => $_FILES['cv'],
-                'university' => ucfirst(trim($_POST['university'])),
-                'universityID' => trim($_POST['universityID']),
-                'universityIDCopy' => $_FILES['universityIDCopy'],
-                'profilePicName' => '',
-                'nicCopyName' => $_FILES['nicCopy']['name'],//TODO: implement this
-                'cvName' => $_FILES['cv']['name'],//TODO: implement this
-                'universityIDCopyName' => $_FILES['universityIDCopy']['name'],//TODO: implement this
-                'role' => 'Student',
-                'status' => 'Pending',
-                'date' => date('Y-m-d H:i:s'),
+            // Init data
+            $data = $this->prepareData($_POST, $_FILES);
 
-                'firstName_err' => '',
-                'lastName_err' => '',
-                'email_err' => '',
-                'password_err' => '',
-                'confirm_password_err' => '',
-                'contactNo_err' => '',
-                'streetNo_err' => '',
-                'addressLine1_err' => '',
-                'addressLine2_err' => '',
-                'city_err' => '',
-                'gender_err' => '',
-                'dob_err' => '',
-                'profilePic_err' => '',
-                'nicNo_err' => '',
-                'nicCopy_err' => '',
-                'cv_err' => '',
-                'university_err' => '',
-                'universityID_err' => '',
-                'universityIDCopy_err' => ''
-            ];
-
-            // Validate First Name
-            $data['firstName_err'] = Validator::isEmpty($data['firstName']) ? 'Please enter first name' : 
-                (!Validator::isValidName($data['firstName']) ? 'First name can only contain letters and spaces' : '');
-
-            // Validate Last Name
-            $data['lastName_err'] = Validator::isEmpty($data['lastName']) ? 'Please enter last name' : 
-                (!Validator::isValidName($data['lastName']) ? 'Last name can only contain letters and spaces' : '');
-
-            // Validate email
-            $data['email_err'] = Validator::isEmpty($data['email']) ? 'Please enter email' : 
-                (!Validator::isValidEmail($data['email']) ? 'Please enter a valid email' : 
-                ($this->model->findUserByEmail($data['email']) ? 'Email is already taken' : ''));
-
-            // Validate password
-            $data['password_err'] = Validator::isEmpty($data['password']) ? 'Please enter password' : 
-                (!Validator::isValidPassword($data['password']) ? 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one number' : '');
-
-            // Validate confirm password
-            $data['confirm_password_err'] = Validator::isEmpty($data['confirm_password']) ? 'Please confirm password' : 
-                (!Validator::isValidConfirmPassword($data['password'], $data['confirm_password']) ? 'Passwords do not match' : '');
-
-            // Validate contact number
-            $data['contactNo_err'] = Validator::isEmpty($data['contactNo']) ? 'Please enter contact number' : 
-                (!Validator::isValidContactNo($data['contactNo']) ? 'Please enter a valid contact number' : '');
-            
-            // Validate street number
-            $data['streetNo_err'] = Validator::isEmpty($data['streetNo']) ? 'Please enter street number' : '';
-
-            // Validate address line 1
-            $data['addressLine1_err'] = Validator::isEmpty($data['addressLine1']) ? 'Please enter address line 1' : '';
-
-            // Validate city
-            $data['city_err'] = Validator::isEmpty($data['city']) ? 'Please enter city' : '';
-
-            //Validate gender
-            $data['gender_err'] = Validator::isEmpty($data['gender']) ? 'Please select gender' :
-                (!Validator::isValidGender($data['gender']) ? 'Please select a valid gender' : '');
-
-            // Validate date of birth
-            $data['dob_err'] = Validator::isEmpty($data['dob']) ? 'Please enter date of birth' : 
-                (!Validator::isValidBirthdate($data['dob']) ? 'You must be at least 18 years old' : '');
-
-            // Validate NIC
-            $data['nicNo_err'] = Validator::isEmpty($data['nicNo']) ? 'Please enter NIC number' : 
-                (!Validator::isValidNIC($data['nicNo']) ? 'Please enter a valid NIC number' : '');
-
-            // Validate university
-            $data['university_err'] = Validator::isEmpty($data['university']) ? 'Please enter university' : '';
-
-            // Validate university ID
-            $data['universityID_err'] = Validator::isEmpty($data['universityID']) ? 'Please enter university ID' : '';
-
-            // Validate role
-            $data['role_err'] = Validator::isEmpty($data['role']) ? 'Please select a role' : 
-                (!Validator::isValidRole($data['role']) ? 'Please select a valid role' : '');
-
-            // Validate status
-            $data['status_err'] = Validator::isEmpty($data['status']) ? 'Please select a status' : 
-                (!Validator::isValidStatus($data['status']) ? 'Please select a valid status' : '');
-
-            // Validate and upload profile picture
-            $response = ImageUploadHelper::uploadImage($data['profilePic'], PUBROOT.'/images/profile_pictures/student');
-            if ($response['success']) {
-                $data['profilePicName'] = $response['file_name'];
-            } else {
-                $data['profilePic_err'] = $response['error'];
+            //check email is already registered
+            if ($this->model->findUserByEmail($data['email'])) {
+                $data['email_err'] = 'Email is already registered';
             }
 
-            // Validate and upload NIC copy
+            //vallidate input data
+            $validationResponse = Validator::isValidRegistrationData($data);
+            if (!$validationResponse['is_valid']) {
+                $data = array_merge($data, $validationResponse['error']);
+            }
 
-            // Validate and upload CV
+            //vallidate files
+            $fileValidationResponse = FileUploadHelper::validateFiles([
+                'profilePic' => ['file' => $data['profilePic'],'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                'nicCopy' => ['file' => $data['nicCopy'],'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
+                'cv' => ['file' => $data['cv'],'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
+                'universityIDCopy' => ['file' => $data['universityIDCopy'],'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
+            ]);
 
-            // Validate and upload university ID copy
+            if (!$fileValidationResponse['is_valid']) {
+                $data = array_merge($data, $fileValidationResponse['error']);
+            }
 
-            // Check for errors
-            if (empty($data['firstName_err']) && empty($data['lastName_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['gender_err']) && empty($data['dob_err']) && empty($data['nicNo_err']) && empty($data['university_err']) && empty($data['universityID_err']) && empty($data['profilePic_err'])) {
+            //check if there are no validation errors
+            if (empty($data['firstName_err']) && empty($data['lastName_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['gender_err']) && empty($data['dob_err']) && empty($data['nicNo_err']) && empty($data['university_err']) && empty($data['universityID_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['profilePic_err']) && empty($data['nicCopy_err']) && empty($data['cv_err']) && empty($data['universityIDCopy_err'])) {
                 // Hash password
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-                // Register user
+                //upload each file
+                $uploadedFilesResponse = FileUploadHelper::uploadFiles([
+                    'profilePic' => ['file' => $data['profilePic'],'path' => PUBROOT . 'uploads/profile_pictures/student'],
+                    'nicCopy' => ['file' => $data['nicCopy'],'path' => PUBROOT . 'uploads/nic_copies'],
+                    'cv' => ['file' => $data['cv'],'path' => PUBROOT . 'uploads/cvs'],
+                    'universityIDCopy' => ['file' => $data['universityIDCopy'],'path' => PUBROOT . 'uploads/university_id_copies']
+                ]);
+
+                //check if all files are uploaded successfully
+                if ($uploadedFilesResponse['success']) {
+                    //set file names to data array
+                    $data = array_merge($data, $uploadedFilesResponse['file_name']);
+                } else {
+                    //merge data with errors
+                    $data = array_merge($data, $uploadedFilesResponse['error']);
+                    // Load view with errors
+                    $this->view('pages/student/register', $data);
+                    return;
+                }
+
+                //register student
                 if ($this->model->studentRegister($data)) {
-                    // TODO: Flash success message
                     // Redirect to login page
                     Redirect::to(URLROOT . '/student/login');
                 } else {
                     die('Something went wrong');//TODO: Handle this
                 }
+
             } else {
                 // Load view with errors
                 $this->view('pages/student/register', $data);
             }
 
         } else {
-            $data = [
-                'firstName' => '',
-                'lastName' => '',
-                'email' => '',
-                'password' => '',
-                'confirm_password' => '',
-                'contactNo' => '',
-                'streetNo' => '',
-                'addressLine1' => '',
-                'addressLine2' => '',
-                'city' => '',
-                'gender' => '',
-                'dob' => '',
-                'profilePic' => '',
-                'nicNo' => '',
-                'nicCopy' => '',
-                'cv' => '',
-                'university' => '',
-                'universityID' => '',
-                'universityIDCopy' => '',
-
-                'firstName_err' => '',
-                'lastName_err' => '',
-                'email_err' => '',
-                'password_err' => '',
-                'confirm_password_err' => '',
-                'contactNo_err' => '',
-                'streetNo_err' => '',
-                'addressLine1_err' => '',
-                'addressLine2_err' => '',
-                'city_err' => '',
-                'gender_err' => '',
-                'dob_err' => '',
-                'profilePic_err' => '',
-                'nicNo_err' => '',
-                'nicCopy_err' => '',
-                'cv_err' => '',
-                'university_err' => '',
-                'universityID_err' => '',
-                'universityIDCopy_err' => ''
-            ];
+            // Init data
+            $data = $this->prepareData();
 
             // Load view
             $this->view('pages/student/register', $data);

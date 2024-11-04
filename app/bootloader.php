@@ -10,6 +10,6 @@ require_once 'libraries/Database.php';
 //load helpers
 require_once 'helpers/Redirect.php';
 require_once 'helpers/Validator.php';
-require_once 'helpers/ImageUploadHelper.php';
+require_once 'helpers/FileUploadHelper.php';
 
 $init = new Core();
