@@ -1,0 +1,57 @@
+<?php require APPROOT . '/views/components/header.php'; ?>
+
+<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+
+    <div class="search-bar-container">
+        <div class="search-bar">
+            <div class="search-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <input type="text" placeholder="Search jobs, internships" class="search-input">
+            <div class="filters-button">
+                <i class="fa-solid fa-filter"></i>
+                <span>Filters</span>
+            </div>
+            <button class="search-button">Search</button>
+        </div>
+    </div>
+
+    <h1 class= "H1">Trending Companies</h1>
+    <h2 class= "H2">Check out the top-rated companies based on the student reviews</h2>
+   
+    <div class="cards-container">
+        <?php for ($i = 0; $i < 6; $i++): ?>
+            <div class="card">
+                <div class="card-logo">
+                    <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
+                </div>
+                <div class="card-content">
+                    <div class="job-rating">
+                        <i class="fa fa-star"></i> 4.8
+                    </div>
+                    <h3 class="job-title">Spotify</h3>
+                    <p class="job-location">Based on 126 student reviews</p>
+                    <button class="view-button">View Company</button>
+
+                    <div class="card-icons">
+                    <i class="fa fa-heart"></i>
+                    <i class="fa fa-share-alt"></i>
+                    <i class="fa fa-bookmark"></i>
+                    </div>
+                </div>
+                <div class="social-media-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        <?php endfor; ?>
+    </div>
+</body>
+
+
+<?php require APPROOT . '/views/components/footer.php'; ?>
