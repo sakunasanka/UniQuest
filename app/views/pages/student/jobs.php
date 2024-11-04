@@ -7,6 +7,10 @@
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <div class="content-area">
+        <div class="tabs-header">
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
+        </div>
         <div class="container">
             <div class="search-bar-container">
                 <div class="search-bar">
@@ -78,4 +82,5 @@
     }
 </script>
 
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
