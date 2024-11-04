@@ -36,7 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit">Log in</button>
             </form>
             <div class="register-link">
-                <span>Do not have an account?</span> <a href="#">Register now</a>
             </div>
         </div>
         <div class="right-side">
@@ -46,10 +45,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </a>
         </div>
     </div>
-    </div>
 
-<?php require APPROOT . '/views/components/footer.php'; ?>
-  
-
-
-
+    <?php require APPROOT . '/views/components/footer.php'; ?>
