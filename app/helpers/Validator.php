@@ -79,6 +79,12 @@ class Validator
         return in_array($gender, ['Male', 'Female']);
     }
 
+    //validate the terms and conditions
+    public static function isValidTerms($terms): bool
+    {
+        return $terms === 'accepted';
+    }
+
     //validate the registration data
     public static function isValidRegistrationData(array $data): array
     {
@@ -179,6 +185,12 @@ class Validator
             if (self::isEmpty($data['city'])) {
                 $errors['city_err'] = 'City is required';
             }
+
+            if (self::isEmpty($data['terms'])) {
+                $errors['terms_err'] = 'You must accept the terms and conditions';
+            } else if (!self::isValidTerms($data['terms'])) {
+                $errors['terms_err'] = 'You must accept the terms and conditions';
+            }
         }
 
         // Check if the data is for a company
@@ -199,6 +211,12 @@ class Validator
 
             if (self::isEmpty($data['city'])) {
                 $errors['city_err'] = 'City is required';
+            }
+
+            if (self::isEmpty($data['terms'])) {
+                $errors['terms_err'] = 'You must accept the terms and conditions';
+            } else if (!self::isValidTerms($data['terms'])) {
+                $errors['terms_err'] = 'You must accept the terms and conditions';
             }
         }
 

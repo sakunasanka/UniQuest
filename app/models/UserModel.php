@@ -153,6 +153,59 @@ class userModel
         }
     }
 
+    public function vtMemberRegister(array $data)
+    {
+        try{
+            // Start transaction
+            $this->db->beginTransaction();
+
+            //Insert into User table
+            $this->db->query('INSERT INTO user (Password, Email, Role, RegisterDate, ContactNo, Status) VALUES ( :password, :email, :role, :registerDate, :contactNo, :status)');
+            $this->db->bind(':password', $data['password']);
+            $this->db->bind(':email', $data['email']);
+            $this->db->bind(':role', $data['role']);
+            $this->db->bind(':registerDate', $data['date']);
+            $this->db->bind(':contactNo', $data['contactNo']);
+            $this->db->bind(':status', $data['status']);
+
+            //Execute query
+            if (!$this->db->execute()) {
+                error_log('Failed to insert into User table');
+                $this->db->rollBack();
+                return false;
+            }
+
+            //Get the last inserted user id
+            $userId = $this->db->lastInsertId();
+
+            //Insert into verification team table
+            $this->db->query('INSERT INTO VerificationTeam (VT_MemberID, FirstName, LastName, ProfilePic) VALUES (:vtMemberID, :firstName, :lastName, :profilePic)');
+            $this->db->bind(':vtMemberID', $userId);
+            $this->db->bind(':firstName', $data['firstName']);
+            $this->db->bind(':lastName', $data['lastName']);
+            $this->db->bind(':profilePic', $data['profilePicName']);
+            
+            //Execute query
+            if (!$this->db->execute()) {
+                error_log('Failed to insert into verification team table');
+                $this->db->rollBack();
+                return false;
+            }
+
+            //Commit transaction
+            $this->db->commit();
+            return true;
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function login($email, $password)
     {
         try {

@@ -15,6 +15,7 @@ class Service_provider extends Controller
             'addressLine1' => ucfirst(trim($post['addressLine1'] ?? '')),
             'addressLine2' => ucfirst(trim($post['addressLine2'] ?? '')),
             'city' => ucfirst(trim($post['city'] ?? '')),
+            'terms' => trim($post['terms'] ?? ''),
             'companyLogo' => $files['companyLogo'] ?? '',
             'companyLogoName' => '',
             'description' => '',
@@ -33,6 +34,7 @@ class Service_provider extends Controller
             'city_err' => '',
             'description_err' => '',
             'companyLogo_err' => '',
+            'terms_err' => '',
             'role_err' => '',
             'status_err' => ''
         ];
@@ -73,9 +75,9 @@ class Service_provider extends Controller
                 $data = array_merge($data, $validationResponse['error']);
             }
 
-            $fileValidationResponse = FileUploadHelper::validateFiles(['companyLogo' => ['file' => $data['companyLogo'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS]]);
-            if (!$fileValidationResponse['is_valid']) {
-                $data = array_merge($data, $fileValidationResponse['error']);
+            $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
+            if (!$logoValidationResponse['is_valid']) {
+                $data['companyLogo_err'] = $logoValidationResponse['error'];
             }
 
             // Check if there are no errors
@@ -84,11 +86,11 @@ class Service_provider extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Upload company logo
-                $companyLogoResponse = FileUploadHelper::uploadFiles(['companyLogo' => ['file' => $data['companyLogo'], 'path' => PUBROOT . 'uploads/profile_pictures/company']]);
+                $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
                 if ($companyLogoResponse['success']) {
-                    $data = array_merge($data, $companyLogoResponse['file_name']);
+                    $data['companyLogoName'] = $companyLogoResponse['fileName'];
                 } else {
-                    $data = array_merge($data, $companyLogoResponse['error']);
+                    $data['companyLogo_err'] = $companyLogoResponse['error'];
                     $this->view('pages/service_provider/register', $data);
                     return;
                 }
@@ -125,53 +127,7 @@ class Service_provider extends Controller
   
     public function login()
     {
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            // Sanitize POST array
-            $_POST = filter_input_array(INPUT_POST);
-
-            $data = [
-                'email' => trim($_POST['email']),
-                'password' => trim($_POST['password']),
-                'email_err' => '',
-                'password_err' => ''
-            ];
-
-            // Validate email
-            $data['email_err'] = Validator::isEmpty($data['email']) ? 'Please enter email' : 
-                (!Validator::isValidEmail($data['email']) ? 'Please enter a valid email' : 
-                (!$this->model->findUserByEmail($data['email']) ? 'No user found' : ''));
-
-            // Validate password
-            $data['password_err'] = Validator::isEmpty($data['password']) ? 'Please enter password' : '';
-
-            // Check if there are no errors
-            if (empty($data['email_err']) && empty($data['password_err'])) {
-                // Check for user
-                $loggedInUser = $this->model->login($data['email'], $data['password']);
-
-                if ($loggedInUser) {
-                    // Create session
-                    die('Logged in');//TODO: Handle this
-                } else {
-                    $data['password_err'] = 'Password incorrect';
-                    $this->view('pages/service_provider/login', $data);
-                }
-            } else {
-                // Load view with errors
-                $this->view('pages/service_provider/login', $data);
-            }
-
-        } else {
-            $data = [
-                'email' => '',
-                'password' => '',
-                'email_err' => '',
-                'password_err' => ''
-            ];
-
-            // Load view
-            $this->view('pages/service_provider/login', $data);
-        }
+        $this->view('pages/service_provider/login');
     }
 
     public function ongoing_jobs()

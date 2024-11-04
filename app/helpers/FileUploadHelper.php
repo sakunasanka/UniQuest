@@ -12,6 +12,13 @@ class FileUploadHelper
             'error' => ''
         ];
 
+        // Check if the file exists and has been uploaded
+        if (empty($file) || !isset($file['name']) || $file['size'] == 0) {
+            // No file was uploaded, so we can consider it valid or skip validation
+            $response['is_valid'] = true;
+            return $response;
+        }
+
         $file_size = $file['size'];
         $file_error = $file['error'];
         $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
@@ -47,7 +54,14 @@ class FileUploadHelper
             'error' => ''
         ];
 
-        // Ensure directory exists
+        // Check if the file exists and has been uploaded
+        if (empty($file) || !isset($file['name']) || $file['size'] == 0) {
+            // No file was uploaded, so we can consider it valid or skip validation
+            $response['success'] = true;
+            return $response;
+        }
+
+        // Ensure the directory exists
         if (!is_dir($path)) {
             mkdir($path, 0755, true);
         }

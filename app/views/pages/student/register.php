@@ -122,13 +122,14 @@
                     </div>
 
                     <div class="form-group terms">
-                        <input type="checkbox" id="terms" name="terms" required>
+                        <input type="checkbox" id="terms" name="terms" value="accepted" required>
                         <label for="terms">
                             I agreed to all
                             <a href="terms.html" target="_blank">Terms</a>
                             and
                             <a href="privacy.html" target="_blank">Privacy Policy</a>
                         </label>
+                        <span class="error-msg"><?php echo !empty($data['terms_err']) ? $data['terms_err'] : ''; ?></span>
                     </div>
 
                     <button type="submit">Register</button>

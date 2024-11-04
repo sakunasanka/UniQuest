@@ -25,6 +25,7 @@ class Student extends Controller
             'university' => ucfirst(trim($post['university'] ?? '')),
             'universityID' => trim($post['universityID'] ?? ''),
             'universityIDCopy' => $files['universityIDCopy'] ?? '',
+            'terms' => trim($post['terms'] ?? ''),
             'role' => 'Student',
             'status' => 'Pending',
             'date' => date('Y-m-d H:i:s'),
@@ -48,6 +49,7 @@ class Student extends Controller
             'university_err' => '',
             'universityID_err' => '',
             'universityIDCopy_err' => '',
+            'terms_err' => '',
             'role_err' => '',
             'status_err' => ''
         ];
@@ -142,10 +144,10 @@ class Student extends Controller
 
                 //upload each file
                 $uploadedFilesResponse = FileUploadHelper::uploadFiles([
-                    'profilePic' => ['file' => $data['profilePic'],'path' => PUBROOT . 'uploads/profile_pictures/student'],
-                    'nicCopy' => ['file' => $data['nicCopy'],'path' => PUBROOT . 'uploads/nic_copies'],
-                    'cv' => ['file' => $data['cv'],'path' => PUBROOT . 'uploads/cvs'],
-                    'universityIDCopy' => ['file' => $data['universityIDCopy'],'path' => PUBROOT . 'uploads/university_id_copies']
+                    'profilePic' => ['file' => $data['profilePic'],'path' => PUBROOT . '/uploads/profile_pictures/student'],
+                    'nicCopy' => ['file' => $data['nicCopy'],'path' => PUBROOT . '/uploads/nic_copies'],
+                    'cv' => ['file' => $data['cv'],'path' => PUBROOT . '/uploads/cvs'],
+                    'universityIDCopy' => ['file' => $data['universityIDCopy'],'path' => PUBROOT . '/uploads/university_id_copies']
                 ]);
 
                 //check if all files are uploaded successfully

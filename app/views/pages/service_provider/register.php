@@ -24,7 +24,7 @@
                 <span class="error-msg"><?php echo !empty($data['contactNo_err']) ? $data['contactNo_err'] : '' ?></span>
 
                 <label for="company-logo">Company Logo</label>
-                <input type="file" id="companyLogo" name="companyLogo" value="<?php echo $data['companyLogo']; ?>" accept=".jpg, .jpeg, .png">
+                <input type="file" id="companyLogo" name="companyLogo" accept=".jpg, .jpeg, .png">
                 <span class="error-msg"><?php echo !empty($data['companyLogo_err']) ? $data['companyLogo_err'] : '' ?></span>
 
             </div>
@@ -68,12 +68,13 @@
 
             <!-- Terms and Register Button -->
             <div class="form-group terms">
-                <input type="checkbox" id="terms" name="terms" required>
+                <input type="checkbox" id="terms" name="terms" value="accepted" required>
                 <label for="terms">
                     I agreed to all
                     <a href="terms.html" target="_blank">Terms</a> and
                     <a href="privacy.html" target="_blank">Privacy Policy</a>
                 </label>
+                <span class="error-msg"><?php echo !empty($data['terms_err']) ? $data['terms_err'] : '' ?></span>
             </div>
 
             <button type="submit" value="register">Register</button>
