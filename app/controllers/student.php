@@ -223,12 +223,17 @@ class Student extends Controller
     {
         $this->view('pages/student/saveJobs');
     }
+
+    public function saveCompanies()
+    {
+        $this->view('pages/student/saveCompanies');
+    }
   
     public function jobsDescription()
     {
         $this->view('pages/student/jobsDescription');
     }
-    
+
     public function jobsApply()
     {
         $this->view('pages/student/jobsApply');

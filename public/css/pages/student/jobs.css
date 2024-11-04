@@ -8,25 +8,26 @@
 body {
     margin: 0;
     font-family: 'Outfit', sans-serif;
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: #f8f9fa;
+}
+
+.container{
+    padding: 0 10px;
 }
 
 .search-bar-container {
-    width: 100%;
     display: flex;
     justify-content: center;
     margin: 20px 0;
-    margin-top: 100px;
+    margin-top: 0px;
+    margin-bottom: 40px;
 }
 
 .search-bar {
     display: flex;
     align-items: center;
     background-color: #ffffff;
-    padding: 5px;
+    padding: 5px 20px;
     border-radius: 30px;
     width: 60%;
     height: 60px;
@@ -38,6 +39,7 @@ body {
     font-size: 24px;
     color: #555;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .search-input {
@@ -63,31 +65,17 @@ body {
     margin-right: 5px;
 }
 
-.search-button {
-    background-color: #4bd681;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-}
-
-.search-button:hover {
-    background-color: #3cb56e;
-}
-
 .cards-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    gap: 50px;
     width: 100%;
-    max-width: 1200px;
-    max-height: 500px;
-    padding: 40px;
+    padding: 5px;
+    margin-top: 40px;
 }
 
 .card {
-    background-color: #f9f9f9;
+    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
@@ -97,11 +85,10 @@ body {
     max-height: 600px; /* Set the desired max height */
 }
 
-
-
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
 }
 
 .card-logo img {
@@ -186,7 +173,7 @@ body {
 }
 
 .view-button {
-    background-color: #4bd681;
+    background-color: #299b63;
     color: #fff;
     padding: 10px 20px;
     border-radius: 20px;
@@ -196,5 +183,20 @@ body {
 }
 
 .view-button:hover {
-    background-color: #3cb56e;
+    background-color: #137d4a;
+}
+
+.H1{
+    color: black;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.H2{
+    color: #999;
+}
+
+.H3{
+    color: #222;
+    text-align: center;
 }

@@ -1,7 +1,8 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/premiumFeatures.css">
 
-<?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+<div class="main-container">
+    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
     <div class="content-area">
         <h1>Upgrade to a Premium Plan</h1>
         <p>Take your job posting experience to the next level with our premium plans.</p>
@@ -50,5 +51,6 @@
             </div>
         </div>
     </div>
+</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>    
