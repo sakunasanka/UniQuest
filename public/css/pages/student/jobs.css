@@ -195,3 +195,8 @@ body {
 .H2{
     color: #999;
 }
+
+.H3{
+    color: #222;
+    text-align: center;
+}
