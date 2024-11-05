@@ -227,7 +227,38 @@ class userModel
         }
     }
 
-    
+    public function getSessionDetails($userId)
+    {
+        try {
+            $this->db->query('SELECT UserID, Email, Role, Status FROM User WHERE UserID = :userId');
+            $this->db->bind(':userId', $userId);
+            $user = $this->db->single();
+            if ($user-> Role === 'Student') {
+                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM Student WHERE StudentID = :userId');
+                $this->db->bind(':userId', $userId);
+                $student = $this->db->single();
+                return array_merge((array)$user, (array)$student);
+            } else if ($user-> Role === 'Company') {
+                $this->db->query('SELECT CompanyName, CompanyLogo FROM Company WHERE CompanyID = :userId');
+                $this->db->bind(':userId', $userId);
+                $company = $this->db->single();
+                return array_merge((array)$user, (array)$company);
+            } else if ($user-> Role === 'VT-Member') {
+                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM VerificationTeam WHERE VT_MemberID = :userId');
+                $this->db->bind(':userId', $userId);
+                $vtMember = $this->db->single();
+                return array_merge((array)$user, (array)$vtMember);
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) { // Catch database-specific exceptions
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 
 
 }

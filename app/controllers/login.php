@@ -35,13 +35,18 @@ class Login extends Controller {
                 // Check for user
                 $loggedInUser = $this->model->login($data['email'], $data['password']);
 
-                if ($loggedInUser) {
+                if ($loggedInUser && $loggedInUser->Status === 'Active') {
                     // Create session
-                    die('Logged in');//TODO: Handle this
+                    $this->createSession($loggedInUser->UserID);
+                } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
+                    die('Pending');//TODO: Handle this
+                } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
+                    die('Not Approved');//TODO: Handle this
                 } else {
                     $data['password_err'] = 'Password incorrect';
                     $this->view('pages/login/login', $data);
                 }
+
             } else {
                 // Load view with errors
                 $this->view('pages/login/login', $data);
@@ -59,5 +64,47 @@ class Login extends Controller {
             $this->view('pages/login/login', $data);
         }
     }
+
+    public function createSession($userID) {
+        // Start session
+        session_start();
+    
+        // Get session details
+        $user = $this->model->getSessionDetails($userID);
+    
+        if ($user) {
+            // Store session variables
+            $_SESSION['user_id'] = $user['UserID'];
+            $_SESSION['user_email'] = $user['Email'];
+            $_SESSION['user_role'] = $user['Role'];
+            $_SESSION['user_status'] = $user['Status'];
+    
+            if ($user['Role'] === 'Student' || $user['Role'] === 'Admin' || $user['Role'] === 'VT-Member') {
+                $_SESSION['user_name'] = $user['FirstName'] . ' ' . $user['LastName'];
+                $_SESSION['user_profile_pic'] = $user['ProfilePic'];
+            } else if ($user['Role'] === 'Company') {
+                $_SESSION['user_name'] = $user['CompanyName'];
+                $_SESSION['user_profile_pic'] = $user['CompanyLogo'];
+            }
+    
+            // TODO: Redirect to dashboard or handle the next step
+            die(print_r($_SESSION, true));
+        } else {
+            // Handle case where session details were not found
+            die('User not found or unable to create session');
+        }
+    }
+
+    public function logout() {
+        // Unset session variables
+        session_unset();
+    
+        // Destroy session
+        session_destroy();
+    
+        // Redirect to login page
+        Redirect::to(URLROOT . '/login');
+    }
+    
 }
 ?>
