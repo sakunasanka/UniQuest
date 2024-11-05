@@ -125,6 +125,48 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
+-- -----------------------------------------------------
+-- Table `uniquest`.`Jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
+  `JobID` INT NOT NULL,
+  `Title` VARCHAR(45) NULL,
+  `Description` VARCHAR(45) NULL,
+  `Location` VARCHAR(45) NULL,
+  `Category` ENUM('Part Time', 'Internship') NULL,
+  `CompanyID` INT NOT NULL,
+  PRIMARY KEY (`JobID`, `CompanyID`),
+  INDEX `fk_Jobs_ServiceProvider1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_Jobs_ServiceProvider1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquest`.`Company` (`CompanyID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`BookmarkJobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`BookmarkJobs` (
+  `StudentID` INT NOT NULL,
+  `JobID` INT NOT NULL,
+  PRIMARY KEY (`StudentID`, `JobID`),
+  INDEX `fk_Student_has_Jobs_Jobs1_idx` (`JobID` ASC),
+  INDEX `fk_Student_has_Jobs_Student1_idx` (`StudentID` ASC),
+  CONSTRAINT `fk_Student_has_Jobs_Student1`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquest`.`Student` (`StudentID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Student_has_Jobs_Jobs1`
+    FOREIGN KEY (`JobID`)
+    REFERENCES `uniquest`.`Jobs` (`JobID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
