@@ -78,6 +78,25 @@
     function toggleBookmark(icon) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
+        const jobId = icon.closest('.card').dataset.jobId;
+        fetch('<?php echo URLROOT; ?>/student/bookmarkJob', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ jobId: jobId }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            console.log('Job bookmarked successfully');
+            } else {
+            console.error('Error bookmarking job');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
         icon.classList.toggle("icon-active");
     }
 </script>
