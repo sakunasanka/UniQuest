@@ -21,19 +21,13 @@
         </div>
 
         <!-- Saved -->
-        <button class="nav-btn" data-path="/uniquest/student/saved_jobs">
+        <button class="nav-btn" data-path="/uniquest/student/saveJobs">
             <span class="material-symbols-outlined"> bookmark </span>
             Saved Opportunities
         </button>
 
-        <!-- View Status -->
-        <button class="nav-btn" data-path="/uniquest/student/status">
-            <span class="material-symbols-outlined"> visibility </span>
-            View Status
-        </button>
-
         <!-- Trending companies -->
-        <button class="nav-btn" data-path="/uniquest/students/trending_companies">
+        <button class="nav-btn" data-path="/uniquest/student/trendyCompany">
             <span class="material-symbols-outlined"> trending_up </span>
             Trending Companies
         </button>
