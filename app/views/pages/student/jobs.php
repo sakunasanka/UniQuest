@@ -42,13 +42,16 @@
                             
                             <div class="job-location-details">
                                 Colombo, Western Province
+            
                             </div>
+                            <?php $job = (object) ['id' => $i + 1]; ?>
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $job->id; ?>, this)"></i>
                             </div>
                         </div>
+                        
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-twitter"></i></a>
@@ -75,30 +78,36 @@
         icon.classList.toggle("icon-active");
     }
 
-    function toggleBookmark(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        const jobId = icon.closest('.card').dataset.jobId;
-        fetch('<?php echo URLROOT; ?>/student/bookmarkJob', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ jobId: jobId }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-            console.log('Job bookmarked successfully');
+    function toggleBookmark(icon, jobId) {
+    icon.classList.toggle("fa-regular");
+    icon.classList.toggle("fa-solid");
+    icon.classList.toggle("icon-active");
+}
+
+    // Function to bookmark a job
+    function bookmarkJob(jobId, iconElement) {
+        // Create a new FormData object to send the jobId
+        const formData = new FormData();
+        formData.append('job_id', jobId); // Append the job ID to the request data
+
+        // Create a new XMLHttpRequest to send the data to the server
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/bookmarkJob', true);
+
+        // Set up the callback for when the request completes
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                alert(xhr.responseText); // Show the server response (e.g., success message)
+                iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
             } else {
-            console.error('Error bookmarking job');
+                alert('Failed to bookmark the job.');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-        icon.classList.toggle("icon-active");
+        };
+
+        // Send the request with the form data
+        xhr.send(formData);
     }
+
 </script>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
