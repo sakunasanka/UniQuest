@@ -13,7 +13,7 @@ class Jobs extends Controller
     public function index()
     {
         $data = [];
-        $this->view('posts/v_index', $data);
+        $this->view('pages/student/jobs', $data);
     }
 
     // New method to handle the bookmarking action
@@ -31,9 +31,36 @@ class Jobs extends Controller
                 echo "Failed to add bookmark. Please check the database.";
             }
         } else {
-            echo "Job ID is missing!";
+            echo "Job not found!";
         }
     }
+
+    public function checkBookmark()
+    {
+        // Example user ID (should come from session or authentication system)
+        $userId = 1; // For now, use a hardcoded user ID
+        $jobId = $_POST['job_id']; // Get job ID from the POST request
+
+        $this->model->isJobBookmarked($userId, $jobId);
+    }
+
+    // // public function removeBookmark()
+    // public function removeBookmark()
+    // {
+    //     // Example user ID (should come from session or authentication system)
+    //     $userId = 1; // For now, use a hardcoded user ID
+    //     $jobId = $_POST['job_id']; // Get job ID from the POST request
+
+    //     // Check if job ID is provided
+    //     if (!empty($jobId)) {
+    //         if ($this->model->removeBookmark($userId, $jobId)) {
+    //             echo "Bookmark removed successfully";
+    //         } else {
+    //             echo "Failed to remove bookmark. Please check the database.";
+    //         }
+    //     } else {
+    //         echo "Job not found!";
+    //     }
 
       // public function addBookmarkCompany($id) 
       // {

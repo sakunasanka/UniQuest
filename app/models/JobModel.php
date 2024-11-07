@@ -42,6 +42,23 @@ class jobModel
         }
     }
 
+    // Method to check if a job is bookmarked by the user
+    public function isJobBookmarked($studentId, $jobId) {
+        $this->db->query("SELECT COUNT(*) AS count FROM bookmarkJobs WHERE student_id = :student_id AND job_id = :job_id");
+        $this->db->bind(':student_id', $studentId);
+        $this->db->bind(':job_id', $jobId);
+        $row = $this->db->single();
+        return $row->count > 0;
+    }
+
+    // Method to remove a bookmark from the database
+    // public function removeBookmark($studentId, $jobId) {
+    //     $this->db->query("DELETE FROM bookmarkJobs WHERE student_id = :student_id AND job_id = :job_id");
+    //     $this->db->bind(':student_id', $studentId);
+    //     $this->db->bind(':job_id', $jobId);
+    //     return $this->db->execute();
+    // }
+
     // public function checkUserCompanyBookmark($data)
     // {
     //     $this->db->query("SELECT * FROM post_bookmarks WHERE studentId = :studentId AND companyId = :companyId");

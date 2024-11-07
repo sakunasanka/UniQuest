@@ -49,6 +49,7 @@
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
                                 <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $job->id; ?>, this)"></i>
+                                <?php echo $job->checkBookmarked?>
                             </div>
                         </div>
                         
@@ -85,27 +86,27 @@
 }
 
     // Function to bookmark a job
-    function bookmarkJob(jobId, iconElement) {
-        // Create a new FormData object to send the jobId
-        const formData = new FormData();
-        formData.append('job_id', jobId); // Append the job ID to the request data
+    function bookmarkJob(jobId, icon) {
+    // Prepare form data with the job ID
+    const data = new FormData();
+    data.append('job_id', jobId);
 
-        // Create a new XMLHttpRequest to send the data to the server
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/bookmarkJob', true);
+    // Set up an AJAX request
+    const request = new XMLHttpRequest();
+    request.open('POST', '<?php echo URLROOT; ?>/jobs/bookmarkJob', true);
 
-        // Set up the callback for when the request completes
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                alert(xhr.responseText); // Show the server response (e.g., success message)
-                iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
-            } else {
-                alert('Failed to bookmark the job.');
-            }
-        };
+    // Handle the server response
+    request.onload = function() {
+        if (request.status === 200) {
+            alert(request.responseText); // Display server response
+            icon.classList.toggle('bookmarked'); // Toggle bookmark icon
+        } else {
+            alert('Failed to bookmark the job.');
+        }
+    };
 
-        // Send the request with the form data
-        xhr.send(formData);
+    // Send the request with the job ID
+    request.send(data);
     }
 
 </script>
