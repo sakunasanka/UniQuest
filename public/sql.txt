@@ -1,0 +1,172 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema uniquest
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema uniquest
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `uniquest` DEFAULT CHARACTER SET utf8 ;
+USE `uniquest` ;
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`user` (
+  `UserID` INT(10) NOT NULL AUTO_INCREMENT,
+  `Password` VARCHAR(255) NOT NULL,
+  `Email` VARCHAR(255) NOT NULL,
+  `Role` ENUM('Admin', 'VT-Member', 'Student', 'Company') NOT NULL,
+  `RegisterDate` DATETIME NOT NULL,
+  `ContactNo` VARCHAR(10) NOT NULL DEFAULT '',
+  `Status` ENUM('Active', 'Deactive', 'Pending', 'Not Approved') NOT NULL,
+  PRIMARY KEY (`UserID`),
+  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC),
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 10037
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`admin`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`admin` (
+  `AdminID` INT(10) NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `ProfilePic` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`AdminID`),
+  INDEX `fk_Administration_User1_idx` (`AdminID` ASC),
+  CONSTRAINT `fk_Administration_User1`
+    FOREIGN KEY (`AdminID`)
+    REFERENCES `uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`company`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`company` (
+  `CompanyID` INT(10) NOT NULL,
+  `CompanyName` VARCHAR(255) NOT NULL,
+  `Description` VARCHAR(255) NULL DEFAULT NULL,
+  `CompanyLogo` VARCHAR(255) NULL DEFAULT NULL,
+  `StreetNo` VARCHAR(45) NOT NULL,
+  `AddressLine1` VARCHAR(45) NOT NULL,
+  `AddressLine2` VARCHAR(45) NULL DEFAULT NULL,
+  `City` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`CompanyID`),
+  INDEX `fk_ServiceProvider_User1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_ServiceProvider_User1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`student`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`student` (
+  `StudentID` INT(10) NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `ProfilePic` VARCHAR(255) NULL DEFAULT NULL,
+  `Gender` ENUM('Male', 'Female') NOT NULL,
+  `DOB` DATE NOT NULL,
+  `NIC_No` VARCHAR(12) NOT NULL,
+  `NIC_Copy` VARCHAR(255) NOT NULL,
+  `CV` VARCHAR(255) NULL DEFAULT NULL,
+  `StreetNo` VARCHAR(45) NOT NULL,
+  `AddressLine1` VARCHAR(45) NOT NULL,
+  `AddressLine2` VARCHAR(45) NULL DEFAULT NULL,
+  `City` VARCHAR(45) NOT NULL,
+  `University` VARCHAR(255) NOT NULL,
+  `UniversityID` VARCHAR(45) NOT NULL,
+  `UniversityID_Copy` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`StudentID`),
+  INDEX `fk_Student_User_idx` (`StudentID` ASC),
+  CONSTRAINT `fk_Student_User`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`verificationteam`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`verificationteam` (
+  `VT_MemberID` INT(10) NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `ProfilePic` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`VT_MemberID`),
+  INDEX `fk_VerficationTeam_User1_idx` (`VT_MemberID` ASC),
+  CONSTRAINT `fk_VerficationTeam_User1`
+    FOREIGN KEY (`VT_MemberID`)
+    REFERENCES `uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`Jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
+  `JobID` INT NOT NULL,
+  `Title` VARCHAR(45) NULL,
+  `Description` VARCHAR(45) NULL,
+  `Location` VARCHAR(45) NULL,
+  `Category` ENUM('Part Time', 'Internship') NULL,
+  `CompanyID` INT NOT NULL,
+  PRIMARY KEY (`JobID`, `CompanyID`),
+  INDEX `fk_Jobs_ServiceProvider1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_Jobs_ServiceProvider1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquest`.`Company` (`CompanyID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`BookmarkJobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`BookmarkJobs` (
+  `StudentID` INT NOT NULL,
+  `JobID` INT NOT NULL,
+  PRIMARY KEY (`StudentID`, `JobID`),
+  INDEX `fk_Student_has_Jobs_Jobs1_idx` (`JobID` ASC),
+  INDEX `fk_Student_has_Jobs_Student1_idx` (`StudentID` ASC),
+  CONSTRAINT `fk_Student_has_Jobs_Student1`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquest`.`Student` (`StudentID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Student_has_Jobs_Jobs1`
+    FOREIGN KEY (`JobID`)
+    REFERENCES `uniquest`.`Jobs` (`JobID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
