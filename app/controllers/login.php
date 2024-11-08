@@ -88,7 +88,15 @@ class Login extends Controller {
             }
     
             // TODO: Redirect to dashboard or handle the next step
-            die(print_r($_SESSION, true));
+            if ($user['Role'] === 'Student') {
+                Redirect::to(URLROOT . '/student/jobs');
+            } else if ($user['Role'] === 'Company') {
+                Redirect::to(URLROOT . '/service_provider/dashboard');
+            } else if ($user['Role'] === 'Admin') {
+                Redirect::to(URLROOT . '/admin/dashboard');
+            } else if ($user['Role'] === 'VT-Member') {
+                Redirect::to(URLROOT . '/verification_team/dashboard');
+            }
         } else {
             // Handle case where session details were not found
             die('User not found or unable to create session');
