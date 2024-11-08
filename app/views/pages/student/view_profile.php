@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <button class="edit-btn" >Edit info</button>
+    <button class="edit-btn" onclick="window.location.href='<?php echo URLROOT; ?>/student/edit_profile'">Edit info</button>
 </div>
 </div>
 </div>
