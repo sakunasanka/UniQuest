@@ -1,0 +1,49 @@
+<?php
+class Student extends Controller
+{
+    public function __construct()
+    {
+        // echo 'Pages loaded';
+    }
+
+    public function index()
+    {
+        echo 'student/index';
+    }
+
+    public function contact_sp()
+    {
+        $this->view('pages/student/contact_sp');
+    }
+
+    public function contact_admin()
+    {
+        $this->view('pages/student/contact_admin');
+    }
+    
+     public function students_mng()
+    {
+        $this->view('pages/student/students_mng');
+    }
+  
+    public function login()
+    {
+        $this->view('pages/student/login');
+    }
+    public function view_profile()
+    {
+        $this->view('pages/student/view_profile');
+    }
+
+    public function edit_profile()
+    {
+        $this->view('pages/student/edit_profile');
+    }
+    public function delete_account()
+    {
+        $this->view('pages/student/delete_account');
+    }
+
+
+}
+
