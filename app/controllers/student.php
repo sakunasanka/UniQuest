@@ -61,12 +61,7 @@ class Student extends Controller
     {
         $this->view('pages/student/rate_review_company');
     }
-
-    public function make_complain()
-    {
-        $this->view('pages/student/make_complain');
-    }
-
+    
     public function all_app()
     {
         $this->view('pages/student/all_applications');
