@@ -33,7 +33,7 @@ body {
     justify-content: center;   
     align-items: center;   
     margin-top: 0px;    
-    padding: 75px;
+    padding: 75px 100px;
     height: 100vh;
 }
 
@@ -46,7 +46,7 @@ body {
     text-align: center;
     padding: 20px 40px;
     border-radius: 10px 0 0 10px;
-    width: 40%;
+    width: 35%;
 }
 
 .image-section h1 {
@@ -71,7 +71,7 @@ body {
     height: 100%; /* Allow scrolling if form grows */
     background-color: #f5f5f5;
     border-radius: 0 10px 10px 0;
-    width: 60%;
+    width: 65%;
 }
 
 form h2 {
@@ -301,7 +301,7 @@ button[type="submit"]:hover {
 
 .file-name {
     display: inline-block;
-    max-width: 200px; /* Adjust max width as needed */
+    max-width: 160px; /* Adjust max width as needed */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
