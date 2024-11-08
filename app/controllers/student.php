@@ -100,6 +100,20 @@ class Student extends Controller
     {
         $this->view('pages/student/login');
     }
+
+    public function view_profile()
+    {
+        $this->view('pages/student/view_profile');
+    }
+
+    public function edit_profile()
+    {
+        $this->view('pages/student/edit_profile');
+    }
+    public function delete_account()
+    {
+        $this->view('pages/student/delete_account');
+    }
     public function rate_review_company()
     {
         $this->view('pages/student/rate_review_company');
@@ -238,5 +252,6 @@ class Student extends Controller
     {
         $this->view('pages/student/jobsApply');
     }
+
 }
 
