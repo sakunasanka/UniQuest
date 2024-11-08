@@ -144,6 +144,8 @@ class Register extends Controller
 
                 // Register user
                 if ($this->model->companyRegister($data)) {
+                    //clear data array
+                    $data = [];
                     // Redirect to login page
                     Redirect::to(URLROOT . '/service_provider/login');
                 } else {
@@ -221,6 +223,8 @@ class Register extends Controller
 
                 //register student
                 if ($this->model->studentRegister($data)) {
+                    //clear data array
+                    $data = [];
                     // Redirect to login page
                     Redirect::to(URLROOT . '/student/login');
                 } else {
