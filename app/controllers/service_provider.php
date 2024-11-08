@@ -28,12 +28,6 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/job_report');
     }
-  
-    public function login()
-    {
-        $this->view('pages/service_provider/login');
-    }
-
 
     public function ongoing_jobs()
     {
@@ -90,3 +84,5 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/view_profile');
     }
   
+}
+?>
