@@ -106,6 +106,11 @@ class Student extends Controller
     {
         $this->view('pages/student/saveCompanies');
     }
+
+    public function make_complain()
+    {
+        $this->view('pages/student/make_complain');
+    }
   
     public function jobsDescription()
     {
