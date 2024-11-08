@@ -1,7 +1,7 @@
 <aside class="sidebar">
     <nav class="nav-menu">
         <!-- Dashboard -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/dashboard">
+        <button class="nav-btn" data-path="/uniquest/student/jobs">
             <span class="material-symbols-outlined"> work </span>
             Browse Opportunities
         </button>
@@ -21,19 +21,19 @@
         </div>
 
         <!-- Saved -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/analytics">
+        <button class="nav-btn" data-path="/uniquest/student/saveJobs">
             <span class="material-symbols-outlined"> bookmark </span>
             Saved Opportunities
         </button>
 
         <!-- Trending companies -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/reviews">
+        <button class="nav-btn" data-path="/uniquest/student/trendyCompany">
             <span class="material-symbols-outlined"> trending_up </span>
             Trending Companies
         </button>
 
         <!-- Help and Support -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/support">
+        <button class="nav-btn" data-path="/uniquest/student/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
         </button>
