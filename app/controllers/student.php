@@ -43,11 +43,6 @@ class Student extends Controller
     {
         $this->view('pages/student/noMatch');
     }
-  
-    public function login()
-    {
-        $this->view('pages/student/login');
-    }
 
     public function view_profile()
     {
