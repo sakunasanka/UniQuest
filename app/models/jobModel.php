@@ -9,7 +9,7 @@ class jobModel extends Controller
     }
 
     public function create_complain($data) {
-        $this-> db->query('INSERT INTO complaint (job_posting, issue) VALUES (:job_posting, :issue)');
+        $this-> db->query('INSERT INTO test (job_posting, issue) VALUES (:job_posting, :issue)');
         $this->db->bind(':job_posting', $data['job_posting']);
         $this->db->bind(':issue', $data['issue']);
 

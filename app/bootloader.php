@@ -11,5 +11,6 @@ require_once 'libraries/Database.php';
 require_once 'helpers/Redirect.php';
 require_once 'helpers/Validator.php';
 require_once 'helpers/FileUploadHelper.php';
+require_once 'helpers/DisplayPopup.php';
 
 $init = new Core();

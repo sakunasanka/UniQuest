@@ -108,15 +108,18 @@ class Student extends Controller
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $data = [
-                'company' => trim($_POST['company']),
                 'job_posting' => trim($_POST['job_posting']),
                 'issue' => trim($_POST['issue']),
             ];
+            $this->model('jobModel')->create_complain($data);
+            
+            Redirect::to('make_complain');
+            DisplayPopup::openPopup(APPROOT . 'views/popups/admin/activateAcc');  //Not working yet  
+              
         }
 
         else {
             $data = [
-                'company' => '',
                 'job_posting' => '',
                 'issue' => '',
             ];

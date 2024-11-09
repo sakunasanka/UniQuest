@@ -17,7 +17,7 @@
                 <!-- Form -->
                 <form action="<?php echo URLROOT; ?>/student/make_complain" method="POST">
                     <label for="company">Company</label>
-                    <input type="text" id="company" name="company" placeholder="Enter Company name" value="<?php $data['company'];?>" required>
+                    <input type="text" id="company" name="company" value="Pizza hut" readonly>
             
                     <label for="job_posting">Job Posting</label>
                     <input type="text" id="job_posting" name="job_posting" placeholder="Enter job posting details" value="<?php $data['job_posting'];?>" required>
