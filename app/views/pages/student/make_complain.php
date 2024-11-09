@@ -1,5 +1,4 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
-
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/make_complain.css">
 
 <!-- Sidebar and Content Layout -->
@@ -8,8 +7,8 @@
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <!-- Content Area -->
-    <div class="content-area">
-        <div class="complaint-container">
+    <main class="content-area">
+    <div class="complaint-container">
         <!-- Complaint Form Section -->
             <div class="complaint-form-container">
                 <h2>Report an Issue</h2>
@@ -35,7 +34,10 @@
         <div class="complaint-image-container">
             <img src="<?php echo URLROOT; ?>/public/images/complain.png" alt="Report Issue Image">
         </div>
-    </div>
+    </main>
 </div>
+
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminBackButton.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
