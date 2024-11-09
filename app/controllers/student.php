@@ -104,7 +104,25 @@ class Student extends Controller
 
     public function make_complain()
     {
-        $this->view('pages/student/make_complain');
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'company' => trim($_POST['company']),
+                'job_posting' => trim($_POST['job_posting']),
+                'issue' => trim($_POST['issue']),
+            ];
+        }
+
+        else {
+            $data = [
+                'company' => '',
+                'job_posting' => '',
+                'issue' => '',
+            ];
+            $this->view('pages/student/make_complain', $data);
+        }
+        
     }
   
     public function jobsDescription()

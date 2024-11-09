@@ -8,22 +8,16 @@ class jobModel extends Controller
         $this->db = Database::getInstance();
     }
 
-    public function submitComplain() {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            
-        }
-        else {
-            $data = [
-                'company' => '',
-                'job_posting' => '',
-                'issue' => '',
+    public function create_complain($data) {
+        $this-> db->query('INSERT INTO complaint (job_posting, issue) VALUES (:job_posting, :issue)');
+        $this->db->bind(':job_posting', $data['job_posting']);
+        $this->db->bind(':issue', $data['issue']);
 
-                'company_err' => '',
-                'job_posting_err' => '',
-                'issue_err' => ''
-            ];
-            $this->view('pages/student/make_complain', $data);
+        // Execute
+        if($this->db->execute()) {
+            return true;
+        } else {
+            return false;
         }
     }
 
