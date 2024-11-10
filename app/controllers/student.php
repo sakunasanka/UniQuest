@@ -125,7 +125,7 @@ class Student extends Controller
 
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
-                if ($this->rateReviewModel->addReview($data)) {
+                if ($this->model('RateAndReviewModel')->addReview($data)) {
                     Redirect::to(URLROOT . '/student/rate_review_company');
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
