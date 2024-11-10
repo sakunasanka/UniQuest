@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/popups/student/deactivate_account.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/view_Profile.css">
 
@@ -15,7 +16,7 @@
         <img src="<?php echo URLROOT; ?>/public/images/user.png" alt="Profile Picture" class="profile-pic">
         <ul>
             <li><a href="profile.php">Profile</a></li>
-            <li><a href="deactivate_account.php">Deactivate Account</a></li>
+            <li><a class="delete_acc" onclick="showdeleteaccountconfirm()"     href="#" >Deactivate Account</a></li>
             <li><a href="signout.php">Sign out</a></li>
         </ul>
     </div>
@@ -77,4 +78,6 @@
 </div>
 </div>
 </div>
+
+<script src="<?php echo URLROOT; ?>/js/student/delete_account.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
