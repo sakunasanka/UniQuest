@@ -1,4 +1,21 @@
-.popup .overlay{
+
+/* Reset styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 0;
+}
+
+/* Wrapper for the layout */
+.l-container  .d-container{
+
     position: fixed;
     top: 0px;
     left: 0px;
@@ -8,6 +25,36 @@
     z-index: 101;
     display: none;
     
+
+
+}
+
+/* Main content styling */
+.l-container .container {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    flex-direction: column;
+    max-width: 400px;
+    background-color: #d6caca;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+    z-index: 107;
+}
+
+.l-container.active  .d-container{
+    display:flex;
+}
+
+.l-container.active .container{
+    display:flex;
+    transition: all 300ms ease-in-out;
+
+
 }
 
 .popup .content{

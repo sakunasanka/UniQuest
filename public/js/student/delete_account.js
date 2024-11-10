@@ -4,6 +4,8 @@ function showdeleteaccountconfirm() {
     popup_stu.classList.toggle("active");
 }
 
+let dapopup =document.querySelector(".container");
+const pageWrapper = document.querySelector(".page-wrapper");
 function showdeleteaccountconfirm(){
     dapopup.classList.add("active");
 }
