@@ -7,7 +7,7 @@
     <div class="hero-text">
         <h1>Welcome to UniQuest!</h1>
         <p>Empowering students with part time jobs and internship opportunities.</p>
-        <a href="#" class="cta-button">
+        <a href="#services" class="cta-button">
             Read More
         </a>
     </div>
@@ -15,7 +15,7 @@
 
 <!-- Services Section -->
 <div class="content">
-    <section class="services">
+    <section id="services" class="services">
         <h2>Our Services <i class="material-icons">work_outline</i></h2>
         <p>We offer part-time job opportunities for university students.</p>
         <div class="service-cards">
@@ -67,3 +67,4 @@
 
 <!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>
+<script src="<?php echo URLROOT; ?>/public/js/home/home_scroll.js"></script>
