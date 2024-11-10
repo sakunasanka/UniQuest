@@ -55,7 +55,7 @@ class Student extends Controller
     }
     public function delete_account()
     {
-        $this->view('pages/student/delete_account');
+        $this->view('popups/student/deactivate_account');
     }
     public function rate_review_company()
     {

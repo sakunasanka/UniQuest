@@ -27,7 +27,8 @@
 }
 
 .popup.active .overlay{
-    display: block;
+    display:flex ;
+    backdrop-filter: blur(5px);
 }
 
 .popup.active .content{
