@@ -63,7 +63,7 @@
             <div class="button-group"></div>
             <div class="form-group">
                 <button type="submit" class="save-button">Save Changes</button>
-                <button type="submit" class="change-password-btn" onclick="showChangePasswordForm()">change password1</button>
+                <button type="button" class="change-password-btn" onclick="showChangePasswordForm()">change password1</button>
             </div>
             </div>
         </form>
