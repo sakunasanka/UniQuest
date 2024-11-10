@@ -1,4 +1,4 @@
-    <footer class="footer">
+<footer class="footer">
         <div class="footer-container">
             <div class="footer-left">
                 <p>&copy; 2024 UniQuest. All rights reserved.</p>

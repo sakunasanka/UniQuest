@@ -15,7 +15,7 @@
     transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
     cursor: pointer;
     text-align: center;
-    font-weight: 500;
+    font-weight: bold;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for elevated effect */
 }
 
