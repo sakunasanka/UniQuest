@@ -25,32 +25,32 @@
         <div class="info-row">
             <label>Full Name</label>
             <span class="colon">:</span>
-            <span class="kk">kaveesha rathnayake</span>
+            <span class="kk"><?php echo $data['user']['FirstName'] ?> <?php echo $data['user']['LastName'] ?></span>
         </div>
-        <div class="info-row">
+        <!-- <div class="info-row">
             <label>Email</label>
             <span class="colon">:</span>
-            <span class="kk">kaveesha123@gmail.com</span>
-        </div>
+            <span class="kk"><?php echo $data['user']['Email'] ?></span>
+        </div> -->
         <div class="info-row">
             <label>Address</label>
             <span class="colon">:</span>
-            <span class="kk">29/A, Hambanthota</span>
+            <span class="kk"><?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?>, <?php echo $data['user']['City'] ?></span>
         </div>
         <div class="info-row">
             <label>NIC No</label>
             <span class="colon">:</span>
-            <span class="kk">200456789900</span>
+            <span class="kk"><?php echo $data['user']['NIC_No'] ?></span>
         </div>
         <div class="info-row">
             <label>Date Of Birth</label>
             <span class="colon">:</span>
-            <span class="kk">2002/09/06</span>
+            <span class="kk"><?php echo $data['user']['DOB'] ?></span>
         </div>
         <div class="info-row">
             <label>Mobile</label>
             <span class="colon">:</span>
-            <span class="kk">0776890789</span>
+            <span class="kk"><?php echo $data['user']['ContactNo'] ?></span>
         </div>
         <div class="info-row">
             <label>Uploaded CV</label>
@@ -62,12 +62,19 @@
     <h3>University information</h3>
     <div class="info-section">
         <div class="info-row">
+            <label>University</label>
+            <span class="colon">:</span>
+            <span class="kk"><?php echo $data['user']['University'] ?></span>
+        </div>
+        <div class="info-row">
             <label>University Email</label>
-            <span>: 2020cs058stu.cmb.ucsc.ac.lk</span>
+            <span class="colon">:</span>
+            <span class="kk"><?php echo $data['user']['Email'] ?></span>
         </div>
         <div class="info-row">
             <label>University ID number</label>
-            <span>: 21000678</span>
+            <span class="colon">:</span>
+            <span class="kk"><?php echo $data['user']['UniversityID'] ?></span>
         </div>
     </div>
 

@@ -67,16 +67,16 @@ body {
 }
 
 h3 {
-    font-size: 18px;
+    font-size: 20px;
     color: #333;
     font-weight: bold;
     margin-bottom: 15px;
     border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 5px;
+    padding: 5px;
 }
 
 .info-section {
-    margin-bottom: 20px;
+    margin: 20px 60px 30px 60px;
 }
 
 /* Info row styling with flexbox for alignment */
