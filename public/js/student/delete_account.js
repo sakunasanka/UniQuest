@@ -1,22 +1,17 @@
+let dapopup = document.getElementById("popup-stu");
 
-let dapopup =document.querySelector(".container");
-const pageWrapper = document.querySelector(".page-wrapper");
+function showdeleteaccountconfirm() {
+    popup_stu.classList.toggle("active");
+}
+
 function showdeleteaccountconfirm(){
-    
-    
     dapopup.classList.add("active");
-    pageWrapper.classList.add("blur");
-    
-
 }
 
 function closedeleteaccountconfirm(){
     dapopup.classList.remove("active");
-    pageWrapper.classList.remove("blur");
-
 }
 
 function canceldeleteaccountconfirm(){
     dapopup.classList.remove("active");
-    pageWrapper.classList.remove("blur");
 }
