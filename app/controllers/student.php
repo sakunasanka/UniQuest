@@ -11,7 +11,7 @@ class Student extends Controller
 
     public function index()
     {
-        echo 'student/index';
+        $this->view('pages/student/jobs');
     }
 
     public function contact_sp()
