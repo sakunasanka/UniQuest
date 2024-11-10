@@ -117,4 +117,9 @@ class Student extends Controller
         $this->view('pages/student/jobsApply');
     }
 
+    public function pending()
+    {
+        $this->view('pages/login/wait_to_verify_stu');
+    }
+
 }
