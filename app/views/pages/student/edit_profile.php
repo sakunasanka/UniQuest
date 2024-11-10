@@ -101,6 +101,6 @@
     </div>
 </div>
 </div>
-
+<script type="text/javascript" src="<?php echo URLROOT; ?>/js/student/change_password.js"></script>   
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
