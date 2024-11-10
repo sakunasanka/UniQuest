@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/delete_account.css">
 
+<div class="d-container">
 <div class="container">
         <h2>Delete Account</h2>
         <form action="delete_account.php" method="post">
@@ -17,5 +18,5 @@
             </div>
         </form>
     </div>
-
+    </div>
     <script type="text/javascript" src="<?php echo URLROOT; ?>/js/student/delete_account.js"></script>

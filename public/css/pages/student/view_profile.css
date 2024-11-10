@@ -6,6 +6,7 @@
 }
 
 body {
+    z-index: 101;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     padding: 0;

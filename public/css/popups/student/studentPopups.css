@@ -27,7 +27,7 @@
 }
 
 .popup.active .overlay{
-    display: block;
+    display:flex ;
 }
 
 .popup.active .content{
