@@ -1,9 +1,9 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/popups/student/changePassword.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/edit_profile.css">
 
 <!-- Sidebar and Content Layout -->
-
 
     <!-- Sidebar -->
 <div class="content-sub">
@@ -63,44 +63,12 @@
             <div class="button-group"></div>
             <div class="form-group">
                 <button type="submit" class="save-button">Save Changes</button>
-                <button type="button" class="change-password-btn" onclick="showChangePasswordForm()">change password1</button>
+                <button type="button" class="change-password-btn" onclick="ToggleChangePasswordForm()">change password</button>
             </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="changep_password-form-container" id="changep_password-form-container">
-        <h2>Change password</h2>
-        <form action="#" method="post">
-            <div class="changep_form-group">
-                <label for="current-password">Current Password</label>
-                <div class="changep_password-wrapper">
-                    <input type="password" id="current-password" name="current-password" placeholder="Password">
-                    <span class="changep_password-toggle">&#128065;</span> <!-- Eye icon -->
-                </div>
-            </div>
-            <div class="changep_form-group">
-                <label for="new-password">New Password</label>
-                <div class="changep_password-wrapper">
-                    <input type="password" id="new-password" name="new-password" placeholder="Password">
-                    <span class="changep_password-toggle">&#128065;</span> <!-- Eye icon -->
-                </div>
-            </div>
-            <div class="changep_form-group">
-                <label for="confirm-password">Confirm Password</label>
-                <div class="changep_password-wrapper">
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password">
-                    <span class="changep_password-toggle">&#128065;</span> <!-- Eye icon -->
-                </div>
-            </div>
-            <!-- Change Password button -->
-            <div class="changep_form-group">
-                <button type="submit" class="changep_change-button"  onclick="closeChangePasswordForm()">Change Password</button>
             </div>
         </form>
     </div>
 </div>
 </div>
-<script type="text/javascript" src="<?php echo URLROOT; ?>/js/student/change_password.js"></script>   
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
