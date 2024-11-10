@@ -106,7 +106,7 @@ label {
 }
 
 .edit-btn {
-    background-color: #FFA500;
+    background-color: #04AA6D;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -119,7 +119,7 @@ label {
 }
 
 .edit-btn:hover {
-    background-color: #FF8C00;
+    background-color: #218838;
 }
 
 .changep_password-form-container {
