@@ -1,8 +1,6 @@
-
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/rate_review_company.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="content-area">
     <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
@@ -11,31 +9,27 @@
     <div class="container">
         <h1>Rate and Review Company</h1>
 
-        <!-- Review Form (Static, Doesn't submit data) -->
+        <!-- Review Form -->
         <div class="review-form">
             <h2>Share your experience</h2>
-            <form>
+            <form action="<?php echo URLROOT ?>/student/addReview" method="POST">
+                <!-- Rating Input -->
                 <div class="rating-stars">
-                    <input type="radio" id="star5" name="rating" value="5">
-                    <label for="star5">★</label>
-                    <input type="radio" id="star4" name="rating" value="4">
-                    <label for="star4">★</label>
-                    <input type="radio" id="star3" name="rating" value="3">
-                    <label for="star3">★</label>
-                    <input type="radio" id="star2" name="rating" value="2">
-                    <label for="star2">★</label>
-                    <input type="radio" id="star1" name="rating" value="1">
-                    <label for="star1">★</label>
+                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                        <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($data['rating'] == $i) ? 'checked' : ''; ?>>
+                        <label for="star<?php echo $i; ?>">★</label>
+                    <?php endfor; ?>
                 </div>
+                <span class="error-msg"><?php echo !empty($data['rating_err']) ? $data['rating_err'] : ''; ?></span>
 
-                <input type="text" name="job_title" placeholder="Enter your job title" required>
-
-                <textarea name="review" placeholder="Share your experiences" required></textarea>
+                <!-- Comment Input -->
+                <textarea name="comment" placeholder="Share your experiences" required value = "<?php echo $data['comment']?>"></textarea>
+                <span class="error-msg"><?php echo !empty($data['comment_err']) ? $data['comment_err'] : ''; ?></span>
 
                 <button type="submit">Submit Review</button>
             </form>
         </div>
-
+        
         <!-- Static Student Reviews -->
         <h2>Student Reviews</h2>
         <div class="student-reviews">
