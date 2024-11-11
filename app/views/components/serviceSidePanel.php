@@ -47,7 +47,7 @@
         </button>
 
         <!-- Premium -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/premiums">
+        <button class="nav-btn" data-path="/uniquest/service_provider/premium">
         <span class="material-symbols-outlined">workspace_premium</span>
             Activate Premium
         </button>
@@ -64,6 +64,12 @@
             Help and Support
         </button>
     </nav>
+
+    <button class="nav-btn logout-btn" data-path="/uniquest/admin/reports">
+    <span class="material-symbols-outlined"> logout </span>
+        Logout
+    </button>
+    
 </aside>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/serviceSidePanel.js"></script>

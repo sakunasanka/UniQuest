@@ -1,0 +1,92 @@
+.popup .overlay{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.7);
+    z-index: 101;
+    display: none;
+    
+}
+
+.popup .content{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #fff;
+    width: 100vh;
+    z-index: 102;
+    text-align: left;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.popup.active .overlay{
+    display:flex ;
+    backdrop-filter: blur(5px);
+}
+
+.popup.active .content{
+    transition: all 300ms ease-in-out;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.changep_form-group {
+    margin-bottom: 15px;
+}
+
+.changep_form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.changep_password-wrapper {
+    position: relative;
+}
+
+.changep_form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.changep_form-group input::placeholder {
+    color: #999;
+}
+
+/* Eye icon inside input field */
+.changep_password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+}
+
+/* Change Password button */
+.changep_change-button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.changep_change-button:hover {
+    background-color: #218838;
+}
