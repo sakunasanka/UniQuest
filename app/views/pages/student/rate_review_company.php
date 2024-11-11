@@ -1,5 +1,4 @@
-
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/stu_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/rate_review_company.css">
 
 <!-- Sidebar and Content Layout -->
@@ -16,16 +15,16 @@
             <h2>Share your experience</h2>
             <form>
                 <div class="rating-stars">
-                    <input type="radio" id="star5" name="rating" value="5">
-                    <label for="star5">★</label>
-                    <input type="radio" id="star4" name="rating" value="4">
-                    <label for="star4">★</label>
-                    <input type="radio" id="star3" name="rating" value="3">
-                    <label for="star3">★</label>
-                    <input type="radio" id="star2" name="rating" value="2">
-                    <label for="star2">★</label>
                     <input type="radio" id="star1" name="rating" value="1">
                     <label for="star1">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4">★</label>
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5">★</label>
                 </div>
 
                 <input type="text" name="job_title" placeholder="Enter your job title" required>
@@ -90,3 +89,5 @@
             </div>
         </div>
     </div>
+
+    <script type="module" src="<?php echo URLROOT; ?>/public/js/student/starhover.js"></script>

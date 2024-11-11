@@ -9,6 +9,7 @@
     <div class="content-area">
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/internships">Internships</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
         </div>
         <div class="container">
@@ -28,15 +29,17 @@
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
-                        <div class="card-logo">
+                        <div class="card-logo" onclick="goToJobDescription()">
                             <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
                         </div>
-                        <div class="card-content">
-                            <div class="job-rating">
-                                <i class="fa fa-star"></i> 4.8
+                        <div class="card-content" onclick="goToJobDescription()">
+                            <div class="title-content">
+                                <h3 class="job-title">Delivery Rider</h3>
+                                <div class="job-rating">
+                                    <i class="fa fa-star"></i> 4.8
+                                </div>
                             </div>
-                            <h3 class="job-title">Delivery Rider</h3>
-                            <p class="job-location">Negombo / Ja Ela / Kiribathgoda</p>
+                            <p class="company-name"><b>Pizza Hut</b></p>
                             <p class="job-salary">Rs. 2,000 (per day)</p>
                             <p class="job-days-left">9 days left</p>
                             
@@ -84,3 +87,9 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToJobDescription() {
+        window.location.href = "/uniquest/student/jobsdescription";
+    }
+</script>
