@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.reg-background {
+    background-color: #299b63;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    gap: 80px;
+    padding: 20px;
+    border: none;
+    padding: 0;
+    outline: none;
+}
+
+.back {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 50;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.back span{
+    font-size: 40px;
+    font-variation-settings: 'OPSZ' 40;
+}
+
+.back:hover {
+    transform: scale(1.1);
+}
+
+.reg-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    background-color: #fff;
+    border-radius: 15px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: none; 
+    padding: 0; 
+    cursor: pointer;
+    outline: none; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.reg-btn:focus {
+    outline: none;
+}
+
+.reg-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); 
+}
+
+.image-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.image-section h1 {
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-size: 2rem;
+    color: #333;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.reg-btn:hover .image-section h1 {
+    transform: scale(1.1);
+}
+
+.image-section img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 15px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.reg-btn:hover .image-section img {
+    transform: scale(1.05);
+}

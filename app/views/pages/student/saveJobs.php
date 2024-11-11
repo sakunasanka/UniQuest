@@ -7,13 +7,17 @@
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <div class="content-area">
+        <div class="tabs-header">
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
+        </div>
         <div class="container">
             <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
-                    <input type="text" placeholder="Search jobs, internships..." class="search-input">
+                    <input type="text" placeholder="Search saved jobs, internships..." class="search-input">
                     <div class="filters-button">
                         <i class="fa-solid fa-filter"></i>
                         <span>Filters</span>
@@ -79,5 +83,6 @@
         icon.classList.toggle("icon-active");
     }
 </script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
