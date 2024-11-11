@@ -248,6 +248,11 @@ class userModel
                 $this->db->bind(':userId', $userId);
                 $vtMember = $this->db->single();
                 return array_merge((array)$user, (array)$vtMember);
+            } else if ($user-> Role === 'Admin') {
+                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM Admin WHERE AdminID = :userId');
+                $this->db->bind(':userId', $userId);
+                $admin = $this->db->single();
+                return array_merge((array)$user, (array)$admin);
             } else {
                 return false;
             }
@@ -259,7 +264,5 @@ class userModel
             return false;
         }
     }
-
-
 }
 ?>
