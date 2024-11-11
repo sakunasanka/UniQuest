@@ -23,6 +23,10 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/ser_dashboard');
     }
+    public function jobPostform()
+    {
+        $this->view('pages/admin/jobPost');
+    }
 
     public function report()
     {
