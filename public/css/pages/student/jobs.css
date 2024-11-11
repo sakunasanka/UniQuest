@@ -109,18 +109,24 @@ body {
     margin-bottom: 5px;
 }
 
-.job-rating {
-    font-size: 1.2em;
-    color: #333;
-    position: absolute;
-    top: 150px;
-    right: 20px;
+.title-content {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.job-rating {
+    font-size: 1em;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
 }
 
 .job-rating i {
     color: #fbc02d;
+    font-size: 1.2em;
 }
 
 .job-location-details {

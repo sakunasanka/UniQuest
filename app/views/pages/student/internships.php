@@ -1,7 +1,6 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="main-container">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
@@ -30,16 +29,18 @@
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
                         <div class="card-logo">
-                            <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
+                            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="job">
                         </div>
                         <div class="card-content">
+                        <div class="title-content">
+                            <h3 class="job-title">Software Engineering Internship</h3>
                             <div class="job-rating">
                                 <i class="fa fa-star"></i> 4.8
                             </div>
-                            <h3 class="job-title">Delivery Rider</h3>
-                            <p class="job-location">Negombo / Ja Ela / Kiribathgoda</p>
-                            <p class="job-salary">Rs. 2,000 (per day)</p>
-                            <p class="job-days-left">9 days left</p>
+                        </div>
+                        <p class="job-location"><b>Begood solutions</b> </p>
+                            
+                          
                             
                             <div class="job-location-details">
                                 Colombo, Western Province
