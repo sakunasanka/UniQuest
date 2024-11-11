@@ -4,30 +4,30 @@
 
     <div class="job-post-form-container">
         <h2>Add New Job Post</h2>
-        <form action="submit-job-post.php" method="POST" class="job-post-form">
+        <form action="<?php echo URLROOT; ?>/service_provider/jobpost" method="POST" class="job-post-form">
             <div class="form-left">
                 <label for="jobName">Job Name:</label>
-                <input type="text" id="jobName" name="jobName" placeholder="Job Name" required>
+                <input type="text" id="jobName" name="jobName" placeholder="Job Name" required  value="<?php echo $data['job_name']; ?>">
 
                 <label for="jobDescription">Job Description:</label>
-                <textarea id="jobDescription" name="jobDescription" placeholder="Job Description" required></textarea>
+                <textarea id="jobDescription" name="jobDescription" placeholder="Job Description" required value="<?php echo $data['Description']; ?>"></textarea>
 
                 <label for="jobBenefits">Job Benefits:</label>
-                <input type="text" id="jobBenefits" name="jobBenefits" placeholder="Job Benefits">
+                <input type="text" id="jobBenefits" name="jobBenefits" placeholder="Job Benefits" value="<?php echo $data['job_benifits']; ?>">
 
                 <label for="jobLocation">Job Location:</label>
-                <input type="text" id="jobLocation" name="jobLocation" placeholder="Job Location">
+                <input type="text" id="jobLocation" name="jobLocation" placeholder="Job Location" value="<?php echo $data['job_location']; ?>">
 
                 <label for="salaryRange">Salary Range:</label>
-                <input type="text" id="salaryRange" name="salaryRange" placeholder="Salary Range">
+                <input type="text" id="salaryRange" name="salaryRange" placeholder="Salary Range" value="<?php echo $data['salary_range']; ?>">
             </div>
 
             <div class="form-right">
                 <label for="qualifications">Required Qualifications:</label>
-                <input type="text" id="qualifications" name="qualifications" placeholder="Required Qualifications">
+                <input type="text" id="qualifications" name="qualifications" placeholder="Required Qualifications" value="<?php echo $data['required_skills']; ?>">
 
                 <label for="address">Address:</label>
-                <textarea id="address" name="address" placeholder="Address" required></textarea>
+                <textarea id="address" name="address" placeholder="Address" value="<?php echo $data['adress']; ?>"></textarea>
 
                 <label for="jobType">Job Type:</label>
                 <select id="jobType" name="jobType" required>
@@ -37,10 +37,10 @@
                 </select>
 
                 <label for="contactNo">Contact No:</label>
-                <input type="tel" id="contactNo" name="contactNo" placeholder="Contact No" required>
+                <input type="tel" id="contactNo" name="contactNo" placeholder="Contact No" >
 
                 <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                <input type="email" id="email" name="email" placeholder="Email Address" >
             </div>
 
             <div class="form-actions">
