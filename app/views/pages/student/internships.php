@@ -28,17 +28,17 @@
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
-                        <div class="card-logo">
+                        <div class="card-logo" onclick="goToInternshipDescription()">
                             <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="job">
                         </div>
-                        <div class="card-content">
-                        <div class="title-content">
-                            <h3 class="job-title">Software Engineering Internship</h3>
-                            <div class="job-rating">
-                                <i class="fa fa-star"></i> 4.8
+                        <div class="card-content" onclick="goToInternshipDescription()">
+                            <div class="title-content">
+                                <h3 class="job-title">Software Engineering Internship</h3>
+                                <div class="job-rating">
+                                    <i class="fa fa-star"></i> 4.8
+                                </div>
                             </div>
-                        </div>
-                        <p class="job-location"><b>Begood solutions</b> </p>
+                        <p class="company-name"><b>Begood solutions</b> </p>
                             
                           
                             
@@ -86,3 +86,9 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToInternshipDescription() {
+        window.location.href = "/uniquest/student/internshipdescription";
+    }
+</script>

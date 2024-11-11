@@ -30,8 +30,8 @@
 
             
             <div class="buttons">
-                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
-                    <button onclick="goToContactPage()" class="contact-btn">Contact</button>
+                    <button class="apply-btn">Apply</button>
+                    <button class="contact-btn">Contact</button>
             </div>
 
     <div class="reviews-section">
@@ -63,7 +63,7 @@
         </div>
 
         <div class="buttons">
-                    <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                    <button class="apply-btn">Add review</button>
         </div>
 
     </div>
@@ -98,17 +98,3 @@
 </div>    
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
-
-<script>
-    function goToApplyPage() {
-        window.location.href = "/uniquest/student/jobsapply"; 
-    }
-
-    function goToContactPage() {
-        window.location.href = "/uniquest/student/contact_sp"; 
-    }
-
-    function goToAddReview() {
-        window.location.href = "/uniquest/student/rate_review_company"; 
-    }
-</script>

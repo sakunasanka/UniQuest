@@ -88,7 +88,6 @@ body {
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
 }
 
 .card-logo img {
@@ -97,13 +96,18 @@ body {
     margin-bottom: 10px;
 }
 
-.job-title {
+.job-title, .company-titile {
     font-size: 1.2em;
     color: #333;
     margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.job-location, .job-salary, .job-days-left {
+.job-location, .job-salary, .job-days-left, .company-name, .review-count{
     font-size: 1em;
     color: #555;
     margin-bottom: 5px;
@@ -112,7 +116,7 @@ body {
 .title-content {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .job-rating {
@@ -122,6 +126,7 @@ body {
     align-items: center;
     gap: 5px;
     margin-left: 10px;
+    margin-bottom: 10px;
 }
 
 .job-rating i {
@@ -205,4 +210,8 @@ body {
 .H3{
     color: #222;
     text-align: center;
+}
+
+.card-logo:hover, .card-content:hover {
+    cursor: pointer;
 }

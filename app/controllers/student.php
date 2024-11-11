@@ -11,7 +11,7 @@ class Student extends Controller
 
     public function index()
     {
-        $this->view('pages/student/jobs');
+        echo 'student/index';
     }
 
     public function contact_sp()
@@ -110,6 +110,16 @@ class Student extends Controller
     public function jobsDescription()
     {
         $this->view('pages/student/jobsDescription');
+    }
+
+    public function companyDescription()
+    {
+        $this->view('pages/student/companyDescription');
+    }
+
+    public function internshipDescription()
+    {
+        $this->view('pages/student/internshipDescription');
     }
 
     public function jobsApply()
