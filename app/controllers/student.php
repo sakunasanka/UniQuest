@@ -58,6 +58,18 @@ class Student extends Controller
         $this->view('popups/student/deactivate_account');
     }
 
+    public function getReview()
+    {
+        $company_id = $_GET['company_id'] ?? 1; 
+        $reviews = $this->rateAndReviewModel->getReviewsByCompanyId($company_id);
+
+        $data = [
+            'reviews' => $reviews
+        ];
+
+        $this->view('pages/student/rate_review_company', $data);
+    }
+
     public function addReview()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

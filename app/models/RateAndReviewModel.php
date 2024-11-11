@@ -42,5 +42,12 @@ class RateAndReviewModel
             return false;
         }
     }
+
+    public function getReviewsByCompanyId($company_id)
+    {
+        $this->db->query('SELECT * FROM review WHERE company_id = :company_id ORDER BY created_at DESC');
+        $this->db->bind(':company_id', $company_id);
+        return $this->db->resultSet();
+    }
 }
 ?>
