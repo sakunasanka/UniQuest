@@ -11,11 +11,10 @@
     <div class="page-wrapper">
     <!-- Sidebar -->
     <div class="sidebr">
-        <img src="<?php echo URLROOT; ?>/public/images/user.png" alt="Profile Picture" class="profile-pic">
+        <img src="<?php echo UPLOADROOT; ?>/profile_pictures/student/<?php echo $data['user']['ProfilePic'] ?>" alt="Profile Picture" class="profile-pic">
         <ul>
-            <li><a href="profile.php">Profile</a></li>
             <li><a href="deactivate_account.php">Deactivate Account</a></li>
-            <li><a href="signout.php">Sign out</a></li>
+            <li><a href="signout.php">Log Out</a></li>
         </ul>
     </div>
 
@@ -27,11 +26,6 @@
             <span class="colon">:</span>
             <span class="kk"><?php echo $data['user']['FirstName'] ?> <?php echo $data['user']['LastName'] ?></span>
         </div>
-        <!-- <div class="info-row">
-            <label>Email</label>
-            <span class="colon">:</span>
-            <span class="kk"><?php echo $data['user']['Email'] ?></span>
-        </div> -->
         <div class="info-row">
             <label>Address</label>
             <span class="colon">:</span>
@@ -55,7 +49,7 @@
         <div class="info-row">
             <label>Uploaded CV</label>
             <span class="colon">:</span>
-            <span class="kk"><img src="<?php echo URLROOT; ?>/public/images/cv-icon.png" alt="CV Icon" class="cv-icon"></span>
+            <span class="kk"><a href="<?php echo UPLOADROOT; ?>/cvs/<?php echo $data['user']['CV'] ?>" target="_blank">View CV</a></span>
         </div>
     </div>
 

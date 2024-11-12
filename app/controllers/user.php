@@ -29,6 +29,9 @@ class User extends Controller
                 $this->view('pages/admin/profile', $data); //TODO: Create admin profile view
             } else if ($user['Role'] === 'VT-Member') {
                 $this->view('pages/vt-member/profile', $data);//TODO: Create VT-Member profile view
+            } else {
+                // Redirect to login page
+                Redirect::to(URLROOT . '/login');
             }
         } catch (Exception $e) {
             die($e->getMessage());
