@@ -120,10 +120,14 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
   `JobID` INT NOT NULL,
-  `Title` VARCHAR(45) NULL,
-  `Description` VARCHAR(45) NULL,
-  `Location` VARCHAR(45) NULL,
-  `Category` ENUM('Part Time', 'Internship') NULL,
+  `Title` VARCHAR(100) NULL,                  -- Job Name
+  `Description` TEXT NULL,                    -- Job Description
+  `Location` VARCHAR(100) NULL,               -- Job Location
+  `Category` ENUM('Full-time', 'Part-time', 'Internship') NULL, -- Job Type (expanded to include 'Full-time')
+  `JobBenefits` TEXT NULL,                    -- Job Benefits
+  `Address` VARCHAR(255) NULL,                -- Address
+  `RequiredQualifications` TEXT NULL,         -- Required Qualifications
+  `SalaryRange` VARCHAR(45) NULL,             -- Salary Range
   `CompanyID` INT NOT NULL,
   PRIMARY KEY (`JobID`, `CompanyID`),
   INDEX `fk_Jobs_ServiceProvider1_idx` (`CompanyID` ASC),
@@ -131,8 +135,10 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
     FOREIGN KEY (`CompanyID`)
     REFERENCES `uniquest`.`company` (`CompanyID`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE
+)
 ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `uniquest`.`BookmarkJobs`
