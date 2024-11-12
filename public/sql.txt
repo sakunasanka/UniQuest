@@ -148,6 +148,7 @@ CREATE VIEW v_jobs AS
         company.CompanyID AS CompanyID,
         jobs.Title AS Title,
         company.CompanyLogo AS CompanyLogo,
+        company.CompanyName AS CompanyName,
         jobs.Description AS Description,
         jobs.Location AS Location,
         jobs.Category AS Category,

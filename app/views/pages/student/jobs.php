@@ -5,7 +5,7 @@
 
 <div class="main-container">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-
+    
     <div class="content-area">
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-
+            <?php foreach($data['jobs'] as $post): ?>
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
@@ -35,17 +35,17 @@
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToJobDescription()">
                                 <div class="title-content">
-                                    <h3 class="job-title">Delivery Rider</h3>
+                                    <h3 class="job-title"><?php echo $post->Title; ?></h3>
                                     <div class="job-rating">
                                         <i class="fa fa-star"></i> 4.8
                                     </div>
                                 </div>
-                                <p class="company-name"><b>Pizza Hut</b></p>
-                                <p class="job-salary">Rs. 2,000 (per day)</p>
-                                <p class="job-days-left">9 days left</p>
+                                <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
+                                <p class="job-salary"><?php echo $post->SalaryRange; ?></p>
+                                <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
                                 
                                 <div class="job-location-details">
-                                    Colombo, Western Province
+                                        <?php echo $post->Location; ?>
                                 </div>
                             </div>
                             <div class="card-icons">
@@ -66,7 +66,7 @@
         </div>  
     </div>
 </div>
-
+<?php endforeach; ?>
 <style>
     .icon-active {
         color: #e74c3c; /* Active color */

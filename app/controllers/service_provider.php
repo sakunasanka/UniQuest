@@ -214,8 +214,12 @@ class Service_provider extends Controller
     }
   
 }
-public function jobsDescription()
-    {
-        $this->view('pages/student/jobsDescription');
-    }
+    public function jobsDescription()
+        {
+            $this->view('pages/student/jobsDescription');
+        }
+        public function jobs()
+        {
+            $this->view('pages/student/jobs');
+        }
 }
