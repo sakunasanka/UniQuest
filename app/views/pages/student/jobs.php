@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <?php foreach($data['jobs'] as $post): ?>
+            <?php foreach($data['posts'] as $post): ?>
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">

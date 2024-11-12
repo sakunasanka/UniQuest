@@ -7,6 +7,16 @@ class M_jobpost {
         $this->db = Database::getInstance();
     }
 
+    
+    
+    public function getPosts(){
+        $this->db->query('SELECT * FROM v_jobs ORDER BY jobs_create_at DESC');
+        $results = $this->db->resultSet();
+        return $results;
+    }
+
+
+
     public function create($data) {
         $this->db->query('
             INSERT INTO jobs 

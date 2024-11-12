@@ -158,7 +158,7 @@ class Service_provider extends Controller
             if(empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err']) && empty($data['adress_err']) && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])){
                 if($this->model('M_jobpost')->create($data)){
                     flash('post-msg','post is published');
-                    redirect('service_provider/index');
+                    redirect('service_provider/jobs');
                 }
                 else{
                     die('something went wrong');
@@ -219,7 +219,13 @@ class Service_provider extends Controller
             $this->view('pages/student/jobsDescription');
         }
         public function jobs()
-        {
-            $this->view('pages/student/jobs');
+        {   
+            $posts = $this->model('M_jobpost')->getPosts() ?? [];
+            $data =[
+                'posts' => $posts
+            ];
+
+             $this->view('pages/student/jobs', $data);
+        
         }
 }
