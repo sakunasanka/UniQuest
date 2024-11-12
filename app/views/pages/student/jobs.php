@@ -32,19 +32,21 @@
                         <div class="card-logo" onclick="goToJobDescription()">
                             <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
                         </div>
-                        <div class="card-content" onclick="goToJobDescription()">
-                            <div class="title-content">
-                                <h3 class="job-title">Delivery Rider</h3>
-                                <div class="job-rating">
-                                    <i class="fa fa-star"></i> 4.8
+                        <div class="card-content">
+                            <div class="content-hover-class" onclick="goToJobDescription()">
+                                <div class="title-content">
+                                    <h3 class="job-title">Delivery Rider</h3>
+                                    <div class="job-rating">
+                                        <i class="fa fa-star"></i> 4.8
+                                    </div>
                                 </div>
-                            </div>
-                            <p class="company-name"><b>Pizza Hut</b></p>
-                            <p class="job-salary">Rs. 2,000 (per day)</p>
-                            <p class="job-days-left">9 days left</p>
-                            
-                            <div class="job-location-details">
-                                Colombo, Western Province
+                                <p class="company-name"><b>Pizza Hut</b></p>
+                                <p class="job-salary">Rs. 2,000 (per day)</p>
+                                <p class="job-days-left">9 days left</p>
+                                
+                                <div class="job-location-details">
+                                    Colombo, Western Province
+                                </div>
                             </div>
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>

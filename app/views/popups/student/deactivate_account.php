@@ -3,6 +3,7 @@
     <div class="popup" id="popup-stu">
         <div class="overlay"></div>
         <div class="content">
+            <button class="close-btn" onclick="closedeleteaccountconfirm()"><i class="fa fa-times"></i></button><button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button>
             <h2>Delete Account</h2>
             <form action="delete_account.php" method="post">
                 <div class="warning">
