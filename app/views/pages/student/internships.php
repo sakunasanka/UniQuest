@@ -31,19 +31,21 @@
                         <div class="card-logo" onclick="goToInternshipDescription()">
                             <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="job">
                         </div>
-                        <div class="card-content" onclick="goToInternshipDescription()">
-                            <div class="title-content">
-                                <h3 class="job-title">Software Engineering Internship</h3>
-                                <div class="job-rating">
-                                    <i class="fa fa-star"></i> 4.8
+                        <div class="card-content" >
+                            <div class="content-hover-class" onclick="goToInternshipDescription()">
+                                <div class="title-content">
+                                    <h3 class="job-title">Software Engineering Internship</h3>
+                                    <div class="job-rating">
+                                        <i class="fa fa-star"></i> 4.8
+                                    </div>
                                 </div>
-                            </div>
-                        <p class="company-name"><b>Begood solutions</b> </p>
+                                <p class="company-name"><b>Begood solutions</b> </p>
+                                
                             
-                          
-                            
-                            <div class="job-location-details">
-                                Colombo, Western Province
+                                
+                                <div class="job-location-details">
+                                    Colombo, Western Province
+                                </div>
                             </div>
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>

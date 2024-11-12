@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
@@ -28,45 +29,51 @@
 
             <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
-            
             <div class="buttons">
-                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
-                    <button onclick="goToContactPage()" class="contact-btn">Contact</button>
+                <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
+                <button onclick="goToContactPage()" class="contact-btn">Contact</button>
             </div>
 
-    <div class="reviews-section">
-        <h4>Reviews and Ratings about this company</h4>
-            
-            <div class="review">
-                <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- John Doe</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                </div>
+            <div class="reviews-section">
+                <h4>Reviews and Ratings about this company</h4>
+
+                <?php for ($i = 0; $i < 3; $i++): ?>
+                    <div class="review" id="review-<?php echo $i + 1; ?>">
+                        <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
+                        <div class="review-details">
+                            <span class="reviewer-name">- John Doe</span>
+                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                        </div>
+                        <div class="review-actions">
+                            <button class="like-btn" onclick="toggleLike('review-<?php echo $i + 1; ?>')">
+                                <span class="material-symbols-outlined" id="like-icon-<?php echo $i + 1; ?>">thumb_up</span>
+                            </button>
+                            <span class="like-count" id="like-count-<?php echo $i + 1; ?>">0 likes</span>
+
+                            <button class="dislike-btn" onclick="toggleDislike('review-<?php echo $i + 1; ?>')">
+                                <span class="material-symbols-outlined" id="dislike-icon-<?php echo $i + 1; ?>">thumb_down</span>
+                            </button>
+                            <span class="dislike-count" id="dislike-count-<?php echo $i + 1; ?>">0 dislikes</span>
+
+                            <button class="reply-btn" onclick="toggleReplyForm('review-<?php echo $i + 1; ?>')">
+                                <span class="material-symbols-outlined" id="reply-icon">reply</span>
+                            </button>
+                            <span class="reply-count" id="reply-count-<?php echo $i + 1; ?>">0 replies</span>
+                        </div>
+                        <div class="reply-section" id="reply-section-<?php echo $i + 1; ?>" style="display: none;">
+                            <textarea class="reply-input" id="reply-input-<?php echo $i + 1; ?>" placeholder="Write a reply..."></textarea>
+                            <button class="submit-reply-btn" onclick="submitReply('review-<?php echo $i + 1; ?>')">Submit</button>
+                            <div class="replies-list" id="replies-list-<?php echo $i + 1; ?>"></div>
+                        </div>
+                    </div>
+                <?php endfor; ?>
             </div>
 
-            <div class="review">
-                <p class="review-text">"The salary is quite competitive compared to other companies, and they provide special allowances too."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- Sarah Smith</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 4.5</span>
-                </div>
-            </div>
-
-            <div class="review">
-                <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- David Lee</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
-                </div>
+            <div class="buttons btn-space-between">
+                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             </div>
         </div>
-
-        <div class="buttons">
-                    <button onclick="goToAddReview()" class="apply-btn">Add review</button>
-        </div>
-
-    </div>
 
         <div class="job-card">
             <div class="job-logo">
@@ -84,8 +91,7 @@
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Salary Range:</td><td>Any</td></tr>
                 </table>
-                <p>Job ID - 5674563879</p>
-                
+
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -93,22 +99,13 @@
                     <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-        </div>
+            <div class="buttons">
+                <button onclick="goToCompany()" class="apply-btn">View Company</button>
+            </div>
+        </div>     
     </div>
-</div>    
+</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
-<script>
-    function goToApplyPage() {
-        window.location.href = "/uniquest/student/jobsapply"; 
-    }
-
-    function goToContactPage() {
-        window.location.href = "/uniquest/student/contact_sp"; 
-    }
-
-    function goToAddReview() {
-        window.location.href = "/uniquest/student/rate_review_company"; 
-    }
-</script>
+<script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
