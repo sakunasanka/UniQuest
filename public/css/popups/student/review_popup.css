@@ -1,4 +1,9 @@
 .popup .content {
     height: 500px; 
     overflow-y: auto; 
+    padding-top: 0 !important;
+}
+
+.reviews-section {
+    margin-top: 10px !important;
 }

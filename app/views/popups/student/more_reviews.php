@@ -4,8 +4,7 @@
     <div class="popup" id="popup-1">
         <div class="overlay"></div>
         <div class="content">
-            <button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button>
-            <button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button>
+            <div class="close-btn-container"><button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button></div>
             <div class="reviews-section">
                 <h4>Reviews and Ratings about this company</h4>
 
