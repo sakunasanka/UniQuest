@@ -70,7 +70,7 @@ class Login extends Controller {
         session_start();
     
         // Get session details
-        $user = $this->model->getSessionDetails($userID);
+        $user = $this->model->getUserDetails($userID);
     
         if ($user) {
             // Store session variables
@@ -89,7 +89,7 @@ class Login extends Controller {
     
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/student/jobs');
+                Redirect::to(URLROOT . '/user/profile');
             } else if ($user['Role'] === 'Company') {
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {
@@ -97,9 +97,12 @@ class Login extends Controller {
             } else if ($user['Role'] === 'VT-Member') {
                 Redirect::to(URLROOT . '/verification_team/dashboard');
             }
+            //print user details
+            // print_r($_SESSION);
+            // print($_SESSION['user_id']);
         } else {
             // Handle case where session details were not found
-            die('User not found or unable to create session');
+            die('User not found or unable to create session');//TODO: Handle this
         }
     }
 

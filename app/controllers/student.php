@@ -44,29 +44,19 @@ class Student extends Controller
         $this->view('pages/student/noMatch');
     }
 
-    public function view_profile()
-    {
-        $this->view('pages/student/view_profile');
-    }
-
     public function edit_profile()
     {
         $this->view('pages/student/edit_profile');
     }
     public function delete_account()
     {
-        $this->view('pages/student/delete_account');
+        $this->view('popups/student/deactivate_account');
     }
     public function rate_review_company()
     {
         $this->view('pages/student/rate_review_company');
     }
-
-    public function make_complain()
-    {
-        $this->view('pages/student/make_complain');
-    }
-
+    
     public function all_app()
     {
         $this->view('pages/student/all_applications');
@@ -106,10 +96,25 @@ class Student extends Controller
     {
         $this->view('pages/student/saveCompanies');
     }
+
+    public function make_complain()
+    {
+        $this->view('pages/student/make_complain');
+    }
   
     public function jobsDescription()
     {
         $this->view('pages/student/jobsDescription');
+    }
+
+    public function companyDescription()
+    {
+        $this->view('pages/student/companyDescription');
+    }
+
+    public function internshipDescription()
+    {
+        $this->view('pages/student/internshipDescription');
     }
 
     public function jobsApply()
@@ -117,5 +122,14 @@ class Student extends Controller
         $this->view('pages/student/jobsApply');
     }
 
-}
+    public function pending()
+    {
+        $this->view('pages/login/wait_to_verify_stu');
+    }
 
+    public function internships()
+    {
+        $this->view('pages/student/internships');
+    }
+
+}

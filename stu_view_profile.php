@@ -25,11 +25,11 @@ $user = [
     <div class="profile-container">
     <div class="profile-sidebar">
         <div class="menu-icon">
-        <img src="./Assests/menu_icon.png" alt="Menu Icon" class="menu-icon">
+        <img src="<?php echo URLROOT; ?>/public/images/menu_icon.png" alt="Menu Icon" class="menu-icon">
         </div>
         <div class="profile-pic-container">
-
-            <img src="./Assests/user.png" alt="Profile Picture" class="profile-pic"> <!-- Add your profile picture image path -->
+                      
+            <img src="<?php echo URLROOT; ?>/public/images/user2.png" alt="Profile Picture" class="profile-pic"> <!-- Add your profile picture image path -->
         </div>
         <ul class="nav-links">
             <li><a href="#">Profile</a></li>
