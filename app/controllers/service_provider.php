@@ -95,18 +95,18 @@ class Service_provider extends Controller
     public function jobPost()
     {
         if($_SERVER['REQUEST_METHOD']=='POST'){
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             $data=[
                 
-                'job_name' => trim($_POST['job_name'] ),
-                'job_benifits' => trim($_POST['job_benifits'] ),
-                'job_location' => trim($_POST['job_location'] ),
-                'job_category' => trim($_POST['job_category'] ),
-                'adress' => trim($_POST['adress'] ),
-                'required_skills' => trim($_POST['required_skills']   ),
-                'salary_range' => trim($_POST['salary_range'] ),
-                'Description' => trim($_POST['Description'] ), 
+                'job_name' => trim($_POST['jobName'] ?? ''),
+                'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
+                'job_location' => trim($_POST['jobLocation'] ?? ''),
+                'job_category' => trim($_POST['jobType'] ?? ''),
+                'adress' => trim($_POST['address']),
+                'required_skills' => trim($_POST['qualifications'] ?? ''),
+                'salary_range' => trim($_POST['salaryRange'] ?? ''),
+                'Description' => trim($_POST['jobDescription'] ?? ''),
 
                 'job_name_err'=>'',
                 'job_benifits_err'=>'',
@@ -164,7 +164,7 @@ class Service_provider extends Controller
                     die('something went wrong');
                 }
 
-            }
+            
             
             // if(empty($data['title_err']) && empty($data['body_err']) && empty($data['image_err'] )){
             //     if($this->postsModel->create($data)){

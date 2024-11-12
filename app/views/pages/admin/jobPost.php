@@ -7,11 +7,11 @@
         <form action="<?php echo URLROOT; ?>/service_provider/jobpost" method="post" class="job-post-form">
             <div class="form-left">
                 <label for="jobName">Job Name:</label>
-                <input type="text" id="jobName" name="jobName" placeholder="Job Name" required  value="<?php  $data['job_name']; ?>">
+                <input type="text" id="jobName" name="jobName" placeholder="Job Name"   value="<?php  $data['job_name']; ?>">
                 <span class="form-invalid"><?php echo $data['job_name_err']; ?></span>
 
                 <label for="jobDescription">Job Description:</label>
-                <textarea id="jobDescription" name="jobDescription" placeholder="Job Description" required value="<?php  $data['Description']; ?>"></textarea>
+                <textarea id="jobDescription" name="jobDescription" placeholder="Job Description" value="<?php echo $data['Description']; ?>"></textarea>
                 <span class="form-invalid"><?php echo $data['Description_err']; ?></span>
 
                 <label for="jobBenefits">Job Benefits:</label>
@@ -43,11 +43,11 @@
                     <option value="Internship">Internship</option>
                 </select>
 
-                <label for="contactNo">Contact No:</label>
+                <!-- <label for="contactNo">Contact No:</label>
                 <input type="tel" id="contactNo" name="contactNo" placeholder="Contact No" >
 
                 <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" placeholder="Email Address" >
+                <input type="email" id="email" name="email" placeholder="Email Address" > -->
             </div>
 
             <div class="form-actions">
