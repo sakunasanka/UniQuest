@@ -83,6 +83,10 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/view_profile');
     }
+
+    public function pending()
+    {
+        $this->view('pages/login/wait_to_verify_ser');
+    }
   
 }
-?>

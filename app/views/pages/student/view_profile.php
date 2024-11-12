@@ -1,8 +1,10 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/popups/student/deactivate_account.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/view_Profile.css">
 
 <!-- Sidebar and Content Layout -->
+ <div class="main-container">
 <div class="content-area">
     <!-- Sidebar -->
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
@@ -72,8 +74,10 @@
         </div>
     </div>
 
-    <button class="edit-btn">Edit info</button>
+    <button class="edit-btn" onclick="window.location.href='<?php echo URLROOT; ?>/student/edit_profile'">Edit info</button>
 </div>
 </div>
 </div>
+</div>
+
 <?php require APPROOT . '/views/components/footer.php'; ?>

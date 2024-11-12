@@ -19,13 +19,13 @@
                 <img src="<?php echo URLROOT; ?>/images/UniQuest3.png" alt="UniQuest Logo">
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="hov">Home</a></li>
-                <li><a href="#" class="hov">About Us</a></li>
-                <li><a href="#" class="hov">Contact Us</a></li>
+                <li><a href="/uniquest/home" class="hov">Home</a></li>
+                <li><a href="/uniquest/about" class="hov">About Us</a></li>
+                <li><a href="/uniquest/service_provider/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <div class="nav-icons">
-                <a href="#"><span class="material-symbols-outlined">account_circle</span></a>
-                <a href="#"><span class="material-symbols-outlined">notifications</span></a>
+                <a href="/uniquest/service_provider/view_profile"><span class="material-symbols-outlined">account_circle</span></a>
+                <a href="/uniquest/service_provider/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>
         </div>
