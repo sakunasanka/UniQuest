@@ -37,33 +37,24 @@
             <div class="reviews-section">
                 <h4>Reviews and Ratings about this company</h4>
 
-                <?php for ($i = 0; $i < 3; $i++): ?>
-                    <div class="review" id="review-<?php echo $i + 1; ?>">
-                        <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
+                 <!-- Reviews on Main Page -->
+                 <?php for ($i = 0; $i < 3; $i++): ?>
+                    <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
+                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
                         <div class="review-details">
                             <span class="reviewer-name">- John Doe</span>
                             <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                         </div>
                         <div class="review-actions">
-                            <button class="like-btn" onclick="toggleLike('review-<?php echo $i + 1; ?>')">
-                                <span class="material-symbols-outlined" id="like-icon-<?php echo $i + 1; ?>">thumb_up</span>
+                            <button class="like-btn" data-id="<?php echo $i; ?>">
+                                <span class="material-symbols-outlined like-icon">thumb_up</span>
                             </button>
-                            <span class="like-count" id="like-count-<?php echo $i + 1; ?>">0 likes</span>
+                            <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
 
-                            <button class="dislike-btn" onclick="toggleDislike('review-<?php echo $i + 1; ?>')">
-                                <span class="material-symbols-outlined" id="dislike-icon-<?php echo $i + 1; ?>">thumb_down</span>
+                            <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                             </button>
-                            <span class="dislike-count" id="dislike-count-<?php echo $i + 1; ?>">0 dislikes</span>
-
-                            <button class="reply-btn" onclick="toggleReplyForm('review-<?php echo $i + 1; ?>')">
-                                <span class="material-symbols-outlined" id="reply-icon">reply</span>
-                            </button>
-                            <span class="reply-count" id="reply-count-<?php echo $i + 1; ?>">0 replies</span>
-                        </div>
-                        <div class="reply-section" id="reply-section-<?php echo $i + 1; ?>" style="display: none;">
-                            <textarea class="reply-input" id="reply-input-<?php echo $i + 1; ?>" placeholder="Write a reply..."></textarea>
-                            <button class="submit-reply-btn" onclick="submitReply('review-<?php echo $i + 1; ?>')">Submit</button>
-                            <div class="replies-list" id="replies-list-<?php echo $i + 1; ?>"></div>
+                            <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
                         </div>
                     </div>
                 <?php endfor; ?>
