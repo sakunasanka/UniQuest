@@ -31,17 +31,19 @@
                         <div class="card-logo" onclick="goToCompanyDescription()">
                             <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
                         </div>
-                        <div class="card-content" onclick="goToCompanyDescription()">
-                            <div class="title-content">
-                                <h3 class="company-title">Spotify</h3>
-                                <div class="job-rating">
-                                    <i class="fa fa-star"></i> 4.8
+                        <div class="card-content">
+                            <div class="content-hover-class" onclick="goToCompanyDescription()">
+                                <div class="title-content">
+                                    <h3 class="company-title">Spotify</h3>
+                                    <div class="job-rating">
+                                        <i class="fa fa-star"></i> 4.8
+                                    </div>
                                 </div>
-                            </div>
-                            <p class="review-count">Based on <span>126</span> student reviews</p>
+                                <p class="review-count">Based on <span>126</span> student reviews</p>
 
-                            <div class="job-location-details">
-                                Colombo, Western Province
+                                <div class="job-location-details">
+                                    Colombo, Western Province
+                                </div>
                             </div>
                             
 

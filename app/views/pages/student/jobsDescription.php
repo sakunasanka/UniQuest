@@ -28,45 +28,42 @@
 
             <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
-            
             <div class="buttons">
-                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
-                    <button onclick="goToContactPage()" class="contact-btn">Contact</button>
+                <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
+                <button onclick="goToContactPage()" class="contact-btn">Contact</button>
             </div>
 
-    <div class="reviews-section">
-        <h4>Reviews and Ratings about this company</h4>
-            
-            <div class="review">
-                <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- John Doe</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+            <div class="reviews-section">
+                <h4>Reviews and Ratings about this company</h4>
+
+                <div class="review">
+                    <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
+                    <div class="review-details">
+                        <span class="reviewer-name">- John Doe</span>
+                        <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                    </div>
+                </div>
+
+                <div class="review">
+                    <p class="review-text">"The salary is quite competitive compared to other companies, and they provide special allowances too."</p>
+                    <div class="review-details">
+                        <span class="reviewer-name">- Sarah Smith</span>
+                        <span class="review-rating"><i class="fa fa-star"></i> 4.5</span>
+                    </div>
+                </div>
+
+                <div class="review">
+                    <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
+                    <div class="review-details">
+                        <span class="reviewer-name">- David Lee</span>
+                        <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
+                    </div>
                 </div>
             </div>
-
-            <div class="review">
-                <p class="review-text">"The salary is quite competitive compared to other companies, and they provide special allowances too."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- Sarah Smith</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 4.5</span>
-                </div>
-            </div>
-
-            <div class="review">
-                <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- David Lee</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
-                </div>
+            <div class="buttons">
+                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
             </div>
         </div>
-
-        <div class="buttons">
-                    <button onclick="goToAddReview()" class="apply-btn">Add review</button>
-        </div>
-
-    </div>
 
         <div class="job-card">
             <div class="job-logo">
@@ -84,8 +81,7 @@
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Salary Range:</td><td>Any</td></tr>
                 </table>
-                <p>Job ID - 5674563879</p>
-                
+
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -93,9 +89,12 @@
                     <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-        </div>
+            <div class="buttons">
+                <button onclick="goToCompany()" class="apply-btn">View Company</button>
+            </div>
+        </div>     
     </div>
-</div>    
+</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
@@ -110,5 +109,9 @@
 
     function goToAddReview() {
         window.location.href = "/uniquest/student/rate_review_company"; 
+    }
+
+    function goToCompany() {
+        window.location.href = "/uniquest/student/companydescription"; 
     }
 </script>
