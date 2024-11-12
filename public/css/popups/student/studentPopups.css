@@ -90,3 +90,19 @@
 .changep_change-button:hover {
     background-color: #218838;
 }
+
+.close-btn {
+    position: absolute;
+    top: 10px; /* Space from the top */
+    right: 10px; /* Space from the right edge */
+    background: none;
+    border: none;
+    font-size: 1.5em; 
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #f44336; /* Change color to red on hover */
+}

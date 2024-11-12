@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
@@ -60,8 +61,9 @@
                     </div>
                 </div>
             </div>
-            <div class="buttons">
+            <div class="buttons btn-space-between">
                 <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             </div>
         </div>
 
