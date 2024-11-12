@@ -227,14 +227,14 @@ class userModel
         }
     }
 
-    public function getSessionDetails($userId)
+    public function getUserDetails($userId)
     {
         try {
-            $this->db->query('SELECT UserID, Email, Role, Status FROM User WHERE UserID = :userId');
+            $this->db->query('SELECT UserID, Email, Role, Status, ContactNo FROM User WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             $user = $this->db->single();
             if ($user-> Role === 'Student') {
-                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM Student WHERE StudentID = :userId');
+                $this->db->query('SELECT * FROM Student WHERE StudentID = :userId');
                 $this->db->bind(':userId', $userId);
                 $student = $this->db->single();
                 return array_merge((array)$user, (array)$student);
@@ -259,6 +259,8 @@ class userModel
             return false;
         }
     }
+
+
 
 
 }
