@@ -99,14 +99,14 @@ class Service_provider extends Controller
 
             $data=[
                 
-                'job_name'=>trim($_POST['job_name']),
-                'job_benifits'=>trim($_POST['job_benifits']),
-                'job_location'=>trim($_POST['job_location']),
-                'job_category'=>trim($_POST['job_category']),
-                'adress'=>trim($_POST['adress']),
-                'required_skills'=>trim($_POST['required_skills']),
-                'salary_range'=>trim($_POST['salary_range']),
-                'Description' => trim($_POST['Description']), 
+                'job_name' => trim($_POST['job_name'] ),
+                'job_benifits' => trim($_POST['job_benifits'] ),
+                'job_location' => trim($_POST['job_location'] ),
+                'job_category' => trim($_POST['job_category'] ),
+                'adress' => trim($_POST['adress'] ),
+                'required_skills' => trim($_POST['required_skills']   ),
+                'salary_range' => trim($_POST['salary_range'] ),
+                'Description' => trim($_POST['Description'] ), 
 
                 'job_name_err'=>'',
                 'job_benifits_err'=>'',
