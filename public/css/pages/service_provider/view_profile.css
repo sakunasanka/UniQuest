@@ -114,6 +114,13 @@ a:hover {
     text-decoration: underline;
 }
 
+.seemore p{
+    color: #4aa1fd;
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
 /* Button Styling */
 .view-card-button {
     background-color: #f39c12;
