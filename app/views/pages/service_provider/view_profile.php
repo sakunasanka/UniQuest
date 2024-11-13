@@ -10,7 +10,7 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="placeholder.png" alt="Company Logo"> 
+            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Company Logo"> 
 
             <div class="view-card-content">
                 <h1>Acme Inc.</h1>
