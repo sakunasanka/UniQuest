@@ -64,12 +64,10 @@
                 <div class="buttons btn-space-between">
                         <button onclick="goToAddReview()" class="apply-btn">Add review</button>
                         <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
-                    </div>
-                    </div>    
-                    
-        
+                </div>
+            </div>    
+        </div>
     </div>
-</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 

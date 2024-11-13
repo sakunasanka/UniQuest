@@ -147,6 +147,11 @@ a:hover {
     width: 100% !important;
 }
 
+.btn-space-between{
+    width: 100vw;
+    margin-top: 10px !important;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .view-card {
