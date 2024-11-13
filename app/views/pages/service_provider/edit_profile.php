@@ -10,7 +10,7 @@
     <div class="s_e_p_content">
 
     <form action="process_form.php" method="post" enctype="multipart/form-data">
-    <h2>Company Info Form</h2>
+    <h2>Edit Company Info</h2>
     
     <label for="companyLogo">Company Logo</label>
     <input type="file" id="companyLogo" name="companyLogo">
@@ -37,14 +37,12 @@
     <input type="url" id="website" name="website" value="www.acmeinc.com" required>
     
     <input type="submit" value="Save Changes">
-    <input type="button" value="Cancel" onclick="window.location.href='index.php';">
+    <input type="button" value="Cancel" onclick="window.location.href='/uniquest/service_provider/edit_profile';">
 </form>
 </div>
 
 </div>
-<footer class="footer">
 
-</footer>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
