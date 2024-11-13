@@ -31,7 +31,7 @@
                 </div>
                 <div>
                     <span>Website</span>
-                    <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
+                    <a class="weblink" href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
                 </div>
             </div>
         </div>

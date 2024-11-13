@@ -150,6 +150,14 @@ a:hover {
     background-color: #e67e22;
 }
 
+.weblink {
+    text-decoration: none;
+    color: #f0a23a;
+}
+
+.weblink:hover {
+    color: #e0912a;
+
 .reviews-section {
     width: 100% !important;
 }
