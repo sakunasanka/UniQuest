@@ -49,5 +49,30 @@ class RateAndReviewModel
         $this->db->bind(':company_id', $company_id);
         return $this->db->resultSet();
     }
+    
+    public function updateReview($data)
+    {
+        try {
+            $this->db->query('UPDATE review SET Rating = :rating, Comment = :comment WHERE id = :id AND student_id = :student_id');
+            $this->db->bind(':rating', $data['rating']);
+            $this->db->bind(':comment', $data['comment']);
+            $this->db->bind(':id', $data['id']);
+            $this->db->bind(':student_id', $_SESSION['student_id']);
+            
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getReviewById($id)
+    {
+        $this->db->query('SELECT * FROM review WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+
 }
 ?>

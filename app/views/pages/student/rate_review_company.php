@@ -3,7 +3,7 @@
 
 <div class="content-area">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <!-- Content Area -->
     <div class="container">
@@ -39,6 +39,7 @@
                         <h3><?php echo htmlspecialchars($review->company_name); ?></h3>
                         <div class="rating">Rating: <?php echo $review->Rating; ?> ★</div>
                         <p><?php echo htmlspecialchars($review->Comment); ?></p>
+                        <a href="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" class="edit-btn">Edit</a> <!-- Edit button -->  
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -47,3 +48,4 @@
         </div>
     </div>
 </div>
+

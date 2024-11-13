@@ -115,6 +115,59 @@ class Student extends Controller
             $this->view('pages/student/rate_review_company', $data);
         }
     }
+
+    public function editReview($id)
+    {
+        $review = $this->model('RateAndReviewModel')->getReviewById($id);
+
+        if (!$review) {
+            Redirect::to(URLROOT . '/student/rate_review_company');
+            return;
+        }
+
+        $data = [
+            'review' => $review,
+            'rating_err' => '',
+            'comment_err' => ''
+        ];
+
+        $this->view('pages/student/edit_review', $data);
+    }
+
+    public function updateReview($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'review_id' => $id,
+                'rating' => $_POST['rating'] ?? '',
+                'comment' => trim($_POST['comment'] ?? ''),
+                'rating_err' => '',
+                'comment_err' => ''
+            ];
+
+            if (empty($data['rating'])) {
+                $data['rating_err'] = 'Please provide a rating.';
+            }
+            if (empty($data['comment'])) {
+                $data['comment_err'] = 'Please provide a comment.';
+            }
+
+            if (empty($data['rating_err']) && empty($data['comment_err'])) {
+                if ($this->model('RateAndReviewModel')->updateReview($data)) {
+                    Redirect::to(URLROOT . '/student/rate_review_company');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                $this->view('pages/student/edit_review', $data);
+            }
+        } else {
+            Redirect::to(URLROOT . '/student/rate_review_company');
+        }
+    }
+
     
     public function rate_review_company()
     {
