@@ -1,7 +1,6 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
 <div class="main-container">
@@ -72,15 +71,14 @@
             </div>
             <div class="job-details">
                 <h3>Delivery Rider</h3>
-                <p>Negombo / Ja Ela / Kiribathgoda</p>
+                <p><b>@<span>Burger King</b></span></p>
                 <p>Rs. 2,000 (per day)</p>
                 <p>9 days left</p>
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
                 <p>Colombo, Western Province</p>
                 <table class="table">
-                    <tr><td>Education:</td><td>Ordinary Level</td></tr>
                     <tr><td>Experience:</td><td>No Experience</td></tr>
-                    <tr><td>Salary Range:</td><td>Any</td></tr>
+                    <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
 
                 <div class="social-media-icons">

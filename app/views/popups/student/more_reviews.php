@@ -5,7 +5,7 @@
         <div class="overlay"></div>
         <div class="content">
             <div class="close-btn-container"><button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button></div>
-            <div class="reviews-section">
+            <div class="reviews-section-popup">
                 <h4>Reviews and Ratings about this company</h4>
 
                 <?php for ($i = 0; $i < 6; $i++): ?>
