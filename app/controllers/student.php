@@ -11,7 +11,7 @@ class Student extends Controller
 
     public function index()
     {
-        $this->view('pages/student/jobs');
+        echo 'student/index';
     }
 
     public function contact_sp()
@@ -42,11 +42,6 @@ class Student extends Controller
     public function noMatch()
     {
         $this->view('pages/student/noMatch');
-    }
-
-    public function view_profile()
-    {
-        $this->view('pages/student/view_profile');
     }
 
     public function edit_profile()
@@ -133,9 +128,29 @@ class Student extends Controller
         $this->view('pages/student/jobsDescription');
     }
 
+    public function companyDescription()
+    {
+        $this->view('pages/student/companyDescription');
+    }
+
+    public function internshipDescription()
+    {
+        $this->view('pages/student/internshipDescription');
+    }
+
     public function jobsApply()
     {
         $this->view('pages/student/jobsApply');
+    }
+
+    public function pending()
+    {
+        $this->view('pages/login/wait_to_verify_stu');
+    }
+
+    public function internships()
+    {
+        $this->view('pages/student/internships');
     }
 
 }

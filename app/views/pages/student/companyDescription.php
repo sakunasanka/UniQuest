@@ -1,16 +1,14 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/stu_header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
-
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <div class="content-area">
         <div class="view-card">
-            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Company Logo"> 
+            <img src="placeholder.png" alt="Company Logo"> 
 
             <div class="view-card-content">
                 <h1>Acme Inc.</h1>
@@ -34,12 +32,6 @@
                         <span>Website</span>
                         <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
                     </div>
-                </div>
-                <div class="edit-btn"> 
-                    <button class="edit-btn" onclick="window.location.href='/uniquest/service_provider/edit_profile';">
-                        <span class="material-symbols-outlined"> edit </span>
-                        Edit Profile
-                    </button>
                 </div>
             </div>
         </div>
@@ -69,7 +61,8 @@
                         </div>
                     <?php endfor; ?>
                 </div>
-                <div class="buttons">
+                <div class="buttons btn-space-between">
+                        <button onclick="goToAddReview()" class="apply-btn">Add review</button>
                         <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                 </div>
             </div>    
