@@ -39,8 +39,13 @@
         <span class="material-symbols-outlined"> summarize </span>
             Reports
         </button>
-
     </nav>
+
+    <button class="nav-btn logout-btn" data-path="/uniquest/admin/reports">
+    <span class="material-symbols-outlined"> logout </span>
+        Logout
+    </button>
+    
 </aside>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSidePanel.js"></script>

@@ -1,9 +1,12 @@
 <?php
 class Student extends Controller
 {
+    private $model;
+
     public function __construct()
     {
-        // echo 'Pages loaded';
+        // Load model
+        $this->model = $this->model('userModel');
     }
 
     public function index()
@@ -25,26 +28,35 @@ class Student extends Controller
     {
         $this->view('pages/student/students_mng');
     }
-  
-    public function login()
+
+    public function searchJob()
     {
-        $this->view('pages/student/login');
+        $this->view('pages/student/searchJob');
+    }
+
+    public function searchCompany()
+    {
+        $this->view('pages/student/searchCompany');
+    }
+
+    public function noMatch()
+    {
+        $this->view('pages/student/noMatch');
+    }
+
+    public function edit_profile()
+    {
+        $this->view('pages/student/edit_profile');
+    }
+    public function delete_account()
+    {
+        $this->view('popups/student/deactivate_account');
     }
     public function rate_review_company()
     {
         $this->view('pages/student/rate_review_company');
     }
-
-    public function register()
-    {
-        $this->view('pages/student/register');
-    }
-
-    public function make_complain()
-    {
-        $this->view('pages/student/make_complain');
-    }
-
+    
     public function all_app()
     {
         $this->view('pages/student/all_applications');
@@ -60,5 +72,64 @@ class Student extends Controller
         $this->view('pages/student/rejected_applications');
     }
   
-}
+    public function jobs()
+    {
+        $this->view('pages/student/jobs');
+    }
 
+    public function company()
+    {
+        $this->view('pages/student/company');
+    }
+
+    public function trendyCompany()
+    {
+        $this->view('pages/student/trendyCompany');
+    }
+
+    public function saveJobs()
+    {
+        $this->view('pages/student/saveJobs');
+    }
+
+    public function saveCompanies()
+    {
+        $this->view('pages/student/saveCompanies');
+    }
+
+    public function make_complain()
+    {
+        $this->view('pages/student/make_complain');
+    }
+  
+    public function jobsDescription()
+    {
+        $this->view('pages/student/jobsDescription');
+    }
+
+    public function companyDescription()
+    {
+        $this->view('pages/student/companyDescription');
+    }
+
+    public function internshipDescription()
+    {
+        $this->view('pages/student/internshipDescription');
+    }
+
+    public function jobsApply()
+    {
+        $this->view('pages/student/jobsApply');
+    }
+
+    public function pending()
+    {
+        $this->view('pages/login/wait_to_verify_stu');
+    }
+
+    public function internships()
+    {
+        $this->view('pages/student/internships');
+    }
+
+}

@@ -1,9 +1,12 @@
 <?php
 class Service_provider extends Controller
 {
+    private $model;
+
     public function __construct()
     {
-        // echo 'Pages loaded';
+        // Load model
+        $this->model = $this->model('userModel');
     }
 
     public function index()
@@ -14,12 +17,7 @@ class Service_provider extends Controller
     public function contact_admin()
     {
         $this->view('pages/service_provider/contact_admin');
-    }
-
-    public function register()
-    {
-        $this->view('pages/service_provider/register');
-    }    
+    }   
 
     public function dashboard()
     {
@@ -29,11 +27,6 @@ class Service_provider extends Controller
     public function report()
     {
         $this->view('pages/service_provider/job_report');
-    }
-  
-    public function login()
-    {
-        $this->view('pages/service_provider/login');
     }
 
     public function ongoing_jobs()
@@ -89,6 +82,11 @@ class Service_provider extends Controller
     public function view_profile()
     {
         $this->view('pages/service_provider/view_profile');
+    }
+
+    public function pending()
+    {
+        $this->view('pages/login/wait_to_verify_ser');
     }
   
 }
