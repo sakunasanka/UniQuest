@@ -136,7 +136,7 @@ class User extends Controller
             if ($user['Role'] === 'Student') {
                 $this->view('pages/student/view_profile', $data);
             } else if ($user['Role'] === 'Company') {
-                $this->view('pages/service_provider/view_profile', $data);//TODO: Create company profile view
+                $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {
                 $this->view('pages/admin/profile', $data); //TODO: Create admin profile view
             } else if ($user['Role'] === 'VT-Member') {

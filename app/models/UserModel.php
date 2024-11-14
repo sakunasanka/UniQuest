@@ -239,7 +239,7 @@ class userModel
                 $student = $this->db->single();
                 return array_merge((array)$user, (array)$student);
             } else if ($user-> Role === 'Company') {
-                $this->db->query('SELECT CompanyName, CompanyLogo FROM Company WHERE CompanyID = :userId');
+                $this->db->query('SELECT * FROM Company WHERE CompanyID = :userId');
                 $this->db->bind(':userId', $userId);
                 $company = $this->db->single();
                 return array_merge((array)$user, (array)$company);

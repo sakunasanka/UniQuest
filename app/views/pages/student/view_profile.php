@@ -31,7 +31,7 @@
         <div class="info-row">
             <label>Address</label>
             <span class="colon">:</span>
-            <span class="kk"><?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?>, <?php echo $data['user']['City'] ?></span>
+            <span class="kk"><?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['user']['City'] ?>
         </div>
         <div class="info-row">
             <label>NIC No</label>
