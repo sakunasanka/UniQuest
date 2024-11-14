@@ -43,7 +43,12 @@ class User extends Controller
                     // Create session
                     $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
-                    die('Pending');//TODO: Handle this
+                    // die('Pending');//TODO: Handle this
+                    if ($loggedInUser->Role === 'Student') {
+                        $this->view('pages/login/wait_to_verify_stu');
+                    } else if ($loggedInUser->Role === 'Company') {
+                        $this->view('pages/login/wait_to_verify_ser');
+                    }
                 } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
                     die('Not Approved');//TODO: Handle this
                 } else {
