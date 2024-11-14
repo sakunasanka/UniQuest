@@ -14,6 +14,113 @@ class User extends Controller
         echo 'user/index';
     }
 
+    public function login() {
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            // Sanitize POST array
+            $_POST = filter_input_array(INPUT_POST);
+
+            $data = [
+                'email' => trim($_POST['email']),
+                'password' => trim($_POST['password']),
+                'email_err' => '',
+                'password_err' => ''
+            ];
+
+            // Validate email
+            $data['email_err'] = Validator::isEmpty($data['email']) ? 'Please enter email' : 
+                (!Validator::isValidEmail($data['email']) ? 'Please enter a valid email' : 
+                (!$this->model->findUserByEmail($data['email']) ? 'No user found' : ''));
+
+            // Validate password
+            $data['password_err'] = Validator::isEmpty($data['password']) ? 'Please enter password' : '';
+
+            // Check if there are no errors
+            if (empty($data['email_err']) && empty($data['password_err'])) {
+                // Check for user
+                $loggedInUser = $this->model->login($data['email'], $data['password']);
+
+                if ($loggedInUser && $loggedInUser->Status === 'Active') {
+                    // Create session
+                    $this->createSession($loggedInUser->UserID);
+                } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
+                    die('Pending');//TODO: Handle this
+                } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
+                    die('Not Approved');//TODO: Handle this
+                } else {
+                    $data['password_err'] = 'Password incorrect';
+                    $this->view('pages/login/login', $data);
+                }
+
+            } else {
+                // Load view with errors
+                $this->view('pages/login/login', $data);
+            }
+
+        } else {
+            $data = [
+                'email' => '',
+                'password' => '',
+                'email_err' => '',
+                'password_err' => ''
+            ];
+
+            // Load view
+            $this->view('pages/login/login', $data);
+        }
+    }
+
+    public function createSession($userID) {
+        // Start session
+        session_start();
+    
+        // Get session details
+        $user = $this->model->getUserDetails($userID);
+    
+        if ($user) {
+            // Store session variables
+            $_SESSION['user_id'] = $user['UserID'];
+            $_SESSION['user_email'] = $user['Email'];
+            $_SESSION['user_role'] = $user['Role'];
+            $_SESSION['user_status'] = $user['Status'];
+    
+            if ($user['Role'] === 'Student' || $user['Role'] === 'Admin' || $user['Role'] === 'VT-Member') {
+                $_SESSION['user_name'] = $user['FirstName'] . ' ' . $user['LastName'];
+                $_SESSION['user_profile_pic'] = $user['ProfilePic'];
+            } else if ($user['Role'] === 'Company') {
+                $_SESSION['user_name'] = $user['CompanyName'];
+                $_SESSION['user_profile_pic'] = $user['CompanyLogo'];
+            }
+    
+            // TODO: Redirect to dashboard or handle the next step
+            if ($user['Role'] === 'Student') {
+                Redirect::to(URLROOT . '/user/profile');
+            } else if ($user['Role'] === 'Company') {
+                Redirect::to(URLROOT . '/service_provider/dashboard');
+            } else if ($user['Role'] === 'Admin') {
+                Redirect::to(URLROOT . '/admin/dashboard');
+            } else if ($user['Role'] === 'VT-Member') {
+                Redirect::to(URLROOT . '/verification_team/dashboard');
+            }
+            //print user details
+            // print_r($_SESSION);
+            // print($_SESSION['user_id']);
+        } else {
+            // Handle case where session details were not found
+            die('User not found or unable to create session');//TODO: Handle this
+        }
+    }
+
+    public function logout() {
+        // Unset session variables
+        session_unset();
+    
+        // Destroy session
+        session_destroy();
+    
+        // Redirect to login page
+        Redirect::to(URLROOT . '/login');
+    }
+
     public function profile()
     {
         try {
