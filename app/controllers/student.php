@@ -109,7 +109,6 @@ class Student extends Controller
             $this->model('jobModel')->create_complain($data);
             
             Redirect::to('make_complain');
-            DisplayPopup::openPopup(APPROOT . 'views/popups/admin/activateAcc');  //Not working yet  
               
         }
 
