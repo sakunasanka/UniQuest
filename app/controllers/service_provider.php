@@ -78,6 +78,7 @@ class Service_provider extends Controller
             'job_location' => trim($_POST['jobLocation'] ),
             'job_category' => trim($_POST['jobType'] ),
             'adress' => trim($_POST['address']),
+            'job_id' => $postId,
             'required_skills' => trim($_POST['qualifications']),
             'salary_range' => trim($_POST['salaryRange'] ),
             'Description' => trim($_POST['jobDescription']),
@@ -170,11 +171,12 @@ class Service_provider extends Controller
         $post=$this->model('M_jobpost')->getpostbyid($postId);
 
         //check the owner
-        if($post->companyID != $_SESSION['company_id']){
-            redirect('service_provider/jobs');
+        if($post->companyID != $_SESSION['user_id']){
+            redirect('student/jobs');
         }
         $data = [
             'job_name' => '',
+            'job_id' => '',
             'job_benifits' => '',
             'job_location' => '',
             'job_category' => '',

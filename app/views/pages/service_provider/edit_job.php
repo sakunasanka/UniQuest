@@ -15,10 +15,10 @@
         </div>
 
         <div class="form-container">
-            <form action="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $data['job_id']; ?>"  method="POST" enctype="multipart/form-data">
+            <form action="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $data['job_id']; ?>"  method="POST" >
                 
                 <div class="form-group">
-                    <label for="referral_id">Referral ID</label>
+                    <label for="referral_id"><?php echo $data['job_id']?></label>
                     <span class="arrow">-></span>
                     <input type="text" id="referral_id" name="referral_id" value="23477" readonly>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <label for="job_title">Job Title</label>
                     <span class="arrow">-></span>
-                    <input type="text" id="job_title" name="job_title" value="<?php  $data['job_name']; ?>">
+                    <input type="text" id="job_title" name="job_title" value="<?php echo  $data['job_name']; ?>">
                 </div>
         
                 <div class="form-group">
@@ -38,26 +38,26 @@
                 <div class="form-group">
                     <label for="job_location">Job Location</label>
                     <span class="arrow">-></span>
-                    <input type="text" id="job_location" name="job_location" value="<?php  $data['job_location']; ?>">
+                    <input type="text" id="job_location" name="job_location" value="<?php echo $data['job_location']; ?>">
                 </div>
         
                 <div class="form-group">
                     <label for="salary_range">Salary Range</label>
                     <span class="arrow">-></span>
-                    <input type="text" id="salary_range" name="salary_range" value="<?php  $data['salary_range']; ?>">
+                    <input type="text" id="salary_range" name="salary_range" value="<?php echo $data['salary_range']; ?>">
                 </div>
         
                 <div class="form-group">
                     <label for="job_qualifications">Job Qualifications</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_qualifications" name="job_qualifications" value="<?php $data['required_skills']; ?>">
+                    <textarea id="job_qualifications" name="job_qualifications" value="<?php echo $data['required_skills']; ?>">
                     </textarea>
                 </div>
         
                 <div class="form-group">
                     <label for="job_benefits">Job Benefits</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_benefits" name="job_benefits" value="<?php  $data['job_benifits']; ?>">
+                    <textarea id="job_benefits" name="job_benefits" value="<?php echo  $data['job_benifits']; ?>">
                         • Benefit 1
                     </textarea>
                 </div>
