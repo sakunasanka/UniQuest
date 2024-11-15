@@ -25,9 +25,9 @@
                     </div>
                 </div>
             </div>
-            <?php foreach($data['posts'] as $post): ?>
+            
             <div class="cards-container">
-                <?php for ($i = 0; $i < 6; $i++): ?>
+                <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToJobDescription()">
                             <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
@@ -61,12 +61,12 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
-                <?php endfor; ?>
+                    <?php endforeach; ?>
             </div>
         </div>  
     </div>
 </div>
-<?php endforeach; ?>
+
 <style>
     .icon-active {
         color: #e74c3c; /* Active color */

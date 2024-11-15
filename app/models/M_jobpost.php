@@ -10,7 +10,7 @@ class M_jobpost {
     
     
     public function getPosts(){
-        $this->db->query('SELECT * FROM v_jobs ORDER BY jobs_create_at DESC');
+        $this->db->query('SELECT * FROM v_jobs');
         $results = $this->db->resultSet();
         return $results;
     }

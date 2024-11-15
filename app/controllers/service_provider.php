@@ -94,138 +94,116 @@ class Service_provider extends Controller
     }
     public function jobPost()
     {
-        if($_SERVER['REQUEST_METHOD']=='POST'){
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            $data=[
-                
-                'job_name' => trim($_POST['jobName'] ?? ''),
-                'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
-                'job_location' => trim($_POST['jobLocation'] ?? ''),
-                'job_category' => trim($_POST['jobType'] ?? ''),
-                'adress' => trim($_POST['address']),
-                'required_skills' => trim($_POST['qualifications'] ?? ''),
-                'salary_range' => trim($_POST['salaryRange'] ?? ''),
-                'Description' => trim($_POST['jobDescription'] ?? ''),
+        $data = [
+            'job_name' => trim($_POST['jobName'] ?? ''),
+            'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
+            'job_location' => trim($_POST['jobLocation'] ?? ''),
+            'job_category' => trim($_POST['jobType'] ?? ''),
+            'adress' => trim($_POST['address']),
+            'required_skills' => trim($_POST['qualifications'] ?? ''),
+            'salary_range' => trim($_POST['salaryRange'] ?? ''),
+            'Description' => trim($_POST['jobDescription'] ?? ''),
 
-                'job_name_err'=>'',
-                'job_benifits_err'=>'',
-                'job_location_err'=>'',
-                'job_category_err'=>'',
-                'adress_err'=>'',
-                'required_skills_err'=>'',
-                'salary_range_err'=>'',
-                'Description_err' => ''
-            ];
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
 
-            //validation
-            
-            if(empty($data['job_name'])){
-                $data['job_name_err'] = 'Please enter job name';
+        // Validation
+        if (empty($data['job_name'])) {
+            $data['job_name_err'] = 'Please enter job name';
+        }
+        if (empty($data['job_benifits'])) {
+            $data['job_benifits_err'] = 'Please enter job benefits';
+        }
+        if (empty($data['job_location'])) {
+            $data['job_location_err'] = 'Please enter job location';
+        }
+        if (empty($data['job_category'])) {
+            $data['job_category_err'] = 'Please enter job category';
+        }
+        if (empty($data['adress'])) {
+            $data['adress_err'] = 'Please enter address';
+        }
+        if (empty($data['required_skills'])) {
+            $data['required_skills_err'] = 'Please enter required skills';
+        }
+        if (empty($data['salary_range'])) {
+            $data['salary_range_err'] = 'Please enter salary range';
+        }
+        if (empty($data['Description'])) {
+            $data['Description_err'] = 'Please enter description';
+        }
 
+        // Make sure no errors
+        if (
+            empty($data['job_name_err']) &&
+            empty($data['job_benifits_err']) &&
+            empty($data['job_location_err']) &&
+            empty($data['job_category_err']) &&
+            empty($data['adress_err']) &&
+            empty($data['required_skills_err']) &&
+            empty($data['salary_range_err']) &&
+            empty($data['Description_err'])
+        ) {
+            if ($this->model('M_jobpost')->create($data)) {
+                flash('post-msg', 'Post is published');
+                redirect('service_provider/jobsDescription');
+                return; // Exit after redirect
+            } else {
+                die('Something went wrong');
             }
-            if(empty($data['job_benifits'])){
-                $data['job_benifits_err'] = 'Please enter job benifits';
+        } else {
+            // Load view with errors
+            $this->view('pages/admin/jobPost', $data);
+        }
+    } else {
+        $data = [
+            'job_name' => '',
+            'job_benifits' => '',
+            'job_location' => '',
+            'job_category' => '',
+            'adress' => '',
+            'required_skills' => '',
+            'salary_range' => '',
+            'Description' => '',
 
-            }
-            if(empty($data['job_location'])){
-                $data['job_location_err'] = 'Please enter job location';
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
+        $this->view('pages/admin/jobPost', $data);
+    }
+}
 
-            }
-            if(empty($data['job_category'])){
-                $data['job_category_err'] = 'Please enter job category';
+  
 
-            }
-            if(empty($data['adress'])){
-                $data['adress_err'] = 'Please enter adress';
-
-            }
-            if(empty($data['required_skills'])){
-                $data['required_skills_err'] = 'Please enter required skills';
-
-            }
-            if(empty($data['salary_range'])){
-                $data['salary_range_err'] = 'Please enter salary range';
-
-            }
-
-            if(empty($data['Description'])){
-                $data['Description_err'] = 'Please enter Description';  
-
-            }
-
-            //make sure no errors
-            if(empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err']) && empty($data['adress_err']) && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])){
-                if($this->model('M_jobpost')->create($data)){
-                    flash('post-msg','post is published');
-                    redirect('service_provider/jobs');
-                }
-                else{
-                    die('something went wrong');
-                }
-
-            
-            
-            // if(empty($data['title_err']) && empty($data['body_err']) && empty($data['image_err'] )){
-            //     if($this->postsModel->create($data)){
-
-            //         //grt post  id
-            //         $postId = $this->postsModel->getpostidbycontent($data);
-            //         $userId = $_SESSION['user_id'];
-            //         $this->postsModel->addpostinteraction($postId, $userId, 'new');
-
-            //         flash('post-msg','post is published');
-            //         redirect('posts/index');
-
-            //     }
-            //     else{
-            //         die('something went wrong');
-            //     }
-
-            // }
-            else{
-                //loading view with errors
-                $this->view('pages/admin/jobPost', $data);
-            }
-            }
-            else{
-                $data =[
-                    'job_name'=>'',
-                    'job_benifits'=>'',
-                    'job_location'=>'',
-                    'job_category'=>'',
-                    'adress'=>'',
-                    'required_skills'=>'',
-                    'salary_range'=>'',
-                    'Description' => '',
-
-                    'job_name_err'=>'',
-                    'job_benifits_err'=>'',
-                    'job_location_err'=>'',
-                    'job_category_err'=>'',
-                    'adress_err'=>'',
-                    'required_skills_err'=>'',
-                    'salary_range_err'=>'',
-                    'Description_err' => ''
-                ];
-                $this->view('pages/admin/jobPost', $data);
-            }
+    public function jobsDescription(){
+        
+            $this->view('pages/student/jobsDescription');
        
     }
-  
-}
-    public function jobsDescription()
-        {
-            $this->view('pages/student/jobsDescription');
-        }
-        public function jobs()
-        {   
-            $posts = $this->model('M_jobpost')->getPosts() ?? [];
+    public function jobs()
+    {   
+            $posts = $this->model('M_jobpost')->getPosts();
             $data =[
                 'posts' => $posts
             ];
 
              $this->view('pages/student/jobs', $data);
         
-        }
+    }
 }
