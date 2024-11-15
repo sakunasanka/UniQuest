@@ -214,9 +214,9 @@ JOIN
 JOIN 
     `uniquest`.`company` c ON cm.CompanyID = c.CompanyID
 JOIN 
-    `uniquest`.`user` u ON c.CompanyID = u.UserID;  -- Assuming `company` has FK to `user` for email
-
-
+    `uniquest`.`user` u ON c.CompanyID = u.UserID 
+ORDER BY 
+    cm.ComplainedDate ASC;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
