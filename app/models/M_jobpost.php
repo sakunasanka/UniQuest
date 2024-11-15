@@ -24,7 +24,7 @@ class M_jobpost {
         $this->db->bind(':adress', $data['adress']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
-        $this->db->bind(':company_id', $_SESSION['company_id']);
+        $this->db->bind(':company_id', $_SESSION['user_id']);
 
         // Execute and return the result
         return $this->db->execute();

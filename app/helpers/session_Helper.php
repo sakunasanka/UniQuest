@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    
 
     function flash($name = '', $message = '', $class = 'msg-flash') {
         if (!empty($name)) {

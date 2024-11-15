@@ -158,36 +158,17 @@ class Service_provider extends Controller
             if(empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err']) && empty($data['adress_err']) && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])){
                 if($this->model('M_jobpost')->create($data)){
                     flash('post-msg','post is published');
-                    redirect('service_provider/index');
+                    redirect('service_provider/jobs');
                 }
                 else{
                     die('something went wrong');
+                    
                 }
-
-            
-            
-            // if(empty($data['title_err']) && empty($data['body_err']) && empty($data['image_err'] )){
-            //     if($this->postsModel->create($data)){
-
-            //         //grt post  id
-            //         $postId = $this->postsModel->getpostidbycontent($data);
-            //         $userId = $_SESSION['user_id'];
-            //         $this->postsModel->addpostinteraction($postId, $userId, 'new');
-
-            //         flash('post-msg','post is published');
-            //         redirect('posts/index');
-
-            //     }
-            //     else{
-            //         die('something went wrong');
-            //     }
-
-            // }
-            else{
+            } else {
                 //loading view with errors
                 $this->view('pages/admin/jobPost', $data);
             }
-            }
+        }
             else{
                 $data =[
                     'job_name'=>'',
