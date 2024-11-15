@@ -68,9 +68,133 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/ser_analytics');
     }
 
-    public function edit_job()
-    {
-        $this->view('pages/service_provider/edit_job');
+    public function edit_job($postId)
+    {   if($_SERVER['REQUEST_METHOD']=='POST'){
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        $data=[
+            'job_name' => trim($_POST['jobName'] ),
+            'job_benifits' => trim($_POST['jobBenefits'] ),
+            'job_location' => trim($_POST['jobLocation'] ),
+            'job_category' => trim($_POST['jobType'] ),
+            'adress' => trim($_POST['address']),
+            'required_skills' => trim($_POST['qualifications']),
+            'salary_range' => trim($_POST['salaryRange'] ),
+            'Description' => trim($_POST['jobDescription']),
+
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
+
+        //validation
+        $post=$this->model('M_jobpost')->getpostbyid($postId);
+        // $oldImage= PUBROOT.'/img/postsimg/'.$post->image;
+
+        //photouploaded
+
+        //user havent change the existing  photo
+    //     if($_POST['intentionally_removed']=='removed'){
+    //         deleteImage($oldImage);
+    //         $data['image_name'] = '';       
+    //     }
+    //     else{
+    //     if($_FILES['image']['size']==''){
+    //         $data['image_name'] = $post->image;
+           
+    //     }
+    //     else{
+    //        updateImage($oldImage , $data['image']['tmp_name'] , $data['image_name'] , '/img/postsimg/');
+            
+    //    }   
+    // }
+        
+
+
+    if (empty($data['job_name'])) {
+        $data['job_name_err'] = 'Please enter job name';
+    }
+    if (empty($data['job_benifits'])) {
+        $data['job_benifits_err'] = 'Please enter job benefits';
+    }
+    if (empty($data['job_location'])) {
+        $data['job_location_err'] = 'Please enter job location';
+    }
+    if (empty($data['job_category'])) {
+        $data['job_category_err'] = 'Please enter job category';
+    }
+    if (empty($data['adress'])) {
+        $data['adress_err'] = 'Please enter address';
+    }
+    if (empty($data['required_skills'])) {
+        $data['required_skills_err'] = 'Please enter required skills';
+    }
+    if (empty($data['salary_range'])) {
+        $data['salary_range_err'] = 'Please enter salary range';
+    }
+    if (empty($data['Description'])) {
+        $data['Description_err'] = 'Please enter description';
+    }
+
+        if(
+            empty($data['job_name_err']) &&
+            empty($data['job_benifits_err']) &&
+            empty($data['job_location_err']) &&
+            empty($data['job_category_err']) &&
+            empty($data['adress_err']) &&
+            empty($data['required_skills_err']) &&
+            empty($data['salary_range_err']) &&
+            empty($data['Description_err'])
+        ){
+            if($this->model('M_jobpost')->edit($data)){
+                flash('post-msg','post is updated');
+                redirect('pages/service_provider/edit_job');
+
+            }
+            else{
+                die('something went wrong');
+            }
+
+        }
+        else{
+            //loading view with errors
+            $this->view('pages/service_provider/edit_job', $data);
+        }
+    }
+    else{
+        $post=$this->model('M_jobpost')->getpostbyid($postId);
+
+        //check the owner
+        if($post->CompanyID != $_SESSION['CompanyID']){
+            redirect('pages/service_provider/jobs');
+        }
+        $data = [
+            'job_name' => '',
+            'job_benifits' => '',
+            'job_location' => '',
+            'job_category' => '',
+            'adress' => '',
+            'required_skills' => '',
+            'salary_range' => '',
+            'Description' => '',
+
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
+        $this->view('pages/service_provider/edit_job', $data);
+        }
+            
     }
   
     public function view_job()
@@ -156,7 +280,7 @@ class Service_provider extends Controller
         ) {
             if ($this->model('M_jobpost')->create($data)) {
                 flash('post-msg', 'Post is published');
-                redirect('service_provider/jobsDescription');
+                redirect('pages/service_provider/jobs');
                 return; // Exit after redirect
             } else {
                 die('Something went wrong');
@@ -195,7 +319,7 @@ class Service_provider extends Controller
         
             $posts = $this->model('M_jobpost')->getpostbyid($id);
             $data =[
-                'posts' => $posts
+                'post' => $posts
             ];
 
             $this->view('pages/student/jobsDescription', $data);
