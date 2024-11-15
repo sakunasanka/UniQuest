@@ -153,7 +153,7 @@ class Service_provider extends Controller
         ){
             if($this->model('M_jobpost')->edit($data)){
                 flash('post-msg','post is updated');
-                redirect('pages/service_provider/edit_job');
+                redirect('service_provider/edit_job');
 
             }
             else{
@@ -170,8 +170,8 @@ class Service_provider extends Controller
         $post=$this->model('M_jobpost')->getpostbyid($postId);
 
         //check the owner
-        if($post->CompanyID != $_SESSION['CompanyID']){
-            redirect('pages/service_provider/jobs');
+        if($post->companyID != $_SESSION['company_id']){
+            redirect('service_provider/jobs');
         }
         $data = [
             'job_name' => '',
@@ -280,6 +280,7 @@ class Service_provider extends Controller
         ) {
             if ($this->model('M_jobpost')->create($data)) {
                 flash('post-msg', 'Post is published');
+
                 redirect('student/jobs');
                 return; // Exit after redirect
             } else {
@@ -316,5 +317,28 @@ class Service_provider extends Controller
   
 
 
-    
+
+    public function delete($postId){
+            
+        $post= $this->model('M_jobpost')->getpostbyid($postId);
+
+        //check owner
+        if($post->companyID != $_SESSION['company_id']){
+            redirect('service_provider/jobs');
+        }
+        else{
+        
+        
+
+        if($this->model('M_jobpost')->delete($postId)){
+            flash('post-msg','post is deleted');
+            redirect('service_provider/jobs');
+
+        }
+        else{
+            die('Something went wrong');
+        }
+        } 
+}
+
 }
