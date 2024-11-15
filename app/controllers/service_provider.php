@@ -280,7 +280,7 @@ class Service_provider extends Controller
         ) {
             if ($this->model('M_jobpost')->create($data)) {
                 flash('post-msg', 'Post is published');
-                redirect('pages/service_provider/jobs');
+                redirect('student/jobs');
                 return; // Exit after redirect
             } else {
                 die('Something went wrong');
@@ -315,24 +315,6 @@ class Service_provider extends Controller
 
   
 
-    public function jobsDescription($id){
-        
-            $posts = $this->model('M_jobpost')->getpostbyid($id);
-            $data =[
-                'post' => $posts
-            ];
 
-            $this->view('pages/student/jobsDescription', $data);
-       
-    }
-    public function jobs()
-    {   
-            $posts = $this->model('M_jobpost')->getPosts();
-            $data =[
-                'posts' => $posts
-            ];
-
-             $this->view('pages/student/jobs', $data);
-        
-    }
+    
 }

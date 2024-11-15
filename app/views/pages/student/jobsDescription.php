@@ -5,12 +5,12 @@
 
 <div class="main-container">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-
+    
     <div class="content-area">
         <div class="job-description">
             <h2><?php echo $data['post']->Title; ?></h2>
             <p><?php echo $data['post']->Location; ?></p>
-
+           
             <h3>Qualifications:</h3>
             <ul>
                 <li><?php echo $data['post']->RequiredQualifications; ?></li>
