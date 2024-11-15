@@ -2,22 +2,20 @@ body {
     font-family: Arial;
     background-color: #f7f7f7;
     margin: 0;
-    padding: 20px;
 }
 .s_e_p_content{
     display:flex;
-    width:100%;
+    width:calc(100% - 250px);
     margin-left:250px;
     margin-top:100px;
-
-
+    padding: 50px;
 }
 form {
     
     background-color: #fff;
-    padding: 10px;
+    padding: 40px;
     border-radius: 8px;
-    width:85%;
+    width:100%;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
    
     /* margin: auto; */
@@ -50,14 +48,15 @@ input[type="file"] {
 }
 
 textarea {
-    width:100%;
+    width: calc(100% - 100px);
     height: 100px;
     resize: vertical;
     font-family: Arial;
+    margin-right: auto;
 }
 
 input[type="submit"], input[type="button"] {
-    background-color: #000000;
+    background-color: #299b63;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -68,7 +67,15 @@ input[type="submit"], input[type="button"] {
 }
 
 input[type="submit"]:hover, input[type="button"]:hover {
-     background-color: #007BFF;
+     background-color: #3cb56e;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+    border: 2px solid #299b63;
+    outline: none; 
 }
 
 input[type="button"] {

@@ -11,7 +11,7 @@
             <img src="<?php echo URLROOT; ?>/images/service-provider.png" alt="student">
         </div>
         <div class="form-side">
-            <form action="<?php echo URLROOT ?>/login/login" method="POST">
+            <form action="<?php echo URLROOT ?>/user/login" method="POST">
                 <div class="form-row">
                     <h1>Login</h1>
                 </div>

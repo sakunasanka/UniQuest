@@ -227,14 +227,14 @@ class userModel
         }
     }
 
-    public function getSessionDetails($userId)
+    public function getUserDetails($userId)
     {
         try {
-            $this->db->query('SELECT UserID, Email, Role, Status FROM User WHERE UserID = :userId');
+            $this->db->query('SELECT UserID, Email, Role, Status, ContactNo FROM User WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             $user = $this->db->single();
             if ($user-> Role === 'Student') {
-                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM Student WHERE StudentID = :userId');
+                $this->db->query('SELECT * FROM Student WHERE StudentID = :userId');
                 $this->db->bind(':userId', $userId);
                 $student = $this->db->single();
                 return array_merge((array)$user, (array)$student);
@@ -248,6 +248,11 @@ class userModel
                 $this->db->bind(':userId', $userId);
                 $vtMember = $this->db->single();
                 return array_merge((array)$user, (array)$vtMember);
+            } else if ($user-> Role === 'Admin') {
+                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM Admin WHERE AdminID = :userId');
+                $this->db->bind(':userId', $userId);
+                $admin = $this->db->single();
+                return array_merge((array)$user, (array)$admin);
             } else {
                 return false;
             }
@@ -260,6 +265,25 @@ class userModel
         }
     }
 
+    public function deactivateAccount($userId)
+    {
+        try {
+            $this->db->query('UPDATE User SET Status = "Deactive" WHERE UserID = :userId');
+            $this->db->bind(':userId', $userId);
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
 
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

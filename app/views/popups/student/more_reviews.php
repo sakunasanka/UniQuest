@@ -5,60 +5,29 @@
         <div class="overlay"></div>
         <div class="content">
             <div class="close-btn-container"><button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button></div>
-            <div class="reviews-section">
+            <div class="reviews-section-popup">
                 <h4>Reviews and Ratings about this company</h4>
 
-                <div class="review">
-                    <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
-                    <div class="review-details">
-                        <span class="reviewer-name">- John Doe</span>
-                        <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                    </div>
-                </div>
+                <?php for ($i = 0; $i < 6; $i++): ?>
+                    <div class="review" id="popup-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
+                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
+                        <div class="review-details">
+                            <span class="reviewer-name">- John Doe</span>
+                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                        </div>
+                        <div class="review-actions">
+                            <button class="like-btn" data-id="<?php echo $i; ?>">
+                                <span class="material-symbols-outlined like-icon">thumb_up</span>
+                            </button>
+                            <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
 
-                <div class="review">
-                    <p class="review-text">"The salary is quite competitive compared to other companies, and they provide special allowances too."</p>
-                    <div class="review-details">
-                        <span class="reviewer-name">- Sarah Smith</span>
-                        <span class="review-rating"><i class="fa fa-star"></i> 4.5</span>
+                            <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                            </button>
+                            <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                        </div>
                     </div>
-                </div>
-
-                <div class="review">
-                    <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
-                    <div class="review-details">
-                        <span class="reviewer-name">- David Lee</span>
-                        <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
-                    </div>
-                </div>
-                <div class="review">
-                    <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
-                    <div class="review-details">
-                        <span class="reviewer-name">- John Doe</span>
-                        <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                    </div>
-                </div>
-                <div class="review">
-                    <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
-                    <div class="review-details">
-                        <span class="reviewer-name">- David Lee</span>
-                        <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
-                    </div>
-                </div>
-                <div class="review">
-                    <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
-                    <div class="review-details">
-                        <span class="reviewer-name">- John Doe</span>
-                        <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                    </div>
-                </div>
-                <div class="review">
-                    <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
-                    <div class="review-details">
-                        <span class="reviewer-name">- David Lee</span>
-                        <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
-                    </div>
-                </div>
+                <?php endfor; ?>
             </div>
         </div>
     </div>

@@ -184,7 +184,7 @@ p{
     margin-top: -40px;
     margin-right: 20px;
     font-size: 1.1em;
-    color: #4aa1fd;
+    color: #4aa1fd !important;
 }
 
 .seemore p{
@@ -194,7 +194,7 @@ p{
 .seemore p:hover {
     text-decoration: underline;
     cursor: pointer;
-    color: #246fc0;
+    color: #246fc0 !important;
 }
 
 .btn-space-between {

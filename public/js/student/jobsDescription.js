@@ -15,40 +15,46 @@ function goToCompany() {
     window.location.href = "/uniquest/student/companydescription"; 
 }
 
-// Likes and dislikes tracking objects
+// Track likes, dislikes, and their status for each review
 const likeCounts = {};
 const dislikeCounts = {};
-
-// Track whether each review has been liked or disliked
 const likedStatus = {};
 const dislikedStatus = {};
+
+// Initialize event listeners for all like and dislike buttons
+function initializeEventListeners() {
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', () => toggleLike(button.getAttribute('data-id')));
+    });
+
+    document.querySelectorAll('.dislike-btn').forEach(button => {
+        button.addEventListener('click', () => toggleDislike(button.getAttribute('data-id')));
+    });
+}
 
 // Toggle like function
 function toggleLike(reviewId) {
     if (!likeCounts[reviewId]) likeCounts[reviewId] = 0;
     if (!likedStatus[reviewId]) likedStatus[reviewId] = false;
 
-    const likeButton = document.getElementById(`like-icon-${reviewId.split('-')[1]}`);
-    const likeCountElem = document.getElementById(`like-count-${reviewId.split('-')[1]}`);
+    const likeButtons = document.querySelectorAll(`.like-btn[data-id="${reviewId}"] .like-icon`);
+    const likeCountElems = document.querySelectorAll(`.like-count[data-id="${reviewId}"]`);
 
     if (likedStatus[reviewId]) {
-        // If already liked, remove the like
         likeCounts[reviewId]--;
         likedStatus[reviewId] = false;
-        likeButton.style.color = ""; // Reset color
+        likeButtons.forEach(btn => btn.style.color = "");
     } else {
-        // If not liked, add the like
         likeCounts[reviewId]++;
         likedStatus[reviewId] = true;
-        likeButton.style.color = "#299b63"; // Active color for like
+        likeButtons.forEach(btn => btn.style.color = "#299b63");
 
-        // If dislike was active, remove it
         if (dislikedStatus[reviewId]) {
-            toggleDislike(reviewId); // Call toggleDislike to remove it
+            toggleDislike(reviewId); // Remove dislike if active
         }
     }
 
-    likeCountElem.textContent = `${likeCounts[reviewId]} likes`;
+    likeCountElems.forEach(elem => elem.textContent = `${likeCounts[reviewId]} likes`);
 }
 
 // Toggle dislike function
@@ -56,50 +62,25 @@ function toggleDislike(reviewId) {
     if (!dislikeCounts[reviewId]) dislikeCounts[reviewId] = 0;
     if (!dislikedStatus[reviewId]) dislikedStatus[reviewId] = false;
 
-    const dislikeButton = document.getElementById(`dislike-icon-${reviewId.split('-')[1]}`);
-    const dislikeCountElem = document.getElementById(`dislike-count-${reviewId.split('-')[1]}`);
+    const dislikeButtons = document.querySelectorAll(`.dislike-btn[data-id="${reviewId}"] .dislike-icon`);
+    const dislikeCountElems = document.querySelectorAll(`.dislike-count[data-id="${reviewId}"]`);
 
     if (dislikedStatus[reviewId]) {
-        // If already disliked, remove the dislike
         dislikeCounts[reviewId]--;
         dislikedStatus[reviewId] = false;
-        dislikeButton.style.color = ""; // Reset color
+        dislikeButtons.forEach(btn => btn.style.color = "");
     } else {
-        // If not disliked, add the dislike
         dislikeCounts[reviewId]++;
         dislikedStatus[reviewId] = true;
-        dislikeButton.style.color = "#e74c3c"; // Active color for dislike
+        dislikeButtons.forEach(btn => btn.style.color = "#e74c3c");
 
-        // If like was active, remove it
         if (likedStatus[reviewId]) {
-            toggleLike(reviewId); // Call toggleLike to remove it
+            toggleLike(reviewId); // Remove like if active
         }
     }
 
-    dislikeCountElem.textContent = `${dislikeCounts[reviewId]} dislikes`;
+    dislikeCountElems.forEach(elem => elem.textContent = `${dislikeCounts[reviewId]} dislikes`);
 }
 
-// Toggle reply form visibility
-function toggleReplyForm(reviewId) {
-    const replySection = document.getElementById(`reply-section-${reviewId.split('-')[1]}`);
-    replySection.style.display = replySection.style.display === 'none' ? 'block' : 'none';
-}
-
-// Submit a reply
-function submitReply(reviewId) {
-    const replyInput = document.getElementById(`reply-input-${reviewId.split('-')[1]}`);
-    const replyText = replyInput.value.trim();
-    if (!replyText) return;
-
-    // Add reply to replies list
-    const repliesList = document.getElementById(`replies-list-${reviewId.split('-')[1]}`);
-    const replyElement = document.createElement('p');
-    replyElement.textContent = replyText;
-    repliesList.appendChild(replyElement);
-
-    // Clear input and update reply count
-    replyInput.value = '';
-    if (!replies[reviewId]) replies[reviewId] = [];
-    replies[reviewId].push(replyText);
-    document.getElementById(`reply-count-${reviewId.split('-')[1]}`).textContent = `${replies[reviewId].length} replies`;
-}
+// Initialize all event listeners on page load
+initializeEventListeners();
