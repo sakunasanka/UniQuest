@@ -29,11 +29,11 @@
             <div class="cards-container">
                 <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
-                        <div class="card-logo" onclick="goToJobDescription()">
+                        <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
                             <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
                         </div>
                         <div class="card-content">
-                            <div class="content-hover-class" onclick="goToJobDescription()">
+                            <div class="content-hover-class" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
                                 <div class="title-content">
                                     <h3 class="job-title"><?php echo $post->Title; ?></h3>
                                     <div class="job-rating">
@@ -91,7 +91,7 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>
-    function goToJobDescription() {
-        window.location.href = "/uniquest/student/jobsdescription";
+    function goToJobDescription(jobId) {
+        window.location.href = "/uniquest/student/jobsdescription/" + jobId;
     }
 </script>
