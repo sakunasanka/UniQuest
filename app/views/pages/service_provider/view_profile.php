@@ -10,7 +10,11 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="<?php echo UPLOADROOT; ?>/profile_pictures/company/<?php echo $data['user']['CompanyLogo'] ?>" alt="Company Logo"> 
+        <img 
+            src="<?php echo empty($data['user']['CompanyLogo']) 
+                ? URLROOT . '/images/profile_pic_preview.png' 
+                : UPLOADROOT . '/profile_pictures/company/' . $data['user']['CompanyLogo']; ?>" 
+            alt="Profile Picture">
 
             <div class="view-card-content">
                 <h1><?php echo $data['user']['CompanyName'] ?></h1>

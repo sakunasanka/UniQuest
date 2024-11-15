@@ -13,10 +13,15 @@
     <div class="page-wrapper">
     <!-- Sidebar -->
     <div class="sidebr">
-        <img src="<?php echo UPLOADROOT; ?>/profile_pictures/student/<?php echo $data['user']['ProfilePic'] ?>" alt="Profile Picture" class="profile-pic">
+    <img 
+        src="<?php echo empty($data['user']['ProfilePic']) 
+            ? URLROOT . '/images/profile_pic_preview.png' 
+            : UPLOADROOT . '/profile_pictures/student/' . $data['user']['ProfilePic']; ?>" 
+        alt="Profile Picture" 
+        class="profile-pic">
         <ul>
             <li><a href="deactivate_account.php">Deactivate Account</a></li>
-            <li><a href="signout.php">Log Out</a></li>
+            <li><a href="<?php echo URLROOT ?>/user/logout">Log Out</a></li>
         </ul>
     </div>
 
