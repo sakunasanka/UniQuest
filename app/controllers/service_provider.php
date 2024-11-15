@@ -3,43 +3,6 @@ class Service_provider extends Controller
 {
     private $model;
 
-    private function prepareData($post = [], $files = [])
-    {
-        return [
-            'companyName' => ucfirst(trim($post['companyName'] ?? '')),
-            'email' => trim($post['email'] ?? ''),
-            'password' => trim($post['password'] ?? ''),
-            'confirm_password' => trim($post['confirm_password'] ?? ''),
-            'contactNo' => trim($post['contactNo'] ?? ''),
-            'streetNo' => trim($post['streetNo'] ?? ''),
-            'addressLine1' => ucfirst(trim($post['addressLine1'] ?? '')),
-            'addressLine2' => ucfirst(trim($post['addressLine2'] ?? '')),
-            'city' => ucfirst(trim($post['city'] ?? '')),
-            'terms' => trim($post['terms'] ?? ''),
-            'companyLogo' => $files['companyLogo'] ?? '',
-            'companyLogoName' => '',
-            'description' => '',
-            'role' => 'Company',
-            'date' => date('Y-m-d H:i:s'),
-            'status' => 'Pending',
-
-            'companyName_err' => '',
-            'email_err' => '',
-            'password_err' => '',
-            'confirm_password_err' => '',
-            'contactNo_err' => '',
-            'streetNo_err' => '',
-            'addressLine1_err' => '',
-            'addressLine2_err' => '',
-            'city_err' => '',
-            'description_err' => '',
-            'companyLogo_err' => '',
-            'terms_err' => '',
-            'role_err' => '',
-            'status_err' => ''
-        ];
-    }
-
     public function __construct()
     {
         // Load model
@@ -54,80 +17,20 @@ class Service_provider extends Controller
     public function contact_admin()
     {
         $this->view('pages/service_provider/contact_admin');
-    }
-
-    public function register()
-    {
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            // Sanitize POST array
-            $_POST = filter_input_array(INPUT_POST);
-
-            // Init data
-            $data = $this->prepareData($_POST, $_FILES);
-
-            //check email is already registered
-            if ($this->model->findUserByEmail($data['email'])) {
-                $data['email_err'] = 'Email is already registered';
-            }
-
-            $validationResponse = Validator::isValidRegistrationData($data);
-            if (!$validationResponse['is_valid']) {
-                $data = array_merge($data, $validationResponse['error']);
-            }
-
-            $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
-            if (!$logoValidationResponse['is_valid']) {
-                $data['companyLogo_err'] = $logoValidationResponse['error'];
-            }
-
-            // Check if there are no errors
-            if (empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['companyName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['companyLogo_err'])) {
-                // Hash password
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-                // Upload company logo
-                $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
-                if ($companyLogoResponse['success']) {
-                    $data['companyLogoName'] = $companyLogoResponse['fileName'];
-                } else {
-                    $data['companyLogo_err'] = $companyLogoResponse['error'];
-                    $this->view('pages/service_provider/register', $data);
-                    return;
-                }
-
-                // Register user
-                if ($this->model->companyRegister($data)) {
-                    // Redirect to login page
-                    Redirect::to(URLROOT . '/service_provider/login');
-                } else {
-                    die('Something went wrong');//TODO: Handle this
-                }
-            } else {
-                // Load view with errors
-                $this->view('pages/service_provider/register', $data);
-            }
-
-        } else {
-            $data = $this->prepareData();
-
-            // Load view
-            $this->view('pages/service_provider/register', $data);
-        }
-    }    
+    }   
 
     public function dashboard()
     {
         $this->view('pages/service_provider/ser_dashboard');
     }
+    public function jobPostform()
+    {
+        $this->view('pages/admin/jobPost');
+    }
 
     public function report()
     {
         $this->view('pages/service_provider/job_report');
-    }
-  
-    public function login()
-    {
-        $this->view('pages/service_provider/login');
     }
 
     public function ongoing_jobs()
@@ -165,9 +68,133 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/ser_analytics');
     }
 
-    public function edit_job()
-    {
-        $this->view('pages/service_provider/edit_job');
+    public function edit_job($postId)
+    {   if($_SERVER['REQUEST_METHOD']=='POST'){
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        $data=[
+            'job_name' => trim($_POST['jobName'] ),
+            'job_benifits' => trim($_POST['jobBenefits'] ),
+            'job_location' => trim($_POST['jobLocation'] ),
+            'job_category' => trim($_POST['jobType'] ),
+            'adress' => trim($_POST['address']),
+            'required_skills' => trim($_POST['qualifications']),
+            'salary_range' => trim($_POST['salaryRange'] ),
+            'Description' => trim($_POST['jobDescription']),
+
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
+
+        //validation
+        $post=$this->model('M_jobpost')->getpostbyid($postId);
+        // $oldImage= PUBROOT.'/img/postsimg/'.$post->image;
+
+        //photouploaded
+
+        //user havent change the existing  photo
+    //     if($_POST['intentionally_removed']=='removed'){
+    //         deleteImage($oldImage);
+    //         $data['image_name'] = '';       
+    //     }
+    //     else{
+    //     if($_FILES['image']['size']==''){
+    //         $data['image_name'] = $post->image;
+           
+    //     }
+    //     else{
+    //        updateImage($oldImage , $data['image']['tmp_name'] , $data['image_name'] , '/img/postsimg/');
+            
+    //    }   
+    // }
+        
+
+
+    if (empty($data['job_name'])) {
+        $data['job_name_err'] = 'Please enter job name';
+    }
+    if (empty($data['job_benifits'])) {
+        $data['job_benifits_err'] = 'Please enter job benefits';
+    }
+    if (empty($data['job_location'])) {
+        $data['job_location_err'] = 'Please enter job location';
+    }
+    if (empty($data['job_category'])) {
+        $data['job_category_err'] = 'Please enter job category';
+    }
+    if (empty($data['adress'])) {
+        $data['adress_err'] = 'Please enter address';
+    }
+    if (empty($data['required_skills'])) {
+        $data['required_skills_err'] = 'Please enter required skills';
+    }
+    if (empty($data['salary_range'])) {
+        $data['salary_range_err'] = 'Please enter salary range';
+    }
+    if (empty($data['Description'])) {
+        $data['Description_err'] = 'Please enter description';
+    }
+
+        if(
+            empty($data['job_name_err']) &&
+            empty($data['job_benifits_err']) &&
+            empty($data['job_location_err']) &&
+            empty($data['job_category_err']) &&
+            empty($data['adress_err']) &&
+            empty($data['required_skills_err']) &&
+            empty($data['salary_range_err']) &&
+            empty($data['Description_err'])
+        ){
+            if($this->model('M_jobpost')->edit($data)){
+                flash('post-msg','post is updated');
+                redirect('service_provider/edit_job');
+
+            }
+            else{
+                die('something went wrong');
+            }
+
+        }
+        else{
+            //loading view with errors
+            $this->view('pages/service_provider/edit_job', $data);
+        }
+    }
+    else{
+        $post=$this->model('M_jobpost')->getpostbyid($postId);
+
+        //check the owner
+        if($post->companyID != $_SESSION['company_id']){
+            redirect('service_provider/jobs');
+        }
+        $data = [
+            'job_name' => '',
+            'job_benifits' => '',
+            'job_location' => '',
+            'job_category' => '',
+            'adress' => '',
+            'required_skills' => '',
+            'salary_range' => '',
+            'Description' => '',
+
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
+        $this->view('pages/service_provider/edit_job', $data);
+        }
+            
     }
   
     public function view_job()
@@ -184,5 +211,134 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/view_profile');
     }
+
+    public function pending()
+    {
+        $this->view('pages/login/wait_to_verify_ser');
+    }
+    public function jobPost()
+    {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+        $data = [
+            'job_name' => trim($_POST['jobName'] ?? ''),
+            'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
+            'job_location' => trim($_POST['jobLocation'] ?? ''),
+            'job_category' => trim($_POST['jobType'] ?? ''),
+            'adress' => trim($_POST['address']),
+            'required_skills' => trim($_POST['qualifications'] ?? ''),
+            'salary_range' => trim($_POST['salaryRange'] ?? ''),
+            'Description' => trim($_POST['jobDescription'] ?? ''),
+
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
+
+        // Validation
+        if (empty($data['job_name'])) {
+            $data['job_name_err'] = 'Please enter job name';
+        }
+        if (empty($data['job_benifits'])) {
+            $data['job_benifits_err'] = 'Please enter job benefits';
+        }
+        if (empty($data['job_location'])) {
+            $data['job_location_err'] = 'Please enter job location';
+        }
+        if (empty($data['job_category'])) {
+            $data['job_category_err'] = 'Please enter job category';
+        }
+        if (empty($data['adress'])) {
+            $data['adress_err'] = 'Please enter address';
+        }
+        if (empty($data['required_skills'])) {
+            $data['required_skills_err'] = 'Please enter required skills';
+        }
+        if (empty($data['salary_range'])) {
+            $data['salary_range_err'] = 'Please enter salary range';
+        }
+        if (empty($data['Description'])) {
+            $data['Description_err'] = 'Please enter description';
+        }
+
+        // Make sure no errors
+        if (
+            empty($data['job_name_err']) &&
+            empty($data['job_benifits_err']) &&
+            empty($data['job_location_err']) &&
+            empty($data['job_category_err']) &&
+            empty($data['adress_err']) &&
+            empty($data['required_skills_err']) &&
+            empty($data['salary_range_err']) &&
+            empty($data['Description_err'])
+        ) {
+            if ($this->model('M_jobpost')->create($data)) {
+                flash('post-msg', 'Post is published');
+
+                redirect('student/jobs');
+                return; // Exit after redirect
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            // Load view with errors
+            $this->view('pages/admin/jobPost', $data);
+        }
+    } else {
+        $data = [
+            'job_name' => '',
+            'job_benifits' => '',
+            'job_location' => '',
+            'job_category' => '',
+            'adress' => '',
+            'required_skills' => '',
+            'salary_range' => '',
+            'Description' => '',
+
+            'job_name_err' => '',
+            'job_benifits_err' => '',
+            'job_location_err' => '',
+            'job_category_err' => '',
+            'adress_err' => '',
+            'required_skills_err' => '',
+            'salary_range_err' => '',
+            'Description_err' => ''
+        ];
+        $this->view('pages/admin/jobPost', $data);
+    }
+}
+
   
+
+
+
+    public function delete($postId){
+            
+        $post= $this->model('M_jobpost')->getpostbyid($postId);
+
+        //check owner
+        if($post->companyID != $_SESSION['company_id']){
+            redirect('service_provider/jobs');
+        }
+        else{
+        
+        
+
+        if($this->model('M_jobpost')->delete($postId)){
+            flash('post-msg','post is deleted');
+            redirect('service_provider/jobs');
+
+        }
+        else{
+            die('Something went wrong');
+        }
+        } 
+}
+
 }

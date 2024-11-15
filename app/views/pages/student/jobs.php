@@ -5,10 +5,11 @@
 
 <div class="main-container">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-
+    
     <div class="content-area">
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/internships">Internships</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
         </div>
         <div class="container">
@@ -24,34 +25,35 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="cards-container">
-                <?php for ($i = 0; $i < 6; $i++): ?>
+                <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
-                        <div class="card-logo">
+                        <div class="card-logo" onclick="goToJobDescription()">
                             <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
                         </div>
                         <div class="card-content">
-                            <div class="job-rating">
-                                <i class="fa fa-star"></i> 4.8
+                            <div class="content-hover-class" onclick="goToJobDescription()">
+                                <div class="title-content">
+                                    <h3 class="job-title"><?php echo $post->Title; ?></h3>
+                                    <div class="job-rating">
+                                        <i class="fa fa-star"></i> 4.8
+                                    </div>
+                                </div>
+                                <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
+                                <p class="job-salary"><?php echo $post->SalaryRange; ?></p>
+                                <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+                                
+                                <div class="job-location-details">
+                                        <?php echo $post->Location; ?>
+                                </div>
                             </div>
-                            <h3 class="job-title">Delivery Rider</h3>
-                            <p class="job-location">Negombo / Ja Ela / Kiribathgoda</p>
-                            <p class="job-salary">Rs. 2,000 (per day)</p>
-                            <p class="job-days-left">9 days left</p>
-                            
-                            <div class="job-location-details">
-                                Colombo, Western Province
-            
-                            </div>
-                            <?php $job = (object) ['id' => $i + 1]; ?>
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $job->id; ?>, this)"></i>
+                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
                             </div>
                         </div>
-                        
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-twitter"></i></a>
@@ -59,7 +61,7 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
-                <?php endfor; ?>
+                    <?php endforeach; ?>
             </div>
         </div>  
     </div>
@@ -78,37 +80,18 @@
         icon.classList.toggle("icon-active");
     }
 
-    function toggleBookmark(icon, jobId) {
-    icon.classList.toggle("fa-regular");
-    icon.classList.toggle("fa-solid");
-    icon.classList.toggle("icon-active");
-}
-
-    // Function to bookmark a job
-    function bookmarkJob(jobId, icon) {
-    // Prepare form data with the job ID
-    const data = new FormData();
-    data.append('job_id', jobId);
-
-    // Set up an AJAX request
-    const request = new XMLHttpRequest();
-    request.open('POST', '<?php echo URLROOT; ?>/jobs/bookmarkJob', true);
-
-    // Handle the server response
-    request.onload = function() {
-        if (request.status === 200) {
-            alert(request.responseText); // Display server response
-            icon.classList.toggle('bookmarked'); // Toggle bookmark icon
-        } else {
-            alert('Failed to bookmark the job.');
-        }
-    };
-
-    // Send the request with the job ID
-    request.send(data);
+    function toggleBookmark(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
     }
-
 </script>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToJobDescription() {
+        window.location.href = "/uniquest/student/jobsdescription";
+    }
+</script>

@@ -65,7 +65,7 @@ p{
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.review-text {
+.review-text, .reply-text {
     font-size: 1.1em;
     color: #555;
 }
@@ -98,8 +98,8 @@ p{
 }
 
 .job-logo img {
-    width: 230px;
-    height: 230px;
+    width: 150px;
+    height: 150px;
     margin-bottom: 10px;
 }
 
@@ -169,9 +169,37 @@ p{
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    width: 150px;
+    min-width: 150px;
     height: 50px;
     font-size: 1.3em;
+}
+
+.seemore{
+    background-color: transparent;
+    display: inline;
+    color: #333;
+    border: none;
+    text-decoration: none;
+    text-align: right;
+    margin-top: -40px;
+    margin-right: 20px;
+    font-size: 1.1em;
+    color: #4aa1fd !important;
+}
+
+.seemore p{
+    font-size: 1.1em;
+}
+
+.seemore p:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #246fc0 !important;
+}
+
+.btn-space-between {
+    display: flex;
+    justify-content: space-between;
 }
 
 .apply-btn {
@@ -211,4 +239,70 @@ p{
 
 .social-media-icons a:hover i {
     color: #333;
+}
+
+.review-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.reply-btn, .like-btn, .dislike-btn {
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.like-btn:hover, .reply-btn:hover, .dislike-btn:hover {
+    background-color: #c0c0c0;
+}
+
+.like-count, .reply-count, .dislike-count {
+    font-size: 0.9em;
+    color: #777;
+}
+
+.reply-section {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reply-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.replies-list {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.reply-input:focus {
+    border-color: #299b63;
+    outline-color: #299b63;
+}
+
+.submit-reply-btn {
+    padding: 8px 15px;
+    background-color: #299b63;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-reply-btn:hover {
+    background-color: #137d4a;
 }
