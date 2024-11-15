@@ -27,5 +27,11 @@ class jobModel extends Controller
         }
     }
 
+    public function getComplains() {
+        $this->db->query('SELECT * FROM StudentCompanyComplaints');
+        $results = $this->db->resultSet();
+        return $results;
+    }
+
 }
 ?>
