@@ -74,6 +74,19 @@ class M_jobpost {
         // Execute and return the result
         return $this->db->execute();
     }
+
+    public function delete($postId){
+        $this->db->query('DELETE FROM jobs WHERE id=:id');
+        $this->db->bind(':id',$postId );
+        
+
+        //execute
+        if($this->db->execute()){
+            return true;
+        }else{               
+            return false;
+        }
+    }
     
 }
 ?>

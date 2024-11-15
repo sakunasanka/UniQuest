@@ -335,4 +335,26 @@ class Service_provider extends Controller
              $this->view('pages/student/jobs', $data);
         
     }
+    public function delete($postId){
+            
+        $post= $this->model('M_jobpost')->getpostbyid($postId);
+
+        //check owner
+        if($post->companyID != $_SESSION['company_id']){
+            redirect('service_provider/jobs');
+        }
+        else{
+        
+        
+
+        if($this->model('M_jobpost')->delete($postId)){
+            flash('post-msg','post is deleted');
+            redirect('service_provider/jobs');
+
+        }
+        else{
+            die('Something went wrong');
+        }
+        } 
+}
 }
