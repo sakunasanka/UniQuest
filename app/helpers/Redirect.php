@@ -4,4 +4,7 @@ class Redirect {
         header("Location: $location");
     }
 }
+function redirect($page){
+    header('location:'.URLROOT.'/'.$page);
+}
 ?>
