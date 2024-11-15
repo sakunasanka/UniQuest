@@ -153,7 +153,7 @@ class Service_provider extends Controller
         ){
             if($this->model('M_jobpost')->edit($data)){
                 flash('post-msg','post is updated');
-                redirect('pages/service_provider/edit_job');
+                redirect('service_provider/edit_job');
 
             }
             else{
@@ -170,8 +170,8 @@ class Service_provider extends Controller
         $post=$this->model('M_jobpost')->getpostbyid($postId);
 
         //check the owner
-        if($post->CompanyID != $_SESSION['CompanyID']){
-            redirect('pages/service_provider/jobs');
+        if($post->companyID != $_SESSION['company_id']){
+            redirect('service_provider/jobs');
         }
         $data = [
             'job_name' => '',
@@ -280,7 +280,7 @@ class Service_provider extends Controller
         ) {
             if ($this->model('M_jobpost')->create($data)) {
                 flash('post-msg', 'Post is published');
-                redirect('pages/service_provider/jobs');
+                redirect('service_provider/jobs');
                 return; // Exit after redirect
             } else {
                 die('Something went wrong');
