@@ -6,7 +6,12 @@ class M_jobpost {
         // Assuming Database class uses a singleton pattern with getInstance()
         $this->db = Database::getInstance();
     }
-
+    public function getpostbyid($jobpostId){
+        $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.JobID = :id');
+        $this->db->bind(':id', $jobpostId);
+        $row = $this->db->single();
+        return $row;
+    }
     
     
     public function getPosts(){

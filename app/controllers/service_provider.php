@@ -191,9 +191,14 @@ class Service_provider extends Controller
 
   
 
-    public function jobsDescription(){
+    public function jobsDescription($id){
         
-            $this->view('pages/student/jobsDescription');
+            $posts = $this->model('M_jobpost')->getpostbyid($id);
+            $data =[
+                'posts' => $posts
+            ];
+
+            $this->view('pages/student/jobsDescription', $data);
        
     }
     public function jobs()
