@@ -8,19 +8,19 @@
 
     <div class="content-area">
         <div class="job-description">
-            <h2>Delivery Rider</h2>
-            <p>Negombo / Ja Ela / Kiribathgoda</p>
+            <h2><?php echo $data['post']->Title; ?></h2>
+            <p><?php echo $data['post']->Location; ?></p>
 
             <h3>Qualifications:</h3>
             <ul>
-                <li>Age Between 18 - 40</li>
+                <li><?php echo $data['post']->RequiredQualifications; ?></li>
                 <li>With a valid driver's license</li>
                 <li>Should own a Motorbike</li>
             </ul>
 
             <h3>Benefits:</h3>
             <ul>
-                <li>Highest salary in the industry</li>
+                <li><?php echo $data['post']->JobBenefits; ?></li>
                 <li>Special Extra Allowances</li>
                 <li>Meals during service hours</li>
                 <li>Accommodation is provided</li>
@@ -70,12 +70,14 @@
                 <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
             </div>
             <div class="job-details">
-                <h3>Delivery Rider</h3>
-                <p><b>@<span>Burger King</b></span></p>
-                <p>Rs. 2,000 (per day)</p>
-                <p>9 days left</p>
+
+                <h3><?php echo $data['post']->Title; ?></h3>
+                <p><?php echo $data['post']->Location; ?></p>
+                <p><?php echo $data['post']->SalaryRange; ?></p>
+                <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                <p>Colombo, Western Province</p>
+                <p><?php echo $data['post']->Address; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
