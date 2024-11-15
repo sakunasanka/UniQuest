@@ -4,10 +4,12 @@
 
     <div class="job-post-form-container">
         <h2>Add New Job Post</h2>
+        <?php echo $_SESSION['user_id']; ?>
         <form action="<?php echo URLROOT; ?>/service_provider/jobpost" method="post" class="job-post-form">
             <div class="form-left">
+           
                 <label for="jobName">Job Name:</label>
-                <input type="text" id="jobName" name="jobName" placeholder="Job Name"   value="<?php  $data['job_name']; ?>">
+                <input type="text" id="jobName" name="jobName" placeholder="Job Name"   cc">
                 <span class="form-invalid"><?php echo $data['job_name_err']; ?></span>
 
                 <label for="jobDescription">Job Description:</label>
