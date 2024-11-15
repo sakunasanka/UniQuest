@@ -1,5 +1,5 @@
 <?php
-class jobModel extends Controller
+class jobModel
 {
     private $db;
 
@@ -8,30 +8,78 @@ class jobModel extends Controller
         $this->db = Database::getInstance();
     }
 
-    public function submitComplain() {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    // public function checkUserPostBookmark($data)
+    // {
+    //     $this->db->query("SELECT * FROM bookmarkJobs WHERE studentId = :studentId AND jobID = :jobID");
+    //     $this->db->bind(':studentId', $data['studentId']);
+    //     $this->db->bind(':jobID', $data['jobID']);
+
+    //     $this->db->single(); 
+
+    //     return $this->db->rowCount() > 0;
+    // }
+
+    public function addUserPostBookmark($userId, $jobId)
+    {
+        try {
+            // Prepare the query to insert the bookmark into the database
+            $this->db->query("INSERT INTO BookmarkJobs (studentId, jobId) VALUES(:studentId, :jobId)");
             
-        }
-        else {
-            $data = [
-                'company' => '',
-                'job_posting' => '',
-                'issue' => '',
+            // Bind the parameters to the query
+            $this->db->bind(':studentId', $userId);
+            $this->db->bind(':jobId', $jobId);
 
-                'company_err' => '',
-                'job_posting_err' => '',
-                'issue_err' => ''
-            ];
-            $this->view('pages/student/make_complain', $data);
+            // Execute the query and check if the bookmark was successfully added
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            // Catch any database errors and print them
+            echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
-    public function getComplains() {
-        $this->db->query('SELECT * FROM StudentCompanyComplaints');
-        $results = $this->db->resultSet();
-        return $results;
+    // Method to check if a job is bookmarked by the user
+    public function isJobBookmarked($studentId, $jobId) {
+        $this->db->query("SELECT COUNT(*) AS count FROM bookmarkJobs WHERE student_id = :student_id AND job_id = :job_id");
+        $this->db->bind(':student_id', $studentId);
+        $this->db->bind(':job_id', $jobId);
+        $row = $this->db->single();
+        return $row->count > 0;
     }
+
+    // Method to remove a bookmark from the database
+    // public function removeBookmark($studentId, $jobId) {
+    //     $this->db->query("DELETE FROM bookmarkJobs WHERE student_id = :student_id AND job_id = :job_id");
+    //     $this->db->bind(':student_id', $studentId);
+    //     $this->db->bind(':job_id', $jobId);
+    //     return $this->db->execute();
+    // }
+
+    // public function checkUserCompanyBookmark($data)
+    // {
+    //     $this->db->query("SELECT * FROM post_bookmarks WHERE studentId = :studentId AND companyId = :companyId");
+    //     $this->db->bind(':studentId', $data['studentId']);
+    //     $this->db->bind(':companyId', $data['companyId']);
+
+    //     $this->db->single(); // Assuming you have a method like this to fetch a single row
+
+    //     return $this->db->rowCount() > 0;
+    // }
+
+    // public function addUserCompanyBookmark($data)
+    // {
+    //     $this->db->query("INSERT INTO post_bookmarks (studentId, companyId) VALUES(:studentId, :companyId)");
+    //     $this->db->bind(':studentId', $data['studentId']);
+    //     $this->db->bind(':companyId', $data['companyId']);
+
+    //     if ($this->db->execute()) {
+    //         return true;
+    //     }
+    // }
 
 }
 ?>
