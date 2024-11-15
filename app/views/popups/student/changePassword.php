@@ -3,6 +3,7 @@
     <div class="popup" id="popup-stu">
         <div class="overlay"></div>
         <div class="content">
+            <button class="close-btn" onclick="ToggleChangePasswordForm()"><i class="fa fa-times"></i></button><button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button>
             <h2>Change password</h2>
 
             <form action="#" method="post">

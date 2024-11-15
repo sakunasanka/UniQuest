@@ -90,3 +90,27 @@
 .changep_change-button:hover {
     background-color: #218838;
 }
+
+.close-btn-container {
+    position: sticky;
+    top: 0; /* Keeps it at the top of the popup */
+    z-index: 103;
+    background-color: #fff; /* Background color to cover content behind */
+    padding: 5px;
+    width: 100%;
+
+    text-align: right;
+}
+
+.close-btn {
+    font-size: 1.5em; 
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    background: none;
+    border: none;
+}
+
+.close-btn:hover {
+    color: #f44336; /* Change color to red on hover */
+}

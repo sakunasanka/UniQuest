@@ -1,6 +1,6 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
-<?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
 <div class="main-container">
@@ -28,42 +28,45 @@
 
             <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
+            
             <div class="buttons">
-                <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
-                <button onclick="goToContactPage()" class="contact-btn">Contact</button>
+                    <button class="apply-btn">Apply</button>
+                    <button class="contact-btn">Contact</button>
             </div>
 
-            <div class="reviews-section">
-                <h4>Reviews and Ratings about this company</h4>
-
-                 <!-- Reviews on Main Page -->
-                 <?php for ($i = 0; $i < 3; $i++): ?>
-                    <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
-                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
-                        <div class="review-details">
-                            <span class="reviewer-name">- John Doe</span>
-                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                        </div>
-                        <div class="review-actions">
-                            <button class="like-btn" data-id="<?php echo $i; ?>">
-                                <span class="material-symbols-outlined like-icon">thumb_up</span>
-                            </button>
-                            <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
-
-                            <button class="dislike-btn" data-id="<?php echo $i; ?>">
-                                <span class="material-symbols-outlined dislike-icon">thumb_down</span>
-                            </button>
-                            <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
-                        </div>
-                    </div>
-                <?php endfor; ?>
+    <div class="reviews-section">
+        <h4>Reviews and Ratings about this company</h4>
+            
+            <div class="review">
+                <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
+                <div class="review-details">
+                    <span class="reviewer-name">- John Doe</span>
+                    <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                </div>
             </div>
 
-            <div class="buttons btn-space-between">
-                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
-                <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+            <div class="review">
+                <p class="review-text">"The salary is quite competitive compared to other companies, and they provide special allowances too."</p>
+                <div class="review-details">
+                    <span class="reviewer-name">- Sarah Smith</span>
+                    <span class="review-rating"><i class="fa fa-star"></i> 4.5</span>
+                </div>
+            </div>
+
+            <div class="review">
+                <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
+                <div class="review-details">
+                    <span class="reviewer-name">- David Lee</span>
+                    <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
+                </div>
             </div>
         </div>
+
+        <div class="buttons">
+                    <button class="apply-btn">Add review</button>
+        </div>
+
+    </div>
 
         <div class="job-card">
             <div class="job-logo">
@@ -71,16 +74,17 @@
             </div>
             <div class="job-details">
                 <h3>Delivery Rider</h3>
-                <p><b>@<span>Burger King</b></span></p>
+                <p>Negombo / Ja Ela / Kiribathgoda</p>
                 <p>Rs. 2,000 (per day)</p>
                 <p>9 days left</p>
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
                 <p>Colombo, Western Province</p>
                 <table class="table">
+                    <tr><td>Education:</td><td>Ordinary Level</td></tr>
                     <tr><td>Experience:</td><td>No Experience</td></tr>
-                    <tr><td>Applicants:</td><td>26</td></tr>
+                    <tr><td>Salary Range:</td><td>Any</td></tr>
                 </table>
-
+                
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -91,10 +95,14 @@
             <div class="buttons">
                 <button onclick="goToCompany()" class="apply-btn">View Company</button>
             </div>
-        </div>     
+        </div>
     </div>
-</div>
+</div>    
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
-<script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+<script>
+function goToCompany() {
+        window.location.href = "/uniquest/student/companydescription"; 
+    }
+</script>    
