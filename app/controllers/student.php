@@ -165,8 +165,14 @@ class Student extends Controller
     }
 
     public function jobs()
-    {
-        $this->view('pages/student/jobs');
+    {   
+            $posts = $this->model('M_jobpost')->getPosts();
+            $data =[
+                'posts' => $posts
+            ];
+
+             $this->view('pages/student/jobs', $data);
+        
     }
 
     public function company()
@@ -223,4 +229,18 @@ class Student extends Controller
     {
         $this->view('pages/student/internships');
     }
+  
+    public function jobsDescription($id){
+        
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $data =[
+            'post' => $posts
+        ];
+        // echo json_encode($data);
+        $this->view('pages/student/jobsDescription', $data);
+    
+    }
+
+
+
 }

@@ -28,136 +28,21 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach($data['complaints_com'] as $complaints_com):?>
                     <tr>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 1</td>
-                        <td>Student 1</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
+                        <td><?php echo $complaints_com->Company?></td>
+                        <td><?php echo $complaints_com->CompanyEmail?></td>
+                        <td><?php echo $complaints_com->Complaint?></td>
+                        <td><?php echo $complaints_com->StudentName?></td>
+                        <td><?php echo $complaints_com->ComplainedDate?></td>
+                        <td><span class="status active"><?php echo $complaints_com->Status?></span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
