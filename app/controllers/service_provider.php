@@ -34,13 +34,8 @@ class Service_provider extends Controller
     }
 
     public function ongoing_jobs()
-    {   $posts = $this->model('M_jobpost')->getPosts();
-        $data =[
-            'posts' => $posts
-        ];
-
-         $this->view('pages/service_provider/ongoing_jobs', $data);
-        
+    {
+        $this->view('pages/service_provider/ongoing_jobs');
     }
 
     public function offered_jobs()
