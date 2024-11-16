@@ -124,7 +124,6 @@ body {
     display: flex;
     flex-direction: column;
     width: 1000vh;
-  height: 100vh;
     margin: 0 auto;
     background-color: #fff;  
     padding: 20px;
@@ -213,4 +212,70 @@ h2 {
     font-size: 24px;
     margin-bottom: 20px;
     color: #333;
+}
+
+.file-drop-area {
+    background-color: #fff;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    overflow: hidden;
+    margin: 0 auto;
+    border-radius: 10px;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #ddd;
+    transition: border-color 0.3s ease-in;
+    gap: 50px;
+}
+
+.file-drop-area:hover {
+    border-color: #32a852;
+}
+
+.file-drop-area input[type="file"] {
+    display: none;
+}
+
+.browse-btn {
+    background-color: #32a852;
+    color: white;
+    border: none;
+    padding: 8px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.browse-btn:hover {
+    background-color: #038a27;
+}
+
+.file-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.file-content span {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.file-name {
+    display: inline-block;
+    max-width: 160px; /* Adjust max width as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
 }
