@@ -8,12 +8,20 @@ class Jobs extends Controller
     public function __construct()
     {
         // Load model
-        $this->model = $this->model('JobModel');
+        $this->model = $this->model('jobModel');
+
     }
 
     public function index()
-    {
-        $data = [];
+    {   
+        if (isset($_SESSION['user_id'])) {
+          $userId = $_SESSION['user_id']; // Get user ID from session
+        } 
+        else {
+          $userId = null;
+        }
+
+        $data['posts'] = $this->model->getBookmarkedJobs($userId); 
         $this->view('pages/student/jobs', $data);
     }
 
@@ -41,6 +49,78 @@ class Jobs extends Controller
                     echo "Bookmark added successfully!";
                 } else {
                     echo "Failed to add bookmark. Please check the database.";
+                }
+            } else {
+                echo "Job ID is missing!";
+            }
+        } else {
+            echo "Invalid request method.";
+        }
+    }
+
+    //remove bookmark
+    public function removeBookmark(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate session user ID
+            if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id']; // Get user ID from session
+            } else {
+                http_response_code(403); // Return 403 forbidden status
+                echo "User not logged in!";
+                return;
+            }
+
+            // Get job ID from POST data
+            $jobId = $_POST['job_id'] ?? null; // Use null coalescing operator to avoid undefined index
+
+            // Check if job ID is provided
+            if (!empty($jobId)) {
+                // Attempt to remove the bookmark
+                if ($this->model->removeBookmark($userId, $jobId)) {
+                    echo "Bookmark removed successfully!";
+                } else {
+                    echo "Failed to remove bookmark. Please check the database.";
+                }
+            } else {
+                echo "Job ID is missing!";
+            }
+        } else {
+            echo "Invalid request method.";
+        }
+    }
+
+    //toggle bookmark
+    public function toggleBookmark(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate session user ID
+            if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id']; // Get user ID from session
+            } else {
+                http_response_code(403); // Return 403 forbidden status
+                echo "User not logged in!";
+                return;
+            }
+
+            // Get job ID from POST data
+            $jobId = $_POST['job_id'] ?? null; // Use null coalescing operator to avoid undefined index
+
+            // Check if job ID is provided
+            if (!empty($jobId)) {
+                // Check if the job is already bookmarked
+                if ($this->model->isJobBookmarked($userId, $jobId)) {
+                    // If bookmarked, remove the bookmark
+                    if ($this->model->removeBookmark($userId, $jobId)) {
+                        echo "Bookmark removed successfully!";
+                    } else {
+                        echo "Failed to remove bookmark. Please check the database.";
+                    }
+                } else {
+                    // If not bookmarked, add the bookmark
+                    if ($this->model->addUserPostBookmark($userId, $jobId)) {
+                        echo "Bookmark added successfully!";
+                    } else {
+                        echo "Failed to add bookmark. Please check the database.";
+                    }
                 }
             } else {
                 echo "Job ID is missing!";

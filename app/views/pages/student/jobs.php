@@ -94,8 +94,9 @@
         formData.append('job_id', jobId); // Append the job ID to the request data
 
         // Create a new XMLHttpRequest to send the data to the server
+
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/bookmarkJob', true);
+        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
 
         // Set up the callback for when the request completes
         xhr.onload = function() {
