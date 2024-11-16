@@ -123,7 +123,7 @@ class User extends Controller
         session_destroy();
     
         // Redirect to login page
-        Redirect::to(URLROOT . '/login');
+        Redirect::to(URLROOT . '/home');
     }
 
     public function profile()
@@ -150,5 +150,39 @@ class User extends Controller
         }
     }
 
+    public function deactivate()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST array
+            $_POST = filter_input_array(INPUT_POST);
+
+            $data = [
+                'confirm' => trim($_POST['confirm']),
+                'confirm_err' => ''
+            ];
+
+            // Validate confirm
+            $data['confirm_err'] = Validator::isEmpty($data['confirm']) ? 'Please confirm account deactivation' : '';
+
+            // Check if there are no errors
+            if (empty($data['confirm_err'])) {
+                // Deactivate account
+                $this->model->deactivateAccount($_SESSION['user_id']);
+                // Logout
+                $this->logout();
+            } else {
+                // Load view with errors
+                $this->view('popups/student/deactivate_account', $data);
+            }
+        } else {
+            $data = [
+                'confirm' => '',
+                'confirm_err' => ''
+            ];
+
+            // Load view
+            $this->view('popups/student/deactivate_account', $data);
+        }
+    }
 }
 ?>

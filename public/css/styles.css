@@ -10,8 +10,10 @@
 /* pages */
 @import url("pages/admin/students_mng.css");
 @import url("pages/service_provider/contact_admin.css");
+@import url("pages/admin/jobPost.css");
 @import url("pages/service_provider/jobs_table.css");
 @import url("pages/admin/add_member.css");
+
 
 .content-area {
     margin-left: 250px !important; /* Make room for the sidebar */

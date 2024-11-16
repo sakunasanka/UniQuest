@@ -20,7 +20,7 @@
         alt="Profile Picture" 
         class="profile-pic">
         <ul>
-            <li><a href="deactivate_account.php">Deactivate Account</a></li>
+            <li><a onclick="showdeleteaccountconfirm()">Deactivate Account</a></li>
             <li><a href="<?php echo URLROOT ?>/user/logout">Log Out</a></li>
         </ul>
     </div>

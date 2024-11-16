@@ -31,17 +31,14 @@ class Database
     }
 
     // Get the singleton instance of the database
-    public static function getInstance()
-    {
-        if (!self::$instance) {
+    public static function getInstance() {
+        if (self::$instance === null) {
             self::$instance = new Database();
         }
         return self::$instance;
     }
-
     // Prepare statement with query
-    public function query($sql)
-    {
+    public function query($sql) {
         $this->stmt = $this->dbh->prepare($sql);
     }
 

@@ -16,7 +16,10 @@
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
                 <button class="add-btn">
                     <span class="material-symbols-outlined">post_add</span>
+                   
+                <a href="<?php echo URLROOT; ?>/service_provider/jobPost" >
                     <span class="add-btn-text">Post Job</span>
+                </a>
                 </button>
             </div>
             <table>
@@ -31,60 +34,27 @@
                     </tr>
                 </thead>
                 <tbody>
+                <?php foreach($data['posts'] as $post): ?>
                     <tr>
-                        <td>Delivery Rider</td>
-                        <td>Negombo</td>
-                        <td>2024/08/16</td>
+                        <td><?php echo $post->Title; ?></td>
+                        <td><?php echo $post->Location; ?></td>
+                        <td><?php echo date('Y-m-d', strtotime($post->jobs_create_at)); ?></td>
                         <td>35</td>
                         <td>18</td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
+                            <a href="<?php echo URLROOT; ?>/service_provider/view_job/<?php echo $post->JobID; ?>" class="material-symbols-outlined action-btn view">
                                 preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
+                            </a>
+                            <a href="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $post->JobID; ?>" class="material-symbols-outlined action-btn edit">
                                 edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
+                            </a>
+                            <a href="<?php echo URLROOT; ?>/service_provider/delete/<?php echo $post->JobID; ?>" class="material-symbols-outlined action-btn deactivate">
                                 block
-                            </span>
+                            </a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Sales Ref</td>
-                        <td>Matara</td>
-                        <td>2024/08/24</td>
-                        <td>40</td>
-                        <td>18</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sales Ref</td>
-                        <td>Galle</td>
-                        <td>2024/07/05</td>
-                        <td>50</td>
-                        <td>22</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
+                    <?php endforeach; ?>
+                    
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
