@@ -90,27 +90,7 @@ class Service_provider extends Controller
             'Description_err' => ''
         ];
 
-        //validation
-        $post=$this->model('M_jobpost')->getpostbyid($postId);
-        // $oldImage= PUBROOT.'/img/postsimg/'.$post->image;
-
-        //photouploaded
-
-        //user havent change the existing  photo
-    //     if($_POST['intentionally_removed']=='removed'){
-    //         deleteImage($oldImage);
-    //         $data['image_name'] = '';       
-    //     }
-    //     else{
-    //     if($_FILES['image']['size']==''){
-    //         $data['image_name'] = $post->image;
-           
-    //     }
-    //     else{
-    //        updateImage($oldImage , $data['image']['tmp_name'] , $data['image_name'] , '/img/postsimg/');
-            
-    //    }   
-    // }
+        /
         
 
 
@@ -152,9 +132,9 @@ class Service_provider extends Controller
 
         }
         else{
-            echo json_encode($data);
+            // echo json_encode($data);
             //loading view with errors
-            // $this->view('pages/service_provider/edit_job', $data);
+            $this->view('pages/service_provider/edit_job', $data);
         }
     }
     else{

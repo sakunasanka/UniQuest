@@ -58,7 +58,7 @@ class M_jobpost {
                 RequiredQualifications = :required_skills, 
                 SalaryRange = :salary_range 
             WHERE 
-                JobID = :job_id
+               JobID = :job_id AND CompanyID = :company_id
         ');
     
         // Bind the values from $data array
@@ -69,6 +69,7 @@ class M_jobpost {
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
         $this->db->bind(':job_id', $data['job_id']);
+        $this->db->bind(':company_id', $_SESSION['company_id']);
         // Execute and return the result
         return $this->db->execute();
     }
