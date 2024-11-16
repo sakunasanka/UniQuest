@@ -120,7 +120,9 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `uniquest`.`Jobs`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
+
   `JobID` INT NOT NULL AUTO_INCREMENT ,
+
   `Title` VARCHAR(100) NULL,                  -- Job Name
   `Description` TEXT NULL,                    -- Job Description
   `Location` VARCHAR(100) NULL,               -- Job Location
@@ -164,6 +166,7 @@ CREATE VIEW v_jobs AS
     INNER JOIN company ON jobs.CompanyID = company.CompanyID
     INNER JOIN user ON company.CompanyID = user.UserID
     ORDER BY jobs.Create_at DESC;
+
 
 
 
