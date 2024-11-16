@@ -1,4 +1,6 @@
+
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
+
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/rate_review_company.css">
 
 <div class="content-area">
@@ -15,10 +17,22 @@
             <form action="<?php echo URLROOT ?>/student/addReview" method="POST">
                 <!-- Rating Input -->
                 <div class="rating-stars">
+
                     <?php for ($i = 5; $i >= 1; $i--): ?>
                         <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($data['rating'] == $i) ? 'checked' : ''; ?>>
                         <label for="star<?php echo $i; ?>">★</label>
                     <?php endfor; ?>
+
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4">★</label>
+                    <input type="radio" id="star5" name="rating" value="5">
+
                 </div>
                 <span class="error-msg"><?php echo !empty($data['rating_err']) ? $data['rating_err'] : ''; ?></span>
 
@@ -47,5 +61,10 @@
             <?php endif; ?>
         </div>
     </div>
+
 </div>
+
+
+
+    <script type="module" src="<?php echo URLROOT; ?>/public/js/student/starhover.js"></script>
 

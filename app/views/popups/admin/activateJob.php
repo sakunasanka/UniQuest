@@ -3,6 +3,7 @@
     <div class="popup" id="popup-1">
         <div class="overlay"></div>
         <div class="content">
+            <button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button>
             <p class="popup-text">Are you sure you want to activate this job?</p>
             <div class="btn-container">
                 <a href="#" class="no-btn" onclick="togglePopup()">No</a>
