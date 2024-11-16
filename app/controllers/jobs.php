@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 class Jobs extends Controller
 {
@@ -16,30 +17,39 @@ class Jobs extends Controller
         $this->view('pages/student/jobs', $data);
     }
 
-    public function addBookmarkJob($id) 
-      {
-          if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            $jobId = $_POST['jobID'];
+    public function bookmarkJob()
+    {
+        // Ensure the request is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            // Validate session user ID
             if (isset($_SESSION['user_id'])) {
-              $user_id = $_SESSION['user_id'];
-              $data = [
-                'jobId' => $jobId,
-                'studentId' => $user_id
-              ];
-              if (!$this->model->checkUserPostBookmark($data)) {
-                if ($status = $this->model->addUserPostBookmark($data)) {
-                  echo $status;
-                }
-              } else {
-                // $this->model->deleteUserCompanyBookmark($data);
-                echo 0;
-              }
+                $userId = $_SESSION['user_id']; // Get user ID from session
             } else {
-              echo 0;
+                http_response_code(403); // Return 403 forbidden status
+                echo "User not logged in!";
+                return;
             }
-          }
+
+            // Get job ID from POST data
+            $jobId = $_POST['job_id'] ?? null; // Use null coalescing operator to avoid undefined index
+
+            // Check if job ID is provided
+            if (!empty($jobId)) {
+                // Attempt to bookmark the job
+                if ($this->model->addUserPostBookmark($userId, $jobId)) {
+                    echo "Bookmark added successfully!";
+                } else {
+                    echo "Failed to add bookmark. Please check the database.";
+                }
+            } else {
+                echo "Job ID is missing!";
+            }
+        } else {
+            echo "Invalid request method.";
         }
+    }
+
 
     public function checkUserPostBookmark()
     {

@@ -52,7 +52,7 @@
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)" data-job-id="<?php echo $post->JobID; ?>"></i>
+                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                             </div>
                         </div>
                         <div class="social-media-icons">
@@ -81,25 +81,43 @@
         icon.classList.toggle("icon-active");
     }
 
-    function toggleBookmark(icon) {
+    function toggleBookmark(icon, jobId) {
     icon.classList.toggle("fa-regular");
     icon.classList.toggle("fa-solid");
     icon.classList.toggle("icon-active");
-
-    // Get the JobID from the data attribute
-    const jobId = icon.getAttribute("data-job-id");
-    console.log("JobID:", jobId);
-
-    // Return or handle the JobID as needed
-    return jobId;
 }
+
+    // Function to bookmark a job
+    function bookmarkJob(jobId, iconElement) {
+        // Create a new FormData object to send the jobId
+        const formData = new FormData();
+        formData.append('job_id', jobId); // Append the job ID to the request data
+
+        // Create a new XMLHttpRequest to send the data to the server
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/bookmarkJob', true);
+
+        // Set up the callback for when the request completes
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                alert(xhr.responseText); // Show the server response (e.g., success message)
+                iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+            } else {
+                alert('Failed to bookmark the job.');
+            }
+        };
+
+        // Send the request with the form data
+        xhr.send(formData);
+    }
+
 </script>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
-<script>
+<!-- <script>
     function goToJobDescription(jobId) {
         window.location.href = "/uniquest/student/jobsdescription/" + jobId;
     }
-</script>
+</script> -->
