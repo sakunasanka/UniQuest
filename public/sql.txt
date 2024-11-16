@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`company` (
   `AddressLine1` VARCHAR(45) NOT NULL,
   `AddressLine2` VARCHAR(45) NULL DEFAULT NULL,
   `City` VARCHAR(45) NOT NULL,
+  create_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`CompanyID`),
   INDEX `fk_ServiceProvider_User1_idx` (`CompanyID` ASC),
   CONSTRAINT `fk_ServiceProvider_User1`
@@ -119,7 +120,9 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `uniquest`.`Jobs`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
-  `JobID` INT NOT NULL,
+
+  `JobID` INT NOT NULL AUTO_INCREMENT ,
+
   `Title` VARCHAR(100) NULL,                  -- Job Name
   `Description` TEXT NULL,                    -- Job Description
   `Location` VARCHAR(100) NULL,               -- Job Location
@@ -129,6 +132,7 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
   `RequiredQualifications` TEXT NULL,         -- Required Qualifications
   `SalaryRange` VARCHAR(45) NULL,             -- Salary Range
   `CompanyID` INT NOT NULL,
+  create_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`JobID`, `CompanyID`),
   INDEX `fk_Jobs_ServiceProvider1_idx` (`CompanyID` ASC),
   CONSTRAINT `fk_Jobs_ServiceProvider1`
@@ -138,6 +142,32 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
     ON UPDATE CASCADE
 )
 ENGINE = InnoDB;
+-- ---------------------------------------------------
+
+CREATE VIEW v_jobs AS 
+    SELECT 
+        jobs.JobID AS JobID,
+        company.CompanyID AS CompanyID,
+        jobs.Title AS Title,
+        company.CompanyLogo AS CompanyLogo,
+        company.CompanyName AS CompanyName,
+        jobs.Description AS Description,
+        jobs.Location AS Location,
+        jobs.Category AS Category,
+        jobs.JobBenefits AS JobBenefits,
+        jobs.Address AS Address,
+        jobs.RequiredQualifications AS RequiredQualifications,
+        jobs.SalaryRange AS SalaryRange,
+        user.Email AS Email,
+        user.ContactNo AS ContactNo,
+        jobs.Create_at AS jobs_create_at,         -- Use correct capitalization
+        company.Create_at AS company_create_at    -- Use correct capitalization
+    FROM jobs 
+    INNER JOIN company ON jobs.CompanyID = company.CompanyID
+    INNER JOIN user ON company.CompanyID = user.UserID
+    ORDER BY jobs.Create_at DESC;
+
+
 
 
 -- -----------------------------------------------------

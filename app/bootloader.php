@@ -12,5 +12,8 @@ require_once 'helpers/Redirect.php';
 require_once 'helpers/Validator.php';
 require_once 'helpers/FileUploadHelper.php';
 require_once 'helpers/session_Helper.php';
+require_once 'helpers/TimeConvert_Helper.php';
+
 
 $init = new Core();
+?>

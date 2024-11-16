@@ -1,6 +1,7 @@
 <?php
     
 
+
     function flash($name = '', $message = '', $class = 'msg-flash') {
         if (!empty($name)) {
             if (!empty($message) && empty($_SESSION[$name])) {
