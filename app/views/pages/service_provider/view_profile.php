@@ -36,7 +36,7 @@
                     </div>
                     <div>
                         <span>Website</span>
-                        <a href="<?php echo $data['user']['WebSite'] ?>" target="_blank"><?php echo $data['user']['WebSite'] ?></a>
+                        <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
                     </div>
                 </div>
                 <div class="edit-btn"> 
