@@ -1,4 +1,5 @@
 <?php
+
 class M_jobpost {
     private $db;
 
@@ -52,30 +53,30 @@ class M_jobpost {
             UPDATE jobs 
             SET 
                 Title = :job_name, 
-                Description = :Description, 
+                Description = :job_description, 
                 Location = :job_location, 
                 JobBenefits = :job_benifits, 
                 RequiredQualifications = :required_skills, 
                 SalaryRange = :salary_range 
             WHERE 
-               JobID = :job_id AND CompanyID = :company_id
+               JobID = :job_id 
         ');
     
         // Bind the values from $data array
         $this->db->bind(':job_name', $data['job_name']);
-        $this->db->bind(':Description', $data['Description']);
+        $this->db->bind(':job_description', $data['job_description']);
         $this->db->bind(':job_location', $data['job_location']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
         $this->db->bind(':job_id', $data['job_id']);
-        $this->db->bind(':company_id', $_SESSION['company_id']);
+        
         // Execute and return the result
         return $this->db->execute();
     }
 
     public function delete($postId){
-        $this->db->query('DELETE FROM jobs WHERE id=:id');
+        $this->db->query('DELETE FROM jobs WHERE JobID=:id');
         $this->db->bind(':id',$postId );
         
 

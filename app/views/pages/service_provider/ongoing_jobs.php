@@ -16,7 +16,10 @@
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
                 <button class="add-btn">
                     <span class="material-symbols-outlined">post_add</span>
+                   
+                <a href="<?php echo URLROOT; ?>/service_provider/jobPost" >
                     <span class="add-btn-text">Post Job</span>
+                </a>
                 </button>
             </div>
             <table>
@@ -35,7 +38,7 @@
                     <tr>
                         <td><?php echo $post->Title; ?></td>
                         <td><?php echo $post->Location; ?></td>
-                        <td><?php echo $post->jobs_create_at ?></td>
+                        <td><?php echo date('Y-m-d', strtotime($post->jobs_create_at)); ?></td>
                         <td>35</td>
                         <td>18</td>
                         <td class="action">
@@ -45,7 +48,7 @@
                             <a href="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $post->JobID; ?>" class="material-symbols-outlined action-btn edit">
                                 edit_square
                             </a>
-                            <a href="<?php echo URLROOT; ?>/service_provider/deactivate_job/<?php echo $post->JobID; ?>" class="material-symbols-outlined action-btn deactivate">
+                            <a href="<?php echo URLROOT; ?>/service_provider/delete/<?php echo $post->JobID; ?>" class="material-symbols-outlined action-btn deactivate">
                                 block
                             </a>
                         </td>

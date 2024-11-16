@@ -34,8 +34,13 @@ class Service_provider extends Controller
     }
 
     public function ongoing_jobs()
-    {
-        $this->view('pages/service_provider/ongoing_jobs');
+    {   $posts = $this->model('M_jobpost')->getPosts();
+        $data =[
+            'posts' => $posts
+        ];
+
+         $this->view('pages/service_provider/ongoing_jobs', $data);
+        
     }
 
     public function offered_jobs()
@@ -123,7 +128,7 @@ class Service_provider extends Controller
         ){
             if($this->model('M_jobpost')->edit($data)){
                 flash('post-msg','post is updated');
-                redirect('service_provider/edit_job');
+                redirect('service_provider/ongoing_jobs');
 
             }
             else{
@@ -166,9 +171,14 @@ class Service_provider extends Controller
             
     }
   
-    public function view_job()
+    public function view_job($id)
     {
-        $this->view('pages/service_provider/view_job');
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $data =[
+            'post' => $posts
+        ];
+        // echo json_encode($data);
+        $this->view('pages/student/jobsDescription', $data);
     }
   
     public function edit_profile()
@@ -252,7 +262,7 @@ class Service_provider extends Controller
             if(empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err']) && empty($data['adress_err']) && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])){
                 if($this->model('M_jobpost')->create($data)){
                     flash('post-msg','post is published');
-                    redirect('service_provider/jobs');
+                    redirect('service_provider/ongoing_jobs');
                 }
                 else{
                     die('something went wrong');
@@ -295,8 +305,8 @@ class Service_provider extends Controller
         $post= $this->model('M_jobpost')->getpostbyid($postId);
 
         //check owner
-        if($post->companyID != $_SESSION['company_id']){
-            redirect('service_provider/jobs');
+        if($post->CompanyID != $_SESSION['user_id']){
+            redirect('student/jobs');
         }
         else{
         
@@ -304,7 +314,7 @@ class Service_provider extends Controller
 
         if($this->model('M_jobpost')->delete($postId)){
             flash('post-msg','post is deleted');
-            redirect('service_provider/jobs');
+            redirect('service_provider/ongoing_jobs');
 
         }
         else{
