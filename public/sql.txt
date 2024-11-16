@@ -192,6 +192,30 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`BookmarkJobs` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
+-- Table `uniquest`.`Complaint`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`Complaint` (
+  `ComplaintID` INT NOT NULL,
+  `Description` VARCHAR(45) NULL,
+  `Status` VARCHAR(45) NULL,
+  `StudentID` INT NOT NULL,
+  `CompanyID` INT NOT NULL,
+  PRIMARY KEY (`ComplaintID`, `StudentID`, `CompanyID`),
+  INDEX `fk_Complaint_Student1_idx` (`StudentID` ASC),
+  INDEX `fk_Complaint_ServiceProvider1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_Complaint_Student1`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquest`.`student` (`StudentID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Complaint_ServiceProvider1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquest`.`company` (`CompanyID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
 -- Table `uniquest`.`Review`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniquest`.`Review` (
@@ -214,6 +238,45 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`Review` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`Complaint_company`
+-- -----------------------------------------------------
+
+CREATE TABLE `uniquest`.`complaint_company` (
+  `ComplaintID` INT NOT NULL AUTO_INCREMENT,
+  `StudentID` INT NOT NULL,
+  `CompanyID` INT NOT NULL,
+  `Complaint` TEXT NOT NULL,
+  `ComplainedDate` DATETIME NOT NULL,
+  `Status` ENUM('Pending', 'Resolved', 'Rejected') NOT NULL,
+  PRIMARY KEY (`ComplaintID`),
+  FOREIGN KEY (`StudentID`) REFERENCES `uniquest`.`student`(`StudentID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`CompanyID`) REFERENCES `uniquest`.`company`(`CompanyID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- View `uniquest`.`StudentCompanyComplaints`
+-- -----------------------------------------------------
+
+CREATE VIEW `uniquest`.`StudentCompanyComplaints` AS
+SELECT 
+    c.CompanyName AS `Company`,
+    u.Email AS `CompanyEmail`,
+    cm.Complaint AS `Complaint`,
+    CONCAT(s.FirstName, ' ', s.LastName) AS `StudentName`,
+    cm.ComplainedDate AS `ComplainedDate`,
+    cm.Status AS `Status`
+FROM 
+    `uniquest`.`complaint_company` cm
+JOIN 
+    `uniquest`.`student` s ON cm.StudentID = s.StudentID
+JOIN 
+    `uniquest`.`company` c ON cm.CompanyID = c.CompanyID
+JOIN 
+    `uniquest`.`user` u ON c.CompanyID = u.UserID 
+ORDER BY 
+    cm.ComplainedDate ASC;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
