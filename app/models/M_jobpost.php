@@ -1,6 +1,4 @@
 <?php
-
-
 class M_jobpost {
     private $db;
 
