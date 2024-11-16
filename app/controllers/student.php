@@ -61,7 +61,7 @@ class Student extends Controller
     public function getReview()
     {
         $company_id = $_GET['company_id'] ?? 1; 
-        $reviews = $this->rateAndReviewModel->getReviewsByCompanyId($company_id);
+        $reviews =$this->model('RateAndReviewModel')->getReviewsByCompanyId($company_id);
 
         $data = [
             'reviews' => $reviews
