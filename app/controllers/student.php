@@ -75,71 +75,71 @@ class Student extends Controller
     }
 
     public function edit_profile()
-    { {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                // Sanitize POST array
-                $_POST = filter_input_array(INPUT_POST);
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST array
+            $_POST = filter_input_array(INPUT_POST);
 
-                //get data from post
-                $data = $this->prepareEditProfileData($_POST, $_FILES);
+            //get data from post
+            $data = $this->prepareEditProfileData($_POST, $_FILES);
 
-                //validate input data
-                $validateResponse = Validator::isValidEditProfileData($data);
-                if (!$validateResponse['is_valid']) {
-                    $data = array_merge($data, $validateResponse['error']);
-                }
+            //validate input data
+            $validateResponse = Validator::isValidEditProfileData($data);
+            if (!$validateResponse['is_valid']) {
+                $data = array_merge($data, $validateResponse['error']);
+            }
 
-                //validate files
-                $fileValidationResponse = FileUploadHelper::validateFiles([
-                    'profilePic' => ['file' => $data['profilePic'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
-                    'cv' => ['file' => $data['cv'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
+            //validate files
+            $fileValidationResponse = FileUploadHelper::validateFiles([
+                'profilePic' => ['file' => $data['profilePic'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                'cv' => ['file' => $data['cv'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
+            ]);
+
+            if (!$fileValidationResponse['is_valid']) {
+                $data = array_merge($data, $fileValidationResponse['error']);
+            }
+
+            // Check if there are no errors
+            if (empty($data['firstName_err']) && empty($data['lastName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err'])) {
+                //upload files
+                $uploadedFilesResponse = FileUploadHelper::uploadFiles([
+                    'profilePic' => ['file' => $data['profilePic'], 'path' => PUBROOT . '/uploads/profile_pictures/student'],
+                    'cv' => ['file' => $data['cv'], 'path' => PUBROOT . '/uploads/cvs']
                 ]);
 
-                if (!$fileValidationResponse['is_valid']) {
-                    $data = array_merge($data, $fileValidationResponse['error']);
-                }
-
-                // Check if there are no errors
-                if (empty($data['firstName_err']) && empty($data['lastName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err'])) {
-                    //upload files
-                    $uploadedFilesResponse = FileUploadHelper::uploadFiles([
-                        'profilePic' => ['file' => $data['profilePic'], 'path' => PUBROOT . '/uploads/profile_pictures/student'],
-                        'cv' => ['file' => $data['cv'], 'path' => PUBROOT . '/uploads/cvs']
-                    ]);
-
-                    //check if all files are uploaded successfully
-                    if ($uploadedFilesResponse['success']) {
-                        //set file names to data array only the files that are uploaded
-                        $data['profilePicName'] = $uploadedFilesResponse['file_name']['profilePicName'] ?? $data['profilePicName'];
-                        $data['cvName'] = $uploadedFilesResponse['file_name']['cvName'] ?? $data['cvName'];
-                    } else {
-                        //merge data with errors
-                        $data = array_merge($data, $uploadedFilesResponse['error']);
-                        // Load view with errors
-                        $this->view('pages/student/edit_profile', $data);
-                        return;
-                    }
-
-                    //edit student profile
-                    if ($this->model->updateProfile($data)) {
-                        // Redirect to profile page
-                        Redirect::to(URLROOT . '/user/profile');
-                    } else {
-                        die('Something went wrong');
-                    }
+                //check if all files are uploaded successfully
+                if ($uploadedFilesResponse['success']) {
+                    //set file names to data array only the files that are uploaded
+                    $data['profilePicName'] = $uploadedFilesResponse['file_name']['profilePicName'] ?? $data['profilePicName'];
+                    $data['cvName'] = $uploadedFilesResponse['file_name']['cvName'] ?? $data['cvName'];
                 } else {
+                    //merge data with errors
+                    $data = array_merge($data, $uploadedFilesResponse['error']);
                     // Load view with errors
                     $this->view('pages/student/edit_profile', $data);
+                    return;
+                }
+
+                //edit student profile
+                if ($this->model->updateProfile($data)) {
+                    // Redirect to profile page
+                    Redirect::to(URLROOT . '/user/profile');
+                } else {
+                    die('Something went wrong');
                 }
             } else {
-                //init data array
-                $data = $this->prepareEditProfileData();
-
-                // Load view
+                // Load view with errors
                 $this->view('pages/student/edit_profile', $data);
             }
+        } else {
+            //init data array
+            $data = $this->prepareEditProfileData();
+
+            // Load view
+            $this->view('pages/student/edit_profile', $data);
         }
     }
+    
     public function delete_account()
     {
         $this->view('popups/student/deactivate_account');

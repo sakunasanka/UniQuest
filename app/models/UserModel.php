@@ -239,7 +239,7 @@ class userModel
                 $student = $this->db->single();
                 return array_merge((array)$user, (array)$student);
             } else if ($user-> Role === 'Company') {
-                $this->db->query('SELECT CompanyName, CompanyLogo FROM Company WHERE CompanyID = :userId');
+                $this->db->query('SELECT * FROM Company WHERE CompanyID = :userId');
                 $this->db->bind(':userId', $userId);
                 $company = $this->db->single();
                 return array_merge((array)$user, (array)$company);
@@ -304,8 +304,16 @@ class userModel
                 }
             } else if ($data['role'] === 'Company') {
                 //Update Company table
-                $this->db->query('UPDATE Company SET CompanyName = :companyName WHERE CompanyID = :userId'); 
+                $this->db->query('UPDATE Company SET CompanyName = :companyName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CompanyLogo = :companyLogo, Description = :description, Website = :website, Industry = :industry WHERE CompanyID = :userId');
                 $this->db->bind(':companyName', $data['companyName']);
+                $this->db->bind(':streetNo', $data['streetNo']);
+                $this->db->bind(':addressLine1', $data['addressLine1']);
+                $this->db->bind(':addressLine2', $data['addressLine2']);
+                $this->db->bind(':city', $data['city']);
+                $this->db->bind(':companyLogo', $data['companyLogoName']);
+                $this->db->bind(':description', $data['description']);
+                $this->db->bind(':website', $data['website']);
+                $this->db->bind(':industry', $data['industry']);
                 $this->db->bind(':userId', $data['userID']);
             
                 //Execute query
