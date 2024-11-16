@@ -74,6 +74,7 @@ class Student extends Controller
             $data = [
                 'rating' => $_POST['rating'] ?? '',
                 'comment' => trim($_POST['comment'] ?? ''),
+                'user_id' => $_POST['user_id'] ?? '',
                 'company_id' => $_POST['company_id'] ?? '',
                 'rating_err' => '',
                 'comment_err' => ''
@@ -102,6 +103,7 @@ class Student extends Controller
             $data = [
                 'rating' => '',
                 'comment' => '',
+                'user_id' => '',
                 'company_id' => '',
                 'rating_err' => '',
                 'comment_err' => ''
@@ -157,6 +159,34 @@ class Student extends Controller
                 }
             } else {
                 $this->view('pages/student/edit_review', $data);
+            }
+        } else {
+            Redirect::to(URLROOT . '/student/rate_review_company');
+        }
+    }
+
+    public function deleteReview($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Check if the review exists
+            $review = $this->model('RateAndReviewModel')->getReviewById($id);
+
+            if (!$review) {
+                Redirect::to(URLROOT . '/student/rate_review_company');
+                return;
+            }
+
+            // Ensure the review belongs to the logged-in student
+            if ($review->student_id != $_SESSION['user_id']) {
+                Redirect::to(URLROOT . '/student/rate_review_company');
+                return;
+            }
+
+            // Attempt to delete the review
+            if ($this->model('RateAndReviewModel')->deleteReviewById($id)) {
+                Redirect::to(URLROOT . '/student/rate_review_company');
+            } else {
+                die('Something went wrong while deleting the review.');
             }
         } else {
             Redirect::to(URLROOT . '/student/rate_review_company');

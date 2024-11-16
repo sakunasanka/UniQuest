@@ -23,15 +23,6 @@
                         <label for="star<?php echo $i; ?>">★</label>
                     <?php endfor; ?>
 
-                    <input type="radio" id="star1" name="rating" value="1">
-                    <label for="star1">★</label>
-                    <input type="radio" id="star2" name="rating" value="2">
-                    <label for="star2">★</label>
-                    <input type="radio" id="star3" name="rating" value="3">
-                    <label for="star3">★</label>
-                    <input type="radio" id="star4" name="rating" value="4">
-                    <label for="star4">★</label>
-                    <input type="radio" id="star5" name="rating" value="5">
 
                 </div>
                 <span class="error-msg"><?php echo !empty($data['rating_err']) ? $data['rating_err'] : ''; ?></span>
@@ -53,7 +44,10 @@
                         <h3><?php echo htmlspecialchars($review->company_name); ?></h3>
                         <div class="rating">Rating: <?php echo $review->Rating; ?> ★</div>
                         <p><?php echo htmlspecialchars($review->Comment); ?></p>
-                        <a href="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" class="edit-btn">Edit</a> <!-- Edit button -->  
+                        <a href="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" class="edit-btn">Edit</a> <!-- Edit button -->
+                        <form action="<?php echo URLROOT; ?>/student/deleteReview/<?php echo $review->id; ?>" method="POST" class="delete-form">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>  
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
