@@ -1,6 +1,6 @@
 <?php
     
-   
+
 
     function flash($name = '', $message = '', $class = 'msg-flash') {
         if (!empty($name)) {

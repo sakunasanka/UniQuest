@@ -6,6 +6,7 @@ class M_jobpost {
         // Assuming Database class uses a singleton pattern with getInstance()
         $this->db = Database::getInstance();
     }
+
     public function getpostbyid($jobpostId){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.JobID = :id');
         $this->db->bind(':id', $jobpostId);
@@ -44,6 +45,7 @@ class M_jobpost {
         // Execute and return the result
         return $this->db->execute();
     }
+
 
     public function edit($data) {
         $this->db->query('
@@ -84,5 +86,6 @@ class M_jobpost {
         }
     }
     
+
 }
 ?>
