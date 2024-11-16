@@ -23,11 +23,11 @@ class jobModel
     {
         try {
             // Prepare the query to insert the bookmark into the database
-            $this->db->query("INSERT INTO BookmarkJobs (studentId, jobId) VALUES(:studentId, :jobId)");
+            $this->db->query("INSERT IGNORE INTO BookmarkJobs (studentID, jobID) VALUES(:studentID, :jobID)");
             
             // Bind the parameters to the query
-            $this->db->bind(':studentId', $userId);
-            $this->db->bind(':jobId', $jobId);
+            $this->db->bind(':studentID', $_SESSION['user_id']);
+            $this->db->bind(':jobID', $jobId);
 
             // Execute the query and check if the bookmark was successfully added
             if ($this->db->execute()) {

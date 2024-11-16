@@ -27,6 +27,7 @@
             </div>
             
             <div class="cards-container">
+                <form id="bookmarkForm" method="POST" action="<?php echo URLROOT; ?>/student/addBookmarkJob" class="hidden-form"></form>
                 <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
@@ -51,7 +52,7 @@
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)" data-job-id="<?php echo $post->JobID; ?>"></i>
                             </div>
                         </div>
                         <div class="social-media-icons">
@@ -81,10 +82,17 @@
     }
 
     function toggleBookmark(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
+    icon.classList.toggle("fa-regular");
+    icon.classList.toggle("fa-solid");
+    icon.classList.toggle("icon-active");
+
+    // Get the JobID from the data attribute
+    const jobId = icon.getAttribute("data-job-id");
+    console.log("JobID:", jobId);
+
+    // Return or handle the JobID as needed
+    return jobId;
+}
 </script>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>

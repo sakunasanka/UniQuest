@@ -16,32 +16,51 @@ class Jobs extends Controller
         $this->view('pages/student/jobs', $data);
     }
 
-    // New method to handle the bookmarking action
-    public function bookmarkJob()
-    {
-        // Example user ID (should come from session or authentication system)
-        $userId = 1; // For now, use a hardcoded user ID
-        $jobId = $_POST['job_id']; // Get job ID from the POST request
-
-        // Check if job ID is provided
-        if (!empty($jobId)) {
-            if ($this->model->addUserPostBookmark($userId, $jobId)) {
-                echo "Bookmark added successfully";
+    public function addBookmarkJob($id) 
+      {
+          if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $jobId = $_POST['jobID'];
+            if (isset($_SESSION['user_id'])) {
+              $user_id = $_SESSION['user_id'];
+              $data = [
+                'jobId' => $jobId,
+                'studentId' => $user_id
+              ];
+              if (!$this->model->checkUserPostBookmark($data)) {
+                if ($status = $this->model->addUserPostBookmark($data)) {
+                  echo $status;
+                }
+              } else {
+                // $this->model->deleteUserCompanyBookmark($data);
+                echo 0;
+              }
             } else {
-                echo "Failed to add bookmark. Please check the database.";
+              echo 0;
             }
-        } else {
-            echo "Job not found!";
+          }
         }
-    }
 
-    public function checkBookmark()
+    public function checkUserPostBookmark()
     {
-        // Example user ID (should come from session or authentication system)
-        $userId = 1; // For now, use a hardcoded user ID
-        $jobId = $_POST['job_id']; // Get job ID from the POST request
-
-        $this->model->isJobBookmarked($userId, $jobId);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $jobId = $_POST['jobID'];
+            if (isset($_SESSION['user_id'])) {
+                $user_id = $_SESSION['user_id'];
+                $data = [
+                    'jobId' => $jobId,
+                    'studentId' => $user_id
+                ];
+                if ($this->model->checkUserPostBookmark($data)) {
+                    echo 1;
+                } else {
+                    echo 0;
+                }
+            } else {
+                echo 0;
+            }
+        }
     }
 
     // // public function removeBookmark()
@@ -62,29 +81,29 @@ class Jobs extends Controller
     //         echo "Job not found!";
     //     }
 
-      // public function addBookmarkCompany($id) 
-      // {
-      //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      //       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-      //       $companyId = $_POST['companyId'];
-      //       if (isset($_SESSION['user_id'])) {
-      //         $user_id = $_SESSION['user_id'];
-      //         $data = [
-      //           'companyId' => $companyId,
-      //           'studentId' => $user_id
-      //         ];
-      //         if (!$this->model->checkUserPostBookmark($data)) {
-      //           if ($status = $this->model->addUserPostBookmark($data)) {
-      //             echo $status;
-      //           }
-      //         } else {
-      //           // $this->model->deleteUserCompanyBookmark($data);
-      //           echo 0;
-      //         }
-      //       } else {
-      //         echo 0;
-      //       }
-      //     }
-      //   }
+    //   public function addBookmarkCompany($id) 
+    //   {
+    //       if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    //         $companyId = $_POST['companyId'];
+    //         if (isset($_SESSION['user_id'])) {
+    //           $user_id = $_SESSION['user_id'];
+    //           $data = [
+    //             'companyId' => $companyId,
+    //             'studentId' => $user_id
+    //           ];
+    //           if (!$this->model->checkUserPostBookmark($data)) {
+    //             if ($status = $this->model->addUserPostBookmark($data)) {
+    //               echo $status;
+    //             }
+    //           } else {
+    //             // $this->model->deleteUserCompanyBookmark($data);
+    //             echo 0;
+    //           }
+    //         } else {
+    //           echo 0;
+    //         }
+    //       }
+    //     }
 }
 ?>
