@@ -73,21 +73,18 @@ class Service_provider extends Controller
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         $data=[
-            'job_name' => trim($_POST['jobName'] ),
-            'job_benifits' => trim($_POST['jobBenefits'] ),
-            'job_location' => trim($_POST['jobLocation'] ),
-            'job_category' => trim($_POST['jobType'] ),
-            'adress' => trim($_POST['address']),
+            'job_name' => trim($_POST['jobName'] ?? ''),
+            'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
+            'job_location' => trim($_POST['jobLocation'] ?? ''),
+            'required_skills' => trim($_POST['qualifications'] ?? ''),
+            'salary_range' => trim($_POST['salaryRange'] ?? ''),
+            'Description' => trim($_POST['jobDescription'] ?? ''),
             'job_id' => $postId,
-            'required_skills' => trim($_POST['qualifications']),
-            'salary_range' => trim($_POST['salaryRange'] ),
-            'Description' => trim($_POST['jobDescription']),
+
 
             'job_name_err' => '',
             'job_benifits_err' => '',
             'job_location_err' => '',
-            'job_category_err' => '',
-            'adress_err' => '',
             'required_skills_err' => '',
             'salary_range_err' => '',
             'Description_err' => ''
@@ -126,12 +123,6 @@ class Service_provider extends Controller
     if (empty($data['job_location'])) {
         $data['job_location_err'] = 'Please enter job location';
     }
-    if (empty($data['job_category'])) {
-        $data['job_category_err'] = 'Please enter job category';
-    }
-    if (empty($data['adress'])) {
-        $data['adress_err'] = 'Please enter address';
-    }
     if (empty($data['required_skills'])) {
         $data['required_skills_err'] = 'Please enter required skills';
     }
@@ -146,8 +137,6 @@ class Service_provider extends Controller
             empty($data['job_name_err']) &&
             empty($data['job_benifits_err']) &&
             empty($data['job_location_err']) &&
-            empty($data['job_category_err']) &&
-            empty($data['adress_err']) &&
             empty($data['required_skills_err']) &&
             empty($data['salary_range_err']) &&
             empty($data['Description_err'])
@@ -163,37 +152,35 @@ class Service_provider extends Controller
 
         }
         else{
+            echo json_encode($data);
             //loading view with errors
-            $this->view('pages/service_provider/edit_job', $data);
+            // $this->view('pages/service_provider/edit_job', $data);
         }
     }
     else{
         $post=$this->model('M_jobpost')->getpostbyid($postId);
 
         //check the owner
-        if($post->companyID != $_SESSION['user_id']){
+        if($post->CompanyID != $_SESSION['user_id']){
             redirect('student/jobs');
         }
         $data = [
-            'job_name' => '',
-            'job_id' => '',
-            'job_benifits' => '',
-            'job_location' => '',
-            'job_category' => '',
-            'adress' => '',
-            'required_skills' => '',
-            'salary_range' => '',
-            'Description' => '',
+            'job_name' => $post->Title,
+            'job_id' => $postId, 
+            'job_benifits' => $post->JobBenefits,
+            'job_location' => $post->Location,
+            'required_skills' => $post->RequiredQualifications,
+            'salary_range' => $post->SalaryRange,
+            'Description' => $post->Description,
 
             'job_name_err' => '',
             'job_benifits_err' => '',
             'job_location_err' => '',
-            'job_category_err' => '',
-            'adress_err' => '',
             'required_skills_err' => '',
             'salary_range_err' => '',
             'Description_err' => ''
         ];
+        // echo json_encode($data);
         $this->view('pages/service_provider/edit_job', $data);
         }
             

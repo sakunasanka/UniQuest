@@ -39,7 +39,7 @@ class M_jobpost {
         $this->db->bind(':adress', $data['adress']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
-        $this->db->bind(':company_id', $_SESSION['company_id']);
+        $this->db->bind(':company_id', $_SESSION['user_id']);
 
         // Execute and return the result
         return $this->db->execute();
@@ -52,11 +52,9 @@ class M_jobpost {
                 Title = :job_name, 
                 Description = :Description, 
                 Location = :job_location, 
-                Category = :job_category, 
                 JobBenefits = :job_benifits, 
-                Address = :adress, 
                 RequiredQualifications = :required_skills, 
-                SalaryRange = :salary_range, 
+                SalaryRange = :salary_range 
             WHERE 
                 JobID = :job_id
         ');
@@ -65,12 +63,10 @@ class M_jobpost {
         $this->db->bind(':job_name', $data['job_name']);
         $this->db->bind(':Description', $data['Description']);
         $this->db->bind(':job_location', $data['job_location']);
-        $this->db->bind(':job_category', $data['job_category']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
-        $this->db->bind(':adress', $data['adress']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
-        $this->db->bind(':job_id', $_SESSION['job_id']);
+        $this->db->bind(':job_id', $data['job_id']);
         // Execute and return the result
         return $this->db->execute();
     }

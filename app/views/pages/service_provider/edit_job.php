@@ -18,7 +18,8 @@
             <form action="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $data['job_id']; ?>"  method="POST" >
                 
                 <div class="form-group">
-                    <label for="referral_id"><?php echo $data['job_id']?></label>
+                    <label for="referral_id">Refferal ID</label>
+                   
                     <span class="arrow">-></span>
                     <input type="text" id="referral_id" name="referral_id" value="23477" readonly>
                 </div>
@@ -32,7 +33,7 @@
                 <div class="form-group">
                     <label for="job_description">Job Description</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_description" name="job_description" value="<?php echo $data['Description']; ?>"></textarea>
+                    <textarea id="job_description" name="job_description" ><?php echo $data['Description']; ?></textarea>
                 </div>
         
                 <div class="form-group">
@@ -50,7 +51,8 @@
                 <div class="form-group">
                     <label for="job_qualifications">Job Qualifications</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_qualifications" name="job_qualifications" value="<?php echo $data['required_skills']; ?>">
+                    <textarea id="job_qualifications" name="job_qualifications" >
+                    <?php echo $data['required_skills']; ?>
                     </textarea>
                 </div>
         
@@ -58,7 +60,7 @@
                     <label for="job_benefits">Job Benefits</label>
                     <span class="arrow">-></span>
                     <textarea id="job_benefits" name="job_benefits" value="<?php echo  $data['job_benifits']; ?>">
-                        • Benefit 1
+                        <?php echo  $data['job_benifits']; ?>
                     </textarea>
                 </div>
         
