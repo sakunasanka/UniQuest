@@ -6,7 +6,10 @@
     define('URLROOT', 'http://localhost/UniQuest');
 
     //public Root
-    define('PUBROOT', dirname(dirname(dirname(__FILE__))).'/public');
+    define('PUBROOT', dirname(dirname(dirname(__FILE__))) . '/public');
+
+    //uploads Root
+    define('UPLOADROOT', 'http://localhost/UniQuest/public/uploads');
 
     //Site Name
     define('SITENAME', 'UniQuest');

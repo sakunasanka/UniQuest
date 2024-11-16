@@ -11,7 +11,7 @@ class Student extends Controller
 
     public function index()
     {
-        $this->view('pages/student/jobs');
+        echo 'student/index';
     }
 
     public function contact_sp()
@@ -44,11 +44,6 @@ class Student extends Controller
         $this->view('pages/student/noMatch');
     }
 
-    public function view_profile()
-    {
-        $this->view('pages/student/view_profile');
-    }
-
     public function edit_profile()
     {
         $this->view('pages/student/edit_profile');
@@ -78,8 +73,14 @@ class Student extends Controller
     }
   
     public function jobs()
-    {
-        $this->view('pages/student/jobs');
+    {   
+            $posts = $this->model('M_jobpost')->getPosts();
+            $data =[
+                'posts' => $posts
+            ];
+
+             $this->view('pages/student/jobs', $data);
+        
     }
 
     public function company()
@@ -107,9 +108,16 @@ class Student extends Controller
         $this->view('pages/student/make_complain');
     }
   
-    public function jobsDescription()
+    
+
+    public function companyDescription()
     {
-        $this->view('pages/student/jobsDescription');
+        $this->view('pages/student/companyDescription');
+    }
+
+    public function internshipDescription()
+    {
+        $this->view('pages/student/internshipDescription');
     }
 
     public function jobsApply()
@@ -121,5 +129,22 @@ class Student extends Controller
     {
         $this->view('pages/login/wait_to_verify_stu');
     }
+
+    public function internships()
+    {
+        $this->view('pages/student/internships');
+    }
+    public function jobsDescription($id){
+        
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $data =[
+            'post' => $posts
+        ];
+        // echo json_encode($data);
+        $this->view('pages/student/jobsDescription', $data);
+    
+    }
+
+
 
 }

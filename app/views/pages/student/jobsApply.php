@@ -88,7 +88,6 @@
                         <tr><td>Experience:</td><td>No Experience</td></tr>
                         <tr><td>Salary Range:</td><td>Any</td></tr>
                     </table>
-                    <p>Job ID - 5674563879</p>
                     
                     <div class="social-media-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>

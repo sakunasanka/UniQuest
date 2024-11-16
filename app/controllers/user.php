@@ -1,13 +1,17 @@
-<?php 
-class Login extends Controller {
+<?php
+class User extends Controller
+{
     private $model;
-    public function __construct() {
+
+    public function __construct()
+    {
         // Load model
         $this->model = $this->model('userModel');
     }
 
-    public function index() {
-        self::login();
+    public function index()
+    {
+        echo 'user/index';
     }
 
     public function login() {
@@ -39,7 +43,12 @@ class Login extends Controller {
                     // Create session
                     $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
-                    die('Pending');//TODO: Handle this
+                    // die('Pending');//TODO: Handle this
+                    if ($loggedInUser->Role === 'Student') {
+                        $this->view('pages/login/wait_to_verify_stu');
+                    } else if ($loggedInUser->Role === 'Company') {
+                        $this->view('pages/login/wait_to_verify_ser');
+                    }
                 } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
                     die('Not Approved');//TODO: Handle this
                 } else {
@@ -70,7 +79,7 @@ class Login extends Controller {
         session_start();
     
         // Get session details
-        $user = $this->model->getSessionDetails($userID);
+        $user = $this->model->getUserDetails($userID);
     
         if ($user) {
             // Store session variables
@@ -89,7 +98,7 @@ class Login extends Controller {
     
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/student/jobs');
+                Redirect::to(URLROOT . '/user/profile');
             } else if ($user['Role'] === 'Company') {
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {
@@ -97,9 +106,12 @@ class Login extends Controller {
             } else if ($user['Role'] === 'VT-Member') {
                 Redirect::to(URLROOT . '/verification_team/dashboard');
             }
+            //print user details
+            // print_r($_SESSION);
+            // print($_SESSION['user_id']);
         } else {
             // Handle case where session details were not found
-            die('User not found or unable to create session');
+            die('User not found or unable to create session');//TODO: Handle this
         }
     }
 
@@ -111,8 +123,66 @@ class Login extends Controller {
         session_destroy();
     
         // Redirect to login page
-        Redirect::to(URLROOT . '/login');
+        Redirect::to(URLROOT . '/home');
     }
-    
+
+    public function profile()
+    {
+        try {
+            $user = $this->model->getUserDetails($_SESSION['user_id']);
+            $data = [
+                'user' => $user
+            ];
+            if ($user['Role'] === 'Student') {
+                $this->view('pages/student/view_profile', $data);
+            } else if ($user['Role'] === 'Company') {
+                $this->view('pages/service_provider/view_profile', $data);//TODO: Create company profile view
+            } else if ($user['Role'] === 'Admin') {
+                $this->view('pages/admin/profile', $data); //TODO: Create admin profile view
+            } else if ($user['Role'] === 'VT-Member') {
+                $this->view('pages/vt-member/profile', $data);//TODO: Create VT-Member profile view
+            } else {
+                // Redirect to login page
+                Redirect::to(URLROOT . '/login');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
+    public function deactivate()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST array
+            $_POST = filter_input_array(INPUT_POST);
+
+            $data = [
+                'confirm' => trim($_POST['confirm']),
+                'confirm_err' => ''
+            ];
+
+            // Validate confirm
+            $data['confirm_err'] = Validator::isEmpty($data['confirm']) ? 'Please confirm account deactivation' : '';
+
+            // Check if there are no errors
+            if (empty($data['confirm_err'])) {
+                // Deactivate account
+                $this->model->deactivateAccount($_SESSION['user_id']);
+                // Logout
+                $this->logout();
+            } else {
+                // Load view with errors
+                $this->view('popups/student/deactivate_account', $data);
+            }
+        } else {
+            $data = [
+                'confirm' => '',
+                'confirm_err' => ''
+            ];
+
+            // Load view
+            $this->view('popups/student/deactivate_account', $data);
+        }
+    }
 }
 ?>
