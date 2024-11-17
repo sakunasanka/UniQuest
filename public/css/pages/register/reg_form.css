@@ -113,12 +113,24 @@ form h3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 .input-container label {
     font-size: 1.2rem;
     padding: 5px;
+    display: block;
+}
+
+.req {
+    color: red;
+    font-size: 1.2rem;
+}
+
+.input-container span.password-req {
+    font-size: 1rem;
+    padding-left: 5px;
+    color: #666;
     display: block;
 }
 
@@ -145,6 +157,21 @@ form h3 {
     width: auto;
 }
 
+.input-center span.login {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.input-center span.login a {
+    color: #32a852;
+    text-decoration: none;
+}
+
+.input-center span.login a:hover {
+    color: #038a27;
+    text-decoration: underline;
+}
+
 .input-container input[type="file"] {
     font-size: 1rem;
     padding: 8px 15px;
@@ -152,6 +179,24 @@ form h3 {
 
 .form-row .input-container {
     flex-basis: 50%; /* Makes two input containers fit in one row */
+}
+
+.form-row .input-container.textarea {
+    flex-basis: 100%;
+}
+
+.input-container textarea {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+    resize: none;
+}
+
+.input-container textarea:focus {
+    outline: none;
+    border-color: #32a852;
 }
 
 .form-row .input-profile-pic {
@@ -228,7 +273,7 @@ button[type="submit"]:hover {
 
 .error-msg {
     color: red;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-top: 5px;
     padding-left: 15px;
 }

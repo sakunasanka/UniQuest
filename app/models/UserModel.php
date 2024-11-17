@@ -57,7 +57,7 @@ class userModel
             $userId = $this->db->lastInsertId();
 
             //Insert into Company table
-            $this->db->query('INSERT INTO Company (CompanyID, CompanyName, Description, CompanyLogo, StreetNo, AddressLine1, AddressLine2, City) VALUES (:companyID, :companyName, :description, :companyLogo, :streetNo, :addressLine1, :addressLine2, :city)');
+            $this->db->query('INSERT INTO Company (CompanyID, CompanyName, Description, CompanyLogo, StreetNo, AddressLine1, AddressLine2, City, Industry, Website) VALUES (:companyID, :companyName, :description, :companyLogo, :streetNo, :addressLine1, :addressLine2, :city, :industry, :website)');
             $this->db->bind(':companyID', $userId);
             $this->db->bind(':companyName', $data['companyName']);
             $this->db->bind(':description', $data['description']);
@@ -66,6 +66,8 @@ class userModel
             $this->db->bind(':addressLine1', $data['addressLine1']);
             $this->db->bind(':addressLine2', $data['addressLine2']);
             $this->db->bind(':city', $data['city']);
+            $this->db->bind(':industry', $data['industry']);
+            $this->db->bind(':website', $data['website']);
 
             //Execute query
             if (!$this->db->execute()) {
