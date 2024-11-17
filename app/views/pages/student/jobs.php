@@ -1,7 +1,6 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="main-container">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
@@ -74,51 +73,51 @@
     }
 </style>
 
-<script>
-    function toggleFavorite(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
-
-    function toggleBookmark(icon, jobId) {
-    icon.classList.toggle("fa-regular");
-    icon.classList.toggle("fa-solid");
-    icon.classList.toggle("icon-active");
-}
-
-    // Function to bookmark a job
-    function bookmarkJob(jobId, iconElement) {
-        // Create a new FormData object to send the jobId
-        const formData = new FormData();
-        formData.append('job_id', jobId); // Append the job ID to the request data
-
-        // Create a new XMLHttpRequest to send the data to the server
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
-
-        // Set up the callback for when the request completes
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                alert(xhr.responseText); // Show the server response (e.g., success message)
-                iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
-            } else {
-                alert('Failed to bookmark the job.');
-            }
-        };
-
-        // Send the request with the form data
-        xhr.send(formData);
-    }
-
-</script>
-
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>
     function goToJobDescription(jobId) {
         window.location.href = "/uniquest/student/jobsdescription/" + jobId;
     }
+</script>
+
+<script>
+    function toggleFavorite(icon) {
+    icon.classList.toggle("fa-regular");
+    icon.classList.toggle("fa-solid");
+    icon.classList.toggle("icon-active");
+}
+
+function toggleBookmark(icon, jobId) {
+icon.classList.toggle("fa-regular");
+icon.classList.toggle("fa-solid");
+icon.classList.toggle("icon-active");
+}
+
+// Function to bookmark a job
+function bookmarkJob(jobId, iconElement) {
+    // Create a new FormData object to send the jobId
+    const formData = new FormData();
+    formData.append('job_id', jobId); // Append the job ID to the request data
+
+    // Create a new XMLHttpRequest to send the data to the server
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
+
+    // Set up the callback for when the request completes
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+        } else {
+            alert('Failed to bookmark the job.');
+        }
+    };
+
+    // Send the request with the form data
+    xhr.send(formData);
+}
+
 </script>
