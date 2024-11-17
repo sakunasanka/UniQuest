@@ -166,27 +166,27 @@ class Student extends Controller
 
     public function jobs()
     {   
-            $posts = $this->model('M_jobpost')->getPosts();
+        $posts = $this->model('M_jobpost')->getPosts();
 
-            if (isset($_SESSION['user_id'])) {
-                $userId = $_SESSION['user_id']; // Get user ID from session
-    
-              // Get bookmarked jobs for the user
-            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-            } 
-            else {
-                $userId = null;
-                $bookmarkedJobs = []; // No bookmarks if not logged in
-            }
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
 
-            $data =[
-                'posts' => $posts,
-                'bookmarkedJobs' => $bookmarkedJobs,
-                'bookmarkedJobIds' => $bookmarkedJobIds
-            ];
+        // Get bookmarked jobs for the user
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } 
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+        }
 
-             $this->view('pages/student/jobs', $data);
+        $data =[
+            'posts' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds
+        ];
+
+        $this->view('pages/student/jobs', $data);
         
     }
 
@@ -235,11 +235,6 @@ class Student extends Controller
         $this->view('pages/student/make_complain');
     }
 
-    public function jobsDescription()
-    {
-        $this->view('pages/student/jobsDescription');
-    }
-
     public function companyDescription()
     {
         $this->view('pages/student/companyDescription');
@@ -275,7 +270,5 @@ class Student extends Controller
         $this->view('pages/student/jobsDescription', $data);
     
     }
-
-
 
 }
