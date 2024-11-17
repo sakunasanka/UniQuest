@@ -35,39 +35,60 @@
                 </div>
                 <div class="form-row">
                     <div class="input-container">
-                        <label for="company-name">Company Name</label>
-                        <input type="text" id="company-name" name="companyName" value="<?php echo $data['companyName']; ?>" required>
+                        <label for="company-name">Company Name<span class="req"> *</span></label>
+                        <input type="text" id="company-name" name="companyName" value="<?php echo $data['companyName']; ?>" placeholder="Enter Company Name" required>
                         <span class="error-msg"><?php echo !empty($data['companyName_err']) ? $data['companyName_err'] : '' ?></span>
                     </div>
                     <div class="input-container">
-                        <label for="company-contact">Contact No</label>
-                        <input type="text" id="company-contact" name="contactNo" value="<?php echo $data['contactNo']; ?>" required>
+                        <label for="company-contact">Contact Number<span class="req"> *</span></label>
+                        <input type="text" id="company-contact" name="contactNo" value="<?php echo $data['contactNo']; ?>" placeholder="Enter Contact Number" required>
                         <span class="error-msg"><?php echo !empty($data['contactNo_err']) ? $data['contactNo_err'] : '' ?></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-container">
+                        <label for="industry">Industry<span class="req"> *</span></label>       
+                        <input type="text" id="industry" name="industry" value="<?php echo $data['industry']; ?>" placeholder="Enter Industry" required>
+                        <span class="error-msg"><?php echo !empty($data['industry_err']) ? $data['industry_err'] : '' ?></span>
+                    </div>
+                    <div class="input-container">
+                        <label for="website">Company Website</label>
+                        <input type="text" id="website" name="website" value="<?php echo $data['website']; ?>" placeholder="Enter Company Website">
+                        <span class="error-msg"><?php echo !empty($data['website_err']) ? $data['website_err'] : '' ?></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-container textarea">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" placeholder="Enter Description"><?php echo $data['description']; ?></textarea>
+                        <span class="error-msg"><?php echo !empty($data['description_err']) ? $data['description_err'] : '' ?></span>
                     </div>
                 </div>
 
                 <h3>Address</h3>
                 <div class="form-row">
                     <div class="input-container">
-                        <label for="street-no">Street No</label>
-                        <input type="text" id="streetNo" name="streetNo" value="<?php echo $data['streetNo']; ?>" required>
+                        <label for="street-no">Street No<span class="req"> *</span></label>
+                        <input type="text" id="streetNo" name="streetNo" value="<?php echo $data['streetNo']; ?>" placeholder="Enter Street Number" required>
                         <span class="error-msg"><?php echo !empty($data['streetNo_err']) ? $data['streetNo_err'] : ''; ?></span>
                     </div>
                     <div class="input-container">
-                        <label for="address-line1">Address Line 1</label>
-                        <input type="text" id="addressLine1" name="addressLine1" value="<?php echo $data['addressLine1']; ?>" required>
+                        <label for="address-line1">Address Line 1<span class="req"> *</span></label>
+                        <input type="text" id="addressLine1" name="addressLine1" value="<?php echo $data['addressLine1']; ?>" placeholder="Enter Address Line 1" required>
                         <span class="error-msg"><?php echo !empty($data['addressLine1_err']) ? $data['addressLine1_err'] : ''; ?></span>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="input-container">
                         <label for="address-line2">Address Line 2</label>
-                        <input type="text" id="addressLine2" name="addressLine2" value="<?php echo $data['addressLine2']; ?>">
+                        <input type="text" id="addressLine2" name="addressLine2" value="<?php echo $data['addressLine2']; ?>" placeholder="Enter Address Line 2">
                         <span class="error-msg"><?php echo !empty($data['addressLine2_err']) ? $data['addressLine2_err'] : ''; ?></span>
                     </div>
                     <div class="input-container">
-                        <label for="city">City</label>
-                        <input type="text" id="city" name="city" value="<?php echo $data['city']; ?>" required>
+                        <label for="city">City<span class="req"> *</span></label>
+                        <input type="text" id="city" name="city" value="<?php echo $data['city']; ?>" placeholder="Enter City" required>
                         <span class="error-msg"><?php echo !empty($data['city_err']) ? $data['city_err'] : ''; ?></span>
                     </div>
                 </div>
@@ -76,21 +97,22 @@
                 <h2>Login Credentials</h2>
                 <div class="form-row">
                     <div class="input-container">
-                        <label for="email">Company Email</label>
-                        <input type="email" id="email" name="email" value="<?php echo $data['email']; ?>" required>
+                        <label for="email">Company Email<span class="req"> *</span></label>
+                        <input type="email" id="email" name="email" value="<?php echo $data['email']; ?>" placeholder="Enter Company Email" required>
                         <span class="error-msg"><?php echo !empty($data['email_err']) ? $data['email_err'] : ''; ?></span>
                     </div>
                     <div class="input-container"></div>
                 </div>
                 <div class="form-row">
                     <div class="input-container">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" value="<?php echo $data['password']; ?>" required>
+                        <label for="password">Password<span class="req"> *</span></label>
+                        <input type="password" id="password" name="password" value="<?php echo $data['password']; ?>" placeholder="Enter Password" required>
+                        <span class="password-req">Password must contain at least 8 characters, including UPPER/lowercase and numbers</span>
                         <span class="error-msg"><?php echo !empty($data['password_err']) ? $data['password_err'] : ''; ?></span>
                     </div>
                     <div class="input-container">
-                        <label for="confirm_password">Confirm Password</label>
-                        <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $data['confirm_password']; ?>" required>
+                        <label for="confirm_password">Confirm Password<span class="req"> *</span></label>
+                        <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $data['confirm_password']; ?>" placeholder="Enter Confirm Password" required>
                         <span class="error-msg"><?php echo !empty($data['confirm_password_err']) ? $data['confirm_password_err'] : ''; ?></span>
                     </div>
                 </div>
@@ -111,6 +133,12 @@
                 <div class="form-row">
                     <div class="input-center">
                         <button type="submit">Register</button>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-center">
+                        <span class="login">Already have an account? <a href="<?php echo URLROOT; ?>/user/login">Login</a></span>
                     </div>
                 </div>
             </form>
