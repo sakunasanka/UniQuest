@@ -10,29 +10,33 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Company Logo"> 
+        <img 
+            src="<?php echo empty($data['user']['CompanyLogo']) 
+                ? URLROOT . '/images/profile_pic_preview.png' 
+                : UPLOADROOT . '/profile_pictures/company/' . $data['user']['CompanyLogo']; ?>" 
+            alt="Profile Picture">
 
             <div class="view-card-content">
-                <h1>Acme Inc.</h1>
-                <h2>Software & Technology</h2>
-                <p>Acme Inc. is a leading software company that specializes in developing innovative solutions for businesses of all sizes. With a team of talented engineers and designers, we are committed to delivering high-quality products that help our clients achieve their goals.</p>
+                <h1><?php echo $data['user']['CompanyName'] ?></h1>
+                <h2><?php echo $data['user']['Industry'] ?></h2>
+                <p><?php echo $data['user']['Description'] ?></p>
 
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        123 Main Street, Colombo
+                        <?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['user']['City'] ?></span>
                     </div>
                     <div>
-                        <span>Phone</span>
-                        +94 11-345-2686
+                        <span>Contact No</span>
+                        <?php echo $data['user']['ContactNo'] ?>
                     </div>
                     <div>
                         <span>Email</span>
-                        info@academic.com
+                        <?php echo $data['user']['Email'] ?>
                     </div>
                     <div>
                         <span>Website</span>
-                        <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
+                        <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
                     </div>
                 </div>
                 <div class="edit-btn"> 
