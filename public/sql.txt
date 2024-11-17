@@ -278,6 +278,41 @@ JOIN
 ORDER BY 
     cm.ComplainedDate ASC;
 
+-- -----------------------------------------------------
+-- View `uniquest`.`v_bookmarkedJobs`
+-- -----------------------------------------------------
+
+CREATE VIEW v_bookmarkedJobs AS
+SELECT 
+    bj.StudentID,                   -- From BookmarkJobs table
+    j.JobID,                        -- From Jobs table
+    c.CompanyID,                    -- From Company table
+    j.Title,                        -- Job title
+    c.CompanyLogo,                  -- Company logo
+    c.CompanyName,                  -- Company name
+    j.Description,                  -- Job description
+    j.Location,                     -- Job location
+    j.Category,                     -- Job category
+    j.JobBenefits,                  -- Job benefits
+    j.Address,                      -- Job address
+    j.RequiredQualifications,       -- Job qualifications
+    j.SalaryRange,                  -- Salary range
+    u.Email,        -- Company's email from User table
+    u.ContactNo,  -- Company's contact number from User table
+    j.create_at AS jobs_create_at,    -- Job creation timestamp
+    c.create_at AS company_create_att -- Company creation timestamp
+FROM 
+    BookmarkJobs bj
+INNER JOIN 
+    Jobs j ON bj.JobID = j.JobID
+INNER JOIN 
+    company c ON j.CompanyID = c.CompanyID
+INNER JOIN 
+    user u ON c.CompanyID = u.UserID
+ORDER BY 
+    j.create_at DESC;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
