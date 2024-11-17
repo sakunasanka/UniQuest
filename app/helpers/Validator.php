@@ -28,7 +28,7 @@ class Validator
     //validate the company name
     public static function isValidCompanyName($companyName): bool
     {
-        return preg_match('/^[a-zA-Z0-9\s]+$/', $companyName);
+        return preg_match('/^[a-zA-Z0-9\s\-\.\&]+$/', $companyName);
     }
 
     //validate the password
@@ -83,6 +83,12 @@ class Validator
     public static function isValidTerms($terms): bool
     {
         return $terms === 'accepted';
+    }
+
+    //validate the website
+    public static function isValidWebsite($website): bool
+    {
+        return filter_var($website, FILTER_VALIDATE_URL);
     }
 
     //validate the registration data
@@ -211,6 +217,12 @@ class Validator
 
             if (self::isEmpty($data['city'])) {
                 $errors['city_err'] = 'City is required';
+            }
+
+            if (self::isEmpty($data['industry'])) {
+                $errors['industry_err'] = 'Industry is required';
+            } else if (!self::isValidName($data['industry'])) {
+                $errors['industry_err'] = 'Industry can only contain letters and spaces';
             }
 
             if (self::isEmpty($data['terms'])) {
