@@ -57,8 +57,15 @@ class jobModel
 
     //Method to get bookmarked jobs
     public function getBookmarkedJobs($studentId) {
+        // Fetch only the IDs of bookmarked jobs for the user
         $this->db->query("SELECT * FROM bookmarkJobs WHERE studentId = :studentId");
-        $this->db->bind(':studentId', $_SESSION['user_id']);
+        $this->db->bind(':studentId', $studentId);
+        return $this->db->resultSet();
+    }
+
+    public function getAllJobs()
+    {
+        $this->db->query("SELECT * FROM Jobs");
         return $this->db->resultSet();
     }
 

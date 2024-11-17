@@ -25,7 +25,6 @@
                     </div>
                 </div>
             </div>
-            
             <div class="cards-container">
                 <form id="bookmarkForm" method="POST" action="<?php echo URLROOT; ?>/student/addBookmarkJob" class="hidden-form"></form>
                 <?php foreach($data['posts'] as $post): ?>
@@ -52,7 +51,8 @@
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                                
+                                <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                             </div>
                         </div>
                         <div class="social-media-icons">
@@ -117,8 +117,8 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
-<!-- <script>
+<script>
     function goToJobDescription(jobId) {
         window.location.href = "/uniquest/student/jobsdescription/" + jobId;
     }
-</script> -->
+</script>

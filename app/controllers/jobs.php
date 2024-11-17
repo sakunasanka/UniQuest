@@ -14,13 +14,12 @@ class Jobs extends Controller
 
     public function index()
     {   
-        if (isset($_SESSION['user_id'])) {
-          $userId = $_SESSION['user_id']; // Get user ID from session
-        } 
-        else {
-          $userId = null;
+      if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+        } else {
+            // Handle the case when user is not logged in
+            $userId = null;
         }
-
         $data['posts'] = $this->model->getBookmarkedJobs($userId); 
         $this->view('pages/student/jobs', $data);
     }
