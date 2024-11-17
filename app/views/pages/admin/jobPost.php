@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/jobPost.css">
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 
 <body>
