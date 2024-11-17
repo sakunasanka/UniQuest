@@ -200,11 +200,6 @@ class Student extends Controller
         $this->view('pages/student/make_complain');
     }
 
-    public function jobsDescription()
-    {
-        $this->view('pages/student/jobsDescription');
-    }
-
     public function companyDescription()
     {
         $this->view('pages/student/companyDescription');
