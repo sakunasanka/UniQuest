@@ -15,11 +15,11 @@ class RateAndReviewModel
             $this->db->beginTransaction();
 
             // Insert review into the Review table
-            $this->db->query('INSERT INTO review (Rating, Comment, student_id, company_id) VALUES (:rating, :comment, :user_id, :company_id)');
+            $this->db->query('INSERT INTO Review (Rating, Comment, StudentID, CompanyID) VALUES (:rating, :comment, :user_id, :company_id)');
             $this->db->bind(':rating', $data['rating']);
             $this->db->bind(':comment', $data['comment']);
             $this->db->bind(':user_id', $_SESSION['user_id']);
-            $this->db->bind(':company_id', $data['company_id']); 
+            $this->db->bind(':company_id', 10040); 
 
             // Execute query
             if (!$this->db->execute()) {
