@@ -26,33 +26,74 @@ body {
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     border: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-start; /* Align content to the start */
+    align-items: flex-start; /* Align items at the top */
+    gap: 50px; /* Add spacing between picture and content */
+}
+
+.view-card-2 {
+    margin: auto;
+    padding: 40px;
+    width: 90%;
+    max-width: 70vw;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
     transition: transform 0.2s ease;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
-}
-
-.view-card-2{
     margin-top: 40px;
 }
 
-/* Profile Image */
-.view-card img {
-    width: 160px;
-    height: 160px;
-    margin-right: 30px;
-    margin-bottom: 30px;
+.view-card-pic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Add spacing between image and options */
+}
+
+.view-card-pic img {
+    width: 200px;
+    height: 200px;
     border-radius: 8px;
     background-color: #f2f2f2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     object-fit: cover;
+    flex-shrink: 0; /* Prevent the image from shrinking */
+}
+
+.view-card-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.view-card-options li {
+    margin: 5px 0;
+}
+
+.view-card-options a {
+    text-decoration: none;
+    color: #0076cb;
+    font-size: 16px;
+}
+
+.view-card-options a:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Card Content */
 .view-card-content {
-    flex-grow: 1;
-    padding: 0 10px;
+    flex-grow: 1; /* Allow the content to take up remaining space */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between;
 }
 
 .view-card h1 {
@@ -86,6 +127,7 @@ body {
     margin-top: 15px;
     padding: 10px 0;
     border-top: 1px solid #eee;
+    align-items: flex-start;
 }
 
 .view-card-info div {
@@ -172,6 +214,7 @@ a:hover {
     margin-top: 20px;
     display: flex;
     align-items: center;
+    justify-content: end;
     gap: 8px;
 }
 
