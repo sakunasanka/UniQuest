@@ -15,10 +15,11 @@
         </div>
 
         <div class="form-container">
-            <form action="submit.php" method="post" enctype="multipart/form-data">
+            <form action="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $data['job_id']; ?>"  method="POST" >
                 
                 <div class="form-group">
-                    <label for="referral_id">Referral ID</label>
+                    <label for="referral_id">Refferal ID</label>
+                   
                     <span class="arrow">-></span>
                     <input type="text" id="referral_id" name="referral_id" value="23477" readonly>
                 </div>
@@ -26,46 +27,40 @@
                 <div class="form-group">
                     <label for="job_title">Job Title</label>
                     <span class="arrow">-></span>
-                    <input type="text" id="job_title" name="job_title" value="Delivery Rider">
+                    <input type="text" id="job_title" name="jobName" value="<?php echo  $data['job_name']; ?>">
                 </div>
         
                 <div class="form-group">
                     <label for="job_description">Job Description</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_description" name="job_description">
-                        We are looking for a reliable and punctual Delivery Rider to join our team. As a Delivery Rider, you will play a crucial role in ensuring timely and accurate delivery of goods to our customers. Your primary responsibility will be to pick up orders from our warehouse or partner locations and deliver them to customers' specified addresses while providing excellent customer service.
-                    </textarea>
+                    <textarea id="job_description" name="jobDescription" ><?php echo $data['Description']; ?></textarea>
                 </div>
         
                 <div class="form-group">
                     <label for="job_location">Job Location</label>
                     <span class="arrow">-></span>
-                    <input type="text" id="job_location" name="job_location" value="Colombo, Sri Lanka">
+                    <input type="text" id="jobLocation" name="jobLocation" value="<?php echo $data['job_location']; ?>">
                 </div>
         
                 <div class="form-group">
                     <label for="salary_range">Salary Range</label>
                     <span class="arrow">-></span>
-                    <input type="text" id="salary_range" name="salary_range" value="LKR 20000 per day">
+                    <input type="text" id="salary_range" name="salaryRange" value="<?php echo $data['salary_range']; ?>">
                 </div>
         
                 <div class="form-group">
                     <label for="job_qualifications">Job Qualifications</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_qualifications" name="job_qualifications">
-                        • Age Between 18 - 40
-                        • With a valid driver's license
-                        • Should own a Motorbike
+                    <textarea id="job_qualifications" name="qualifications" >
+                    <?php echo $data['required_skills']; ?>
                     </textarea>
                 </div>
         
                 <div class="form-group">
                     <label for="job_benefits">Job Benefits</label>
                     <span class="arrow">-></span>
-                    <textarea id="job_benefits" name="job_benefits">
-                        • Benefit 1
-                        • Benefit 2
-                        • Benefit 3
+                    <textarea id="job_benefits" name="jobBenefits" value="<?php echo  $data['job_benifits']; ?>">
+                        <?php echo  $data['job_benifits']; ?>
                     </textarea>
                 </div>
         

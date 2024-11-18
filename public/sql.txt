@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`company` (
   `AddressLine1` VARCHAR(45) NOT NULL,
   `AddressLine2` VARCHAR(45) NULL DEFAULT NULL,
   `City` VARCHAR(45) NOT NULL,
+  create_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`CompanyID`),
   INDEX `fk_ServiceProvider_User1_idx` (`CompanyID` ASC),
   CONSTRAINT `fk_ServiceProvider_User1`
@@ -119,20 +120,55 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `uniquest`.`Jobs`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniquest`.`Jobs` (
-  `JobID` INT NOT NULL,
-  `Title` VARCHAR(45) NULL,
-  `Description` VARCHAR(45) NULL,
-  `Location` VARCHAR(45) NULL,
-  `Category` ENUM('Part Time', 'Internship') NULL,
+
+  `JobID` INT NOT NULL AUTO_INCREMENT ,
+
+  `Title` VARCHAR(100) NULL,                  -- Job Name
+  `Description` TEXT NULL,                    -- Job Description
+  `Location` VARCHAR(100) NULL,               -- Job Location
+  `Category` ENUM('Full-time', 'Part-time', 'Internship') NULL, -- Job Type (expanded to include 'Full-time')
+  `JobBenefits` TEXT NULL,                    -- Job Benefits
+  `Address` VARCHAR(255) NULL,                -- Address
+  `RequiredQualifications` TEXT NULL,         -- Required Qualifications
+  `SalaryRange` VARCHAR(45) NULL,             -- Salary Range
   `CompanyID` INT NOT NULL,
+  create_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`JobID`, `CompanyID`),
   INDEX `fk_Jobs_ServiceProvider1_idx` (`CompanyID` ASC),
   CONSTRAINT `fk_Jobs_ServiceProvider1`
     FOREIGN KEY (`CompanyID`)
     REFERENCES `uniquest`.`company` (`CompanyID`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE
+)
 ENGINE = InnoDB;
+-- ---------------------------------------------------
+
+CREATE VIEW v_jobs AS 
+    SELECT 
+        jobs.JobID AS JobID,
+        company.CompanyID AS CompanyID,
+        jobs.Title AS Title,
+        company.CompanyLogo AS CompanyLogo,
+        company.CompanyName AS CompanyName,
+        jobs.Description AS Description,
+        jobs.Location AS Location,
+        jobs.Category AS Category,
+        jobs.JobBenefits AS JobBenefits,
+        jobs.Address AS Address,
+        jobs.RequiredQualifications AS RequiredQualifications,
+        jobs.SalaryRange AS SalaryRange,
+        user.Email AS Email,
+        user.ContactNo AS ContactNo,
+        jobs.Create_at AS jobs_create_at,         -- Use correct capitalization
+        company.Create_at AS company_create_at    -- Use correct capitalization
+    FROM jobs 
+    INNER JOIN company ON jobs.CompanyID = company.CompanyID
+    INNER JOIN user ON company.CompanyID = user.UserID
+    ORDER BY jobs.Create_at DESC;
+
+
+
 
 -- -----------------------------------------------------
 -- Table `uniquest`.`BookmarkJobs`
@@ -151,6 +187,30 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`BookmarkJobs` (
   CONSTRAINT `fk_Student_has_Jobs_Jobs1`
     FOREIGN KEY (`JobID`)
     REFERENCES `uniquest`.`Jobs` (`JobID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`Complaint`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquest`.`Complaint` (
+  `ComplaintID` INT NOT NULL,
+  `Description` VARCHAR(45) NULL,
+  `Status` VARCHAR(45) NULL,
+  `StudentID` INT NOT NULL,
+  `CompanyID` INT NOT NULL,
+  PRIMARY KEY (`ComplaintID`, `StudentID`, `CompanyID`),
+  INDEX `fk_Complaint_Student1_idx` (`StudentID` ASC),
+  INDEX `fk_Complaint_ServiceProvider1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_Complaint_Student1`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquest`.`student` (`StudentID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Complaint_ServiceProvider1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquest`.`company` (`CompanyID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -178,6 +238,80 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`Review` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `uniquest`.`Complaint_company`
+-- -----------------------------------------------------
+
+CREATE TABLE `uniquest`.`complaint_company` (
+  `ComplaintID` INT NOT NULL AUTO_INCREMENT,
+  `StudentID` INT NOT NULL,
+  `CompanyID` INT NOT NULL,
+  `Complaint` TEXT NOT NULL,
+  `ComplainedDate` DATETIME NOT NULL,
+  `Status` ENUM('Pending', 'Resolved', 'Rejected') NOT NULL,
+  PRIMARY KEY (`ComplaintID`),
+  FOREIGN KEY (`StudentID`) REFERENCES `uniquest`.`student`(`StudentID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`CompanyID`) REFERENCES `uniquest`.`company`(`CompanyID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- View `uniquest`.`StudentCompanyComplaints`
+-- -----------------------------------------------------
+
+CREATE VIEW `uniquest`.`StudentCompanyComplaints` AS
+SELECT 
+    c.CompanyName AS `Company`,
+    u.Email AS `CompanyEmail`,
+    cm.Complaint AS `Complaint`,
+    CONCAT(s.FirstName, ' ', s.LastName) AS `StudentName`,
+    cm.ComplainedDate AS `ComplainedDate`,
+    cm.Status AS `Status`
+FROM 
+    `uniquest`.`complaint_company` cm
+JOIN 
+    `uniquest`.`student` s ON cm.StudentID = s.StudentID
+JOIN 
+    `uniquest`.`company` c ON cm.CompanyID = c.CompanyID
+JOIN 
+    `uniquest`.`user` u ON c.CompanyID = u.UserID 
+ORDER BY 
+    cm.ComplainedDate ASC;
+
+-- -----------------------------------------------------
+-- View `uniquest`.`v_bookmarkedJobs`
+-- -----------------------------------------------------
+
+CREATE VIEW v_bookmarkedJobs AS
+SELECT 
+    bj.StudentID,                   -- From BookmarkJobs table
+    j.JobID,                        -- From Jobs table
+    c.CompanyID,                    -- From Company table
+    j.Title,                        -- Job title
+    c.CompanyLogo,                  -- Company logo
+    c.CompanyName,                  -- Company name
+    j.Description,                  -- Job description
+    j.Location,                     -- Job location
+    j.Category,                     -- Job category
+    j.JobBenefits,                  -- Job benefits
+    j.Address,                      -- Job address
+    j.RequiredQualifications,       -- Job qualifications
+    j.SalaryRange,                  -- Salary range
+    u.Email,        -- Company's email from User table
+    u.ContactNo,  -- Company's contact number from User table
+    j.create_at AS jobs_create_at,    -- Job creation timestamp
+    c.create_at AS company_create_att -- Company creation timestamp
+FROM 
+    BookmarkJobs bj
+INNER JOIN 
+    Jobs j ON bj.JobID = j.JobID
+INNER JOIN 
+    company c ON j.CompanyID = c.CompanyID
+INNER JOIN 
+    user u ON c.CompanyID = u.UserID
+ORDER BY 
+    j.create_at DESC;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

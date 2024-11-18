@@ -130,7 +130,13 @@ class Admin extends Controller
 
     public function company_complaint()
     {
-        $this->view('pages/admin/company_complaint');
+        $complaints_com = $this->model('jobModel')->getComplains();
+
+        $data = [
+            'complaints_com' => $complaints_com
+        ];
+
+        $this->view('pages/admin/company_complaint', $data);
     }
 
     public function ptjobs_mng()
@@ -178,6 +184,10 @@ class Admin extends Controller
         $this->view('pages/admin/adminDash');
     }
 
+    public function jobPost()
+    {
+        $this->view('pages/admin/jobPost');
+    }
     public function analytics()
     {
         $this->view('pages/admin/analytics');

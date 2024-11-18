@@ -42,8 +42,10 @@ class User extends Controller
                 if ($loggedInUser && $loggedInUser->Status === 'Active') {
                     // Create session
                     $this->createSession($loggedInUser->UserID);
+                } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
+                    die('Deactive');//TODO: Handle this
+
                 } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
-                    // die('Pending');//TODO: Handle this
                     if ($loggedInUser->Role === 'Student') {
                         $this->view('pages/login/wait_to_verify_stu');
                     } else if ($loggedInUser->Role === 'Company') {
@@ -51,6 +53,7 @@ class User extends Controller
                     }
                 } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
                     die('Not Approved');//TODO: Handle this
+                    
                 } else {
                     $data['password_err'] = 'Password incorrect';
                     $this->view('pages/login/login', $data);
@@ -136,7 +139,7 @@ class User extends Controller
             if ($user['Role'] === 'Student') {
                 $this->view('pages/student/view_profile', $data);
             } else if ($user['Role'] === 'Company') {
-                $this->view('pages/service_provider/view_profile', $data);//TODO: Create company profile view
+                $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {
                 $this->view('pages/admin/profile', $data); //TODO: Create admin profile view
             } else if ($user['Role'] === 'VT-Member') {

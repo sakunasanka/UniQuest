@@ -57,7 +57,7 @@ class userModel
             $userId = $this->db->lastInsertId();
 
             //Insert into Company table
-            $this->db->query('INSERT INTO Company (CompanyID, CompanyName, Description, CompanyLogo, StreetNo, AddressLine1, AddressLine2, City) VALUES (:companyID, :companyName, :description, :companyLogo, :streetNo, :addressLine1, :addressLine2, :city)');
+            $this->db->query('INSERT INTO Company (CompanyID, CompanyName, Description, CompanyLogo, StreetNo, AddressLine1, AddressLine2, City, Industry, Website) VALUES (:companyID, :companyName, :description, :companyLogo, :streetNo, :addressLine1, :addressLine2, :city, :industry, :website)');
             $this->db->bind(':companyID', $userId);
             $this->db->bind(':companyName', $data['companyName']);
             $this->db->bind(':description', $data['description']);
@@ -66,6 +66,8 @@ class userModel
             $this->db->bind(':addressLine1', $data['addressLine1']);
             $this->db->bind(':addressLine2', $data['addressLine2']);
             $this->db->bind(':city', $data['city']);
+            $this->db->bind(':industry', $data['industry']);
+            $this->db->bind(':website', $data['website']);
 
             //Execute query
             if (!$this->db->execute()) {
@@ -239,7 +241,7 @@ class userModel
                 $student = $this->db->single();
                 return array_merge((array)$user, (array)$student);
             } else if ($user-> Role === 'Company') {
-                $this->db->query('SELECT CompanyName, CompanyLogo FROM Company WHERE CompanyID = :userId');
+                $this->db->query('SELECT * FROM Company WHERE CompanyID = :userId');
                 $this->db->bind(':userId', $userId);
                 $company = $this->db->single();
                 return array_merge((array)$user, (array)$company);
@@ -259,6 +261,105 @@ class userModel
         } catch (PDOException $e) { // Catch database-specific exceptions
             error_log("Database Error: " . $e->getMessage());
             return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateProfile($data)
+    {
+        try {
+            // Start transaction
+            $this->db->beginTransaction();
+
+            //Update User table
+            $this->db->query('UPDATE User SET ContactNo = :contactNo WHERE UserID = :userId');
+            $this->db->bind(':contactNo', $data['contactNo']);
+            $this->db->bind(':userId', $data['userID']);
+
+            //Execute query
+            if (!$this->db->execute()) {
+                error_log('Failed to update User table');
+                $this->db->rollBack();
+                return false;
+            }
+
+            if ($data['role'] === 'Student') {
+                //Update Student table
+                $this->db->query('UPDATE Student SET FirstName = :firstName, LastName = :lastName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CV = :cv, ProfilePic = :profilePic WHERE StudentID = :userId'); 
+                $this->db->bind(':firstName', $data['firstName']);
+                $this->db->bind(':lastName', $data['lastName']);
+                $this->db->bind(':streetNo', $data['streetNo']);
+                $this->db->bind(':addressLine1', $data['addressLine1']);
+                $this->db->bind(':addressLine2', $data['addressLine2']);
+                $this->db->bind(':city', $data['city']);
+                $this->db->bind(':cv', $data['cvName']);
+                $this->db->bind(':profilePic', $data['profilePicName']);
+                $this->db->bind(':userId', $data['userID']);
+            
+                //Execute query
+                if (!$this->db->execute()) {
+                    error_log('Failed to update Student table');
+                    $this->db->rollBack();
+                    return false;
+                }
+            } else if ($data['role'] === 'Company') {
+                //Update Company table
+                $this->db->query('UPDATE Company SET CompanyName = :companyName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CompanyLogo = :companyLogo, Description = :description, Website = :website, Industry = :industry WHERE CompanyID = :userId');
+                $this->db->bind(':companyName', $data['companyName']);
+                $this->db->bind(':streetNo', $data['streetNo']);
+                $this->db->bind(':addressLine1', $data['addressLine1']);
+                $this->db->bind(':addressLine2', $data['addressLine2']);
+                $this->db->bind(':city', $data['city']);
+                $this->db->bind(':companyLogo', $data['companyLogoName']);
+                $this->db->bind(':description', $data['description']);
+                $this->db->bind(':website', $data['website']);
+                $this->db->bind(':industry', $data['industry']);
+                $this->db->bind(':userId', $data['userID']);
+            
+                //Execute query
+                if (!$this->db->execute()) {
+                    error_log('Failed to update Company table');
+                    $this->db->rollBack();
+                    return false;
+                }
+            } else if ($data['role'] === 'VT-Member') {
+                //Update VerificationTeam table
+                $this->db->query('UPDATE VerificationTeam SET FirstName = :firstName, LastName = :lastName WHERE VT_MemberID = :userId'); 
+                $this->db->bind(':firstName', $data['firstName']);
+                $this->db->bind(':lastName', $data['lastName']);
+                $this->db->bind(':userId', $data['userID']);
+            
+                //Execute query
+                if (!$this->db->execute()) {
+                    error_log('Failed to update VerificationTeam table');
+                    $this->db->rollBack();
+                    return false;
+                }
+            } else if ($data['role'] === 'Admin') {
+                //Update Admin table
+                $this->db->query('UPDATE Admin SET FirstName = :firstName, LastName = :lastName WHERE AdminID = :userId'); 
+                $this->db->bind(':firstName', $data['firstName']);
+                $this->db->bind(':lastName', $data['lastName']);
+                $this->db->bind(':userId', $data['userID']);
+            
+                //Execute query
+                if (!$this->db->execute()) {
+                    error_log('Failed to update Admin table');
+                    $this->db->rollBack();
+                    return false;
+                }
+            }
+
+            //Commit transaction
+            $this->db->commit();
+            return true;
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
