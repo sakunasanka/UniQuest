@@ -8,7 +8,7 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="placeholder.png" alt="Company Logo"> 
+            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Logo not available"> 
 
             <div class="view-card-content">
                 <h1>Acme Inc.</h1>
@@ -65,7 +65,10 @@
                         <button onclick="goToAddReview()" class="apply-btn">Add review</button>
                         <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                 </div>
-            </div>    
+            </div>  
+            <div class="make-complain">
+                <a href="<?php echo URLROOT; ?>/student/make_complain">Click here to make a complain about this company</a>  
+            </div>
         </div>
     </div>
 
