@@ -128,13 +128,15 @@ body {
     padding: 10px 0;
     border-top: 1px solid #eee;
     align-items: flex-start;
+    justify-content: space-between;
 }
 
 .view-card-info div {
     font-size: 16px;
     color: #333;
-    min-width: 200px;
-    flex: 1;
+    max-width: 200px;
+    /* flex: 1; */
+
 }
 
 .view-card-info div span {
