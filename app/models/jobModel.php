@@ -60,8 +60,8 @@ class jobModel
         return $this->db->execute();
     }
 
-    public function getComplains() {
-        $this->db->query('SELECT * FROM StudentCompanyComplaints');
+    public function getComplaintsJob() {
+        $this->db->query('SELECT * FROM StudentJobComplaints');
         $results = $this->db->resultSet();
         return $results;
     }

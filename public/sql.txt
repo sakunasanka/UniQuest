@@ -313,6 +313,31 @@ ORDER BY
     j.create_at DESC;
 
 
+-- -----------------------------------------------------
+-- View `uniquest`.`StudentJobComplaints`
+-- -----------------------------------------------------
+
+CREATE VIEW StudentJobComplaints AS
+SELECT 
+    jobs.Title AS JobTitle,
+    user.Email AS CompanyEmail,
+    complaint_jobs.Description AS Complaint,
+    CONCAT(student.FirstName, ' ', student.LastName) AS StudentName,
+    complaint_jobs.ComplainedDate,
+    complaint_jobs.Status
+FROM 
+    complaint_jobs
+JOIN 
+    jobs ON complaint_jobs.JobID = jobs.JobID
+JOIN 
+    company ON jobs.CompanyID = company.CompanyID
+JOIN 
+    user ON company.CompanyID = user.UserID
+JOIN 
+    student ON complaint_jobs.StudentID = student.StudentID;
+
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
