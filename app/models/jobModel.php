@@ -66,5 +66,17 @@ class jobModel
         return $results;
     }
 
-}
+    public function create_complaint($data) {
+        try {
+            $this->db->query('INSERT INTO complaint_jobs (studentId, jobID, description) VALUES (:studentId, :jobID, :description)');
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobID', $data['posts']->JobID);
+            $this->db->bind(':description', $data['complaint']);
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+}    
 ?>
