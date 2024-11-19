@@ -60,7 +60,7 @@
             </div>
 
             <div class="buttons btn-space-between">
-                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                <button onclick="goToAddReview()" data-page-id="<?php echo $data['post']->id; ?>" class="apply-btn">Add review</button>
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             </div>
         </div>

@@ -65,7 +65,7 @@ class Student extends Controller
         $this->view('pages/student/rate_review_company', $data);
     }
 
-    public function addReview()
+    public function addReview($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -104,7 +104,7 @@ class Student extends Controller
                 'rating' => '',
                 'comment' => '',
                 'user_id' => '',
-                'company_id' => '',
+                'company_id' => $id,
                 'rating_err' => '',
                 'comment_err' => ''
             ];

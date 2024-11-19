@@ -31,6 +31,9 @@
                 <textarea name="comment" placeholder="Share your experiences" required value = "<?php echo $data['comment']?>"></textarea>
                 <span class="error-msg"><?php echo !empty($data['comment_err']) ? $data['comment_err'] : ''; ?></span>
 
+                <input type="hidden" name="company_id" value="<?php echo htmlspecialchars($data['company_id']); ?>">
+
+
                 <button type="submit">Submit Review</button>
             </form>
         </div>
