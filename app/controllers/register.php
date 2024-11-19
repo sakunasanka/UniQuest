@@ -13,7 +13,7 @@ class Register extends Controller
     {
         return [
             'companyName' => ucfirst(trim($post['companyName'] ?? '')),
-            'email' => trim($post['email'] ?? ''),
+            'email' => strtolower(trim($post['email'] ?? '')),
             'password' => trim($post['password'] ?? ''),
             'confirm_password' => trim($post['confirm_password'] ?? ''),
             'contactNo' => trim($post['contactNo'] ?? ''),
@@ -24,7 +24,9 @@ class Register extends Controller
             'terms' => trim($post['terms'] ?? ''),
             'companyLogo' => $files['companyLogo'] ?? '',
             'companyLogoName' => '',
-            'description' => '',
+            'description' => ucfirst(trim($post['description'] ?? '')),
+            'website' => trim($post['website'] ?? ''),
+            'industry' => trim($post['industry'] ?? ''),
             'role' => 'Company',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Pending',
@@ -39,6 +41,8 @@ class Register extends Controller
             'addressLine2_err' => '',
             'city_err' => '',
             'description_err' => '',
+            'website_err' => '',
+            'industry_err' => '',
             'companyLogo_err' => '',
             'terms_err' => '',
             'role_err' => '',
@@ -51,7 +55,7 @@ class Register extends Controller
         return [
             'firstName' => ucfirst(trim($post['firstName'] ?? '')),
             'lastName' => ucfirst(trim($post['lastName'] ?? '')),
-            'email' => trim($post['email'] ?? ''),
+            'email' => strtolower(trim($post['email'] ?? '')),
             'password' => trim($post['password'] ?? ''),
             'confirm_password' => trim($post['confirm_password'] ?? ''),
             'contactNo' => trim($post['contactNo'] ?? ''),
@@ -135,7 +139,7 @@ class Register extends Controller
                 // Upload company logo
                 $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
                 if ($companyLogoResponse['success']) {
-                    $data['companyLogoName'] = $companyLogoResponse['fileName'];
+                    $data['companyLogoName'] = $companyLogoResponse['file_name'];
                 } else {
                     $data['companyLogo_err'] = $companyLogoResponse['error'];
                     $this->view('pages/register/company_register', $data);
