@@ -65,7 +65,9 @@ class Service_provider extends Controller
     }
 
     public function ongoing_jobs()
-    {   $posts = $this->model('M_jobpost')->getPosts();
+    {  
+        //$id = $_SESSION['user_id'];
+        $posts = $this->model('M_jobpost')->getPost();
         $data =[
             'posts' => $posts
         ];
@@ -105,7 +107,8 @@ class Service_provider extends Controller
     }
 
     public function edit_job($postId)
-    {   if($_SERVER['REQUEST_METHOD']=='POST'){
+    {   
+        if($_SERVER['REQUEST_METHOD']=='POST'){
         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         $data=[
