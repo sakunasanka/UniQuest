@@ -62,7 +62,7 @@ label {
 input[type="text"], input[type="tel"], input[type="email"], select, textarea {
     width: 100%;
     height: 50px;
-    padding: 10px;
+    padding: 15px;
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -75,7 +75,7 @@ textarea {
 
 input:focus, textarea:focus, select:focus {
     outline: none;
-    border: 1px solid #4bd681;
+    border: 2px solid #4bd681;
 }
 
 .form-actions {
@@ -83,7 +83,7 @@ input:focus, textarea:focus, select:focus {
     justify-content: center; /* Center the button horizontally */
     margin-top: 20px;
     position: absolute;
-    bottom: 100px; /* Position it at the bottom */
+    bottom: 10px; /* Position it at the bottom */
     width: 100%; /* Ensure it spans the container's width */
 }
 
@@ -97,10 +97,21 @@ input:focus, textarea:focus, select:focus {
     width: 150px;
     height: 50px;
     font-size: 1.2em;
+    
 }
 
 .submit-btn:hover {
     background-color: #038a27;
 }
 
+.employment-types {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Add space between the types */
+}
 
+.employment-types label {
+    margin-right: 10px;
+    font-size: 1em;
+}
+/* Hide the default radio button */
