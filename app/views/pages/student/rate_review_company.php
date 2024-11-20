@@ -18,7 +18,7 @@
                 <!-- Rating Input -->
                 <div class="rating-stars">
 
-                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
                         <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($data['rating'] == $i) ? 'checked' : ''; ?>>
                         <label for="star<?php echo $i; ?>">★</label>
                     <?php endfor; ?>

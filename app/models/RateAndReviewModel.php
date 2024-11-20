@@ -19,7 +19,7 @@ class RateAndReviewModel
             $this->db->bind(':rating', $data['rating']);
             $this->db->bind(':comment', $data['comment']);
             $this->db->bind(':user_id', $_SESSION['user_id']);
-            $this->db->bind(':company_id', 10040); 
+            $this->db->bind(':company_id', $data['company_id']); 
 
             // Execute query
             if (!$this->db->execute()) {

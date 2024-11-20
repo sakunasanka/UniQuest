@@ -159,6 +159,8 @@ class Student extends Controller
 
     public function addReview($id = null)
     {
+        $reviews = $this->model('M_jobpost')-> getpostbyid($id);
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
@@ -183,7 +185,7 @@ class Student extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview');
+                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
                 }

@@ -60,7 +60,7 @@
             </div>
 
             <div class="buttons btn-space-between">
-                <button onclick="goToAddReview()" data-page-id="<?php echo $data['post']->id; ?>" class="apply-btn">Add review</button>
+                <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button>
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             </div>
         </div>
@@ -100,3 +100,9 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+
+<script>
+    function goToAddReview(companyID){
+        window.location.href = "/uniquest/student/addReview/" + companyID;
+    }
+</script>
