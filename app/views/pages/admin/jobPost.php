@@ -1,4 +1,6 @@
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/jobPost.css">
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/jobPost.css">
 
 <body>
 
@@ -24,12 +26,14 @@
                 <input type="text" id="jobLocation" name="jobLocation" placeholder="Job Location" value="<?php  $data['job_location']; ?>">
                 <span class="form-invalid"><?php echo $data['job_location_err']; ?></span>
 
-                <label for="salaryRange">Salary Range:</label>
-                <input type="text" id="salaryRange" name="salaryRange" placeholder="Salary Range" value="<?php  $data['salary_range']; ?>">
-                <span class="form-invalid"><?php echo $data['salary_range_err']; ?></span>
+            
             </div>
 
             <div class="form-right">
+                <label for="salaryRange">Salary Range:</label>
+                <input type="text" id="salaryRange" name="salaryRange" placeholder="Salary Range" value="<?php  $data['salary_range']; ?>">
+                <span class="form-invalid"><?php echo $data['salary_range_err']; ?></span>
+            
                 <label for="qualifications">Required Qualifications:</label>
                 <input type="text" id="qualifications" name="qualifications" placeholder="Required Qualifications" value="<?php $data['required_skills']; ?>">
                 <span class="form-invalid"><?php echo $data['required_skills_err']; ?></span>
@@ -39,11 +43,11 @@
                 <span class="form-invalid"><?php echo $data['adress_err']; ?></span>
 
                 <label for="jobType">Job Type:</label>
-                <select id="jobType" name="jobType" required>
-                    <option value="Full-time">Full-time</option>
-                    <optivon value="Part-time">Part-time</optivon>
-                    <option value="Internship">Internship</option>
-                </select>
+                <div class="employment-types">
+                    <label><input type="radio" name="jobType" value="Full-time" required> Full-time</label>
+                    <label><input type="radio" name="jobType" value="Part-time" required> Part-time</label>
+                    <label><input type="radio" name="jobType" value="Internship" required> Internship</label>
+                </div>
 
                 <!-- <label for="contactNo">Contact No:</label>
                 <input type="tel" id="contactNo" name="contactNo" placeholder="Contact No" >

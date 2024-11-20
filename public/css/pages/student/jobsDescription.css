@@ -306,3 +306,21 @@ p{
 .submit-reply-btn:hover {
     background-color: #137d4a;
 }
+
+.make-complain > a {
+    display: inline-block;
+    color: #d9534f; /* Text color */
+    text-decoration: none;
+    font-size: 1.2em;
+    border-radius: 8px;
+    margin-top: 20px;
+    margin-left: 100px;
+    margin-right: auto;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.make-complain > a:hover {
+    color: #b4332f;
+    text-decoration: underline;
+}

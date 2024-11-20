@@ -16,10 +16,7 @@
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
                 <button class="add-btn">
                     <span class="material-symbols-outlined">post_add</span>
-                   
-                <a href="<?php echo URLROOT; ?>/service_provider/jobPost" >
                     <span class="add-btn-text">Post Job</span>
-                </a>
                 </button>
             </div>
             <table>
