@@ -125,7 +125,13 @@ class Admin extends Controller
 
     public function job_complaint()
     {
-        $this->view('pages/admin/job_complaint');
+        $complaints_job = $this->model('jobModel')->getComplaintsJob();
+
+        $data = [
+            'complaints_job' => $complaints_job
+        ];
+
+        $this->view('pages/admin/job_complaint', $data);
     }
 
     public function company_complaint()
