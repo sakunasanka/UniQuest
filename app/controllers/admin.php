@@ -114,8 +114,7 @@ class Admin extends Controller
                 // Load view with errors
                 $this->view('pages/admin/add_member', $data);
             }
-
-        } else  {
+        } else {
             // Init data
             $data = $this->prepareData();
             // Load view
@@ -142,7 +141,7 @@ class Admin extends Controller
     {
         $this->view('pages/admin/intern_mng');
     }
-  
+
     public function user_ver_all()
     {
         $this->view('pages/admin/user_ver_all');
@@ -182,5 +181,4 @@ class Admin extends Controller
     {
         $this->view('pages/admin/analytics');
     }
-
 }
