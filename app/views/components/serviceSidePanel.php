@@ -14,9 +14,9 @@
                 <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
             </button>
             <div class="dropdown-menu">
-                <button class="nav-btn" data-path="/uniquest/service_provider/ongoing_jobs">Ongoing Jobs</button>
+                <button class="nav-btn" data-path="/uniquest/service_provider/ongoing_jobs">Active Jobs</button>
                 <button class="nav-btn" data-path="/uniquest/service_provider/offered_jobs">Offered Jobs</button>
-                <button class="nav-btn" data-path="/uniquest/service_provider/publish_job">Publish a Job</button>
+                <button class="nav-btn" data-path="/uniquest/service_provider/jobpost">Publish a Job</button>
             </div>
         </div>
 
@@ -53,7 +53,7 @@
         </button>
 
         <!-- Company info -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/company">
+        <button class="nav-btn" data-path="/uniquest/user/profile">
         <span class="material-symbols-outlined">info</span>
             Company Info
         </button>
