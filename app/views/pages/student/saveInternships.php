@@ -8,8 +8,8 @@
     <div class="content-area">
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/saveInternships">Saved Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
+                <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/saveInternships">Saved Internships</button>
+                <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
         </div>
         <div class="container">
             <div class="search-bar-container">
@@ -17,36 +17,36 @@
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
-                    <input type="text" placeholder="Search company..." class="search-input">
+                    <input type="text" placeholder="Search jobs, internships..." class="search-input">
                     <div class="filters-button">
                         <i class="fa-solid fa-filter"></i>
                         <span>Filters</span>
                     </div>
                 </div>
             </div>
-        
+
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
-                        <div class="card-logo" onclick="goToCompanyDescription()">
-                            <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
+                        <div class="card-logo" onclick="goToInternshipDescription()">
+                            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="job">
                         </div>
-                        <div class="card-content">
-                            <div class="content-hover-class" onclick="goToCompanyDescription()">
+                        <div class="card-content" >
+                            <div class="content-hover-class" onclick="goToInternshipDescription()">
                                 <div class="title-content">
-                                    <h3 class="company-title">Spotify</h3>
+                                    <h3 class="job-title">Software Engineering Internship</h3>
                                     <div class="job-rating">
                                         <i class="fa fa-star"></i> 4.8
                                     </div>
                                 </div>
-                                <p class="review-count">Based on <span>126</span> student reviews</p>
-
+                                <p class="company-name"><b>Begood solutions</b> </p>
+                                
+                            
+                                
                                 <div class="job-location-details">
                                     Colombo, Western Province
                                 </div>
                             </div>
-                            
-
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
@@ -62,7 +62,7 @@
                     </div>
                 <?php endfor; ?>
             </div>
-        </div>
+        </div>  
     </div>
 </div>
 
@@ -90,7 +90,7 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>
-    function goToCompanyDescription() {
-        window.location.href = "/uniquest/student/companydescription";
+    function goToInternshipDescription() {
+        window.location.href = "/uniquest/student/internshipdescription";
     }
 </script>

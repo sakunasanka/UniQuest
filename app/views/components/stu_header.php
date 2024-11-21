@@ -30,7 +30,7 @@
                 <li><a href="/uniquest/contact" class="hov">Contact Us</a></li>
             </ul>
             <div class="nav-icons">
-                <a href="/uniquest/student/view_profile"><span class="material-symbols-outlined">account_circle</span></a>
+                <a href="/uniquest/user/profile"><span class="material-symbols-outlined">account_circle</span></a>
                 <a href="/uniquest/student/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>

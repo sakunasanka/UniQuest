@@ -8,7 +8,7 @@
 <!-- Sidebar -->
 <div class="content-sub">
     <div class="content-sub-1">
-        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
     </div>
     <!-- Content Area -->
     <!-- Sidebar -->

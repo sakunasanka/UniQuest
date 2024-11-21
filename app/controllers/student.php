@@ -230,6 +230,11 @@ class Student extends Controller
         $this->view('pages/student/saveCompanies');
     }
 
+    public function saveInternships()
+    {
+        $this->view('pages/student/saveInternships');
+    }
+
     public function make_complain($id = null)
     {
         $posts = $this->model('M_jobpost')->getpostbyid($id);
