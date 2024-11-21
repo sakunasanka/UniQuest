@@ -230,9 +230,31 @@ class Student extends Controller
         $this->view('pages/student/saveCompanies');
     }
 
-    public function make_complain()
+    public function make_complain($id = null)
     {
-        $this->view('pages/student/make_complain');
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'complaint' => trim($_POST['complaint']),
+                'posts' => $posts
+            ];
+            $this->model('jobModel')->create_complaint($data);
+            
+            Redirect::to(URLROOT . '/student/make_complain/'.$id);
+              
+        }
+
+        else {
+            $data = [
+                'complaint' => '',
+                'posts' => $posts
+            ];
+            $this->view('pages/student/make_complain', $data);
+        }
+        
     }
 
     public function companyDescription()

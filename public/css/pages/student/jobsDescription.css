@@ -306,3 +306,26 @@ p{
 .submit-reply-btn:hover {
     background-color: #137d4a;
 }
+
+.make-complain-btn{
+    background-color: transparent;
+    display: inline;
+    border: none;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 40px;
+    margin-left: 10px;
+    margin-right: auto;
+    font-size: 1.1em;
+    color: #d9534f !important;
+}
+
+.make-complain-btn p{
+    font-size: 1.1em;
+}
+
+.make-complain-btn p:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #b4332f !important;
+}
