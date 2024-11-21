@@ -399,6 +399,6 @@ class Service_provider extends Controller
             die('Something went wrong');
         }
         } 
-}
+    }
 
 }

@@ -187,5 +187,9 @@ class User extends Controller
             $this->view('popups/student/deactivate_account', $data);
         }
     }
+
+    public function errorPage() {
+        $this->view('pages/404_not_found/page_not_found');
+    }
 }
 ?>
