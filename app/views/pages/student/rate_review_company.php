@@ -44,7 +44,7 @@
             <?php if (!empty($data['reviews'])): ?>
                 <?php foreach ($data['reviews'] as $review): ?>
                     <div class="review-card">
-                        <h3><?php echo htmlspecialchars($review->company_name); ?></h3>
+                        <h3><?php echo htmlspecialchars($review->CompanyID); ?></h3>
                         <div class="rating">Rating: <?php echo $review->Rating; ?> ★</div>
                         <p><?php echo htmlspecialchars($review->Comment); ?></p>
                         <a href="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" class="edit-btn">Edit</a> <!-- Edit button -->
