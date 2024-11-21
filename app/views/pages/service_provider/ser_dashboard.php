@@ -11,7 +11,7 @@
             </button>
         </div>
         <div class="grid-container">
-            <div class="card">
+            <div class="card" onclick="goToJobs()">
                 <span class="material-symbols-outlined green-icon"> work </span>
                 <h2>Jobs</h2>
                 <p>View, Edit and manage your jobs.</p>
@@ -22,7 +22,7 @@
                 <p class="card-subtext">Job Clicks (Last month)</p>
             </div>
 
-            <div class="card">
+            <div class="card" onclick="goToApplications()">
                 <span class="material-symbols-outlined green-icon"> assignment </span>
                 <h2>Applications</h2>
                 <p>View applications for your jobs.</p>
@@ -38,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" onclick="goToAnalytics()">
                 <span class="material-symbols-outlined green-icon"> monitoring </span>
                 <h2>Analytics</h2>
                 <p>View analytics and generate reports related to jobs.</p>
@@ -49,7 +49,7 @@
                 <p class="card-subtext">Company Rating (Last month)</p>
             </div>
 
-            <div class="card">
+            <div class="card" onclick="goToReviews()">
                 <span class="material-symbols-outlined green-icon"> rate_review </span>
                 <h2>Community Reviews</h2>
                 <p>View, respond to, and manage your reviews.</p>
@@ -64,3 +64,21 @@
 </div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToJobs() {
+        window.location.href = "/uniquest/service_provider/ongoing_jobs";
+    }
+
+    function goToApplications() {
+        window.location.href = "/uniquest/service_provider/new_applications";
+    }
+
+    function goToAnalytics() {
+        window.location.href = "/uniquest/service_provider/analytics";
+    }
+
+    function goToReviews() {
+        window.location.href = "/uniquest/service_provider/reviews";
+    }
+</script>
