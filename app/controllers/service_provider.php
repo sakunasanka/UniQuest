@@ -209,7 +209,7 @@ class Service_provider extends Controller
             'post' => $posts
         ];
         // echo json_encode($data);
-        $this->view('pages/student/jobsDescription', $data);
+        $this->view('pages/service_provider/view_job', $data);
     }
   
     public function edit_profile()
