@@ -23,7 +23,7 @@
                                 <img src="<?php echo URLROOT; ?>/images/profile_pic_preview.png" alt="profilepic-placeholder">
                             </div>
                             <div class="file-content">
-                                <span>Drag & Drop to Upload file</span>
+                                <span>Drag & Drop to Upload Company Logo</span>
                                 <button type="button" class="browse-btn">Browse File
                                     <input type="file" id="companyLogo" name="companyLogo" accept=".jpg, .jpeg, .png">
                                 </button>
@@ -107,13 +107,13 @@
                 <div class="form-row">
                     <div class="input-container">
                         <label for="password">Password<span class="req"> *</span></label>
-                        <input type="password" id="password" name="password" value="<?php echo $data['password']; ?>" placeholder="Enter Password" required>
+                        <input type="password" id="password" name="password" value="<?php echo $data['password']; ?>" placeholder="Enter Password" required minlength="8">
                         <span class="req-msg">Password must contain at least 8 characters, including UPPER/lowercase and numbers</span>
                         <span class="error-msg"><?php echo !empty($data['password_err']) ? $data['password_err'] : ''; ?></span>
                     </div>
                     <div class="input-container">
                         <label for="confirm_password">Confirm Password<span class="req"> *</span></label>
-                        <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $data['confirm_password']; ?>" placeholder="Enter Confirm Password" required>
+                        <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $data['confirm_password']; ?>" placeholder="Enter Confirm Password" required minlength="8">
                         <span class="error-msg"><?php echo !empty($data['confirm_password_err']) ? $data['confirm_password_err'] : ''; ?></span>
                     </div>
                 </div>
