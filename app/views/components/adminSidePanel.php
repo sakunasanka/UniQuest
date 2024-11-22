@@ -41,7 +41,7 @@
         </button>
     </nav>
 
-    <button class="nav-btn logout-btn" data-path="/uniquest/admin/reports">
+    <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">
     <span class="material-symbols-outlined"> logout </span>
         Logout
     </button>

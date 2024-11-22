@@ -126,7 +126,7 @@ class User extends Controller
         session_destroy();
     
         // Redirect to login page
-        Redirect::to(URLROOT . '/login');
+        Redirect::to(URLROOT . '/home');
     }
 
     public function profile()
