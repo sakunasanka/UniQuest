@@ -1,0 +1,167 @@
+body {
+    font-family: Arial;
+    background-color: #f7f7f7;
+    margin: 0;
+}
+.s_e_p_content{
+    display:flex;
+    width:calc(100% - 250px);
+    margin-left:250px;
+    margin-top:100px;
+    padding: 50px;
+}
+form {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    width:100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"], input[type="email"], input[type="url"], textarea {
+    width: calc(100% - 100px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="file"] {
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: calc(100% - 100px);
+    height: 100px;
+    resize: vertical;
+    font-family: Arial;
+    margin-right: auto;
+}
+
+input[type="submit"], input[type="button"] {
+    background-color: #299b63;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+
+}
+
+input[type="submit"]:hover, input[type="button"]:hover {
+     background-color: #3cb56e;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+    border: 2px solid #299b63;
+    outline: none; 
+}
+
+input[type="button"] {
+    background-color: #6c757d;
+    margin-right: 10px;
+}
+
+input[type="button"]:hover {
+    background-color: #5a6268;
+}
+
+.error-msg {
+    color: red;
+    font-size: 1.2rem;
+    margin-top: 5px;
+    padding-left: 5px;
+}
+
+.file-drop-area {
+    background-color: #fff;
+    width: calc(100% - 100px);
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    overflow: hidden;
+    margin: 0;
+    border-radius: 10px;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #ddd;
+    transition: border-color 0.3s ease-in;
+    gap: 50px;
+}
+
+.profile-pic-preview img {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.file-drop-area:hover {
+    border-color: #32a852;
+}
+
+.file-drop-area input[type="file"] {
+    display: none;
+}
+
+.browse-btn {
+    background-color: #32a852;
+    color: white;
+    border: none;
+    padding: 8px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.browse-btn:hover {
+    background-color: #038a27;
+}
+
+.file-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.file-content span {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.file-name {
+    display: inline-block;
+    max-width: 160px; /* Adjust max width as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}

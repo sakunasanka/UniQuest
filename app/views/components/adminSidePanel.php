@@ -5,7 +5,7 @@
             Dashboard
         </button>
 
-        <button class="nav-btn" data-paths="/uniquest/admin/students_mng,/uniquest/admin/company_mng,/uniquest/admin/verTeam_mng">
+        <button class="nav-btn" data-paths="/uniquest/admin/students_mng,/uniquest/admin/company_mng,/uniquest/admin/verTeam_mng,/uniquest/admin/add_member,/uniquest/admin/add_student,/uniquest/admin/add_company">
         <span class="material-symbols-outlined"> manage_accounts</span>
             User Management
         </button>
@@ -39,8 +39,13 @@
         <span class="material-symbols-outlined"> summarize </span>
             Reports
         </button>
-
     </nav>
+
+    <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">
+    <span class="material-symbols-outlined"> logout </span>
+        Logout
+    </button>
+    
 </aside>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSidePanel.js"></script>
