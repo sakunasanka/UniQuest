@@ -6,12 +6,12 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
 
     <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
-            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_pending'">
+            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_pending'">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
                 <h1>User Verification</h1>
             </button>
@@ -101,8 +101,8 @@
                 </div>
 
                 <div class="btn-row">
-                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_reject/<?php echo $data['user']['UserID']; ?>'">Reject</button>
-                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_approve/<?php echo $data['user']['UserID']; ?>'">Approve</button>
+                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_reject/<?php echo $data['user']['UserID']; ?>'">Reject</button>
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_approve/<?php echo $data['user']['UserID']; ?>'">Approve</button>
                 </div>
             </div>
 

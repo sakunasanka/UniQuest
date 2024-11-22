@@ -8,8 +8,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/user_ver_all">All</button>
-            <button class="tab" data-path="/UniQuest/verification_team/user_ver_pending">Pending</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/user_ver_pending">Pending</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/verification_team/user_ver_not">Not Approved</button>
         </div>
         <div class="table-block">
@@ -36,7 +35,7 @@
                             <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
                             <td><span class="status inactive">Not Approved</span></td>
                             <td class="action">
-                                <span class="material-symbols-outlined action-btn view">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_detail/<?php echo $user->UserID; ?>'">
                                     preview
                                 </span>
                             </td>

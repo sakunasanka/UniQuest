@@ -8,8 +8,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/user_ver_all">All</button>
-            <button class="tab" data-path="/UniQuest/admin/user_ver_pending">Pending</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/user_ver_pending">Pending</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/user_ver_not">Not Approved</button>
         </div>
         <div class="table-block">

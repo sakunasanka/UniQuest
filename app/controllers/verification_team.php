@@ -14,18 +14,18 @@ class Verification_team extends Controller
         echo 'verification_team/index';
     }
 
-    public function user_ver_all()
-    {
-        try {
-            $users = $this->model->getAllStudentsAndCompanies();
-            $data = [
-                'users' => $users
-            ];
-            $this->view('pages/verification_team/user_ver_all', $data);
-        } catch (Exception $e) {
-            die($e->getMessage()); //TODO: Handle this
-        }
-    }
+    // public function user_ver_all()
+    // {
+    //     try {
+    //         $users = $this->model->getAllStudentsAndCompanies();
+    //         $data = [
+    //             'users' => $users
+    //         ];
+    //         $this->view('pages/verification_team/user_ver_all', $data);
+    //     } catch (Exception $e) {
+    //         die($e->getMessage()); //TODO: Handle this
+    //     }
+    // }
 
     public function user_ver_pending()
     {
@@ -48,6 +48,43 @@ class Verification_team extends Controller
                 'users' => $users
             ];
             $this->view('pages/verification_team/user_ver_not', $data);
+        } catch (Exception $e) {
+            die($e->getMessage());//TODO: Handle this
+        }
+    }
+
+    public function user_ver_detail($userID)
+    {
+        try {
+            $user = $this->model->getUserDetails($userID);
+            $data = [
+                'user' => $user
+            ];
+            if ($user['Role'] == 'Student') {
+                $this->view('pages/verification_team/stu_ver_detail', $data);
+            } else if ($user['Role'] == 'Company') {
+                $this->view('pages/verification_team/com_ver_detail', $data);
+            }
+        } catch (Exception $e) {
+            die($e->getMessage());//TODO: Handle this
+        }
+    }
+
+    public function user_ver_approve($userID)
+    {
+        try {
+            $this->model->approveUser($userID);
+            Redirect::to(URLROOT . '/verification_team/user_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage());//TODO: Handle this
+        }
+    }
+
+    public function user_ver_reject($userID)
+    {
+        try {
+            $this->model->rejectUser($userID);
+            Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage());//TODO: Handle this
         }

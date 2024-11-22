@@ -154,18 +154,18 @@ class Admin extends Controller
         $this->view('pages/admin/intern_mng');
     }
 
-    public function user_ver_all()
-    {
-        try {
-            $users = $this->model->getAllStudentsAndCompanies();
-            $data = [
-                'users' => $users
-            ];
-            $this->view('pages/admin/user_ver_all', $data);
-        } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
-        }
-    }
+    // public function user_ver_all()
+    // {
+    //     try {
+    //         $users = $this->model->getAllStudentsAndCompanies();
+    //         $data = [
+    //             'users' => $users
+    //         ];
+    //         $this->view('pages/admin/user_ver_all', $data);
+    //     } catch (Exception $e) {
+    //         die($e->getMessage());//TODO: Handle this
+    //     }
+    // }
 
     public function user_ver_pending()
     {
@@ -200,7 +200,11 @@ class Admin extends Controller
             $data = [
                 'user' => $user
             ];
-            $this->view('pages/admin/stu_ver_detail', $data);
+            if ($user['Role'] == 'Student') {
+                $this->view('pages/admin/stu_ver_detail', $data);
+            } else if ($user['Role'] == 'Company') {
+                $this->view('pages/admin/com_ver_detail', $data);
+            }
         } catch (Exception $e) {
             die($e->getMessage());//TODO: Handle this
         }
@@ -210,7 +214,7 @@ class Admin extends Controller
     {
         try {
             $this->model->approveUser($userID);
-            Redirect::to(URLROOT . '/admin/user_ver_all');
+            Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage());//TODO: Handle this
         }
@@ -220,7 +224,7 @@ class Admin extends Controller
     {
         try {
             $this->model->rejectUser($userID);
-            Redirect::to(URLROOT . '/admin/user_ver_all');
+            Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage());//TODO: Handle this
         }

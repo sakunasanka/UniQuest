@@ -387,22 +387,22 @@ class userModel
         }
     }
 
-    public function getAllStudentsAndCompanies()
-    {
-        try {
-            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE Role = "Student" OR Role = "Company"');
-            $users = $this->db->resultSet();
-            return $users;
+    // public function getAllStudentsAndCompanies()
+    // {
+    //     try {
+    //         $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE Role = "Student" OR Role = "Company"');
+    //         $users = $this->db->resultSet();
+    //         return $users;
 
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
 
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
-        }
-    }
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     public function getPendingStudentsAndCompanies()
     {
