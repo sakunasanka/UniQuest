@@ -56,7 +56,7 @@ class Service_provider extends Controller
     }
     public function jobPostform()
     {
-        $this->view('pages/admin/jobPost');
+        $this->view('pages/service_provider/jobPost');
     }
 
     public function report()
@@ -348,7 +348,7 @@ class Service_provider extends Controller
                 }
             } else {
                 //loading view with errors
-                $this->view('pages/admin/jobPost', $data);
+                $this->view('pages/service_provider/jobPost', $data);
             }
         }
             else{
@@ -371,7 +371,7 @@ class Service_provider extends Controller
                     'salary_range_err'=>'',
                     'Description_err' => ''
                 ];
-                $this->view('pages/admin/jobPost', $data);
+                $this->view('pages/service_provider/jobPost', $data);
             }
        
     }
@@ -399,6 +399,6 @@ class Service_provider extends Controller
             die('Something went wrong');
         }
         } 
-}
+    }
 
 }

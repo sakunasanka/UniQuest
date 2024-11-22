@@ -194,30 +194,26 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `uniquest`.`Complaint`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `uniquest`.`complaint_jobs` (
-  `ComplaintID` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `uniquest`.`Complaint` (
+  `ComplaintID` INT NOT NULL,
   `Description` VARCHAR(45) NULL,
   `Status` VARCHAR(45) NULL,
   `StudentID` INT NOT NULL,
-  `JobID` INT NOT NULL,
-  ComplainedDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ComplaintID`),
+  `CompanyID` INT NOT NULL,
+  PRIMARY KEY (`ComplaintID`, `StudentID`, `CompanyID`),
   INDEX `fk_Complaint_Student1_idx` (`StudentID` ASC),
-  INDEX `fk_Complaint_ServiceProvider1_idx` (`JobID` ASC),
+  INDEX `fk_Complaint_ServiceProvider1_idx` (`CompanyID` ASC),
   CONSTRAINT `fk_Complaint_Student1`
     FOREIGN KEY (`StudentID`)
     REFERENCES `uniquest`.`student` (`StudentID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_Complaint_ServiceProvider1`
-    FOREIGN KEY (`JobID`)
-    REFERENCES `uniquest`.`Jobs` (`JobID`)
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquest`.`company` (`CompanyID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
-ALTER TABLE `uniquest`.`complaint_jobs`
-MODIFY COLUMN `Status` ENUM('Pending', 'Resolved') NOT NULL DEFAULT 'Pending';
-
 
 -- -----------------------------------------------------
 -- Table `uniquest`.`Review`
@@ -340,6 +336,34 @@ JOIN
 JOIN 
     student ON complaint_jobs.StudentID = student.StudentID;
 
+
+-- -----------------------------------------------------
+-- View `uniquest`.`CompanyReviews`
+-- -----------------------------------------------------
+
+CREATE VIEW CompanyReviews AS
+SELECT 
+    c.CompanyID,
+    c.CompanyName,
+    c.Description AS CompanyDescription,
+    c.CompanyLogo,
+    r.ReviewID,
+    r.Rating,
+    r.Comment,
+    r.StudentID,
+    r.created_at,
+    CONCAT(s.FirstName, ' ', s.LastName) AS StudentName
+
+FROM 
+    company c
+JOIN 
+    Review r
+ON 
+    c.CompanyID = r.CompanyID
+JOIN 
+    student s
+ON 
+    r.StudentID = s.StudentID;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
