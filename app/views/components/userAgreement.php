@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Agreement - UniQuest</title>
-    <link rel="stylesheet" href="css/components/userAgreement.css"> <!-- Link to external CSS file -->
-</head>
-<body>
-    <div class="container">
+<?php require APPROOT . '/views/components/header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/userAgreement.css">
+
+<div class="main-container">
+    <main class="container">
         <h1>User Agreement</h1>
 
         <h2>Introduction</h2>
@@ -56,8 +51,9 @@
         <h2>Changes to the Agreement</h2>
         <p>We may modify this User Agreement from time to time. Any changes will be posted on our website, and your continued use of UniQuest after such changes have been posted constitutes your acceptance of the new terms.</p>
 
-<h2>Contact Information</h2>
-        <p>If you have any questions or concerns about this User Agreement, please contact us at support@uniquest.com.</p>
-    </div>
-</body>
-</html>
+        <h2>Contact Information</h2>
+        <p>If you have any questions or concerns about this User Agreement, please <a href="">contact us</a> at <a href="mailto:support@uniquest.com">support@uniquest.com</a>.</p>
+    </main>
+</div>
+
+<?php require APPROOT . '/views/components/footer.php'; ?>
