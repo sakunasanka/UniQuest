@@ -77,6 +77,15 @@ a:hover {
     text-decoration: underline;
 }
 
+.privacy-policy {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.privacy-policy:hover {
+    text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {

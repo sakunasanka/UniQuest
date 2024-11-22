@@ -9,7 +9,7 @@
         <p>Welcome to UniQuest, a platform designed to connect university students with part-time jobs and internships, and opportunities. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.</p>
 
         <h2>Acceptance of Terms</h2>
-        <p>By registering, accessing, or using UniQuest, you agree to be bound by this User Agreement and our <span>Privacy Policy</span>. If you do not agree with any of these terms, please do not use our services.</p>
+        <p>By registering, accessing, or using UniQuest, you agree to be bound by this User Agreement and our <span class="privacy-policy" onclick="goToPrivacyPolicy()">Privacy Policy</span>. If you do not agree with any of these terms, please do not use our services.</p>
 
         <h2>User Eligibility</h2>
         <p>UniQuest is available to university students, and for companies. By using our services, you represent and warrant that you are at least 18 years old and have the authority to enter into this agreement.</p>
@@ -52,8 +52,14 @@
         <p>We may modify this User Agreement from time to time. Any changes will be posted on our website, and your continued use of UniQuest after such changes have been posted constitutes your acceptance of the new terms.</p>
 
         <h2>Contact Information</h2>
-        <p>If you have any questions or concerns about this User Agreement, please <a href="<?php echo URLROOT; ?>/contact_admin">click here</a> to contact us via the website or contact us at <a href="mailto:support@uniquest.com">support@uniquest.com</a>.</p>
+        <p>If you have any questions or concerns about this User Agreement, please <a href="<?php echo URLROOT; ?>/student/contact_admin">click here</a> to contact us via the website or contact us at <a href="mailto:support@uniquest.com">support@uniquest.com</a>.</p>
     </main>
 </div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToPrivacyPolicy() {
+        window.location.href = "<?php echo URLROOT; ?>/privacyStatement";
+    }
+</script>
