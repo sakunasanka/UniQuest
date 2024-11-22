@@ -191,6 +191,10 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`BookmarkJobs` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+ALTER TABLE `uniquest`.`BookmarkJobs`
+ADD COLUMN `bookmark_create_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+
 -- -----------------------------------------------------
 -- Table `uniquest`.`Complaint`
 -- -----------------------------------------------------
@@ -300,7 +304,8 @@ SELECT
     u.Email,        -- Company's email from User table
     u.ContactNo,  -- Company's contact number from User table
     j.create_at AS jobs_create_at,    -- Job creation timestamp
-    c.create_at AS company_create_att -- Company creation timestamp
+    c.create_at AS company_create_at, -- Company creation timestamp
+    bj.bookmark_create_at
 FROM 
     BookmarkJobs bj
 INNER JOIN 
@@ -310,7 +315,7 @@ INNER JOIN
 INNER JOIN 
     user u ON c.CompanyID = u.UserID
 ORDER BY 
-    j.create_at DESC;
+    bj.bookmark_create_at DESC;
 
 
 -- -----------------------------------------------------
