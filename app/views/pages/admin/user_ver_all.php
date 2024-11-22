@@ -19,7 +19,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">User Name</th>
+                        <th onclick="sortTable(0)">User ID</th>
                         <th onclick="sortTable(1)">Email</th>
                         <th onclick="sortTable(2)">Account Type</th>
                         <th onclick="sortTable(3)">Requested Date</th>
@@ -28,127 +28,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>User 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Company</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Not Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Company</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Not Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Not Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Company</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Company</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['users'] as $user) : ?>
+                        <tr>
+                            <td><?php echo $user->UserID; ?></td>
+                            <td><?php echo $user->Email; ?></td>
+                            <td><?php echo $user->Role; ?></td>
+                            <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
+                            <td>
+                                <?php if ($user->Status == 'Pending') : ?>
+                                    <span class="status pending">Pending</span>
+                                <?php elseif ($user->Status == 'Not Approved') : ?>
+                                    <span class="status inactive">Not Approved</span>
+                                <?php else : ?>
+                                    <span class="status active">Approved</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="action">
+                                <span class="material-symbols-outlined action-btn view">
+                                    preview
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

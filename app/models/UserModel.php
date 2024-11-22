@@ -386,5 +386,56 @@ class userModel
             return false;
         }
     }
+
+    public function getAllStudentsAndCompanies()
+    {
+        try {
+            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE Role = "Student" OR Role = "Company"');
+            $users = $this->db->resultSet();
+            return $users;
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getPendingStudentsAndCompanies()
+    {
+        try {
+            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Pending"');
+            $users = $this->db->resultSet();
+            return $users;
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getNotVerifiedStudentsAndCompanies()
+    {
+        try {
+            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Not Approved"');
+            $users = $this->db->resultSet();
+            return $users;
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>
