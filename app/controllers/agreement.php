@@ -8,6 +8,6 @@ class Agreement extends Controller
 
     public function index()
     {
-        $this->view('components/userAgreement');
+        $this->view('pages/userAgreement/userAgreement');
     }
 }
