@@ -3,7 +3,7 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
     <!-- Content Area -->
     <main class="content-area">
@@ -33,19 +33,16 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Sakith</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
+                        <td>Sunil Perera</td>
+                        <td>sunil@uoc.com</td>
+                        <td>0774585126</td>
+                        <td>2024-10-25</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
+                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/stu_detail'">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn edit" data-tooltip="Edit Profile">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
+                            <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
                             </span>
                         </td>
@@ -59,9 +56,6 @@
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
                             </span>
                             <span class="material-symbols-outlined action-btn activate">
                                 person_add
@@ -78,9 +72,6 @@
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
                             </span>
@@ -95,9 +86,6 @@
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
                             </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
@@ -114,9 +102,6 @@
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
                             <span class="material-symbols-outlined action-btn activate">
                                 person_add
                             </span>
@@ -131,9 +116,6 @@
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
                             </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
@@ -150,9 +132,6 @@
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
                             <span class="material-symbols-outlined action-btn activate">
                                 person_add
                             </span>
@@ -167,9 +146,6 @@
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
                             </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
@@ -186,9 +162,6 @@
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
                             <span class="material-symbols-outlined action-btn activate">
                                 person_add
                             </span>
@@ -203,9 +176,6 @@
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
                             </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
@@ -222,9 +192,6 @@
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
                             </span>
@@ -239,9 +206,6 @@
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
                             </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove
@@ -258,9 +222,6 @@
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
                             <span class="material-symbols-outlined action-btn activate">
                                 person_add
                             </span>
@@ -275,9 +236,6 @@
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
                             </span>
                             <span class="material-symbols-outlined action-btn deactivate">
                                 person_remove

@@ -14,18 +14,15 @@ class Verification_team extends Controller
         echo 'verification_team/index';
     }
 
-    // public function user_ver_all()
-    // {
-    //     try {
-    //         $users = $this->model->getAllStudentsAndCompanies();
-    //         $data = [
-    //             'users' => $users
-    //         ];
-    //         $this->view('pages/verification_team/user_ver_all', $data);
-    //     } catch (Exception $e) {
-    //         die($e->getMessage()); //TODO: Handle this
-    //     }
-    // }
+    public function user_verified()
+    {
+        $this->view('pages/verification_team/user_verified');
+    }
+
+    public function job_verified()
+    {
+        $this->view('pages/verification_team/job_verified');
+    }
 
     public function user_ver_pending()
     {
@@ -70,6 +67,14 @@ class Verification_team extends Controller
         }
     }
 
+    public function stu_detail() {
+        $this->view('pages/verification_team/stu_detail');
+    }
+
+    public function com_detail() {
+        $this->view('pages/verification_team/com_detail');
+    }
+
     public function user_ver_approve($userID)
     {
         try {
@@ -88,11 +93,6 @@ class Verification_team extends Controller
         } catch (Exception $e) {
             die($e->getMessage());//TODO: Handle this
         }
-    }
-
-    public function job_ver_all()
-    {
-        $this->view('pages/verification_team/job_ver_all');
     }
 
     public function job_ver_pending()

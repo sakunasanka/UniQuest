@@ -15,12 +15,12 @@
             Jobs Management
         </button>
 
-        <button class="nav-btn" data-paths="/UniQuest/admin/user_ver_all,/UniQuest/admin/user_ver_pending,/UniQuest/admin/user_ver_not">
+        <button class="nav-btn" data-paths="/UniQuest/admin/user_ver_pending,/UniQuest/admin/user_ver_not">
         <span class="material-symbols-outlined"> person_check </span>
             User Verification
         </button>
 
-        <button class="nav-btn" data-paths="/UniQuest/admin/job_ver_all,/UniQuest/admin/job_ver_pending,/UniQuest/admin/job_ver_not">
+        <button class="nav-btn" data-paths="/UniQuest/admin/job_ver_pending,/UniQuest/admin/job_ver_not">
         <span class="material-symbols-outlined"> domain_verification </span>
             Jobs Verification
         </button>

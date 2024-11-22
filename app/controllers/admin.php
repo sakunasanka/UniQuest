@@ -154,18 +154,15 @@ class Admin extends Controller
         $this->view('pages/admin/intern_mng');
     }
 
-    // public function user_ver_all()
-    // {
-    //     try {
-    //         $users = $this->model->getAllStudentsAndCompanies();
-    //         $data = [
-    //             'users' => $users
-    //         ];
-    //         $this->view('pages/admin/user_ver_all', $data);
-    //     } catch (Exception $e) {
-    //         die($e->getMessage());//TODO: Handle this
-    //     }
-    // }
+    public function stu_detail()
+    {
+        $this->view('pages/admin/stu_detail');
+    }
+
+    public function com_detail()
+    {
+        $this->view('pages/admin/com_detail');
+    }
 
     public function user_ver_pending()
     {

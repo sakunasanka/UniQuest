@@ -58,16 +58,6 @@
                         <span class="colon">:</span>
                         <span class="kk"><a href="<?php echo UPLOADROOT; ?>/cvs/<?php echo $data['user']['CV'] ?>" target="_blank">View CV</a></span>
                     </div>
-                    <div class="info-row">
-                        <?php if (!empty($data['user']['CV'])): ?>
-                            <iframe
-                                src="<?php echo UPLOADROOT; ?>/cvs/<?php echo htmlspecialchars($data['user']['CV']); ?>"
-                                style="width:100%; height:600px; border:1px solid #ccc;">
-                            </iframe>
-                        <?php else: ?>
-                            <p>No CV uploaded yet.</p>
-                        <?php endif; ?>
-                    </div>
                 </div>
 
                 <h3>University information</h3>

@@ -23,11 +23,6 @@
                                 ? URLROOT . '/images/profile_pic_preview.png'
                                 : UPLOADROOT . '/profile_pictures/company/' . $data['user']['CompanyLogo']; ?>"
                     alt="Profile Picture">
-
-                <ul class="view-card-options">
-                    <li><a onclick="showdeleteaccountconfirm()">Deactivate Account</a></li>
-                    <li><a href="<?php echo URLROOT ?>/user/logout">Log Out</a></li>
-                </ul>
             </div>
 
             <div class="view-card-content">
