@@ -26,16 +26,24 @@
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
-                        <div class="card-logo">
+                        <div class="card-logo" onclick="goToCompanyDescription()">
                             <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
                         </div>
                         <div class="card-content">
-                            <div class="job-rating">
-                                <i class="fa fa-star"></i> 4.8
+                            <div class="content-hover-class" onclick="goToCompanyDescription()">
+                                <div class="title-content">
+                                    <h3 class="company-title">Spotify</h3>
+                                    <div class="job-rating">
+                                        <i class="fa fa-star"></i> 4.8
+                                    </div>
+                                </div>
+                                <p class="review-count">Based on <span>126</span> student reviews</p>
+
+                                <div class="job-location-details">
+                                    Colombo, Western Province
+                                </div>
                             </div>
-                            <h3 class="job-title">Spotify</h3>
-                            <p class="job-location">Based on 126 student reviews</p>
-                            <button class="view-button">View Company</button>
+                            
 
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
@@ -79,6 +87,10 @@
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
         icon.classList.toggle("icon-active");
+    }
+
+    function goToCompanyDescription() {
+        window.location.href = "/uniquest/student/companydescription";
     }
 </script>
 

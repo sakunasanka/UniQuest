@@ -39,7 +39,6 @@
                                         <i class="fa fa-star"></i> 4.8
                                     </div>
                                 </div>
-                                <p class="review-count">Based on <span>126</span> student reviews</p>
 
                                 <div class="job-location-details">
                                     Colombo, Western Province

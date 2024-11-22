@@ -35,6 +35,22 @@
                 </div>
             </div>
         </div>
+
+            <div class="view-card view-card-2">
+                <h4>Jobs Provided by the Company</h4>
+                <div class="job-list">
+                    <?php for ($i = 0; $i < 3; $i++): ?>
+                        <div class="job-item" onclick="goToJobDescription()">
+                            <h5>Title</h5>
+                            <p>Description</p>
+                            <span>Location: Galle</span>
+                            <span>Salary: Rs.1000 per day</span>
+                            <button class="apply-btn">View job</button>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+
             <div class="view-card view-card-2">
                 <div class="reviews-section">
                     <h4>Reviews and Ratings about this company</h4>
@@ -72,3 +88,9 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+
+<script>
+    function goToJobDescription() {
+        window.location.href = "/uniquest/student/jobsdescription/"+10;
+    }
+</script>

@@ -46,7 +46,7 @@ p{
     font-size: 1.3em;
 }
 
-.reviews-section h4{
+.reviews-section h4, .view-card-2 h4{
     font-size: 1.2em;
 
 }
@@ -118,6 +118,57 @@ p{
 .job-details .job-rating {
     font-size: 1.2em;
     color: #fbc02d;
+}
+
+.job-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.job-item {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    border: 2px solid #299b63;
+}
+
+.job-item h5 {
+    font-size: 1.3em;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.job-item p {
+    font-size: 1.1em;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.job-item span {
+    display: block;
+    font-size: 1em;
+    color: #555;
+}
+
+.job-item .apply-btn {
+    margin-top: 10px;
+    background-color: #299b63;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.job-item .apply-btn:hover {
+    background-color: #137d4a;
 }
 
 /* Social Media Icons */
