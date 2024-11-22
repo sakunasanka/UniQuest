@@ -139,7 +139,7 @@ class Register extends Controller
                 // Upload company logo
                 $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
                 if ($companyLogoResponse['success']) {
-                    $data['companyLogoName'] = $companyLogoResponse['fileName'];
+                    $data['companyLogoName'] = $companyLogoResponse['file_name'];
                 } else {
                     $data['companyLogo_err'] = $companyLogoResponse['error'];
                     $this->view('pages/register/company_register', $data);

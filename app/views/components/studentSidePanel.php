@@ -38,6 +38,12 @@
             Help and Support
         </button>
     </nav>
+
+    <button class="nav-btn logout-btn" data-path="/uniquest/user/logout">
+    <span class="material-symbols-outlined"> logout </span>
+        Logout
+    </button>
+    
 </aside>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/serviceSidePanel.js"></script>

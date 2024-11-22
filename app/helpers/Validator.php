@@ -250,4 +250,65 @@ class Validator
         // If there are no errors, return true; otherwise, return the errors
         return empty($errors) ? ['is_valid' => true] : ['is_valid' => false, 'error' => $errors];
     }
+
+    //validate the edit profile data
+    public static function isValidEditProfileData(array $data): array
+    {
+        $errors = [];
+
+        if (self::isEmpty($data['contactNo'])) {
+            $errors['contactNo_err'] = 'Contact number is required';
+        } else if (!self::isValidContactNo($data['contactNo'])) {
+            $errors['contactNo_err'] = 'Invalid contact number';
+        }
+
+        if ($data['role'] === 'Student') {
+
+            if (self::isEmpty($data['firstName'])) {
+                $errors['firstName_err'] = 'First name is required';
+            } else if (!self::isValidName($data['firstName'])) {
+                $errors['firstName_err'] = 'First name can only contain letters and spaces';
+            }
+
+            if (self::isEmpty($data['lastName'])) {
+                $errors['lastName_err'] = 'Last name is required';
+            } else if (!self::isValidName($data['lastName'])) {
+                $errors['lastName_err'] = 'Last name can only contain letters and spaces';
+            }
+
+            if (self::isEmpty($data['streetNo'])) {
+                $errors['streetNo_err'] = 'Street number is required';
+            }
+
+            if (self::isEmpty($data['addressLine1'])) {
+                $errors['addressLine1_err'] = 'Address line 1 is required';
+            }
+
+            if (self::isEmpty($data['city'])) {
+                $errors['city_err'] = 'City is required';
+            }
+        } else if ($data['role'] === 'Company') {
+
+            if (self::isEmpty($data['companyName'])) {
+                $errors['companyName_err'] = 'Company name is required';
+            } else if (!self::isValidCompanyName($data['companyName'])) {
+                $errors['companyName_err'] = 'Company name can only contain letters, numbers, and spaces';
+            }
+
+            if (self::isEmpty($data['streetNo'])) {
+                $errors['streetNo_err'] = 'Street number is required';
+            }
+
+            if (self::isEmpty($data['addressLine1'])) {
+                $errors['addressLine1_err'] = 'Address line 1 is required';
+            }
+
+            if (self::isEmpty($data['city'])) {
+                $errors['city_err'] = 'City is required';
+            }
+        }
+
+        // If there are no errors, return true; otherwise, return the errors
+        return empty($errors) ? ['is_valid' => true] : ['is_valid' => false, 'error' => $errors];
+    }
 }

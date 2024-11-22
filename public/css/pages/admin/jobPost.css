@@ -1,0 +1,117 @@
+/* Reset default styles */
+body, ul, h1, h2, h3, p, input, textarea, select {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.form-invalid{
+    color:rgba(172,5,5);
+    margin-bottom:20px;
+}
+
+
+.job-post-form-container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-top: 100px;
+    min-height: 80vh;
+    position: relative; 
+    padding-bottom: 60px;
+}
+
+.job-post-form-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+.job-post-form {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.form-left, .form-right {
+    width: 48%;
+    margin-top: 40px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+    font-size: 1.2em;
+}
+
+input[type="text"], input[type="tel"], input[type="email"], select, textarea {
+    width: 100%;
+    height: 50px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border: 2px solid #4bd681;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    margin-top: 20px;
+    position: absolute;
+    bottom: 10px; /* Position it at the bottom */
+    width: 100%; /* Ensure it spans the container's width */
+}
+
+.submit-btn {
+    background-color: #32a852;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+    
+}
+
+.submit-btn:hover {
+    background-color: #038a27;
+}
+
+.employment-types {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Add space between the types */
+}
+
+.employment-types label {
+    margin-right: 10px;
+    font-size: 1em;
+}
+/* Hide the default radio button */
