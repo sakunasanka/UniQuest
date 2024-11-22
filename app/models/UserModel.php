@@ -155,7 +155,7 @@ class userModel
         }
     }
 
-    public function vtMemberRegister(array $data)
+    public function addVTMember(array $data)
     {
         try{
             // Start transaction

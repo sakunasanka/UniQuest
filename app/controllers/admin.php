@@ -104,7 +104,7 @@ class Admin extends Controller
                 }
 
                 // Register user
-                if ($this->model->vtMemberRegister($data)) {
+                if ($this->model->addVTMember($data)) {
                     // Redirect to verification team management page
                     Redirect::to(URLROOT . '/admin/verTeam_mng');
                 } else {
