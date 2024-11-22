@@ -8,17 +8,17 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/admin/students_mng">Students</button>
-            <button class="tab" data-path="/uniquest/admin/company_mng">Companies</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/admin/verTeam_mng">Verification Team</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/students_mng">Students</button>
+            <button class="tab" data-path="/UniQuest/admin/company_mng">Companies</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/verTeam_mng">Verification Team</button>
         </div>
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <button class="add-btn" data-path="/uniquest/admin/add_company">
+                <!-- <button class="add-btn" data-path="/uniquest/admin/add_company">
                     <span class="material-symbols-outlined">person_add</span>
                     <span class="add-btn-text">Add Company</span>
-                </button>
+                </button> -->
             </div>
             <table>
                 <thead>
