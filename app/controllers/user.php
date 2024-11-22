@@ -139,7 +139,7 @@ class User extends Controller
             if ($user['Role'] === 'Student') {
                 $this->view('pages/student/view_profile', $data);
             } else if ($user['Role'] === 'Company') {
-                $this->view('pages/service_provider/view_profile', $data);//TODO: Create company profile view
+                $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {
                 $this->view('pages/admin/profile', $data); //TODO: Create admin profile view
             } else if ($user['Role'] === 'VT-Member') {
@@ -153,5 +153,43 @@ class User extends Controller
         }
     }
 
+    public function deactivate()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST array
+            $_POST = filter_input_array(INPUT_POST);
+
+            $data = [
+                'confirm' => trim($_POST['confirm']),
+                'confirm_err' => ''
+            ];
+
+            // Validate confirm
+            $data['confirm_err'] = Validator::isEmpty($data['confirm']) ? 'Please confirm account deactivation' : '';
+
+            // Check if there are no errors
+            if (empty($data['confirm_err'])) {
+                // Deactivate account
+                $this->model->deactivateAccount($_SESSION['user_id']);
+                // Logout
+                $this->logout();
+            } else {
+                // Load view with errors
+                $this->view('popups/student/deactivate_account', $data);
+            }
+        } else {
+            $data = [
+                'confirm' => '',
+                'confirm_err' => ''
+            ];
+
+            // Load view
+            $this->view('popups/student/deactivate_account', $data);
+        }
+    }
+
+    public function errorPage() {
+        $this->view('pages/404_not_found/page_not_found');
+    }
 }
 ?>

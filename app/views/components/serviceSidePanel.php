@@ -16,7 +16,7 @@
             <div class="dropdown-menu">
                 <button class="nav-btn" data-path="/UniQuest/service_provider/ongoing_jobs">Ongoing Jobs</button>
                 <button class="nav-btn" data-path="/UniQuest/service_provider/offered_jobs">Offered Jobs</button>
-                <button class="nav-btn" data-path="/UniQuest/service_provider/publish_job">Publish a Job</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/jobpost">Publish a Job</button>
             </div>
         </div>
 

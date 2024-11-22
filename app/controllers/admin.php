@@ -104,7 +104,7 @@ class Admin extends Controller
                 }
 
                 // Register user
-                if ($this->model->vtMemberRegister($data)) {
+                if ($this->model->addVTMember($data)) {
                     // Redirect to verification team management page
                     Redirect::to(URLROOT . '/admin/verTeam_mng');
                 } else {
@@ -114,8 +114,7 @@ class Admin extends Controller
                 // Load view with errors
                 $this->view('pages/admin/add_member', $data);
             }
-
-        } else  {
+        } else {
             // Init data
             $data = $this->prepareData();
             // Load view
@@ -125,12 +124,24 @@ class Admin extends Controller
 
     public function job_complaint()
     {
-        $this->view('pages/admin/job_complaint');
+        $complaints_job = $this->model('jobModel')->getComplaintsJob();
+
+        $data = [
+            'complaints_job' => $complaints_job
+        ];
+
+        $this->view('pages/admin/job_complaint', $data);
     }
 
     public function company_complaint()
     {
-        $this->view('pages/admin/company_complaint');
+        $complaints_com = $this->model('jobModel')->getComplains();
+
+        $data = [
+            'complaints_com' => $complaints_com
+        ];
+
+        $this->view('pages/admin/company_complaint', $data);
     }
 
     public function ptjobs_mng()
@@ -142,7 +153,7 @@ class Admin extends Controller
     {
         $this->view('pages/admin/intern_mng');
     }
-  
+
     public function user_ver_all()
     {
         $this->view('pages/admin/user_ver_all');
@@ -178,9 +189,12 @@ class Admin extends Controller
         $this->view('pages/admin/adminDash');
     }
 
+    public function jobPost()
+    {
+        $this->view('pages/admin/jobPost');
+    }
     public function analytics()
     {
         $this->view('pages/admin/analytics');
     }
-
 }
