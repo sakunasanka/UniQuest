@@ -35,7 +35,7 @@
 </section>
 
     <!-- Students Section -->
-    <section class="students">
+    <section class="students" id="services">
         <h2>For Students <i class="material-icons large-icon">groups</i></h2>
         <p>We simplify opportunities for university students by connecting you with part-time jobs and internships.</p>
     <div class= "service">
