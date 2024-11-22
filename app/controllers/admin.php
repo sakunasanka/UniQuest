@@ -193,6 +193,39 @@ class Admin extends Controller
         }
     }
 
+    public function user_ver_detail($userID)
+    {
+        try {
+            $user = $this->model->getUserDetails($userID);
+            $data = [
+                'user' => $user
+            ];
+            $this->view('pages/admin/stu_ver_detail', $data);
+        } catch (Exception $e) {
+            die($e->getMessage());//TODO: Handle this
+        }
+    }
+
+    public function user_ver_approve($userID)
+    {
+        try {
+            $this->model->approveUser($userID);
+            Redirect::to(URLROOT . '/admin/user_ver_all');
+        } catch (Exception $e) {
+            die($e->getMessage());//TODO: Handle this
+        }
+    }
+
+    public function user_ver_reject($userID)
+    {
+        try {
+            $this->model->rejectUser($userID);
+            Redirect::to(URLROOT . '/admin/user_ver_all');
+        } catch (Exception $e) {
+            die($e->getMessage());//TODO: Handle this
+        }
+    }
+
     public function job_ver_all()
     {
         $this->view('pages/admin/job_ver_all');

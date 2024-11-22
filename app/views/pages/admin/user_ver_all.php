@@ -44,7 +44,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="action">
-                                <span class="material-symbols-outlined action-btn view">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_detail/<?php echo $user->UserID; ?>'">
                                     preview
                                 </span>
                             </td>

@@ -36,7 +36,7 @@
                             <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
                             <td><span class="status pending">Pending</span></td>
                             <td class="action">
-                                <span class="material-symbols-outlined action-btn view">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_detail/<?php echo $user->UserID; ?>'">
                                     preview
                                 </span>
                             </td>
