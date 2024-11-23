@@ -1,5 +1,7 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/students_mng.css">
+
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -13,24 +15,26 @@
         </div>
         <div class="table-block">
             <div class="content-header">
-                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
+                <span class="total-count">Total: 10</span>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Company</th>
-                        <th onclick="sortTable(1)">Company Email</th>
-                        <th onclick="sortTable(2)">No of complaints</th>
-                        <th onclick="sortTable(3)">Most recent complaint date</th>
-                        <th onclick="sortTable(4)">Status</th>
-                        <th class="no-sort">View</th>
+                        <th>Company</th>
+                        <th>Company Email</th>
+                        <th>Complaint</th>
+                        <th>Student Name</th>
+                        <th>Complained Date</th>
+                        <th>Status</th>
+                        <th>View</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Company 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
+                        <td>Complaint 1</td>
+                        <td>Student 1</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -42,7 +46,8 @@
                     <tr>
                         <td>Company 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>3</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -54,7 +59,8 @@
                     <tr>
                         <td>Company 3</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -66,7 +72,8 @@
                     <tr>
                         <td>Company 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>1</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -78,7 +85,8 @@
                     <tr>
                         <td>Company 3</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>4</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -90,7 +98,8 @@
                     <tr>
                         <td>Company 1</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -102,7 +111,8 @@
                     <tr>
                         <td>Company 3</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -114,7 +124,8 @@
                     <tr>
                         <td>Company 2</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>1</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -126,7 +137,8 @@
                     <tr>
                         <td>Company 3</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>3</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -138,7 +150,8 @@
                     <tr>
                         <td>Company 3</td>
                         <td>sakiththewmika@gmail.com</td>
-                        <td>1</td>
+                        <td>Complaint 2</td>
+                        <td>Student 2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -149,12 +162,17 @@
                     </tr>
                 </tbody>
             </table>
-            <?php require APPROOT . '/views/components/pagination.php'; ?>
+            <div class="pagination">
+                <button class="page-btn prev">&laquo;</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn next">&raquo;</button>
+            </div>
         </div>
     </main>
 </div>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
