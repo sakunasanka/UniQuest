@@ -35,21 +35,32 @@
                 </div>
             </div>
         </div>
+     
 
-            <div class="view-card view-card-2">
-                <h4>Jobs Provided by the Company</h4>
-                <div class="job-list">
-                    <?php for ($i = 0; $i < 3; $i++): ?>
-                        <div class="job-item" onclick="goToJobDescription()">
-                            <h5>Title</h5>
-                            <p>Description</p>
-                            <span>Location: Galle</span>
-                            <span>Salary: Rs.1000 per day</span>
-                            <button class="apply-btn">View job</button>
-                        </div>
-                    <?php endfor; ?>
-                </div>
-            </div>
+<div class="view-card">
+  <div class="job-list">
+    <?php for ($i = 0; $i < 3; $i++): ?>
+      <div class="job-item" onclick="goToJobDescription()">
+        <div class="job-header">
+          <div>
+            <h5>Senior UX Designer</h5>
+          </div>
+        </div>
+        <div class="job-tags">
+          <span class="tag">On-Site</span>
+          <span class="tag">Full-Time</span>
+          <span class="tag">Design</span>
+        </div>
+        <p class="job-description">
+        Acme Inc. seeks a Senior UX Designer to create user-centric designs, collaborating with teams to deliver innovative, intuitive software solutions for exceptional user experiences.
+        </p>
+        <div class="job-actions">
+          <button class="details-btn">View Details</button>
+        </div>
+      </div>
+    <?php endfor; ?>
+  </div>
+</div>
 
             <div class="view-card view-card-2">
                 <div class="reviews-section">
