@@ -145,27 +145,16 @@ class Student extends Controller
         $this->view('popups/student/deactivate_account');
     }
 
-    public function getReview()
-    {
-        $company_id = $_GET['company_id'] ?? 1; 
-        $reviews =$this->model('RateAndReviewModel')->getReviewsByCompanyId($company_id);
-
-        $data = [
-            'reviews' => $reviews
-        ];
-
-        $this->view('pages/student/rate_review_company', $data);
-    }
-
     public function addReview($id = null)
     {
-        $reviews = $this->model('M_jobpost')-> getpostbyid($id);
+        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             // Prepare data for the review
             $data = [
+                'reviews' => $reviews,
                 'rating' => $_POST['rating'] ?? '',
                 'comment' => trim($_POST['comment'] ?? ''),
                 'user_id' => $_POST['user_id'] ?? '',
@@ -195,6 +184,7 @@ class Student extends Controller
             }
         } else {
             $data = [
+                'reviews' => $reviews,
                 'rating' => '',
                 'comment' => '',
                 'user_id' => '',

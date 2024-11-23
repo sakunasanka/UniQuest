@@ -47,7 +47,9 @@
                         <h3><?php echo htmlspecialchars($review->CompanyID); ?></h3>
                         <div class="rating">Rating: <?php echo $review->Rating; ?> ★</div>
                         <p><?php echo htmlspecialchars($review->Comment); ?></p>
-                        <a href="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" class="edit-btn">Edit</a> <!-- Edit button -->
+                        <form action="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" method="POST" class="edit-form">
+                            <button type="submit" class="edit-btn">Edit</button>
+                        </form> 
                         <form action="<?php echo URLROOT; ?>/student/deleteReview/<?php echo $review->id; ?>" method="POST" class="delete-form">
                             <button type="submit" class="delete-btn">Delete</button>
                         </form>  

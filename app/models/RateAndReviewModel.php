@@ -45,7 +45,7 @@ class RateAndReviewModel
 
     public function getReviewsByCompanyId($company_id)
     {
-        $this->db->query('SELECT * FROM review WHERE company_id = :company_id ORDER BY created_at DESC');
+        $this->db->query('SELECT * FROM companyreviews WHERE CompanyID = :company_id ORDER BY created_at DESC');
         $this->db->bind(':company_id', $company_id);
         return $this->db->resultSet();
     }
@@ -64,13 +64,6 @@ class RateAndReviewModel
             error_log("Database Error: " . $e->getMessage());
             return false;
         }
-    }
-
-    public function getReviewById($id)
-    {
-        $this->db->query('SELECT * FROM review WHERE id = :id');
-        $this->db->bind(':id', $id);
-        return $this->db->single();
     }
 
     public function deleteReviewById($id)
