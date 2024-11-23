@@ -6,11 +6,15 @@
 
 body {
     font-family: "Outfit", sans-serif;
-    background-color: #f4f4f4;
+    background-color: #299b63;
     color: #333;
     width: 100vw;
     padding: 0;
     overflow-x: hidden;
+}
+
+.navbar {
+    position: relative !important;
 }
 
 a {
