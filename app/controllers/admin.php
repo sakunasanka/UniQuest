@@ -193,4 +193,9 @@ class Admin extends Controller
         $this->view('pages/admin/analytics');
     }
 
+    public function notifications()
+    {
+        $this->view('pages/student/notification_alerts');
+    }
+
 }

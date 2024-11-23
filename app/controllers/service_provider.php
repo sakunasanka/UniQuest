@@ -106,6 +106,11 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/ser_analytics');
     }
 
+    public function notifications()
+    {
+        $this->view('pages/student/notification_alerts');
+    }
+
     public function edit_job($postId)
     {   
         if($_SERVER['REQUEST_METHOD']=='POST'){

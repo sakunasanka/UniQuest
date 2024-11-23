@@ -189,7 +189,7 @@ class Student extends Controller
         $this->view('pages/student/jobs', $data);
         
     }
-    public function notification()
+    public function notifications()
     {
         $this->view('pages/student/notification_alerts');
     }

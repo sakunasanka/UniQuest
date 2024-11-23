@@ -1,4 +1,10 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php 
+  if ($_SESSION['user_role'] == 'Student') {
+      require APPROOT . '/views/components/stu_header.php';
+  } else{
+      require APPROOT . '/views/components/ser_header.php';
+  } 
+?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/notification.css">
 
@@ -6,7 +12,19 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php 
+      if ($_SESSION['user_role'] == 'Student') {
+        require APPROOT . '/views/components/studentSidePanel.php';
+      } else if ($_SESSION['user_role'] == 'Company') {
+        require APPROOT . '/views/components/serviceSidePanel.php';
+      } 
+      else if ($_SESSION['user_role'] == 'VT-Member') {
+        require APPROOT . '/views/components/verificationTeamSidePanel.php';
+      }
+      else {
+        require APPROOT . '/views/components/adminSidePanel.php';
+      }
+    ?>
     
     
     <div class="content-area">
