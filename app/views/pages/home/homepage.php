@@ -16,6 +16,7 @@
 ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/home/homepage.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/home_footer.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <!-- Hero Section -->
