@@ -390,19 +390,21 @@ p{
     max-width: 1200px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
+    
 }
-  
+
 .view-card h4 {
     font-size: 18px;
     color: #333;
     margin-bottom: 15px;
     text-align: center;
 }
-  
+
 .job-list {
     display: flex;
-    grid-template-columns: 1fr;
-    gap: 20px;
+    flex-wrap: nowrap;
+    overflow-x: auto; 
+    padding-bottom: 10px; 
 }
 
 .job-item {
@@ -412,20 +414,21 @@ p{
     padding: 10px 15px;
     text-align: left;
     transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 250px; 
 }
-  
+
 .job-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
 }
-  
+
 .job-header {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 10px;
 }
-  
+
 .job-header h5 {
     font-size: 18px;
     color: #333;
@@ -437,7 +440,7 @@ p{
     gap: 10px;
     margin: 10px 0;
 }
-  
+
 .tag {
     font-size: 12px;
     color: #007bff;
@@ -458,7 +461,7 @@ p{
     display: flex;
     gap: 10px;
 }
-  
+
 .details-btn {
     flex: 1;
     text-align: center;
@@ -470,17 +473,14 @@ p{
     text-transform: uppercase;
     transition: background-color 0.3s;
 }
-  
+
 .details-btn {
     background-color: #ffffff;
     color: #007bff;
     border: 1px solid #007bff;
 }
-  
+
 .details-btn:hover {
     background-color: #007bff;
     color: #ffffff;
 }
-  
-
-  
