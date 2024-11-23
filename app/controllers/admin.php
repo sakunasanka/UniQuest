@@ -193,8 +193,14 @@ class Admin extends Controller
     {
         $this->view('pages/admin/jobPost');
     }
+
     public function analytics()
     {
         $this->view('pages/admin/analytics');
+    }
+
+    public function reports()
+    {
+        $this->view('pages/admin/reports');
     }
 }
