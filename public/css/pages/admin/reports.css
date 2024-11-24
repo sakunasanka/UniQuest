@@ -19,6 +19,19 @@ header {
     font-size: 1.5rem;
 }
 
+.card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
 /* Filters */
 .report-filters {
     padding: 20px;
@@ -96,16 +109,13 @@ header {
 .charts {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
     justify-content: space-between;
 }
 
 .chart-card {
     flex: 1 1 45%;
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+    margin-bottom: 20px;
 }
 
 canvas {

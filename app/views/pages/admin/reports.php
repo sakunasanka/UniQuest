@@ -61,7 +61,7 @@
             </div>
             <div class="card report-card">
                 <h3>Revenue Generated</h3>
-                <p id="revenueGenerated">0</p>
+                <p id="revenueGenerated">$0</p>
             </div>
         </div>
 
@@ -72,6 +72,12 @@
             </div>
             <div class="card chart-card">
                 <canvas id="jobListingsChart"></canvas>
+            </div>
+            <div class="card chart-card">
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="card chart-card">
+                <canvas id="loginsChart"></canvas>
             </div>
         </div>
     </main>
