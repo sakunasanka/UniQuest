@@ -8,7 +8,11 @@ class Core
 
     public function __construct()
     {
+        // Get URL
         $url = $this->getURL();
+
+        //Apply custom URL middleware to handle routing or transformations
+        $url = URLMiddleware::handle($url);
 
         // Look in controllers for first value
         if (isset($url[0]) && file_exists('../app/controllers/' . ucwords($url[0]) . '.php')) {

@@ -16,6 +16,7 @@ require_once 'helpers/TimeConvert_Helper.php';
 
 //load middlewares
 require_once 'middlewares/AuthMiddleware.php';
+require_once 'middlewares/URLMiddleware.php';
 
 $init = new Core();
 ?>
