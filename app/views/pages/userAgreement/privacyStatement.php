@@ -11,7 +11,7 @@
         require APPROOT . '/views/components/adm_header.php';
     }
     else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ser_header.php';
+        require APPROOT . '/views/components/ver_header.php';
     }
 ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/userAgreement/privacyStatement.css">
