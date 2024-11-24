@@ -191,5 +191,10 @@ class User extends Controller
     public function errorPage() {
         $this->view('pages/404_not_found/page_not_found');
     }
+
+    public function contact_admin()
+    {
+        $this->view('pages/student/contact_admin');
+    }
 }
 ?>

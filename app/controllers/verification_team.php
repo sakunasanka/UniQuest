@@ -104,4 +104,9 @@ class Verification_team extends Controller
     {
         $this->view('pages/verification_team/job_ver_not');
     }
+
+    public function notifications()
+    {
+        $this->view('pages/student/notification_alerts');
+    }
 }
