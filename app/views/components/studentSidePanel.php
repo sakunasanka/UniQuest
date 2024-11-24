@@ -33,10 +33,10 @@
         </button>
 
         <!-- Help and Support -->
-        <button class="nav-btn" data-path="/uniquest/student/support">
+        <!-- <button class="nav-btn" data-path="/uniquest/student/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
-        </button>
+        </button> -->
     </nav>
 
     <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">

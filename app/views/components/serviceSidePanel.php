@@ -59,10 +59,10 @@
         </button>
 
         <!-- Help and Support -->
-        <button class="nav-btn" data-path="/UniQuest/service_provider/support">
+        <!-- <button class="nav-btn" data-path="/UniQuest/service_provider/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
-        </button>
+        </button> -->
     </nav>
 
     <!-- Logout -->

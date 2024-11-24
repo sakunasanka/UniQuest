@@ -1,9 +1,10 @@
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/studentPopups.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/delete_account.css">
 <div class="popup-container">
-    <div class="popup" id="popup-stu">
+    <div class="popup" id="popup-deactivate">
         <div class="overlay"></div>
         <div class="content">
-            <button class="close-btn" onclick="closedeleteaccountconfirm()"><i class="fa fa-times"></i></button>
+        <div class="close-btn-container"><button class="close-btn" onclick="closedeleteaccountconfirm()"><i class="fa fa-times"></i></button></div>
             <h2>Delete Account</h2>
             <form action="<?php echo URLROOT ?>/user/deactivate" method="POST">
                 <div class="warning">
