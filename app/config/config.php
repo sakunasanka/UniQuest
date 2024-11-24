@@ -6,7 +6,10 @@
     define('URLROOT', 'http://localhost/UniQuest');
 
     //public Root
-    define('PUBROOT', dirname(dirname(dirname(__FILE__))).'/public');
+    define('PUBROOT', dirname(dirname(dirname(__FILE__))) . '/public');
+
+    //uploads Root
+    define('UPLOADROOT', 'http://localhost/UniQuest/public/uploads');
 
     //Site Name
     define('SITENAME', 'UniQuest');
@@ -21,5 +24,7 @@
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
+    session_start();
+    
     
 ?>

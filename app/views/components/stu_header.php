@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
 </head>
 <body>
     <nav class="navbar">
@@ -28,7 +30,7 @@
                 <li><a href="/uniquest/contact" class="hov">Contact Us</a></li>
             </ul>
             <div class="nav-icons">
-                <a href="/uniquest/student/view_profile"><span class="material-symbols-outlined">account_circle</span></a>
+                <a href="/uniquest/user/profile"><span class="material-symbols-outlined">account_circle</span></a>
                 <a href="/uniquest/student/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>

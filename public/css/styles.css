@@ -13,6 +13,7 @@
 @import url("pages/service_provider/jobs_table.css");
 @import url("pages/admin/add_member.css");
 
+
 .content-area {
     margin-left: 250px !important; /* Make room for the sidebar */
     padding: 40px !important;

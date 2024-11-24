@@ -1,15 +1,15 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="main-container">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <div class="content-area">
         <div class="tabs-header">
-                <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
-                <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/saveInternships">Saved Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
         </div>
         <div class="container">
             <div class="search-bar-container">
@@ -17,7 +17,7 @@
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
-                    <input type="text" placeholder="Search saved companies..." class="search-input">
+                    <input type="text" placeholder="Search company..." class="search-input">
                     <div class="filters-button">
                         <i class="fa-solid fa-filter"></i>
                         <span>Filters</span>
@@ -28,16 +28,24 @@
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
-                        <div class="card-logo">
+                        <div class="card-logo" onclick="goToCompanyDescription()">
                             <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
                         </div>
                         <div class="card-content">
-                            <div class="job-rating">
-                                <i class="fa fa-star"></i> 4.8
+                            <div class="content-hover-class" onclick="goToCompanyDescription()">
+                                <div class="title-content">
+                                    <h3 class="company-title">Spotify</h3>
+                                    <div class="job-rating">
+                                        <i class="fa fa-star"></i> 4.8
+                                    </div>
+                                </div>
+                                <p class="review-count">Based on <span>126</span> student reviews</p>
+
+                                <div class="job-location-details">
+                                    Colombo, Western Province
+                                </div>
                             </div>
-                            <h3 class="job-title">Spotify</h3>
-                            <p class="job-location">Based on 126 student reviews</p>
-                            <button class="view-button">View Company</button>
+                            
 
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
@@ -77,6 +85,12 @@
         icon.classList.toggle("icon-active");
     }
 </script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToCompanyDescription() {
+        window.location.href = "/uniquest/student/companydescription";
+    }
+</script>
