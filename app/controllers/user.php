@@ -52,7 +52,15 @@ class User extends Controller
                         $this->view('pages/login/wait_to_verify_ser');
                     }
                 } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
-                    die('Not Approved');//TODO: Handle this
+                    if ($loggedInUser->Role === 'Student') {
+                        $this->view('pages/login/deactivate_stu');
+                    } else if ($loggedInUser->Role === 'Company') {
+                        $this->view('pages/login/deactivate_ser');
+                    }
+                    if(isset($_SESSION['user_id'])){
+                        session_unset();
+                        session_destroy();
+                    }
                     
                 } else {
                     $data['password_err'] = 'Password incorrect';
