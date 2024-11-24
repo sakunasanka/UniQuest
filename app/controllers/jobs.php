@@ -6,6 +6,11 @@ class Jobs extends Controller
 
     public function __construct()
     {
+        // Check if user is logged in
+        AuthMiddleware::requireAuth();
+        // Check if user has the required role
+        AuthMiddleware::requireRole('Student');
+        
         // Load model
         $this->model = $this->model('jobModel');
     }

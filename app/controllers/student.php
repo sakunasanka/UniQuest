@@ -3,6 +3,17 @@ class Student extends Controller
 {
     private $model;
 
+    public function __construct()
+    {
+        // Check if user is logged in
+        AuthMiddleware::requireAuth();
+        // Check if user has the required role
+        AuthMiddleware::requireRole('Student');
+        
+        // Load model
+        $this->model = $this->model('userModel');
+    }
+
     private function prepareEditProfileData($post = [], $files = [])
     {
         $user = $this->model->getUserDetails($_SESSION['user_id']);
@@ -31,12 +42,6 @@ class Student extends Controller
             'profilePic_err' => '',
             'cv_err' => ''
         ];
-    }
-
-    public function __construct()
-    {
-        // Load model
-        $this->model = $this->model('userModel');
     }
 
     public function index()

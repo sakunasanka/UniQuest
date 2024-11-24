@@ -33,7 +33,6 @@ class Database
     // Get the singleton instance of the database
     public static function getInstance() {
         if (self::$instance === null) {
-            echo $this->error;
             self::$instance = new Database();
         }
         return self::$instance;

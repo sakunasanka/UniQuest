@@ -36,6 +36,9 @@ class Core
         //get params
         $this->params = $url ? array_values($url) : [];
 
+        // Apply middleware
+        $this->applyMiddleware($this->currentController, $this->currentMethod);
+
         // Call a callback with array of params
         call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
     }
@@ -51,5 +54,14 @@ class Core
         }
 
         return [];
+    }
+
+    private function applyMiddleware($Controller, $method)
+    {
+        // Check if the controller has an auth method
+        if (method_exists($Controller, 'auth')) {
+            // Call the auth method
+            $Controller->auth($method);
+        }
     }
 }
