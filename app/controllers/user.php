@@ -107,7 +107,7 @@ class User extends Controller
             } else if ($user['Role'] === 'Admin') {
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
-                Redirect::to(URLROOT . '/verification_team/dashboard');
+                Redirect::to(URLROOT . '/verification_team/user_ver_all');
             }
             //print user details
             // print_r($_SESSION);
@@ -149,7 +149,7 @@ class User extends Controller
                 Redirect::to(URLROOT . '/login');
             }
         } catch (Exception $e) {
-            die($e->getMessage());
+            die($e->getMessage());//TODO: Handle this
         }
     }
 
