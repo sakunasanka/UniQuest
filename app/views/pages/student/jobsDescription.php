@@ -63,6 +63,9 @@
                 <button onclick="goToAddReview()" class="apply-btn">Add review</button>
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             </div>
+            <div class="make-complain">
+                <button class="make-complain-btn"><p onclick="goToMakeComplaint(<?php echo $post->JobID; ?>)">Click here to make a complain about this job</p></button>
+            </div>
         </div>
 
         <div class="job-card">
@@ -100,3 +103,9 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+
+<script>
+    function goToMakeComplaint(jobId) {
+        window.location.href = "/uniquest/student/make_complain/" + jobId;
+    }
+</script>

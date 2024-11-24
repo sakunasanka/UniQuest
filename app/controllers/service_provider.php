@@ -56,7 +56,7 @@ class Service_provider extends Controller
     }
     public function jobPostform()
     {
-        $this->view('pages/admin/jobPost');
+        $this->view('pages/service_provider/jobPost');
     }
 
     public function report()
@@ -217,7 +217,7 @@ class Service_provider extends Controller
             'post' => $posts
         ];
         // echo json_encode($data);
-        $this->view('pages/student/jobsDescription', $data);
+        $this->view('pages/service_provider/view_job', $data);
     }
   
     public function edit_profile()
@@ -356,7 +356,7 @@ class Service_provider extends Controller
                 }
             } else {
                 //loading view with errors
-                $this->view('pages/admin/jobPost', $data);
+                $this->view('pages/service_provider/jobPost', $data);
             }
         }
             else{
@@ -379,7 +379,7 @@ class Service_provider extends Controller
                     'salary_range_err'=>'',
                     'Description_err' => ''
                 ];
-                $this->view('pages/admin/jobPost', $data);
+                $this->view('pages/service_provider/jobPost', $data);
             }
        
     }
@@ -407,6 +407,6 @@ class Service_provider extends Controller
             die('Something went wrong');
         }
         } 
-}
+    }
 
 }

@@ -66,9 +66,6 @@
                         <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                 </div>
             </div>  
-            <div class="make-complain">
-                <a href="<?php echo URLROOT; ?>/student/make_complain">Click here to make a complain about this company</a>  
-            </div>
         </div>
     </div>
 
