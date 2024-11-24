@@ -227,10 +227,10 @@ class Admin extends Controller
         }
     }
 
-    public function job_ver_all()
-    {
-        $this->view('pages/admin/job_ver_all');
-    }
+    // public function job_ver_all()
+    // {
+    //     $this->view('pages/admin/job_ver_all');
+    // }
 
     public function job_ver_pending()
     {
