@@ -4,8 +4,8 @@
                 <p>&copy; 2024 UniQuest. All rights reserved.</p>
             </div>
             <div class="footer-right">
-                <a href="#">Terms of Services</a>
-                <a href="#">Privacy Policy</a>
+                <a href="<?php echo URLROOT; ?>/Agreement">Terms of Services</a>
+                <a href="<?php echo URLROOT; ?>/privacyStatement">Privacy Policy</a>
             </div>
         </div>
     </footer>
