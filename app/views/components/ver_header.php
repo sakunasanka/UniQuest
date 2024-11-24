@@ -25,8 +25,8 @@
                 <li><a href="/uniquest/about" class="hov">About Us</a></li>
                 <li><a href="/uniquest/service_provider/contact_admin" class="hov">Contact Us</a></li>
             </ul>
+            <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
-                <a href="/uniquest/user/profile"><span class="material-symbols-outlined">account_circle</span></a>
                 <a href="/uniquest/service_provider/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>
