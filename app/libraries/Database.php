@@ -10,39 +10,37 @@ class Database
     private $stmt;
     private $error;
 
-    //static instance to hold the connection
+    // Static instance to hold the connection
     private static $instance = null;
 
     private function __construct()
     {
         $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
-
         $options = array(
             PDO::ATTR_PERSISTENT => true,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         );
 
-        //instance of PDO
+        // Create a new PDO instance
         try {
             $this->dbh = new PDO($dsn, $this->user, $this->pass, $options);
         } catch (PDOException $e) {
             $this->error = $e->getMessage();
-            echo $this->error;
+            error_log($this->error);
         }
     }
 
-    //get instance of the database
-    public static function getInstance()
-    {
-        if (!self::$instance) {
+    // Get the singleton instance of the database
+    public static function getInstance() {
+        if (self::$instance === null) {
+            echo $this->error;
             self::$instance = new Database();
         }
         return self::$instance;
     }
-
-    //Prepare statement with query
-    public function query($sql)
-    {
+  
+    // Prepare statement with query
+    public function query($sql) {
         $this->stmt = $this->dbh->prepare($sql);
     }
 
@@ -64,14 +62,19 @@ class Database
                     $type = PDO::PARAM_STR;
             }
         }
-
         $this->stmt->bindValue($param, $value, $type);
     }
 
-    //Execute the prepared statement
+    // Execute the prepared statement
     public function execute()
     {
-        return $this->stmt->execute();
+        try {
+            return $this->stmt->execute();
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            error_log($this->error);
+            return false;
+        }
     }
 
     //Get result set as array of objects
@@ -93,4 +96,29 @@ class Database
     {
         return $this->stmt->rowCount();
     }
+
+    // Begin a transaction
+    public function beginTransaction()
+    {
+        return $this->dbh->beginTransaction();
+    }
+
+    // Commit the transaction
+    public function commit()
+    {
+        return $this->dbh->commit();
+    }
+
+    // Rollback the transaction
+    public function rollBack()
+    {
+        return $this->dbh->rollBack();
+    }
+
+    // Get the last inserted ID
+    public function lastInsertId()
+    {
+        return $this->dbh->lastInsertId();
+    }
 }
+

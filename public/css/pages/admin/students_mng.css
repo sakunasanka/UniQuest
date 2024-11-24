@@ -1,0 +1,164 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: row;
+    margin-top: 0;
+}
+
+.table-block {
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 90%;
+    margin-top: 20px;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px; 
+}
+
+.total-count {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.add-btn-text {
+    margin-left: 10px;
+    font-size: medium;
+}
+
+.add-btn {
+    background-color: #32a852;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.add-btn:hover {
+    background-color: #038a27;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+table th {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #e2e2e2;
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+table td {
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.action {
+    padding: 0px;
+}
+
+.status.active {
+    color: #32a852;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #32a85250;
+}
+
+.status.inactive {
+    color: #ff4d4d;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #ff4d4d50;
+}
+
+.status.pending {
+    color: #E9992F;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #E9992F50;
+}
+
+.action-btn {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.action-btn.edit {
+    color: #E9992F;
+}
+
+.action-btn.view {
+    color: #0045FF;
+    margin-right: 5px;
+}
+
+.action-btn.deactivate {
+    color: #ff0000;
+    margin-left: 5px;
+}
+
+.action-btn.activate {
+    color: #52CA20;
+    margin-left: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header-text h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.header-text h3 {
+    font-size: 22px;
+    color: #999999;
+    font-weight: 500;
+}

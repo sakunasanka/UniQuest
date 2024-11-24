@@ -1,0 +1,122 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.review-form {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.rating-stars input {
+    display: none; /* Hide the radio buttons */
+}
+
+.rating-stars label {
+    font-size: 25px; /* Star size */
+    color: #ddd; /* Default star color */
+    cursor: pointer; /* Cursor changes on hover */
+    transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out; /* Animation effect */
+}
+
+.rating-stars input:checked ~ label,
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    color: #ffbf00; /* Gold color on hover and selection */
+}
+
+.rating-stars input:checked ~ label {
+    font-weight: bold; /* Bold for selected star */
+    color: #ffbf00; /* Gold color for the selected star */
+}
+
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    font-weight: bold; /* Bold stars on hover */
+}
+
+input[type="text"],
+textarea {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding inside inputs */
+    margin-top: 10px; /* Space above inputs */
+    border-radius: 4px; /* Rounded corners */
+    border: 1px solid #ddd; /* Light gray border */
+}
+
+button {
+    display: block; /* Full width button */
+    width: 100%;
+    padding: 10px; /* Padding inside button */
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Student reviews grid layout */
+.student-reviews {
+    margin-top: 40px; /* Space above reviews */
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(4, 1fr); /* Four columns */
+    gap: 20px; /* Space between items */
+    justify-content: center; /* Center items */
+}
+
+/* Responsive design for medium and small screens */
+@media screen and (max-width: 900px) {
+    .student-reviews {
+        grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens */
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .student-reviews {
+        grid-template-columns: 1fr; /* One column on small screens */
+    }
+}
+
+.review-card {
+    background-color: white; /* White background for reviews */
+    padding: 20px; /* Padding inside review card */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+}
+
+.review-card h3 {
+    margin-top: 0; /* Remove margin from top */
+    font-size: 18px; /* Title size */
+}
+
+.review-card .rating {
+    color: #ffbf00; /* Gold color for rating */
+}
+
+.review-card p {
+    font-size: 14px; /* Font size for review text */
+}
