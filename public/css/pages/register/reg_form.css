@@ -127,11 +127,11 @@ form h3 {
     font-size: 1.2rem;
 }
 
-.input-container span.password-req {
+.input-container span.req-msg, .input-profile-pic span.req-msg {
     font-size: 1rem;
     padding-left: 5px;
     color: #666;
-    display: block;
+    display: inline-block;
 }
 
 .input-container input {
@@ -273,9 +273,8 @@ button[type="submit"]:hover {
 
 .error-msg {
     color: red;
-    font-size: 1.1rem;
-    margin-top: 5px;
-    padding-left: 15px;
+    font-size: 1rem;
+    padding-left: 5px;
 }
 
 .file-drop-area {
