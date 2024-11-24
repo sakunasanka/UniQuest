@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/analytics.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/ser_analytics.css">
 
 <header class="header">
     <div class="logo-block"></div>
@@ -49,20 +49,50 @@
             <div class="card chart-card">
                 <canvas id="registrationsChart"></canvas>
             </div>
+            
+            
             <div class="card chart-card">
-                <canvas id="jobListingsChart"></canvas>
+                <canvas id="loginsChart"></canvas>
             </div>
+            
             <div class="card chart-card">
                 <canvas id="revenueChart"></canvas>
             </div>
             <div class="card chart-card">
-                <canvas id="loginsChart"></canvas>
+                <div class="top-jobs-card">
+                    <h2>Top Performing Jobs</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>Applications</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Software Engineer</td>
+                                    <td>280</td>
+                                </tr>
+                                <tr>
+                                    <td>Marketing Manager</td>
+                                    <td>252</td>
+                                </tr>
+                                <tr>
+                                    <td>Sales Representative</td>
+                                    <td>232</td>
+                                </tr>
+                                <tr>
+                                    <td>Product Designer</td>
+                                    <td>150</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
             </div>
         </div>
     </main>
 </div>
 
-<script src="<?php echo URLROOT; ?>/js/service_provider/ser_analytics.js"></script>
-
 <!-- Footer -->
+<script src="<?php echo URLROOT; ?>/js/service_provider/ser_analytics.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
