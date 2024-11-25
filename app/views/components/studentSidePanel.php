@@ -33,10 +33,10 @@
         </button>
 
         <!-- Help and Support -->
-        <button class="nav-btn" data-path="/uniquest/student/support">
+        <!-- <button class="nav-btn" data-path="/uniquest/student/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
-        </button>
+        </button> -->
 
         <button class="nav-btn" data-path="/UniQuest/user/profile">
             <span class="material-symbols-outlined"> person </span>

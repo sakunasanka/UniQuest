@@ -298,13 +298,30 @@ class Student extends Controller
   
     public function jobsDescription($id){
         
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+    
+        // Get bookmarked jobs for the user
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         $posts = $this->model('M_jobpost')->getpostbyid($id);
+        } 
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+        }
+    
         $data =[
-            'post' => $posts
+            'post' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds
         ];
-        // echo json_encode($data);
+    
         $this->view('pages/student/jobsDescription', $data);
     
     }
 
 }
+
+
+    

@@ -7,7 +7,7 @@
 
     <div class="content-area">
         <div class="container">
-            <div class="search-bar-container">
+            <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -18,13 +18,13 @@
                         <span>Filters</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
         
             <h1 class= "H1">Trending Companies</h1>
             <h2 class= "H2">Check out the top-rated companies based on the student reviews</h2>
 
             <div class="cards-container">
-                <?php for ($i = 0; $i < 6; $i++): ?>
+                <?php for ($i = 0; $i < 30; $i++): ?>
                     <div class="card">
                         <div class="card-logo">
                             <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
