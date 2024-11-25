@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/ver_header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -8,9 +8,8 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/verification_team/job_ver_all">All</button>
-            <button class="tab" data-path="/uniquest/verification_team/job_ver_pending">Pending</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/verification_team/job_ver_not">Not Approved</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/job_ver_pending">Pending</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/verification_team/job_ver_not">Not Approved</button>
         </div>
         <div class="table-block">
             <div class="content-header">

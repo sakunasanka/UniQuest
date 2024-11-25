@@ -189,6 +189,10 @@ class Student extends Controller
         $this->view('pages/student/jobs', $data);
         
     }
+    public function notifications()
+    {
+        $this->view('pages/student/notification_alerts');
+    }
 
     public function company()
     {
@@ -280,6 +284,11 @@ class Student extends Controller
     public function pending()
     {
         $this->view('pages/login/wait_to_verify_stu');
+    }
+
+    public function deactive()
+    {
+        $this->view('pages/login/deactivate_stu');
     }
 
     public function internships()

@@ -6,7 +6,7 @@
     <main class="content-area">
         <div class="header-section">
             <h1>Welcome!</h1>
-            <button class="activate-btn" id="activate-premium">
+            <button class="activate-btn" id="activate-premium" onclick="goToPremiums()">
                 <span class="material-symbols-outlined black-icon"> workspace_premium </span> Activate Premium
             </button>
         </div>
@@ -80,5 +80,9 @@
 
     function goToReviews() {
         window.location.href = "/uniquest/service_provider/reviews";
+    }
+
+    function goToPremiums() {
+        window.location.href = "/uniquest/service_provider/premium";
     }
 </script>
