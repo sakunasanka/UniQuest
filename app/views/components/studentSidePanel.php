@@ -37,6 +37,11 @@
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
         </button> -->
+
+        <button class="nav-btn" data-path="/UniQuest/user/profile">
+            <span class="material-symbols-outlined"> person </span>
+            Profile
+        </button>
     </nav>
 
     <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">

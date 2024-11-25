@@ -8,9 +8,8 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/verification_team/job_ver_all">All</button>
-            <button class="tab" data-path="/uniquest/verification_team/job_ver_pending">Pending</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/verification_team/job_ver_not">Not Approved</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/user_verified">Users</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/verification_team/job_verified">Jobs</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -40,19 +39,6 @@
                             </span>
                         </td>
                     </tr>
-
-                    <tr>
-                        <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Internship</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Not Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
                     <tr>
                         <td>Title 1</td>
                         <td>sakiththewmika@gmail.com</td>
@@ -70,55 +56,7 @@
                         <td>sakiththewmika@gmail.com</td>
                         <td>Internship</td>
                         <td>2024/05/16</td>
-                        <td><span class="status inactive">Not Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Not Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Internship</td>
-                        <td>2024/05/16</td>
                         <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
                         <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 preview
