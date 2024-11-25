@@ -8,7 +8,7 @@ class userModel
         $this->db = Database::getInstance();
     }
 
-    public function findUserByEmail($email) 
+    public function findUserByEmail($email)
     {
         try {
             if (!$this->db) {
@@ -33,7 +33,7 @@ class userModel
 
     public function companyRegister(array $data)
     {
-        try{
+        try {
             // Start transaction
             $this->db->beginTransaction();
 
@@ -79,11 +79,9 @@ class userModel
             //Commit transaction
             $this->db->commit();
             return true;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -92,7 +90,7 @@ class userModel
 
     public function studentRegister(array $data)
     {
-        try{
+        try {
             // Start transaction
             $this->db->beginTransaction();
 
@@ -144,11 +142,9 @@ class userModel
             //Commit transaction
             $this->db->commit();
             return true;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -157,7 +153,7 @@ class userModel
 
     public function addVTMember(array $data)
     {
-        try{
+        try {
             // Start transaction
             $this->db->beginTransaction();
 
@@ -186,7 +182,7 @@ class userModel
             $this->db->bind(':firstName', $data['firstName']);
             $this->db->bind(':lastName', $data['lastName']);
             $this->db->bind(':profilePic', $data['profilePicName']);
-            
+
             //Execute query
             if (!$this->db->execute()) {
                 error_log('Failed to insert into verification team table');
@@ -197,11 +193,9 @@ class userModel
             //Commit transaction
             $this->db->commit();
             return true;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -235,22 +229,22 @@ class userModel
             $this->db->query('SELECT UserID, Email, Role, Status, ContactNo, RegisterDate FROM User WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             $user = $this->db->single();
-            if ($user-> Role === 'Student') {
+            if ($user->Role === 'Student') {
                 $this->db->query('SELECT * FROM Student WHERE StudentID = :userId');
                 $this->db->bind(':userId', $userId);
                 $student = $this->db->single();
                 return array_merge((array)$user, (array)$student);
-            } else if ($user-> Role === 'Company') {
+            } else if ($user->Role === 'Company') {
                 $this->db->query('SELECT * FROM Company WHERE CompanyID = :userId');
                 $this->db->bind(':userId', $userId);
                 $company = $this->db->single();
                 return array_merge((array)$user, (array)$company);
-            } else if ($user-> Role === 'VT-Member') {
+            } else if ($user->Role === 'VT-Member') {
                 $this->db->query('SELECT FirstName, LastName, ProfilePic FROM VerificationTeam WHERE VT_MemberID = :userId');
                 $this->db->bind(':userId', $userId);
                 $vtMember = $this->db->single();
                 return array_merge((array)$user, (array)$vtMember);
-            } else if ($user-> Role === 'Admin') {
+            } else if ($user->Role === 'Admin') {
                 $this->db->query('SELECT FirstName, LastName, ProfilePic FROM Admin WHERE AdminID = :userId');
                 $this->db->bind(':userId', $userId);
                 $admin = $this->db->single();
@@ -287,7 +281,7 @@ class userModel
 
             if ($data['role'] === 'Student') {
                 //Update Student table
-                $this->db->query('UPDATE Student SET FirstName = :firstName, LastName = :lastName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CV = :cv, ProfilePic = :profilePic WHERE StudentID = :userId'); 
+                $this->db->query('UPDATE Student SET FirstName = :firstName, LastName = :lastName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CV = :cv, ProfilePic = :profilePic WHERE StudentID = :userId');
                 $this->db->bind(':firstName', $data['firstName']);
                 $this->db->bind(':lastName', $data['lastName']);
                 $this->db->bind(':streetNo', $data['streetNo']);
@@ -297,7 +291,7 @@ class userModel
                 $this->db->bind(':cv', $data['cvName']);
                 $this->db->bind(':profilePic', $data['profilePicName']);
                 $this->db->bind(':userId', $data['userID']);
-            
+
                 //Execute query
                 if (!$this->db->execute()) {
                     error_log('Failed to update Student table');
@@ -317,7 +311,7 @@ class userModel
                 $this->db->bind(':website', $data['website']);
                 $this->db->bind(':industry', $data['industry']);
                 $this->db->bind(':userId', $data['userID']);
-            
+
                 //Execute query
                 if (!$this->db->execute()) {
                     error_log('Failed to update Company table');
@@ -326,11 +320,11 @@ class userModel
                 }
             } else if ($data['role'] === 'VT-Member') {
                 //Update VerificationTeam table
-                $this->db->query('UPDATE VerificationTeam SET FirstName = :firstName, LastName = :lastName WHERE VT_MemberID = :userId'); 
+                $this->db->query('UPDATE VerificationTeam SET FirstName = :firstName, LastName = :lastName WHERE VT_MemberID = :userId');
                 $this->db->bind(':firstName', $data['firstName']);
                 $this->db->bind(':lastName', $data['lastName']);
                 $this->db->bind(':userId', $data['userID']);
-            
+
                 //Execute query
                 if (!$this->db->execute()) {
                     error_log('Failed to update VerificationTeam table');
@@ -339,11 +333,11 @@ class userModel
                 }
             } else if ($data['role'] === 'Admin') {
                 //Update Admin table
-                $this->db->query('UPDATE Admin SET FirstName = :firstName, LastName = :lastName WHERE AdminID = :userId'); 
+                $this->db->query('UPDATE Admin SET FirstName = :firstName, LastName = :lastName WHERE AdminID = :userId');
                 $this->db->bind(':firstName', $data['firstName']);
                 $this->db->bind(':lastName', $data['lastName']);
                 $this->db->bind(':userId', $data['userID']);
-            
+
                 //Execute query
                 if (!$this->db->execute()) {
                     error_log('Failed to update Admin table');
@@ -355,11 +349,9 @@ class userModel
             //Commit transaction
             $this->db->commit();
             return true;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -376,11 +368,9 @@ class userModel
             } else {
                 return false;
             }
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -410,11 +400,9 @@ class userModel
             $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Pending"');
             $users = $this->db->resultSet();
             return $users;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -427,11 +415,9 @@ class userModel
             $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Not Approved"');
             $users = $this->db->resultSet();
             return $users;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -448,11 +434,9 @@ class userModel
             } else {
                 return false;
             }
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
@@ -469,15 +453,12 @@ class userModel
             } else {
                 return false;
             }
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
-
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
         }
     }
 }
-?>
