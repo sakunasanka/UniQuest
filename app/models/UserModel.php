@@ -17,7 +17,7 @@ class userModel
             $this->db->query('SELECT * FROM User WHERE Email = :email');
             $this->db->bind(':email', $email);
             $user = $this->db->single();
-            if ($user) {
+            if ($user && $user->Status !== 'Deleted') {
                 return $user;
             } else {
                 return false;
