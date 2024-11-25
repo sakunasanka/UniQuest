@@ -6,11 +6,15 @@
 
 body {
     font-family: "Outfit", sans-serif;
-    background-color: #f4f4f4;
+    background-color: #299b63;
     color: #333;
     width: 100vw;
     padding: 0;
     overflow-x: hidden;
+}
+
+.navbar {
+    position: relative !important;
 }
 
 a {
@@ -43,15 +47,22 @@ a {
 /* Hero Section */
 .hero {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
     text-align: center;
     padding: 80px 20px;
-    background-image: linear-gradient(rgba(3, 46, 18, 0.8), rgba(3, 46, 18, 0.8)), url('../../../images/home-bg.png');
+    background-image: linear-gradient(rgba(4, 55, 19, 0.5), rgba(3, 46, 18, 0.8)), url('../../../images/home-bg.png');
     background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
-    height: 60vh;
+    height: 90vh;
+    position: relative;
+
+}
+
+.hero-text {
+    z-index: 2;
+    color: #fff;
+    margin-bottom: 30px;
 }
 
 .hero-text h1 {
@@ -68,6 +79,58 @@ a {
     color: #eaeaea;
 }
 
+.hero-slideshow {
+    position: relative;
+    bottom: 20px;
+    width: 90%;
+    max-width: 1000px;
+    height: 300px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    margin: 0 auto;
+    
+}
+
+.slide {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    align-items: center;
+    animation: fade 1.5s;
+}
+
+.slide.active {
+    display: flex; /* Show the active slide */
+    position: absolute; /* Ensure proper stacking */
+    animation: fade 1.5s ease-in-out; /* Apply the fade animation */
+}
+
+.slide-content h3 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    color: #5cffb0;
+
+}
+
+.slide-content p {
+    font-size: 20px;
+    color: #ecebeb;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0.4;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 .content {
     padding: 40px;
     background-color: #fff;
@@ -76,59 +139,108 @@ a {
 }
 
 /* Services Section */
-.services {
-    padding: 40px;
-    text-align: center;
+.service {
+    display: flex;
+    align-items: center; /* Vertically align content */
+    justify-content: space-between; /* Create space between the image and cards */
+    flex-wrap: wrap; /* Ensure content wraps on smaller screens */
+    gap: 20px; /* Add spacing between the flex items */
+    padding: 50px 20px;
+    border-radius: 10px;
 }
 
-.services h2 {
-    font-size: 40px;
-    margin-bottom: 20px;
-    color: #299b63;
+/* Image Styling - Align to Left */
+.image-content {
+    flex: 1; /* Allow image to take up space proportionally */
+    text-align: left;
 }
 
+.image-content img {
+    width: 100%; /* Ensure image takes up full width of its container */
+    max-width: 800px; /* Set a maximum width for the image */
+    border-radius: 0 50px 50px 0; /* Rounded corner styling */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for better aesthetics */
+    margin-left: -80px; /* Remove unwanted left margin */
+
+}
+
+/* Service Cards - Align to Right */
 .service-cards {
     display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin-top: 40px;
+    flex: 2; /* Allow cards to take up more space */
+    justify-content: space-between; /* Spread cards evenly across the row */
+    align-items: flex-start; /* Align cards to the top */
+    gap: 20px; /* Spacing between cards */
+    flex-wrap: nowrap; /* Prevent cards from wrapping to the next line */
 }
 
 .service-card {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 15px;
-    max-width: 320px;
-    color: #333;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    width: 30%; /* Set each card to take up one-third of the available space */
+    height: 150px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
+/* Hover Effect for Cards */
 .service-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.service-card h3 {
-    font-size: 28px;
-    margin-bottom: 10px;
-    color: #299b63;
+/* Individual Card Backgrounds */
+.service-card:nth-child(1) {
+    background-color: #6dbffb; /* Light blue */
+}
+  
+.service-card:nth-child(2) {
+    background-color: #a3eff9; /* Light cyan */
+}
+  
+.service-card:nth-child(3) {
+    background-color: #f4bbfd; /* Light purple */
 }
 
-.service-card p {
-    font-size: 16px;
-    color: #555;
+.service-card i{
+    width: 300px;
+    size: 50px;
 }
 
-/* Students and Service Providers Section */
+/* Responsive Design - Stack Content for Smaller Screens */
+@media (max-width: 768px) {
+    .service {
+        flex-direction: column; /* Stack image and cards vertically */
+        align-items: center;
+    }
+
+    .image-content img {
+        max-width: 80%; /* Adjust image size for smaller screens */
+        margin: 0 auto; /* Center image */
+    }
+
+    .service-cards {
+        flex-wrap: wrap; /* Allow cards to wrap */
+        justify-content: center; /* Center cards */
+        gap: 20px; /* Spacing between rows of cards */
+    }
+
+    .service-card {
+        width: 100%; /* Each card takes up full width */
+        max-width: 300px; /* Limit card width */
+    }
+}
+
 .students, .service-providers {
     padding: 40px;
     color: #333;
+    height: 88vh;
 }
 
 .students h2, .service-providers h2 {
-    font-size: 36px;
+    font-size: 40px;
     margin-bottom: 20px;
     color: #299b63;
 }
@@ -140,21 +252,14 @@ a {
 }
 
 .students p, .service-providers p {
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 20px;
 }
 
-.service-card ul {
-    list-style-type: disc;
-    padding-left: 20px;
-    margin-bottom: 20px;
-    font-size: 16px;
+.students {
+    background-color: #ddfadd; /* Green-themed background for Students section */
 }
 
-.service-card ul li {
-    margin-bottom: 10px;
-}
-
-.large-icon {
-    font-size: 40px !important;
-}
+.service-providers {
+    background-color: #f7f8fa; /* Blue-themed background for Service Providers section */
+} 

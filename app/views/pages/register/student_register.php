@@ -23,7 +23,7 @@
                                 <img src="<?php echo URLROOT; ?>/images/profile_pic_preview.png" alt="profilepic-placeholder">
                             </div>
                             <div class="file-content">
-                                <span>Drag & Drop to Upload file</span>
+                                <span>Drag & Drop to Upload Profile Photo</span>
                                 <button type="button" class="browse-btn">Browse File
                                     <input type="file" id="profilePic" name="profilePic" accept=".jpg, .jpeg, .png">
                                 </button>
@@ -78,7 +78,7 @@
                         <label for="nicCopy">NIC Scanned Copy<span class="req"> *</span></label>
                         <div class="file-drop-area">
                             <div class="file-content">
-                                <span>Drag & Drop to Upload file</span>
+                                <span>Drag & Drop to Upload NIC Scanned copy</span>
                                 <button type="button" class="browse-btn">Browse File
                                     <input type="file" id="nicCopy" name="nicCopy" accept=".pdf,.doc,.docx" required>
                                 </button>
@@ -92,7 +92,7 @@
                         <label for="cv">Attach CV</label>
                         <div class="file-drop-area">
                             <div class="file-content">
-                                <span>Drag & Drop to Upload file</span>
+                                <span>Drag & Drop to Upload CV</span>
                                 <button type="button" class="browse-btn">Browse File
                                     <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
                                 </button>
@@ -149,13 +149,14 @@
                         <label for="universityIDCopy">University ID Scanned Copy<span class="req"> *</span></label>
                         <div class="file-drop-area">
                             <div class="file-content">
-                                <span>Drag & Drop to Upload file</span>
+                                <span>Drag & Drop to Upload University ID Scanned Copy</span>
                                 <button type="button" class="browse-btn">Browse File
-                                    <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".jpg, .jpeg, .png, .pdf" required>
+                                    <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".pdf,.doc,.docx" required>
                                 </button>
                                 <span class="file-name">No file selected</span>
                             </div>
                         </div>
+                        <span class="req-msg">Only PDF, DOC, DOCX files are allowed, and maximum file size is 5MB</span>
                         <span class="error-msg"><?php echo !empty($data['universityIDCopy_err']) ? $data['universityIDCopy_err'] : ''; ?></span>
                     </div>
                     <div class="input-container"></div>
@@ -174,13 +175,13 @@
                 <div class="form-row">
                     <div class="input-container">
                         <label for="password">Password<span class="req"> *</span></label>
-                        <input type="password" id="password" name="password" value="<?php echo $data['password']; ?>" placeholder="Enter Password" required>
+                        <input type="password" id="password" name="password" value="<?php echo $data['password']; ?>" placeholder="Enter Password" required minlength="8">
                         <span class="req-msg">Password must contain at least 8 characters, including UPPER/lowercase and numbers</span>
                         <span class="error-msg"><?php echo !empty($data['password_err']) ? $data['password_err'] : ''; ?></span>
                     </div>
                     <div class="input-container">
                         <label for="confirm_password">Confirm Password<span class="req"> *</span></label>
-                        <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $data['confirm_password']; ?>" placeholder="Enter Confirm Password" required>
+                        <input type="password" id="confirm_password" name="confirm_password" value="<?php echo $data['confirm_password']; ?>" placeholder="Enter Confirm Password" required required minlength="8">
                         <span class="error-msg"><?php echo !empty($data['confirm_password_err']) ? $data['confirm_password_err'] : ''; ?></span>
                     </div>
                 </div>

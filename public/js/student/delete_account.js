@@ -1,17 +1,35 @@
-let dapopup = document.getElementById("popup-stu");
+let dapopup = document.getElementById("popup-deactivate");
 
+// Function to show the delete account confirmation popup
 function showdeleteaccountconfirm() {
-    popup_stu.classList.toggle("active");
-}
-
-function showdeleteaccountconfirm(){
     dapopup.classList.add("active");
+    disableScrolling();
+    scrollToTop();
 }
 
-function closedeleteaccountconfirm(){
+// Function to close the delete account confirmation popup
+function closedeleteaccountconfirm() {
     dapopup.classList.remove("active");
+    enableScrolling();
 }
 
-function canceldeleteaccountconfirm(){
+// Function to cancel the delete account confirmation popup
+function canceldeleteaccountconfirm() {
     dapopup.classList.remove("active");
+    enableScrolling();
+}
+
+// Helper function to disable scrolling
+function disableScrolling() {
+    document.body.style.overflow = "hidden";
+}
+
+// Helper function to enable scrolling
+function enableScrolling() {
+    document.body.style.overflow = "auto";
+}
+
+// Helper function to scroll to the top of the page
+function scrollToTop() {
+    window.scrollTo(0, 0);
 }

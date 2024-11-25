@@ -69,11 +69,17 @@
         </div>
 
         <div class="job-card">
+            <div class="card-icons">
+                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                                <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                
+                                <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                            </div>
             <div class="job-logo">
                 <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
             </div>
             <div class="job-details">
-
+                    
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><?php echo $data['post']->Location; ?></p>
                 <p><?php echo $data['post']->SalaryRange; ?></p>
@@ -85,7 +91,7 @@
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
-
+                
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -103,9 +109,49 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
 
 <script>
     function goToMakeComplaint(jobId) {
         window.location.href = "/uniquest/student/make_complain/" + jobId;
     }
+</script>
+
+<script>
+    function toggleFavorite(icon) {
+    icon.classList.toggle("fa-regular");
+    icon.classList.toggle("fa-solid");
+    icon.classList.toggle("icon-active");
+}
+
+function toggleBookmark(icon, jobId) {
+icon.classList.toggle("fa-regular");
+icon.classList.toggle("fa-solid");
+icon.classList.toggle("icon-active");
+}
+
+// Function to bookmark a job
+function bookmarkJob(jobId, iconElement) {
+    // Create a new FormData object to send the jobId
+    const formData = new FormData();
+    formData.append('job_id', jobId); // Append the job ID to the request data
+
+    // Create a new XMLHttpRequest to send the data to the server
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
+
+    // Set up the callback for when the request completes
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+        } else {
+            alert('Failed to bookmark the job.');
+        }
+    };
+
+    // Send the request with the form data
+    xhr.send(formData);
+}
+
 </script>
