@@ -46,7 +46,7 @@ p{
     font-size: 1.3em;
 }
 
-.reviews-section h4{
+.reviews-section h4, .view-card-2 h4{
     font-size: 1.2em;
 
 }
@@ -118,6 +118,57 @@ p{
 .job-details .job-rating {
     font-size: 1.2em;
     color: #fbc02d;
+}
+
+.job-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.job-item {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    border: 2px solid #299b63;
+}
+
+.job-item h5 {
+    font-size: 1.3em;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.job-item p {
+    font-size: 1.1em;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.job-item span {
+    display: block;
+    font-size: 1em;
+    color: #555;
+}
+
+.job-item .apply-btn {
+    margin-top: 10px;
+    background-color: #299b63;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.job-item .apply-btn:hover {
+    background-color: #137d4a;
 }
 
 /* Social Media Icons */
@@ -330,6 +381,110 @@ p{
     color: #b4332f !important;
 }
 
+/* General container for the card section */
+.view-card {
+    padding: 20px;
+    background-color: #f9faff;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 1200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    
+}
+
+.view-card h4 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.job-list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto; 
+    padding-bottom: 10px; 
+}
+
+.job-item {
+    background-color: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 10px 15px;
+    text-align: left;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 250px; 
+}
+
+.job-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+}
+
+.job-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.job-header h5 {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+
+.job-tags {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.tag {
+    font-size: 12px;
+    color: #007bff;
+    background-color: #e6f4ff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.job-description {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.job-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.details-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+}
+
+.details-btn {
+    background-color: #ffffff;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.details-btn:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
 .card-icons {
     top: 20px;
     right: 20px;
@@ -349,4 +504,3 @@ p{
     transform: scale(1.5); 
     transition: transform 0.2s ease-in-out, color 0.2s ease-in-out; 
 }
-
