@@ -369,7 +369,8 @@ class userModel
     public function deactivateAccount($userId)
     {
         try {
-            $this->db->query('UPDATE User SET Status = "Deactive" WHERE UserID = :userId');
+            // Update User table with status and time of deactivation
+            $this->db->query('UPDATE User SET Status = "Deactive", DeactivationDate = NOW() WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             if ($this->db->execute()) {
                 return true;

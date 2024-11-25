@@ -168,12 +168,14 @@ class User extends Controller
             $_POST = filter_input_array(INPUT_POST);
 
             $data = [
-                'confirm' => trim($_POST['confirm']),
+                'confirm' => isset($_POST['confirm']) ? trim($_POST['confirm']) : '',
                 'confirm_err' => ''
             ];
-
+    
             // Validate confirm
-            $data['confirm_err'] = Validator::isEmpty($data['confirm']) ? 'Please confirm account deactivation' : '';
+            if (empty($data['confirm']) || $data['confirm'] !== 'yes') {
+                $data['confirm_err'] = 'Please confirm account deactivation';
+            }
 
             // Check if there are no errors
             if (empty($data['confirm_err'])) {
