@@ -43,8 +43,9 @@ class User extends Controller
                     // Create session
                     $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
-                    die('Deactive');//TODO: Handle this
-
+                    //activate account again and logge in user
+                    $this->model->activateAccount($loggedInUser->UserID);
+                    $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
                     if ($loggedInUser->Role === 'Student') {
                         $this->view('pages/login/wait_to_verify_stu');

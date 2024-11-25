@@ -462,4 +462,23 @@ class userModel
             return false;
         }
     }
+
+    public function activateAccount($userId)
+    {
+        try {//todo: add logs
+            $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
+            $this->db->bind(':userId', $userId);
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
