@@ -37,12 +37,13 @@ class Database
         }
         return self::$instance;
     }
+  
     // Prepare statement with query
     public function query($sql) {
         $this->stmt = $this->dbh->prepare($sql);
     }
 
-    // Bind values
+    //Bind values
     public function bind($param, $value, $type = null)
     {
         if (is_null($type)) {
@@ -75,21 +76,21 @@ class Database
         }
     }
 
-    // Get result set as array of objects
+    //Get result set as array of objects
     public function resultSet()
     {
         $this->execute();
         return $this->stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    // Get single record as object
+    //Get single record as object
     public function single()
     {
         $this->execute();
         return $this->stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    // Get row count
+    //Get row count
     public function rowCount()
     {
         return $this->stmt->rowCount();
@@ -119,3 +120,4 @@ class Database
         return $this->dbh->lastInsertId();
     }
 }
+

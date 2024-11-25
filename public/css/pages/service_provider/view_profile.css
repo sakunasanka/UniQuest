@@ -242,6 +242,43 @@ a:hover {
     font-size: 20px; 
 }
 
+.btn-row {
+    margin-top: 20px; /* Push the buttons to the bottom */
+    display: flex;
+    justify-content: end; /* Spread the buttons evenly */
+    align-items: center;
+    gap: 40px;
+    padding: 10px 0; /* Add some padding for better spacing */
+}
+
+.btn-row button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+button.approve-btn {
+    background-color: #32a852;
+    color: #ffffff;
+}
+
+button.reject-btn {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+button.approve-btn:hover {
+    background-color: #038a27;
+}
+
+button.reject-btn:hover {
+    background-color: #c82333;
+}
+
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .view-card {

@@ -56,7 +56,13 @@
                     <div class="info-row">
                         <label>Uploaded CV</label>
                         <span class="colon">:</span>
-                        <span class="kk"><a href="<?php echo UPLOADROOT; ?>/cvs/<?php echo $data['user']['CV'] ?>" target="_blank">View CV</a></span>
+                        <span class="kk">
+                            <?php if ($data['user']['CV']): ?>
+                                <a href="<?php echo UPLOADROOT; ?>/cvs/<?php echo $data['user']['CV']; ?>" target="_blank">View CV</a>
+                            <?php else: ?>
+                                No uploaded CV
+                            <?php endif; ?>
+                        </span>
                     </div>
                 </div>
 

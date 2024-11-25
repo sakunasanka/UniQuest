@@ -52,7 +52,15 @@ class User extends Controller
                         $this->view('pages/login/wait_to_verify_ser');
                     }
                 } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
-                    die('Not Approved');//TODO: Handle this
+                    if ($loggedInUser->Role === 'Student') {
+                        $this->view('pages/login/deactivate_stu');
+                    } else if ($loggedInUser->Role === 'Company') {
+                        $this->view('pages/login/deactivate_ser');
+                    }
+                    if(isset($_SESSION['user_id'])){
+                        session_unset();
+                        session_destroy();
+                    }
                     
                 } else {
                     $data['password_err'] = 'Password incorrect';
@@ -107,7 +115,7 @@ class User extends Controller
             } else if ($user['Role'] === 'Admin') {
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
-                Redirect::to(URLROOT . '/verification_team/dashboard');
+                Redirect::to(URLROOT . '/verification_team/user_ver_all');
             }
             //print user details
             // print_r($_SESSION);
@@ -149,7 +157,7 @@ class User extends Controller
                 Redirect::to(URLROOT . '/login');
             }
         } catch (Exception $e) {
-            die($e->getMessage());
+            die($e->getMessage());//TODO: Handle this
         }
     }
 
@@ -160,12 +168,14 @@ class User extends Controller
             $_POST = filter_input_array(INPUT_POST);
 
             $data = [
-                'confirm' => trim($_POST['confirm']),
+                'confirm' => isset($_POST['confirm']) ? trim($_POST['confirm']) : '',
                 'confirm_err' => ''
             ];
-
+    
             // Validate confirm
-            $data['confirm_err'] = Validator::isEmpty($data['confirm']) ? 'Please confirm account deactivation' : '';
+            if (empty($data['confirm']) || $data['confirm'] !== 'yes') {
+                $data['confirm_err'] = 'Please confirm account deactivation';
+            }
 
             // Check if there are no errors
             if (empty($data['confirm_err'])) {
@@ -190,6 +200,11 @@ class User extends Controller
 
     public function errorPage() {
         $this->view('pages/404_not_found/page_not_found');
+    }
+
+    public function contact_admin()
+    {
+        $this->view('pages/student/contact_admin');
     }
 }
 ?>

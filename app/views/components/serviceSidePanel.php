@@ -46,6 +46,12 @@
             Reviews
         </button>
 
+        <!-- Trending companies -->
+        <button class="nav-btn" data-path="/uniquest/student/trendyCompany">
+            <span class="material-symbols-outlined"> trending_up </span>
+            Trending Companies
+        </button>
+
         <!-- Premium -->
         <button class="nav-btn" data-path="/UniQuest/service_provider/premium">
         <span class="material-symbols-outlined">workspace_premium</span>
@@ -59,10 +65,10 @@
         </button>
 
         <!-- Help and Support -->
-        <button class="nav-btn" data-path="/UniQuest/service_provider/support">
+        <!-- <button class="nav-btn" data-path="/UniQuest/service_provider/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
-        </button>
+        </button> -->
     </nav>
 
     <!-- Logout -->
