@@ -1,0 +1,308 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema uniquestdb_uniquest
+-- -----------------------------------------------------
+
+CREATE SCHEMA IF NOT EXISTS `uniquestdb_uniquest` DEFAULT CHARACTER SET utf8 ;
+USE `uniquestdb_uniquest` ;
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`user` (
+  `UserID` INT(10) NOT NULL AUTO_INCREMENT,
+  `Password` VARCHAR(255) NOT NULL,
+  `Email` VARCHAR(255) NOT NULL,
+  `Role` ENUM('Admin', 'VT-Member', 'Student', 'Company') NOT NULL,
+  `RegisterDate` DATETIME NOT NULL,
+  `ContactNo` VARCHAR(10) NOT NULL DEFAULT '',
+  `Status` ENUM('Active', 'Deactive', 'Pending', 'Not Approved') NOT NULL,
+  PRIMARY KEY (`UserID`),
+  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC),
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 10037
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`admin`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`admin` (
+  `AdminID` INT(10) NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `ProfilePic` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`AdminID`),
+  INDEX `fk_Administration_User1_idx` (`AdminID` ASC),
+  CONSTRAINT `fk_Administration_User1`
+    FOREIGN KEY (`AdminID`)
+    REFERENCES `uniquestdb_uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`company`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`company` (
+  `CompanyID` INT(10) NOT NULL,
+  `CompanyName` VARCHAR(255) NOT NULL,
+  `Description` VARCHAR(255) NULL DEFAULT NULL,
+  `CompanyLogo` VARCHAR(255) NULL DEFAULT NULL,
+  `StreetNo` VARCHAR(45) NOT NULL,
+  `AddressLine1` VARCHAR(45) NOT NULL,
+  `AddressLine2` VARCHAR(45) NULL DEFAULT NULL,
+  `City` VARCHAR(45) NOT NULL,
+  create_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`CompanyID`),
+  INDEX `fk_ServiceProvider_User1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_ServiceProvider_User1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquestdb_uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`student`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`student` (
+  `StudentID` INT(10) NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `ProfilePic` VARCHAR(255) NULL DEFAULT NULL,
+  `Gender` ENUM('Male', 'Female') NOT NULL,
+  `DOB` DATE NOT NULL,
+  `NIC_No` VARCHAR(12) NOT NULL,
+  `NIC_Copy` VARCHAR(255) NOT NULL,
+  `CV` VARCHAR(255) NULL DEFAULT NULL,
+  `StreetNo` VARCHAR(45) NOT NULL,
+  `AddressLine1` VARCHAR(45) NOT NULL,
+  `AddressLine2` VARCHAR(45) NULL DEFAULT NULL,
+  `City` VARCHAR(45) NOT NULL,
+  `University` VARCHAR(255) NOT NULL,
+  `UniversityID` VARCHAR(45) NOT NULL,
+  `UniversityID_Copy` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`StudentID`),
+  INDEX `fk_Student_User_idx` (`StudentID` ASC),
+  CONSTRAINT `fk_Student_User`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquestdb_uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`verificationteam`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`verificationteam` (
+  `VT_MemberID` INT(10) NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `ProfilePic` VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (`VT_MemberID`),
+  INDEX `fk_VerficationTeam_User1_idx` (`VT_MemberID` ASC),
+  CONSTRAINT `fk_VerficationTeam_User1`
+    FOREIGN KEY (`VT_MemberID`)
+    REFERENCES `uniquestdb_uniquest`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`jobs` (
+
+  `JobID` INT NOT NULL AUTO_INCREMENT ,
+
+  `Title` VARCHAR(100) NULL,                  -- Job Name
+  `Description` TEXT NULL,                    -- Job Description
+  `Location` VARCHAR(100) NULL,               -- Job Location
+  `Category` ENUM('Full-time', 'Part-time', 'Internship') NULL, -- Job Type (expanded to include 'Full-time')
+  `JobBenefits` TEXT NULL,                    -- Job Benefits
+  `Address` VARCHAR(255) NULL,                -- Address
+  `RequiredQualifications` TEXT NULL,         -- Required Qualifications
+  `SalaryRange` VARCHAR(45) NULL,             -- Salary Range
+  `CompanyID` INT NOT NULL,
+  create_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`JobID`, `CompanyID`),
+  INDEX `fk_Jobs_ServiceProvider1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_Jobs_ServiceProvider1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquestdb_uniquest`.`company` (`CompanyID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`bookmarkJobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`bookmarkJobs` (
+  `StudentID` INT NOT NULL,
+  `JobID` INT NOT NULL,
+  PRIMARY KEY (`StudentID`, `JobID`),
+  INDEX `fk_Student_has_Jobs_Jobs1_idx` (`JobID` ASC),
+  INDEX `fk_Student_has_Jobs_Student1_idx` (`StudentID` ASC),
+  CONSTRAINT `fk_Student_has_Jobs_Student1`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquestdb_uniquest`.`student` (`StudentID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Student_has_Jobs_Jobs1`
+    FOREIGN KEY (`JobID`)
+    REFERENCES `uniquestdb_uniquest`.`jobs` (`JobID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`complaint_jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`complaint_jobs` (
+  `ComplaintID` INT NOT NULL AUTO_INCREMENT,           -- Primary key with auto-increment
+  `Description` TEXT NULL,                             -- Complaint description
+  `Status` ENUM('Pending', 'Resolved') NULL DEFAULT 'Pending', -- Status of the complaint with a default value
+  `StudentID` INT NOT NULL,                            -- Foreign key referencing the student table
+  `JobID` INT NOT NULL,                                -- Foreign key referencing the jobs table
+  `ComplainedDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Date and time of the complaint
+  PRIMARY KEY (`ComplaintID`),                        -- Primary key on ComplaintID
+  INDEX `fk_complaint_jobs_student_idx` (`StudentID`), -- Index for StudentID
+  INDEX `fk_complaint_jobs_job_idx` (`JobID`),         -- Index for JobID
+  CONSTRAINT `fk_complaint_jobs_student` 
+    FOREIGN KEY (`StudentID`) 
+    REFERENCES `uniquestdb_uniquest`.`student` (`StudentID`) 
+    ON DELETE CASCADE 
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_complaint_jobs_job` 
+    FOREIGN KEY (`JobID`) 
+    REFERENCES `uniquestdb_uniquest`.`jobs` (`JobID`) 
+    ON DELETE CASCADE 
+    ON UPDATE CASCADE
+) ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `uniquestdb_uniquest`.`Review`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniquestdb_uniquest`.`Review` (
+  `ReviewID` INT NOT NULL,
+  `Rating` INT NULL,
+  `Comment` VARCHAR(45) NULL,
+  `StudentID` INT NOT NULL,
+  `CompanyID` INT NOT NULL,
+  PRIMARY KEY (`ReviewID`, `StudentID`, `CompanyID`),
+  INDEX `fk_Review_Student1_idx` (`StudentID` ASC),
+  INDEX `fk_Review_ServiceProvider1_idx` (`CompanyID` ASC),
+  CONSTRAINT `fk_Review_Student1`
+    FOREIGN KEY (`StudentID`)
+    REFERENCES `uniquestdb_uniquest`.`student` (`StudentID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_Review_ServiceProvider1`
+    FOREIGN KEY (`CompanyID`)
+    REFERENCES `uniquestdb_uniquest`.`company` (`CompanyID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- View `uniquestdb_uniquest`.`v_jobs`
+-- -----------------------------------------------------
+
+CREATE VIEW v_jobs AS 
+    SELECT 
+        jobs.JobID AS JobID,
+        company.CompanyID AS CompanyID,
+        jobs.Title AS Title,
+        company.CompanyLogo AS CompanyLogo,
+        company.CompanyName AS CompanyName,
+        jobs.Description AS Description,
+        jobs.Location AS Location,
+        jobs.Category AS Category,
+        jobs.JobBenefits AS JobBenefits,
+        jobs.Address AS Address,
+        jobs.RequiredQualifications AS RequiredQualifications,
+        jobs.SalaryRange AS SalaryRange,
+        user.Email AS Email,
+        user.ContactNo AS ContactNo,
+        jobs.Create_at AS jobs_create_at,         -- Use correct capitalization
+        company.Create_at AS company_create_at    -- Use correct capitalization
+    FROM jobs 
+    INNER JOIN company ON jobs.CompanyID = company.CompanyID
+    INNER JOIN user ON company.CompanyID = user.UserID
+    ORDER BY jobs.Create_at DESC;
+
+
+-- -----------------------------------------------------
+-- View `uniquestdb_uniquest`.`v_bookmarkedJobs`
+-- -----------------------------------------------------
+
+CREATE VIEW v_bookmarkedJobs AS
+SELECT 
+    bj.StudentID,                   -- From BookmarkJobs table
+    j.JobID,                        -- From Jobs table
+    c.CompanyID,                    -- From Company table
+    j.Title,                        -- Job title
+    c.CompanyLogo,                  -- Company logo
+    c.CompanyName,                  -- Company name
+    j.Description,                  -- Job description
+    j.Location,                     -- Job location
+    j.Category,                     -- Job category
+    j.JobBenefits,                  -- Job benefits
+    j.Address,                      -- Job address
+    j.RequiredQualifications,       -- Job qualifications
+    j.SalaryRange,                  -- Salary range
+    u.Email,        -- Company's email from User table
+    u.ContactNo,  -- Company's contact number from User table
+    j.create_at AS jobs_create_at,    -- Job creation timestamp
+    c.create_at AS company_create_att -- Company creation timestamp
+FROM 
+    bookmarkJobs bj
+INNER JOIN 
+    jobs j ON bj.JobID = j.JobID
+INNER JOIN 
+    company c ON j.CompanyID = c.CompanyID
+INNER JOIN 
+    user u ON c.CompanyID = u.UserID
+ORDER BY 
+    j.create_at DESC;
+
+
+-- -----------------------------------------------------
+-- View `uniquestdb_uniquest`.`StudentJobComplaints`
+-- -----------------------------------------------------
+
+CREATE VIEW student_job_complaints AS
+SELECT 
+    jobs.Title AS JobTitle,
+    user.Email AS CompanyEmail,
+    complaint_jobs.Description AS Complaint,
+    CONCAT(student.FirstName, ' ', student.LastName) AS StudentName,
+    complaint_jobs.ComplainedDate,
+    complaint_jobs.Status
+FROM 
+    complaint_jobs
+JOIN 
+    jobs ON complaint_jobs.JobID = jobs.JobID
+JOIN 
+    company ON jobs.CompanyID = company.CompanyID
+JOIN 
+    user ON company.CompanyID = user.UserID
+JOIN 
+    student ON complaint_jobs.StudentID = student.StudentID;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
