@@ -11,7 +11,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
-            <button class="back-btn"  onclick="window.location.href='<?php echo URLROOT; ?>/admin/company_mng'">
+            <button class="back-btn">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
                 <h1>User Management</h1>
             </button>
@@ -51,3 +51,6 @@
 </div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminBackButton.js"></script>

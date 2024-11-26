@@ -232,9 +232,19 @@ class Admin extends Controller
     //     $this->view('pages/admin/job_ver_all');
     // }
 
+    public function ptjob_detail()
+    {
+        $this->view('pages/admin/ptjob_detail');
+    }
+
     public function job_ver_pending()
     {
         $this->view('pages/admin/job_ver_pending');
+    }
+
+    public function ptjob_ver_detail()
+    {
+        $this->view('pages/admin/ptjob_ver_detail');
     }
 
     public function job_ver_not()
