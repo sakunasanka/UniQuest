@@ -171,4 +171,7 @@ function bookmarkJob(jobId, iconElement) {
 function goToCompanyDescription($companyID) {
     window.location.href = "/uniquest/student/companydescription/"+$companyID;
 }
+function goToAddReview(companyID){
+    window.location.href = "/uniquest/student/addReview/" + companyID;
+}  
 </script>
