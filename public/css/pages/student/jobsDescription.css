@@ -52,7 +52,7 @@ p{
 }
 
 .reviews-section {
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 10px;
     width: 100%;
 }
@@ -503,4 +503,8 @@ p{
     color: #333;
     transform: scale(1.5); 
     transition: transform 0.2s ease-in-out, color 0.2s ease-in-out; 
+}
+
+.job-description h3 {
+    margin-bottom: 0;
 }
