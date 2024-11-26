@@ -60,7 +60,7 @@
             </div>
 
             <div class="buttons btn-space-between">
-                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button>
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             </div>
             <div class="make-complain">
@@ -155,3 +155,10 @@ function bookmarkJob(jobId, iconElement) {
 }
 
 </script>
+
+<script>
+    function goToAddReview(companyID){
+        window.location.href = "/uniquest/student/addReview/" + companyID;
+    }
+</script>
+
