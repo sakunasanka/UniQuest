@@ -12,10 +12,20 @@
             <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Logo not available"> 
 
             <div class="view-card-content">
-                <h1>Acme Inc.</h1>
+                <div class="title-with-bookmark">
+                    <h1>Acme Inc.</h1>
+                    <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                        <div class="card-icons">
+                            <i class="fa fa-share-alt" aria-hidden="true"></i>
+                            <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                        </div>
+                    <?php endif;?>
+                </div>
+                
+                
                 <h2>Software & Technology</h2>
                 <p>Acme Inc. is a leading software company that specializes in developing innovative solutions for businesses of all sizes. With a team of talented engineers and designers, we are committed to delivering high-quality products that help our clients achieve their goals.</p>
-
+                
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
@@ -34,6 +44,7 @@
                         <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
                     </div>
                 </div>
+                
             </div>
         </div>
      
@@ -116,3 +127,19 @@
         window.location.href = "/uniquest/student/jobsdescription/"+10;
     }   
 </script>
+
+
+<script>
+    function toggleFavorite(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+
+    function toggleBookmark(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+</script>
+

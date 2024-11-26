@@ -52,7 +52,6 @@ p{
 }
 
 .reviews-section {
-    margin-top: 20px;
     padding: 10px;
     width: 100%;
 }
@@ -507,4 +506,10 @@ p{
 
 .job-description h3 {
     margin-bottom: 0;
+}
+
+.title-with-bookmark{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

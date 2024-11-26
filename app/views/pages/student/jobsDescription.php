@@ -36,7 +36,7 @@
             <?php endif;?>    
 
             <div class="reviews-section">
-                <h4>Reviews and Ratings about this company</h4>
+                <h3>Reviews and Ratings about this company</h3>
 
                  <!-- Reviews on Main Page -->
                  <?php for ($i = 0; $i < 3; $i++): ?>
