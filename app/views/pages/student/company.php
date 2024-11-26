@@ -91,6 +91,6 @@
 
 <script>
     function goToCompanyDescription() {
-        window.location.href = "/uniquest/student/companydescription/"+10;
+        window.location.href = "/uniquest/student/companydescription/"+10045;
     }
 </script>

@@ -114,7 +114,7 @@
                 </div>
             </div>
             <div class="buttons">
-                <button onclick="goToCompanyDescription()" class="apply-btn">View Company</button>
+            <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
             </div>
         </div>     
     </div>
@@ -168,7 +168,7 @@ function bookmarkJob(jobId, iconElement) {
     xhr.send(formData);
 }
 
-function goToCompanyDescription() {
-    window.location.href = "/uniquest/student/companydescription/"+10;
+function goToCompanyDescription($companyID) {
+    window.location.href = "/uniquest/student/companydescription/"+$companyID;
 }
 </script>

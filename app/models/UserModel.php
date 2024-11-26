@@ -463,18 +463,4 @@ class userModel
         }
     }
 
-    public function getCompanyByJobID($id) {
-        try {
-            $this->db->query('SELECT CompanyID FROM JobPost WHERE JobID = :id');
-            $this->db->bind(':id', $id);
-            $company = $this->db->single();
-            return $company;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
-        }
-    }
 }

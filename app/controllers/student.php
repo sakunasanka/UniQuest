@@ -196,6 +196,7 @@ class Student extends Controller
 
     public function company()
     {
+        
         $this->view('pages/student/company');
     }
 
@@ -268,7 +269,7 @@ class Student extends Controller
 
     public function companyDescription($id)
     {
-        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
     
         $data =[
             'post' => $posts
