@@ -89,24 +89,22 @@
                                     
                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                 </div>
-            <?php endif;?>    
+            <?php endif;?> 
             <div class="job-logo">
                 <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
             </div>
             <div class="job-details">
-                    
                 <h3><?php echo $data['post']->Title; ?></h3>
-                <p><?php echo $data['post']->Location; ?></p>
+                <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                 <p><?php echo $data['post']->SalaryRange; ?></p>
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
-
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                <p><?php echo $data['post']->Address; ?></p>
+                <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
-                
+
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -117,7 +115,7 @@
             <div class="buttons">
                 <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
             </div>
-        </div>     
+        </div>    
     </div>
 </div>
 
