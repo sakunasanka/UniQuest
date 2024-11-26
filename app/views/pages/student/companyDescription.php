@@ -74,23 +74,32 @@
                                 <span class="reviewer-name">- John Doe</span>
                                 <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                             </div>
-                            <div class="review-actions">
-                                <button class="like-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined like-icon">thumb_up</span>
-                                </button>
-                                <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
+                            <?php  if (($_SESSION['user_role'] == 'Student') ||($_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
+                                <div class="review-actions">
+                                    <button class="like-btn" data-id="<?php echo $i; ?>">
+                                        <span class="material-symbols-outlined like-icon">thumb_up</span>
+                                    </button>
+                                    <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
 
-                                <button class="dislike-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined dislike-icon">thumb_down</span>
-                                </button>
-                                <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
-                            </div>
+                                    <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                        <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                                    </button>
+                                    <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                                </div>
+                            <?php endif;?>    
                         </div>
                     <?php endfor; ?>
                 </div>
                 <div class="buttons btn-space-between">
-                        <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+               
+                <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                    <?php else:?>
+                        <div></div>
                         <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                
+                    <?php endif;?> 
                 </div>
             </div>  
         </div>
@@ -103,5 +112,5 @@
 <script>
     function goToJobDescription() {
         window.location.href = "/uniquest/student/jobsdescription/"+10;
-    }
+    }   
 </script>

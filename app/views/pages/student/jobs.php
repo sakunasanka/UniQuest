@@ -47,12 +47,15 @@
                                         <?php echo $post->Location; ?>
                                 </div>
                             </div>
-                            <div class="card-icons">
-                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                
-                                <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
-                            </div>
+                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+ 
+                                <div class="card-icons">
+                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    
+                                    <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                                </div>
+                            <?php endif;?>
                         </div>
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
