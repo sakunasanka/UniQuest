@@ -621,7 +621,14 @@ class Student extends Controller
 
     public function myreviews()
     {
-        $this->view('pages/student/myreviews');
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
+
+        $data = [
+            'reviews' => $reviews
+        ];
+
+        $this->view('pages/student/myreviews', $data);
+
     }
 
 }

@@ -49,6 +49,13 @@ class RateAndReviewModel
         $this->db->bind(':company_id', $company_id);
         return $this->db->resultSet();
     }
+
+    public function getReviewsByStuId($student_id)
+    {
+        $this->db->query('SELECT * FROM companyreviews WHERE StudentID = :student_id ORDER BY created_at DESC');
+        $this->db->bind(':student_id', $student_id);
+        return $this->db->resultSet();
+    }
     
     public function updateReview($data)
     {
