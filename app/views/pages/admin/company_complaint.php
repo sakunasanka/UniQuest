@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/adm_header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -8,8 +8,8 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/admin/job_complaint">Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/admin/company_complaint">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/job_complaint">Jobs</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/company_complaint">Companies</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -20,19 +20,17 @@
                     <tr>
                         <th onclick="sortTable(0)">Company</th>
                         <th onclick="sortTable(1)">Company Email</th>
-                        <th onclick="sortTable(2)">Complaint</th>
-                        <th onclick="sortTable(3)">Student Name</th>
-                        <th onclick="sortTable(4)">Complained Date</th>
-                        <th onclick="sortTable(5)">Status</th>
+                        <th onclick="sortTable(2)">No of complaints</th>
+                        <th onclick="sortTable(3)">Most recent complaint date</th>
+                        <th onclick="sortTable(4)">Status</th>
                         <th class="no-sort">View</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 1</td>
-                        <td>Student 1</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -43,9 +41,8 @@
                     </tr>
                     <tr>
                         <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>3</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -56,9 +53,8 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -69,9 +65,8 @@
                     </tr>
                     <tr>
                         <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>1</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -82,9 +77,8 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>4</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -95,9 +89,8 @@
                     </tr>
                     <tr>
                         <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>2</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
@@ -108,9 +101,8 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>2</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -121,9 +113,8 @@
                     </tr>
                     <tr>
                         <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>1</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -134,9 +125,8 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>3</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">
@@ -147,9 +137,8 @@
                     </tr>
                     <tr>
                         <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Complaint 2</td>
-                        <td>Student 2</td>
+                        <td>sakiththewmika@gmail.com</td>
+                        <td>1</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Resolved</span></td>
                         <td class="action">

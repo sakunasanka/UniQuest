@@ -8,7 +8,7 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="placeholder.png" alt="Company Logo"> 
+            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Logo not available"> 
 
             <div class="view-card-content">
                 <h1>Acme Inc.</h1>
@@ -35,6 +35,33 @@
                 </div>
             </div>
         </div>
+     
+
+<div class="view-card">
+  <div class="job-list">
+    <?php for ($i = 0; $i < 3; $i++): ?>
+      <div class="job-item" onclick="goToJobDescription()">
+        <div class="job-header">
+          <div>
+            <h5>Senior UX Designer</h5>
+          </div>
+        </div>
+        <div class="job-tags">
+          <span class="tag">On-Site</span>
+          <span class="tag">Full-Time</span>
+          <span class="tag">Design</span>
+        </div>
+        <p class="job-description">
+        Acme Inc. seeks a Senior UX Designer to create user-centric designs, collaborating with teams to deliver innovative, intuitive software solutions for exceptional user experiences.
+        </p>
+        <div class="job-actions">
+          <button class="details-btn">View Details</button>
+        </div>
+      </div>
+    <?php endfor; ?>
+  </div>
+</div>
+
             <div class="view-card view-card-2">
                 <div class="reviews-section">
                     <h4>Reviews and Ratings about this company</h4>
@@ -65,10 +92,16 @@
                         <button onclick="goToAddReview()" class="apply-btn">Add review</button>
                         <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                 </div>
-            </div>    
+            </div>  
         </div>
     </div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+
+<script>
+    function goToJobDescription() {
+        window.location.href = "/uniquest/student/jobsdescription/"+10;
+    }
+</script>

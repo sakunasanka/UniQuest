@@ -1,47 +1,47 @@
 <aside class="sidebar">
     <nav class="nav-menu">
-        <button class="nav-btn" data-path="/uniquest/admin/dashboard">
+        <button class="nav-btn" data-path="/UniQuest/admin/dashboard">
             <span class="material-symbols-outlined"> dashboard </span>
             Dashboard
         </button>
 
-        <button class="nav-btn" data-paths="/uniquest/admin/students_mng,/uniquest/admin/company_mng,/uniquest/admin/verTeam_mng,/uniquest/admin/add_member,/uniquest/admin/add_student,/uniquest/admin/add_company">
+        <button class="nav-btn" data-paths="/UniQuest/admin/students_mng,/UniQuest/admin/company_mng,/UniQuest/admin/verTeam_mng,/UniQuest/admin/add_member,/UniQuest/admin/add_student,/UniQuest/admin/add_company">
         <span class="material-symbols-outlined"> manage_accounts</span>
             User Management
         </button>
 
-        <button class="nav-btn" data-paths="/uniquest/admin/ptjobs_mng,/uniquest/admin/intern_mng">
+        <button class="nav-btn" data-paths="/UniQuest/admin/ptjobs_mng,/UniQuest/admin/intern_mng">
         <span class="material-symbols-outlined"> folder_managed </span>
             Jobs Management
         </button>
 
-        <button class="nav-btn" data-paths="/uniquest/admin/user_ver_all,/uniquest/admin/user_ver_pending,/uniquest/admin/user_ver_not">
+        <button class="nav-btn" data-paths="/UniQuest/admin/user_ver_pending,/UniQuest/admin/user_ver_not">
         <span class="material-symbols-outlined"> person_check </span>
             User Verification
         </button>
 
-        <button class="nav-btn" data-paths="/uniquest/admin/job_ver_all,/uniquest/admin/job_ver_pending,/uniquest/admin/job_ver_not">
+        <button class="nav-btn" data-paths="/UniQuest/admin/job_ver_pending,/UniQuest/admin/job_ver_not">
         <span class="material-symbols-outlined"> domain_verification </span>
             Jobs Verification
         </button>
 
-        <button class="nav-btn" data-paths="/uniquest/admin/job_complaint,/uniquest/admin/company_complaint">
+        <button class="nav-btn" data-paths="/UniQuest/admin/job_complaint,/UniQuest/admin/company_complaint">
         <span class="material-symbols-outlined"> problem </span>
             Complaints
         </button>
 
-        <button class="nav-btn" data-path="/uniquest/admin/analytics">
+        <button class="nav-btn" data-path="/UniQuest/admin/analytics">
         <span class="material-symbols-outlined"> monitoring </span>
             Analytics
         </button>
 
-        <button class="nav-btn" data-path="/uniquest/admin/reports">
+        <button class="nav-btn" data-path="/UniQuest/admin/reports">
         <span class="material-symbols-outlined"> summarize </span>
             Reports
         </button>
     </nav>
 
-    <button class="nav-btn logout-btn" data-path="/uniquest/admin/reports">
+    <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">
     <span class="material-symbols-outlined"> logout </span>
         Logout
     </button>
