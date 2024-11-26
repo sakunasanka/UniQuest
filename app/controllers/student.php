@@ -323,6 +323,10 @@ class Student extends Controller
         $this->view('pages/student/jobs', $data);
         
     }
+    public function notifications()
+    {
+        $this->view('pages/student/notification_alerts');
+    }
 
     public function company()
     {
@@ -364,25 +368,32 @@ class Student extends Controller
         $this->view('pages/student/saveCompanies');
     }
 
-    public function make_complain()
+    public function saveInternships()
     {
+        $this->view('pages/student/saveInternships');
+    }
+
+    public function make_complain($id = null)
+    {
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $data = [
-                'job_posting' => trim($_POST['job_posting']),
-                'issue' => trim($_POST['issue']),
+                'complaint' => trim($_POST['complaint']),
+                'posts' => $posts
             ];
-            $this->model('jobModel')->create_complain($data);
+            $this->model('jobModel')->create_complaint($data);
             
-            Redirect::to('make_complain');
+            Redirect::to(URLROOT . '/student/make_complain/'.$id);
               
         }
 
         else {
             $data = [
-                'job_posting' => '',
-                'issue' => '',
+                'complaint' => '',
+                'posts' => $posts
             ];
             $this->view('pages/student/make_complain', $data);
         }
@@ -409,6 +420,11 @@ class Student extends Controller
         $this->view('pages/login/wait_to_verify_stu');
     }
 
+    public function deactive()
+    {
+        $this->view('pages/login/deactivate_stu');
+    }
+
     public function internships()
     {
         $this->view('pages/student/internships');
@@ -416,13 +432,30 @@ class Student extends Controller
   
     public function jobsDescription($id){
         
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+    
+        // Get bookmarked jobs for the user
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         $posts = $this->model('M_jobpost')->getpostbyid($id);
+        } 
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+        }
+    
         $data =[
-            'post' => $posts
+            'post' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds
         ];
-        // echo json_encode($data);
+    
         $this->view('pages/student/jobsDescription', $data);
     
     }
 
 }
+
+
+    
