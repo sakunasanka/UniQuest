@@ -32,11 +32,17 @@
             Trending Companies
         </button>
 
-        <!-- Help and Support -->
+        <!-- Reviews by me -->
+        <button class="nav-btn" data-path="/uniquest/student/trendyCompany">
+            <span class="material-symbols-outlined"> reviews </span>
+            Reviews by me
+        </button>
+
+        <!-- Help and Support
         <button class="nav-btn" data-path="/uniquest/student/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
-        </button>
+        </button> -->
     </nav>
 
     <button class="nav-btn logout-btn" data-path="/uniquest/user/logout">
