@@ -64,7 +64,7 @@
 
             <div class="buttons btn-space-between">
             <?php  if ($_SESSION['user_role'] == 'Student'):?>
-                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button>
                
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             <?php else:?>
