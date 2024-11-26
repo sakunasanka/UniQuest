@@ -14,6 +14,14 @@ class M_jobpost {
         $row = $this->db->single();
         return $row;
     }
+
+    public function getpostbycompanyid($jobpostId){
+        $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
+        $this->db->bind(':id', $jobpostId);
+        $row = $this->db->single();
+        return $row;
+    }
+
     public function getPost(){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
         $this->db->bind(':id', $_SESSION['user_id']);
