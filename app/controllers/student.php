@@ -266,14 +266,39 @@ class Student extends Controller
         
     }
 
-    public function companyDescription()
+    public function companyDescription($id)
     {
-        $this->view('pages/student/companyDescription');
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+    
+        $data =[
+            'post' => $posts
+        ];
+    
+        $this->view('pages/student/companyDescription', $data);
     }
-
-    public function internshipDescription()
+    
+    public function internshipDescription($id)
     {
-        $this->view('pages/student/internshipDescription');
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+    
+        // Get bookmarked jobs for the user
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        } 
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+        }
+    
+        $data =[
+            'post' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds
+        ];
+    
+        $this->view('pages/student/internshipDescription', $data);
     }
 
     public function jobsApply()
