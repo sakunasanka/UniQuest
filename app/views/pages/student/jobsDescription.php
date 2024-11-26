@@ -1,5 +1,6 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
+<?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
@@ -64,7 +65,7 @@
 
             <div class="buttons btn-space-between">
             <?php  if ($_SESSION['user_role'] == 'Student'):?>
-                <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button>
+                <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
                
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             <?php else:?>
@@ -171,7 +172,4 @@ function bookmarkJob(jobId, iconElement) {
 function goToCompanyDescription($companyID) {
     window.location.href = "/uniquest/student/companydescription/"+$companyID;
 }
-function goToAddReview(companyID){
-    window.location.href = "/uniquest/student/addReview/" + companyID;
-}  
 </script>
