@@ -60,7 +60,6 @@ p{
 .review {
     margin-top: 15px;
     padding: 10px;
-    width: calc(90vw - 250px);
     background-color: #ffffff;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);

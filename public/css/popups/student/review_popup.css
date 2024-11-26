@@ -1,3 +1,13 @@
+.popup .content {
+    height: 500px; 
+    overflow-y: auto; 
+    padding-top: 5px;
+}
+
+.reviews-section-popup {
+    margin-top: 10px !important;
+}
+
 .popup .popup_top_padding{
     padding-top: 0;
 }

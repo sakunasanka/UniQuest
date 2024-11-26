@@ -11,16 +11,22 @@
         <h2>Your Ratings and Reviews</h2>
             <div class="view-card view-card-2">
                 <div class="reviews-section">
-
                     <!-- Reviews on Main Page -->
                     <?php foreach($data['reviews'] as $review): ?>
                         <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
-                            <p class="review-text"><?php echo $review-> Comment;?></p>
+                            <!-- Review Header: Company Name and Date -->
+                            <div class="review-header">
+                                <p class="company-title" onclick="goToCompany(<?php echo $review->CompanyID; ?>)"><?php echo $review->CompanyName; ?></p>
+                                <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
+                            </div>
+                            <!-- Review Comment -->
+
                             <div class="review-details">
-                                <span class="reviewer-name">- John Doe</span>
+                                <p class="review-text"><?php echo $review->Comment; ?></p>
                                 <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                             </div>
-                            <?php  if (($_SESSION['user_role'] == 'Student') ||($_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
+
+                            <?php if (($_SESSION['user_role'] == 'Student') || ($_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                                 <div class="review-actions">
                                     <button class="like-btn" data-id="<?php echo $i; ?>">
                                         <span class="material-symbols-outlined like-icon">thumb_up</span>
@@ -32,10 +38,11 @@
                                     </button>
                                     <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
                                 </div>
-                            <?php endif;?>    
+                            <?php endif; ?>    
                         </div>
                     <?php endforeach; ?>
                 </div>
+
             </div>  
     </div>
 </div>
@@ -45,3 +52,8 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/student/starhover.js"></script>
 
+<script>
+    function goToCompany(companyID) {
+        window.location.href = "<?php echo URLROOT; ?>/student/companydescription/" + companyID;
+    }
+</script>    
