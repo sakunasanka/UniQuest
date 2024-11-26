@@ -1,5 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
-
+<?php require APPROOT . '/views/components/stu_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/make_complain.css">
 
 <!-- Sidebar and Content Layout -->
@@ -8,38 +7,37 @@
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
     <!-- Content Area -->
-     <div class="content-area">
-    <div class="complaint-form-container">
-            <h2>Report an Issue</h2>
-            <p>Let us know about any problem with Providers</p>
+    <main class="content-area">
+    <div class="complaint-container">
+        <!-- Complaint Form Section -->
+            <div class="complaint-form-container">
+                <h2>Report an Issue</h2>
+                <p>Let us know about any problem with this job</p>
+        
+                <!-- Form -->
+                <form action="<?php echo URLROOT; ?>/student/make_complain/<?php echo $data['posts']->JobID; ?>" method="POST">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" value="<?php echo $data['posts']->CompanyName; ?>" readonly>
+            
+                    <label for="job_posting">Job Posting</label>
+                    <input type="text" id="job_posting" name="job_posting" placeholder="Enter job posting details" value="<?php echo $data['posts']->Title; ?>" readonly>
+            
+                    <label for="issue">Issue</label>
+                    <textarea id="issue" name="complaint" rows="5" placeholder="Describe the issue" required><?php echo $data['complaint']; ?></textarea>
+            
+                    <!-- Submit Button -->
+                    <button type="submit" class="complaint-submit-btn">Submit Report</button>
+                </form>
+            </div>
 
-            <form action="submit_complaint.php" method="post">
-                <label for="company-name">Company</label>
-                <input type="text" id="company-name" name="company" placeholder="Enter Company name" required>
-
-                <label for="job-posting">Job Posting</label>
-                <input type="text" id="job-posting" name="job_posting" placeholder="Enter job posting details" required>
-
-                <label for="issue-description">Issue</label>
-                <textarea id="issue-description" name="issue" rows="4" placeholder="Describe the issue" required></textarea>
-
-                <button type="submit" class="complaint-submit-btn">Submit Report</button>
-            </form>
-        </div>
-
+        <!-- Image Section -->
         <div class="complaint-image-container">
-            <img src="report_icon.png" alt="Report Icon">
+            <img src="<?php echo URLROOT; ?>/public/images/complain.png" alt="Report Issue Image">
         </div>
-    </div>
+    </main>
 </div>
-</div>
 
 
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminBackButton.js"></script>
 
-<footer class="footer">
-
-</footer>
-
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-
-<?php require APPROOT . '/views/components/footer.php'; ?>    <main class="content-area">
+<?php require APPROOT . '/views/components/footer.php'; ?>

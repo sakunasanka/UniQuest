@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,8 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
 </head>
 <body>
     <nav class="navbar">
@@ -16,20 +19,20 @@
                 <img src="<?php echo URLROOT; ?>/images/UniQuest3.png" alt="UniQuest Logo">
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="hov">Home</a></li>
+                <li><a href="/UniQuest/home" class="hov">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
                     <div class="dropdown-content">
-                        <a href="#">Part-time Jobs</a>
-                        <a href="#">Internships</a>
+                        <a href="/UniQuest/student/jobs">Part-time Jobs</a>
+                        <a href="/UniQuest/student/internships">Internships</a>
                     </div>
                 </li>
-                <li><a href="#" class="hov">About Us</a></li>
-                <li><a href="#" class="hov">Contact Us</a></li>
+                <li><a href="/UniQuest/about" class="hov">About Us</a></li>
+                <li><a href="/UniQuest/contact" class="hov">Contact Us</a></li>
             </ul>
+            <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
-                <a href="#"><span class="material-symbols-outlined">account_circle</span></a>
-                <a href="#"><span class="material-symbols-outlined">notifications</span></a>
+                <a href="/UniQuest/student/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>
         </div>
