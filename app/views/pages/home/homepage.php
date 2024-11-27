@@ -75,7 +75,7 @@
 
     <!-- Service Providers Section -->
     <section class="service-providers">
-    <h2>For Service Providers <i class="material-icons large-icon">business</i></h2>
+    <h2>For Companies <i class="material-icons large-icon">business</i></h2>
     <p>Join UniQuest and gain access to a diverse pool of talented students eager to work and learn.</p>
     <div class="service">
         <div class="image-content">
