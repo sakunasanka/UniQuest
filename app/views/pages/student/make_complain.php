@@ -12,18 +12,18 @@
         <!-- Complaint Form Section -->
             <div class="complaint-form-container">
                 <h2>Report an Issue</h2>
-                <p>Let us know about any problem with Providers</p>
+                <p>Let us know about any problem with this job</p>
         
                 <!-- Form -->
-                <form action="<?php echo URLROOT; ?>/submit_report" method="POST">
+                <form action="<?php echo URLROOT; ?>/student/make_complain/<?php echo $data['posts']->JobID; ?>" method="POST">
                     <label for="company">Company</label>
-                    <input type="text" id="company" name="company" placeholder="Enter Company name" required>
+                    <input type="text" id="company" name="company" value="<?php echo $data['posts']->CompanyName; ?>" readonly>
             
                     <label for="job_posting">Job Posting</label>
-                    <input type="text" id="job_posting" name="job_posting" placeholder="Enter job posting details" required>
+                    <input type="text" id="job_posting" name="job_posting" placeholder="Enter job posting details" value="<?php echo $data['posts']->Title; ?>" readonly>
             
                     <label for="issue">Issue</label>
-                    <textarea id="issue" name="issue" rows="5" placeholder="Describe the issue" required></textarea>
+                    <textarea id="issue" name="complaint" rows="5" placeholder="Describe the issue" required><?php echo $data['complaint']; ?></textarea>
             
                     <!-- Submit Button -->
                     <button type="submit" class="complaint-submit-btn">Submit Report</button>

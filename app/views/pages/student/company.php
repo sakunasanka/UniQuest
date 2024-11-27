@@ -8,6 +8,7 @@
     <div class="content-area">
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/internships">Internships</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
         </div>
         <div class="container">
@@ -27,22 +28,30 @@
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
                     <div class="card">
-                        <div class="card-logo">
+                        <div class="card-logo" onclick="goToCompanyDescription()">
                             <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
                         </div>
                         <div class="card-content">
-                            <div class="job-rating">
-                                <i class="fa fa-star"></i> 4.8
-                            </div>
-                            <h3 class="job-title">Spotify</h3>
-                            <p class="job-location">Based on 126 student reviews</p>
-                            <button class="view-button">View Company</button>
+                            <div class="content-hover-class" onclick="goToCompanyDescription()">
+                                <div class="title-content">
+                                    <h3 class="company-title">Spotify</h3>
+                                    <div class="job-rating">
+                                        <i class="fa fa-star"></i> 4.8
+                                    </div>
+                                </div>
 
-                            <div class="card-icons">
-                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                                <div class="job-location-details">
+                                    Colombo, Western Province
+                                </div>
                             </div>
+                            
+                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                                <div class="card-icons">
+                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                                </div>
+                            <?php endif;?>
                         </div>
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -79,3 +88,9 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToCompanyDescription() {
+        window.location.href = "/uniquest/student/companydescription/"+10045;
+    }
+</script>

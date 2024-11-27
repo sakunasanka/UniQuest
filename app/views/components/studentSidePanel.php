@@ -14,7 +14,7 @@
                 <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
             </button>
             <div class="dropdown-menu">
-            <button class="nav-btn" data-path="/uniquest/student/all_app">All</button>
+                <button class="nav-btn" data-path="/uniquest/student/all_app">All</button>
                 <button class="nav-btn" data-path="/uniquest/student/accepted_app">Accepted</button>
                 <button class="nav-btn" data-path="/uniquest/student/rejected_app">Rejected</button>
             </div>
@@ -32,12 +32,29 @@
             Trending Companies
         </button>
 
-        <!-- Help and Support -->
+        <button class="nav-btn" data-path="/UniQuest/user/profile">
+            <span class="material-symbols-outlined"> person </span>
+            Profile
+        </button>
+
+        <!-- Reviews by me -->
+        <button class="nav-btn" data-path="/uniquest/student/myreviews">
+            <span class="material-symbols-outlined"> reviews </span>
+            Reviews by me
+        </button>
+
+        <!-- Help and Support
         <button class="nav-btn" data-path="/uniquest/student/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
-        </button>
+        </button> -->
     </nav>
+
+    <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">
+        <span class="material-symbols-outlined"> logout </span>
+        Logout
+    </button>
+
 </aside>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/serviceSidePanel.js"></script>

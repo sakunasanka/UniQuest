@@ -1,0 +1,131 @@
+.popup .overlay{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.7);
+    z-index: 101;
+    display: none;
+    
+}
+
+.popup .content{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #fff;
+    width: 100vh;
+    z-index: 102;
+    text-align: left;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.popup.active .overlay{
+    display:flex ;
+    backdrop-filter: blur(5px);
+}
+
+.popup.active .content{
+    transition: all 300ms ease-in-out;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.warning {
+    background-color: #ffeded;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #ff5e5e;
+    font-weight: bold;
+    border: 1px solid #ffb3b3;
+    font-size: 14px;
+    margin-top: 20px;;
+}
+
+.warning p {
+    font-size: 14px;
+    color:rgb(224, 122, 71);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.content label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    margin-top: 30px;
+}
+
+label input[type="checkbox"] {
+    width: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.label-text {
+    display: block;
+    white-space: nowrap;
+    font-size: 16px;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: end;
+}
+
+.delete-btn {
+    margin-top:30px;
+    background-color: #ff5e5e;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #ff3b3b;
+}
+
+.cancel-btn {
+    background-color: #333;
+    color: #fff;
+    margin-top: 30px;;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #555;
+}
+
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s;
+    border: none;
+    background: none;
+}
+
+.close-btn:hover {
+    color: #ff5e5e;
+}
