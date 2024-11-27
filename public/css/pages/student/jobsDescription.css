@@ -513,3 +513,7 @@ p{
     justify-content: space-between;
     align-items: center;
 }
+
+.job-description  h2 {
+    margin-bottom: -10px;
+}
