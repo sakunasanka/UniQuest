@@ -28,15 +28,15 @@
 
                             <?php if (($_SESSION['user_role'] == 'Student') || ($_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                                 <div class="review-actions">
-                                    <button class="like-btn" data-id="<?php echo $i; ?>">
+                                    <button class="like-btn" data-id="<?php echo $review->ReviewID; ?>">
                                         <span class="material-symbols-outlined like-icon">thumb_up</span>
                                     </button>
-                                    <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
+                                    <span class="like-count" data-id="<?php echo $review->ReviewID; ?>">0 likes</span>
 
-                                    <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                    <button class="dislike-btn" data-id="<?php echo $review->ReviewID; ?>">
                                         <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                     </button>
-                                    <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                                    <span class="dislike-count" data-id="<?php echo $review->ReviewID; ?>">0 dislikes</span>
                                 </div>
                             <?php endif; ?>    
                         </div>
@@ -51,6 +51,7 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/student/starhover.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/student/myreviews.js"></script>
 
 <script>
     function goToCompany(companyID) {

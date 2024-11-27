@@ -52,3 +52,20 @@ h2 {
     gap: 10px;
     margin-top: 10px;
 }
+
+.like-btn, .dislike-btn {
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.like-btn:hover, .reply-btn:hover, .dislike-btn:hover {
+    background-color: #c0c0c0;
+}
+.like-count, .reply-count, .dislike-count {
+    font-size: 0.9em;
+    color: #777;
+}
