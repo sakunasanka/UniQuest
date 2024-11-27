@@ -25,6 +25,10 @@
                                 <p class="review-text"><?php echo $review->Comment; ?></p>
                                 <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                             </div>
+                            <div class="post-control-btn">
+                                   <button class="post-control-btn1" on>EDIT</button>
+                                   <button class="post-control-btn2">DELETE</button>
+                            </div>
 
                             <?php if (($_SESSION['user_role'] == 'Student') || ($_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                                 <div class="review-actions">
