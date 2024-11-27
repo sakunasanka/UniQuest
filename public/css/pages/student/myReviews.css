@@ -69,3 +69,35 @@ h2 {
     font-size: 0.9em;
     color: #777;
 }
+
+.post-control-btn-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.post-control-btn {
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.post-control-btn.edit {
+    background-color: #007bff;
+}
+
+.post-control-btn.delete {
+    background-color: #dc3545;
+}
+
+.post-control-btn.edit:hover {
+    background-color: #0056b3;
+}
+
+.post-control-btn.delete:hover {
+    background-color: #c82333;
+}
