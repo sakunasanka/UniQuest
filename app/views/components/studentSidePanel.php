@@ -38,7 +38,7 @@
         </button>
 
         <!-- Reviews by me -->
-        <button class="nav-btn" data-path="/uniquest/student/trendyCompany">
+        <button class="nav-btn" data-path="/uniquest/student/myreviews">
             <span class="material-symbols-outlined"> reviews </span>
             Reviews by me
         </button>

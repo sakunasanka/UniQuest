@@ -481,6 +481,11 @@ class Student extends Controller
     
     }
 
+    public function myreviews()
+    {
+        $this->view('pages/student/myreviews');
+    }
+
 }
 
 
