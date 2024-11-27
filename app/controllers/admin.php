@@ -144,6 +144,11 @@ class Admin extends Controller
         $this->view('pages/admin/company_complaint');
     }
 
+    public function complaint_detail()
+    {
+        $this->view('pages/admin/complaint_detail');
+    }
+
     public function ptjobs_mng()
     {
         $this->view('pages/admin/ptjobs_mng');
