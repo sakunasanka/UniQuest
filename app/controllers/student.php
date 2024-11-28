@@ -46,7 +46,7 @@ class Student extends Controller
 
     public function index()
     {
-        // $this->jobs();
+        $this->jobs();
     }
 
     public function contact_sp()

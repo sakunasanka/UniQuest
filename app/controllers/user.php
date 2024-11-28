@@ -18,7 +18,7 @@ class User extends Controller
 
     public function index()
     {
-        // $this->login();
+        $this->login();
     }
 
     public function login() {

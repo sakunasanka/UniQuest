@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/register/register.css">
 </head>
+
 <body>
     <div class="reg-background">
         <button class="back" onclick="window.history.back()">

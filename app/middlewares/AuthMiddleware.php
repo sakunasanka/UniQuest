@@ -16,7 +16,8 @@ class AuthMiddleware {
         // Check if user has the required role
         if ($_SESSION['user_role'] !== $role) {
             // Redirect to error page
-            Redirect::to(URLROOT . '/home/unauth');//todo: redirect to error page
+            // Redirect::to(URLROOT . '/home/unauth');//todo: redirect to error page
+            require_once '../app/views/pages/403_forbidden/403_forbidden.php';
             exit;
         }
     }
