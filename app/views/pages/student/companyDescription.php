@@ -1,5 +1,6 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
+<?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
@@ -11,10 +12,20 @@
             <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Logo not available"> 
 
             <div class="view-card-content">
-                <h1>Acme Inc.</h1>
+                <div class="title-with-bookmark">
+                    <h1>Acme Inc.</h1>
+                    <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                        <div class="card-icons">
+                            <i class="fa fa-share-alt" aria-hidden="true"></i>
+                            <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                        </div>
+                    <?php endif;?>
+                </div>
+                
+                
                 <h2>Software & Technology</h2>
                 <p>Acme Inc. is a leading software company that specializes in developing innovative solutions for businesses of all sizes. With a team of talented engineers and designers, we are committed to delivering high-quality products that help our clients achieve their goals.</p>
-
+                
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
@@ -33,6 +44,7 @@
                         <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
                     </div>
                 </div>
+                
             </div>
         </div>
      
@@ -92,8 +104,9 @@
                 </div>
                 <div class="buttons btn-space-between">
                 <?php  if ($_SESSION['user_role'] == 'Student'):?>
-                <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button>
-               
+                <!-- <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button> -->
+                <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
+                
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                     <?php else:?>
                         <div></div>
@@ -113,7 +126,20 @@
     function goToJobDescription() {
         window.location.href = "/uniquest/student/jobsdescription/"+10;
     }   
-    function goToAddReview(companyID){
-        window.location.href = "/uniquest/student/addReview/" + companyID;
-    }  
 </script>
+
+
+<script>
+    function toggleFavorite(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+
+    function toggleBookmark(icon) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
+</script>
+

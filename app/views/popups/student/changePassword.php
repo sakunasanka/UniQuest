@@ -38,4 +38,3 @@
 </div>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/change_password.js"></script>
-
