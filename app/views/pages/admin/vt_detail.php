@@ -8,7 +8,7 @@
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
     <div class="content-area">
         <div class="content-header">
-            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/students_mng'">
+            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/verTeam_mng'">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
                 <h1>User Management</h1>
             </button>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="info-section">
-                <h3>My information</h3>
+                <h3>Verification Team Member information</h3>
                 <div class="info-row">
                     <label>Full Name</label>
                     <span class="colon">:</span>
