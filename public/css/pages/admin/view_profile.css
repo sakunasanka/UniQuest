@@ -117,6 +117,33 @@ label {
     background-color: #038a56;
 }
 
+.btn-row {
+    margin-top: auto; /* Push the buttons to the bottom */
+    display: flex;
+    justify-content: space-between; /* Spread the buttons evenly */
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0; /* Add some padding for better spacing */
+}
+
+.btn-row button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+button.contact-btn {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+button.contact-btn:hover {
+    background-color: #0056b3;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .profile-container {
