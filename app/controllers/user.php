@@ -109,13 +109,13 @@ class User extends Controller
     
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/user/profile');
+                Redirect::to(URLROOT . '/student/jobs');
             } else if ($user['Role'] === 'Company') {
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
-                Redirect::to(URLROOT . '/verification_team/user_ver_all');
+                Redirect::to(URLROOT . '/verification_team/user_ver_pending');
             }
             //print user details
             // print_r($_SESSION);
