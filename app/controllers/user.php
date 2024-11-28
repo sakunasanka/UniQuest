@@ -109,7 +109,7 @@ class User extends Controller
     
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/user/profile');
+                Redirect::to(URLROOT . '/student/jobs');
             } else if ($user['Role'] === 'Company') {
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {

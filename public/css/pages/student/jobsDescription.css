@@ -13,7 +13,7 @@ body {
 }
 
 .job-description {
-    width: 80%;
+    width: 100%;
     padding: 20px;
     padding-top: 0;
 }
@@ -411,9 +411,14 @@ p{
     border: 1px solid #e6e6e6;
     border-radius: 8px;
     padding: 10px 15px;
-    text-align: left;
+    text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
     min-width: 250px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 10px;
+    cursor: pointer;
 }
 
 .job-item:hover {
