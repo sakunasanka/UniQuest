@@ -1,8 +1,7 @@
-// Handle navigation and active button highlighting
 document.addEventListener("DOMContentLoaded", function () {
     const currentPath = window.location.pathname;
     const navMenu = document.querySelector(".nav-menu");
-
+    
     // Use event delegation to handle click events
     navMenu.addEventListener("click", function (event) {
         const button = event.target.closest(".nav-btn");

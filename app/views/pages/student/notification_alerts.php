@@ -1,81 +1,119 @@
 <?php 
   if ($_SESSION['user_role'] == 'Student') {
       require APPROOT . '/views/components/stu_header.php';
-  } else{
+  } else {
       require APPROOT . '/views/components/ser_header.php';
   } 
 ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/notification.css">
 
-
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
     <?php 
       if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/studentSidePanel.php';
+          require APPROOT . '/views/components/studentSidePanel.php';
       } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/serviceSidePanel.php';
-      } 
-      else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/verificationTeamSidePanel.php';
-      }
-      else {
-        require APPROOT . '/views/components/adminSidePanel.php';
+          require APPROOT . '/views/components/serviceSidePanel.php';
+      } else if ($_SESSION['user_role'] == 'VT-Member') {
+          require APPROOT . '/views/components/verificationTeamSidePanel.php';
+      } else {
+          require APPROOT . '/views/components/adminSidePanel.php';
       }
     ?>
-    
-    
+
+    <!-- Main Content -->
     <div class="content-area">
-    <div class="notification-item">
-      <div class="badge joined">Joined New User</div>
-      <div class="content">
-        <h4>New Registration: Finibus Bonorum et Malorum</h4>
-        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
-        <span class="author">Allen Deu</span>
-      </div>
-      <div class="time">24 Nov 2018 at 9:30 AM</div>
+        <div class="notification-header">
+            <h2>Notifications</h2>
+            <input type="text" class="search-bar" placeholder="Search Notifications" oninput="filterNotifications(this.value)">
+            <button class="mark-all-read-btn" onclick="markAllRead()">Mark All as Read</button>
+            
+        </div>
+
+        <div class="notifications" id="notificationsList">
+            <?php 
+            // Example notifications with read status
+            $notifications = [
+              [
+                  "type" => "joined",
+                  "title" => "New Registration: Finibus Bonorum",
+                  "content" => "A new user has registered successfully.",
+                  "author" => "Allen Deu",
+                  "time" => "24 Nov 2018",
+                  "read" => false
+              ],
+              [
+                  "type" => "message",
+                  "title" => "Darren Smith sent a new message",
+                  "content" => "You have received a new message from Darren Smith.",
+                  "author" => "Darren",
+                  "time" => "24 Nov 2018",
+                  "read" => true
+              ],
+              [
+                  "type" => "comment",
+                  "title" => "New Comment on Your Post",
+                  "content" => "Someone has left a comment on your post.",
+                  "author" => "Maria Gomez",
+                  "time" => "25 Nov 2018",
+                  "read" => false
+              ],
+              [
+                  "type" => "connect",
+                  "title" => "John Doe sent you a connection request",
+                  "content" => "You have received a new connection request from John Doe.",
+                  "author" => "John Doe",
+                  "time" => "25 Nov 2018",
+                  "read" => true
+              ]
+          ];
+          
+            foreach ($notifications as $notification) {
+                $readClass = $notification['read'] ? "read" : "unread";
+                echo "
+                <div class='notification-item $readClass' onclick='selectNotification(\"{$notification['title']}\")'>
+                    <div class='badge {$notification['type']}'>{$notification['type']}</div>
+                    <div class='content'>
+                        <h4>{$notification['title']}</h4>
+                        <p>{$notification['content']}</p>
+                        <span class='author'>{$notification['author']}</span>
+                    </div>
+                    <div class='time'>{$notification['time']}</div>
+                </div>";
+            }
+            ?>
+        </div>
     </div>
 
-    <div class="notification-item">
-      <div class="badge message">Message</div>
-      <div class="content">
-        <h4>Darren Smith sent new message</h4>
-        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
-        <span class="author">Darren</span>
-      </div>
-      <div class="time">24 Nov 2018 at 9:30 AM</div>
+    <!-- Notification Details Sidebar -->
+    <div class="notification-details" id="notificationDetails">
+        <h3>Notification Details</h3>
+        <p>Select a notification to view its details here.</p>
     </div>
+</div>
 
-    <div class="notification-item">
-      <div class="badge comment">Comment</div>
-      <div class="content">
-        <h4>Arin Ganshiram Commented on post</h4>
-        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
-        <span class="author">Arin Ganshiram</span>
-      </div>
-      <div class="time">24 Nov 2018 at 9:30 AM</div>
-    </div>
+<script>
+    function markAllRead() {
+        const items = document.querySelectorAll('.notification-item.unread');
+        items.forEach(item => item.classList.remove('unread'));
+        alert("All notifications marked as read!");
+    }
 
-    <div class="notification-item">
-      <div class="badge connect">Connect</div>
-      <div class="content">
-        <h4>Jullet Den Connect Allen Depk</h4>
-        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
-        <span class="author">Jullet Den</span>
-      </div>
-      <div class="time">24 Nov 2018 at 9:30 AM</div>
-    </div>
-  </div>
+    function filterNotifications(query) {
+        const items = document.querySelectorAll('.notification-item');
+        items.forEach(item => {
+            const title = item.querySelector('h4').textContent.toLowerCase();
+            if (title.includes(query.toLowerCase())) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
 
-
-
-
-
-
-
-
-
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
+    function selectNotification(title) {
+        const details = document.getElementById('notificationDetails');
+        details.innerHTML = `<h3>${title}</h3><p>Details about "${title}" will be displayed here.</p>`;
+    }
+</script>

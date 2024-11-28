@@ -151,7 +151,7 @@ class Register extends Controller
                     //clear data array
                     $data = [];
                     // Redirect to login page
-                    Redirect::to(URLROOT . '/user/login');
+                    Redirect::to(URLROOT . '/login');
                 } else {
                     die('Something went wrong');//TODO: Handle this
                 }
@@ -230,7 +230,7 @@ class Register extends Controller
                     //clear data array
                     $data = [];
                     // Redirect to login page
-                    Redirect::to(URLROOT . '/user/login');
+                    Redirect::to(URLROOT . '/login');
                 } else {
                     die('Something went wrong');//TODO: Handle this
                 }
