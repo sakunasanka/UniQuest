@@ -15,11 +15,6 @@
         <div class="form-container">
             <form action="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $data['job_id']; ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-column">
-                
-                    <div class="form-group">
-                        <label for="referral_id">Referral ID:</label>
-                        <input type="text" id="referral_id" name="referral_id" value="23477" readonly>
-                    </div>
 
                     <div class="form-group">
                         <label for="job_title">Job Title:</label>
@@ -64,7 +59,6 @@
         </div>
     </div>
 </div>
-<footer class="footer"></footer>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 

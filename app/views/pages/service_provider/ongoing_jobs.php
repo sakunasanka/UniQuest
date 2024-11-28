@@ -14,7 +14,7 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <button class="add-btn">
+                <button class="add-btn" onclick="goToPostJob()">
                     <span class="material-symbols-outlined">post_add</span>
                     <span class="add-btn-text">Post Job</span>
                 </button>
@@ -63,3 +63,9 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToPostJob() {
+        window.location.href = "<?php echo URLROOT; ?>/service_provider/jobpost";
+    }
+</script>
