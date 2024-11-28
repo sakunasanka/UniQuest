@@ -81,7 +81,7 @@
         </div>
 
         <div class="job-card">
-            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+            <?php  if (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="card-icons">
                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                     <i class="fa fa-share-alt" aria-hidden="true"></i>
