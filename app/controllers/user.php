@@ -116,13 +116,13 @@ class User extends Controller
     
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/user/profile');
+                Redirect::to(URLROOT . '/student/jobs');
             } else if ($user['Role'] === 'Company') {
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
-                Redirect::to(URLROOT . '/verification_team/user_ver_all');
+                Redirect::to(URLROOT . '/verification_team/user_ver_pending');
             }
             //print user details
             // print_r($_SESSION);
@@ -175,12 +175,14 @@ class User extends Controller
             $_POST = filter_input_array(INPUT_POST);
 
             $data = [
-                'confirm' => trim($_POST['confirm']),
+                'confirm' => isset($_POST['confirm']) ? trim($_POST['confirm']) : '',
                 'confirm_err' => ''
             ];
-
+    
             // Validate confirm
-            $data['confirm_err'] = Validator::isEmpty($data['confirm']) ? 'Please confirm account deactivation' : '';
+            if (empty($data['confirm']) || $data['confirm'] !== 'yes') {
+                $data['confirm_err'] = 'Please confirm account deactivation';
+            }
 
             // Check if there are no errors
             if (empty($data['confirm_err'])) {

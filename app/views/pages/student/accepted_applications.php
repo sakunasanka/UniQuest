@@ -20,7 +20,7 @@
                         <th onclick="sortTable(2)">Location</th>
                         <th onclick="sortTable(3)">Date</th>
                         <th onclick="sortTable(4)">Status</th>
-                        <th class="no-sort">Actions</th>
+                        <!-- <th class="no-sort">Actions</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -30,11 +30,11 @@
                         <td>Negombo</td>
                         <td>2024/08/16</td>
                         <td><span class="status active">Accepted</span></td>
-                        <td class="action">
+                        <!-- <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
-                        </td>
+                        </td> -->
                     </tr>
 
                     <tr>
@@ -43,11 +43,11 @@
                         <td>Colombo</td>
                         <td>2024/08/15</td>
                         <td><span class="status active">Accepted</span></td>
-                        <td class="action">
+                        <!-- <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
-                        </td>
+                        </td> -->
                     </tr>
                     <tr>
                         <td>Delivery Rider</td>
@@ -55,11 +55,11 @@
                         <td>Galle</td>
                         <td>2024/07/16</td>
                         <td><span class="status active">Accepted</span></td>
-                        <td class="action">
+                        <!-- <td class="action">
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
-                        </td>
+                        </td> -->
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

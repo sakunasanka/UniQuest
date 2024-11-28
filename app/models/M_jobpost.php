@@ -14,6 +14,14 @@ class M_jobpost {
         $row = $this->db->single();
         return $row;
     }
+
+    public function getpostbycompanyid($jobpostId){
+        $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
+        $this->db->bind(':id', $jobpostId);
+        $row = $this->db->single();
+        return $row;
+    }
+
     public function getPost(){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
         $this->db->bind(':id', $_SESSION['user_id']);
@@ -32,9 +40,9 @@ class M_jobpost {
     public function create($data) {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, Location, Category, JobBenefits, Address, RequiredQualifications, SalaryRange, CompanyID) 
+            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, CompanyID, Status) 
             VALUES 
-            (:job_name, :Description, :job_location, :job_category, :job_benifits, :adress, :required_skills, :salary_range, :company_id)
+            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :company_id, :status)
         ');
 
         // Bind the values from $data array
@@ -43,10 +51,10 @@ class M_jobpost {
         $this->db->bind(':job_location', $data['job_location']);
         $this->db->bind(':job_category', $data['job_category']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
-        $this->db->bind(':adress', $data['adress']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
         $this->db->bind(':company_id', $_SESSION['user_id']);
+        $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
         return $this->db->execute();

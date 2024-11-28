@@ -37,7 +37,7 @@
                         <td><?php echo $complaints_job->ComplainedDate?></td>
                         <td><span class="status active"><?php echo $complaints_job->Status?></span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
+                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail'">
                                 preview
                             </span>
                         </td>

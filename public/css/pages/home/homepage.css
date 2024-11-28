@@ -101,13 +101,13 @@ a {
     height: auto;
     justify-content: flex-start;
     align-items: center;
-    animation: fade 1.5s;
+    animation: fade 0.5s;
 }
 
 .slide.active {
     display: flex; /* Show the active slide */
     position: absolute; /* Ensure proper stacking */
-    animation: fade 1.5s ease-in-out; /* Apply the fade animation */
+    animation: fade 0.5s ease-in-out; /* Apply the fade animation */
 }
 
 .slide-content h3 {

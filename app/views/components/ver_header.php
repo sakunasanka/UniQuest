@@ -21,15 +21,22 @@
             </div>
             <ul class="nav-links">
                 <li><a href="/uniquest/home" class="hov">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
+                    <div class="dropdown-content">
+                        <a href="/UniQuest/student/jobs">Part-time Jobs</a>
+                        <a href="/UniQuest/student/internships">Internships</a>
+                        <a href="/UniQuest/student/company">Companies</a>
+                    </div>
+                </li>
                 <li><a href="/uniquest/verification_team/user_ver_all" class="hov">Go to verify</a></li>
                 <li><a href="/uniquest/about" class="hov">About Us</a></li>
                 <li><a href="/uniquest/service_provider/contact_admin" class="hov">Contact Us</a></li>
             </ul>
+            <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
-                <a href="/uniquest/user/profile"><span class="material-symbols-outlined">account_circle</span></a>
                 <a href="/uniquest/service_provider/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>
         </div>
     </nav>
-
