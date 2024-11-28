@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/popups/admin/deactivateJob.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -41,7 +42,7 @@
                             <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/ptjob_detail'">
                                 preview
                             </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
+                            <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
                                 block
                             </span>
                         </td>
@@ -56,7 +57,7 @@
                             <span class="material-symbols-outlined action-btn view">
                                 preview
                             </span>
-                            <span class="material-symbols-outlined action-btn activate">
+                            <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
                                 check_circle
                             </span>
                         </td>
