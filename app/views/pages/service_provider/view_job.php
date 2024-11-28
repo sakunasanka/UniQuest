@@ -14,16 +14,16 @@
             <h3>Qualifications:</h3>
             <ul>
                 <li><?php echo $data['post']->RequiredQualifications; ?></li>
-                <li>With a valid driver's license</li>
-                <li>Should own a Motorbike</li>
+                <!-- <li>With a valid driver's license</li>
+                <li>Should own a Motorbike</li> -->
             </ul>
 
             <h3>Benefits:</h3>
             <ul>
                 <li><?php echo $data['post']->JobBenefits; ?></li>
-                <li>Special Extra Allowances</li>
+                <!-- <li>Special Extra Allowances</li>
                 <li>Meals during service hours</li>
-                <li>Accommodation is provided</li>
+                <li>Accommodation is provided</li> -->
             </ul>
 
             <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
@@ -72,7 +72,7 @@
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
 
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                <p><?php echo $data['post']->Address; ?></p>
+                <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
