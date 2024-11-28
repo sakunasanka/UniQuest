@@ -10,20 +10,73 @@
         <div class="job-description">
             <h2><?php echo $data['post']->Title; ?></h2>
             <p><?php echo $data['post']->Location; ?></p>
-           
-            <h3>Qualifications:</h3>
+            
+            <h3>Description:</h3>
+            <!-- <ul>
+                <li><?php echo $data['post']->Description; ?></li>
+            </ul> -->
             <ul>
+            <?php
+                $description = $data['post']->Description;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $descriptionArray = explode("\n", $description);
+
+                // Generate the list items
+                foreach ($descriptionArray as $description) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($description))) {
+                        echo '<li>' . htmlspecialchars(trim($description)) . '</li>';
+                    }
+                }
+            ?>
+            </ul>
+            <h3>Qualifications:</h3>
+            <!-- <ul>
                 <li><?php echo $data['post']->RequiredQualifications; ?></li>
-                <!-- <li>With a valid driver's license</li>
-                <li>Should own a Motorbike</li> -->
+                <li>With a valid driver's license</li>
+                <li>Should own a Motorbike</li>
+            </ul> -->
+            <ul>
+            <?php
+                $qualifications = $data['post']->RequiredQualifications;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $qualificationsArray = explode("\n", $qualifications);
+
+                // Generate the list items
+                foreach ($qualificationsArray as $qualification) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($qualification))) {
+                        echo '<li>' . htmlspecialchars(trim($qualification)) . '</li>';
+                    }
+                }
+            ?>
+            </ul>
             </ul>
 
             <h3>Benefits:</h3>
-            <ul>
+            <!-- <ul>
                 <li><?php echo $data['post']->JobBenefits; ?></li>
-                <!-- <li>Special Extra Allowances</li>
+                <li>Special Extra Allowances</li>
                 <li>Meals during service hours</li>
-                <li>Accommodation is provided</li> -->
+                <li>Accommodation is provided</li>
+            </ul> -->
+            <ul>
+            <?php
+                $jobBenefits = $data['post']->JobBenefits;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $benefitArray = explode("\n", $jobBenefits);
+
+                // Generate the list items
+                foreach ($benefitArray as $benefit) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($benefit))) {
+                        echo '<li>' . htmlspecialchars(trim($benefit)) . '</li>';
+                    }
+                }
+            ?>
             </ul>
 
             <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
@@ -62,7 +115,10 @@
 
         <div class="job-card">
             <div class="job-logo">
-                <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
+                <img src="<?php echo empty($data['post']->CompanyLogo)
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['post']->CompanyLogo; ?>"
+                    alt="Burger King Logo">
             </div>
             <div class="job-details">
 

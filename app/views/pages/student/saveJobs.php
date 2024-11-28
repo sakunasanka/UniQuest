@@ -28,8 +28,11 @@
             <div class="cards-container">
                 <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
-                        <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
-                            <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
+                    <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
+                            <img src="<?php echo empty($post->CompanyLogo)
+                                            ? URLROOT . '/images/profile_pic_preview.png'
+                                            : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                                alt="Burger King Logo">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
