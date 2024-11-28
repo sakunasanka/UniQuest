@@ -38,7 +38,7 @@
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
+                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/ptjob_detail'">
                                 preview
                             </span>
                             <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">

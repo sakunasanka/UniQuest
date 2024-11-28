@@ -66,6 +66,11 @@ body {
     flex-shrink: 0; /* Prevent the image from shrinking */
 }
 
+.view-card-pic img:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
 .view-card-options {
     list-style: none;
     padding: 0;
@@ -98,7 +103,7 @@ body {
 
 .view-card h1 {
     font-size: 30px;
-    margin: 0;
+    margin-bottom: 5px;
     font-weight: bold;
     color: #333;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -111,11 +116,26 @@ body {
     font-weight: 500;
 }
 
+.view-card h3 {
+    font-size: 18px;
+    color: #666;
+    margin: 5px 0 20px;
+    font-weight: 500;
+}
+
+.view-card ul {
+    list-style: disc;
+    padding-left: 40px;
+    margin: 0;
+}
+
+.view-card ul li {
+    margin: 5px 0;
+}
+
 .view-card p {
     font-size: 16px;
     color: #555;
-    line-height: 1.6;
-    margin-bottom: 15px;
     text-align: justify;
 }
 
@@ -123,18 +143,18 @@ body {
 .view-card-info {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 100px;
     margin-top: 15px;
     padding: 10px 0;
     border-top: 1px solid #eee;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: start;
 }
 
 .view-card-info div {
     font-size: 16px;
     color: #333;
-    max-width: 200px;
+    max-width: 300px;
     /* flex: 1; */
 
 }
@@ -146,100 +166,9 @@ body {
     margin-bottom: 5px;
 }
 
-/* Link Styling */
-a {
-    color: #3498db;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-a:hover {
-    color: #2c8cc3;
-    text-decoration: underline;
-}
-
-.seemore p{
-    color: #4aa1fd;
-    text-decoration: none;
-    font-weight: 500;
-    margin-top: 10px;
-}
-
-/* Button Styling */
-.view-card-button {
-    background-color: #f39c12;
-    color: #fff;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.3s ease;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-}
-
-.review-main-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 40px;
-}
-
-.view-card-button:hover {
-    background-color: #e67e22;
-}
-
-.weblink {
-    text-decoration: none;
-    color: #f0a23a;
-}
-
-.weblink:hover {
-    color: #e0912a;
-}
-
-.reviews-section {
-    width: 100% !important;
-}
-
 .btn-space-between{
     width: 100vw;
     margin-top: 10px !important;
-}
-
-.edit-btn {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: 8px;
-}
-
-.edit-btn button {
-    background-color: #299b63; 
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.edit-btn button:hover {
-    background-color: #3cb56e; 
-}
-
-.edit-btn .material-symbols-outlined {
-    font-size: 20px; 
 }
 
 .btn-row {
@@ -278,14 +207,6 @@ button.reject-btn:hover {
     background-color: #c82333;
 }
 
-button.contact-btn {
-    background-color: #007bff;
-    color: #ffffff;
-}
-
-button.contact-btn:hover {
-    background-color: #0056b3;
-}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
@@ -301,6 +222,7 @@ button.contact-btn:hover {
     
     .view-card-info {
         justify-content: center;
+        gap: 20px;
     }
 
     .view-card-button {
