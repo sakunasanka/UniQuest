@@ -101,7 +101,7 @@ class Admin extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Upload profile picture
-                $profilePicResponse = FileUploadHelper::uploadFile($data['profilePic'], PUBROOT . '/uploads/profile_pictures/vt_member');
+                $profilePicResponse = FileUploadHelper::uploadFile($data['profilePic'], PUBROOT . '/uploads/profile_pictures/vT-Member');
                 if ($profilePicResponse['success']) {
                     $data['profilePicName'] = $profilePicResponse['file_name'];
                 } else {
