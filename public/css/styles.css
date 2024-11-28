@@ -3,7 +3,33 @@
 /* components */
 @import url("components/adminSidePanel.css");
 @import url("components/adminTopPanel.css");
+@import url("components/studentSidePanel.css");
 @import url("components/pagination.css");
+@import url("components/tableSearchBar.css");
 
 /* pages */
 @import url("pages/admin/students_mng.css");
+@import url("pages/service_provider/contact_admin.css");
+@import url("pages/service_provider/jobs_table.css");
+@import url("pages/admin/add_member.css");
+
+
+.content-area {
+    margin-left: 250px !important; /* Make room for the sidebar */
+    padding: 40px !important;
+    width: calc(100% - 250px) !important; /* Ensure content takes full width minus sidebar */
+    min-height: calc(100vh - 150px) !important; /* Ensures content area takes the available vertical space */
+    box-sizing: border-box !important; /* Prevents overflowing */
+    margin-top: 80px !important;
+}
+
+.main-container {
+    min-height: calc(100vh - 150px) !important; /* Ensure content area takes the available vertical space */
+}
+
+.main-container-without-side {
+    min-height: calc(100vh - 150px) !important;
+    padding: 40px !important;
+    margin-top: 80px !important;
+    box-sizing: border-box;
+}

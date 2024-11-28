@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Outfit", sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background: #f4f4f4;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    background-color: transparent;
+    border-radius: 10px;
+    overflow: hidden;
+    height: calc(100vh - 240px); 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.reg-container {
+    margin: 0;
+    background: #299b63;
+    display: flex;
+    justify-content: center;   
+    align-items: center;   
+    margin-top: 0px;    
+    padding: 120px 200px;
+    height: 100vh;
+}
+
+.image-side {
+    background-color:#ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px 40px;
+    border-radius: 10px 0 0 10px;
+    width: 45%;
+}
+
+.image-side img {
+    width: auto;
+    max-width: 600px;
+    height: 80%;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+.form-side {
+    padding: 30px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #f5f5f5;
+    border-radius: 0 10px 10px 0;
+    width: 55%;
+}
+
+.form-side h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    padding-left: 15px;
+    color: #666;
+}
+
+.form-row {
+    display: flex;
+    justify-content: center;
+    padding: 0px 10px;
+    gap: 20px;
+    margin-bottom: 5px;
+}
+
+.input-container {
+    padding: 5px;
+    display: block;
+}
+
+.input-center {
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-container label {
+    font-size: 1.3rem;
+    padding: 5px;
+    display: block;
+}
+
+.input-container input {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.form-row .input-container {
+    flex-basis: 90%; /* Makes two input containers fit in one row */
+}
+
+.form-row .input-center {
+    flex-basis: 80%; 
+}
+
+.input-container input:focus {
+    outline: none;
+    border-color: #32a852;
+}
+
+button[type="submit"] {
+    width: 30%;
+    background: #32a852;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background: #038a27;
+}
+
+.back {
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    z-index: 50;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.back span{
+    font-size: 40px;
+    font-variation-settings: 'OPSZ' 40;
+}
+
+.back:hover {
+    transform: scale(1.1);
+}
+
+.error-msg {
+    color: red;
+    font-size: 1.2rem;
+    margin-top: 5px;
+    padding-left: 15px;
+}
+
+.form-row .forget-password {
+    color: #32a852;
+    text-decoration: none;
+    font-size: 1.1rem;
+    display: flex;
+    justify-self: flex-end;
+}
+
+.form-row .reg {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.form-row .reg a {
+    color: #32a852;
+    text-decoration: none;
+}
+
+.form-row .forget-password:hover, .form-row .reg a:hover {
+    color: #038a27;
+    text-decoration: underline;
+}
+
+.form-row .forget-password:active, .form-row .reg a:active {
+    color: #038a27;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .image-side {
+        width: 100%;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .form-side {
+        width: 100%;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .image-side img {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px 10px 0 0;
+    }
+}
