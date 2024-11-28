@@ -14,6 +14,9 @@ require_once 'helpers/FileUploadHelper.php';
 require_once 'helpers/session_Helper.php';
 require_once 'helpers/TimeConvert_Helper.php';
 
+//load middlewares
+require_once 'middlewares/AuthMiddleware.php';
+require_once 'middlewares/URLMiddleware.php';
 
 $init = new Core();
 ?>

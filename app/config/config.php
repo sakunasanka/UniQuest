@@ -21,10 +21,10 @@
     define('SITENAME', 'UniQuest');
 
     //DB Params
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', 'uniquest');
+    // define('DB_HOST', 'localhost');
+    // define('DB_USER', 'root');
+    // define('DB_PASS', '');
+    // define('DB_NAME', 'uniquest');
 
     // Enable error displaying (for development only, consider disabling in production)
     ini_set('display_errors', 1);

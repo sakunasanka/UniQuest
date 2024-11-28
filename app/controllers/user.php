@@ -9,6 +9,13 @@ class User extends Controller
         $this->model = $this->model('userModel');
     }
 
+    public function auth($method) {
+        $protectedMethods = ['profile', 'deactivate'];
+        if (in_array($method, $protectedMethods)) {
+            AuthMiddleware::requireAuth();
+        }
+    }
+
     public function index()
     {
         echo 'user/index';
