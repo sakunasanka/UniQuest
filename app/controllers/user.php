@@ -115,7 +115,7 @@ class User extends Controller
             } else if ($user['Role'] === 'Admin') {
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
-                Redirect::to(URLROOT . '/verification_team/user_ver_all');
+                Redirect::to(URLROOT . '/verification_team/user_ver_pending');
             }
             //print user details
             // print_r($_SESSION);
