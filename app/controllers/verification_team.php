@@ -16,7 +16,7 @@ class Verification_team extends Controller
 
     public function index()
     {
-        // echo 'verification_team/index';
+        $this->user_ver_pending();
     }
 
     public function user_verified()
