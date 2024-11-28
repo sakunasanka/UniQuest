@@ -12,7 +12,8 @@
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
         </div>
         <div class="container">
-            <div class="search-bar-container">
+            <?php require APPROOT . '/views/components/searchBar.php'; ?>
+            <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -23,7 +24,7 @@
                         <span>Filters</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
         
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
