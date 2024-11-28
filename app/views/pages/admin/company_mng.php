@@ -47,11 +47,10 @@
                             </span>
                         </td>
                     </tr>
-
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Company 2</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>075 9851785</td>
                         <td>2024/05/16</td>
                         <td><span class="status inactive">Deactive</span></td>
                         <td class="action">
@@ -64,9 +63,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Company 3</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>075 9851785</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
@@ -109,9 +108,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Company 5</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>075 9851785</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
@@ -124,9 +123,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Company 4</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>075 9851785</td>
                         <td>2024/05/16</td>
                         <td><span class="status inactive">Deactive</span></td>
                         <td class="action">
@@ -139,9 +138,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Compnay 5</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>075 9851785</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
@@ -184,9 +183,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Company 1</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>075 9851785</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
@@ -264,11 +263,6 @@
         </div>
     </main>
 </div>
-
-<!-- Footer -->
-<footer class="footer">
-
-</footer>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>

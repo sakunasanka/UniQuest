@@ -9,15 +9,29 @@
     padding: 10px 16px;
     color: #000;
     border: none;
-    background-color: #e7e7e7;
+    background-color: transparent;
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    font-weight: 500;
 }
 
 .page-btn.active {
-    background-color: #32a852;
+    background-color: #32a852; 
     color: white;
+    border-radius: 10px; 
+    font-weight: bold; 
+    padding: 10px 20px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .page-btn:hover:not(.active) {
-    background-color: #f5f5f5;
+    color: #000;
+    font-weight: bold;
+    text-shadow: 0 0 3px #e7e7e7;
+}
+
+.page-btn:disabled {
+    color: #aaa;
+    cursor: not-allowed; 
+    background-color: transparent;
 }

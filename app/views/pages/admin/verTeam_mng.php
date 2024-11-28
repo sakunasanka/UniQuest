@@ -22,20 +22,20 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th>User Name</th>
-                        <th>Email</th>
-                        <th>Mobile Number</th>
-                        <th>Registered Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                <tr>
+                        <th onclick="sortTable(0)">User Name</th>
+                        <th onclick="sortTable(1)">Email</th>
+                        <th onclick="sortTable(2)">Mobile Number</th>
+                        <th onclick="sortTable(3)">Registered Date</th>
+                        <th onclick="sortTable(4)">Status</th>
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                <tr>
                         <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>071 2519865</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
@@ -50,11 +50,10 @@
                             </span>
                         </td>
                     </tr>
-
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Pamali</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>071 2519865</td>
                         <td>2024/05/16</td>
                         <td><span class="status inactive">Deactive</span></td>
                         <td class="action">
@@ -70,9 +69,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Sakuna</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>071 2519865</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
@@ -88,27 +87,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Sakuna</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>071 2519865</td>
                         <td>2024/05/16</td>
                         <td><span class="status active">Active</span></td>
                         <td class="action">
@@ -124,9 +105,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Sakith</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>076 4834398</td>
+                        <td>Sehara</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>071 2519865</td>
                         <td>2024/05/16</td>
                         <td><span class="status inactive">Deactive</span></td>
                         <td class="action">
@@ -138,6 +119,24 @@
                             </span>
                             <span class="material-symbols-outlined action-btn activate">
                                 person_add
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Wameesha</td>
+                        <td>uniquest@gmail.com</td>
+                        <td>071 2519865</td>
+                        <td>2024/05/16</td>
+                        <td><span class="status active">Active</span></td>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view">
+                                account_box
+                            </span>
+                            <span class="material-symbols-outlined action-btn edit">
+                                edit_square
+                            </span>
+                            <span class="material-symbols-outlined action-btn deactivate">
+                                person_remove
                             </span>
                         </td>
                     </tr>
@@ -147,11 +146,6 @@
         </div>
     </main>
 </div>
-
-<!-- Footer -->
-<footer class="footer">
-
-</footer>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
