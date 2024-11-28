@@ -482,5 +482,21 @@ class userModel
             return false;
         }
     }
+
+    public function getVTMembers()
+    {
+        try {
+            $this->db->query('SELECT UserID, Email, ContactNo, RegisterDate, Status FROM User WHERE Role = "VT-Member"');
+            $users = $this->db->resultSet();
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
 }
 
