@@ -43,7 +43,7 @@ class Admin extends Controller
 
     public function index()
     {
-        echo 'admin/index';
+        // $this->dashboard();
     }
 
     public function students_mng()

@@ -35,6 +35,10 @@ class Core
 
                 // Unset 1 index
                 unset($url[1]);
+            } else {
+                // Method does not exist
+                // Redirect to error page
+                require_once '../app/views/pages/404_not_found/page_not_found.php';
             }
         }
         //get params
