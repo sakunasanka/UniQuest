@@ -25,13 +25,14 @@
                 <li>Meals during service hours</li>
                 <li>Accommodation is provided</li>
             </ul>
+            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
-            <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
-
-            <div class="buttons">
-                <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
-                <button onclick="goToContactPage()" class="contact-btn">Contact</button>
-            </div>
+                <div class="buttons">
+                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
+                    <button onclick="goToContactPage()" class="contact-btn">Contact</button>
+                </div>
+            <?php endif;?>    
 
             <div class="reviews-section">
                 <h4>Reviews and Ratings about this company</h4>
@@ -44,33 +45,55 @@
                             <span class="reviewer-name">- John Doe</span>
                             <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                         </div>
-                        <div class="review-actions">
-                            <button class="like-btn" data-id="<?php echo $i; ?>">
-                                <span class="material-symbols-outlined like-icon">thumb_up</span>
-                            </button>
-                            <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
+                        <?php  if (($_SESSION['user_role'] == 'Student') ||($_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
+                            <div class="review-actions">
+                                <button class="like-btn" data-id="<?php echo $i; ?>">
+                                    <span class="material-symbols-outlined like-icon">thumb_up</span>
+                                </button>
+                                <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
 
-                            <button class="dislike-btn" data-id="<?php echo $i; ?>">
-                                <span class="material-symbols-outlined dislike-icon">thumb_down</span>
-                            </button>
-                            <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
-                        </div>
+                                <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                    <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                                </button>
+                                <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                            </div>
+                        <?php endif;?>    
                     </div>
                 <?php endfor; ?>
             </div>
 
             <div class="buttons btn-space-between">
-                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button>
+               
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+            <?php else:?>
+                <div></div>
+                <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+        
+            <?php endif;?>    
             </div>
+            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                <div class="make-complain">
+                    <button class="make-complain-btn"><p onclick="goToMakeComplaint(<?php echo $post->JobID; ?>)">Click here to make a complain about this job</p></button>
+                </div>
+            <?php endif;?>    
         </div>
 
         <div class="job-card">
+            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                <div class="card-icons">
+                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    
+                    <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                </div>
+            <?php endif;?>    
             <div class="job-logo">
                 <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
             </div>
             <div class="job-details">
-
+                    
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><?php echo $data['post']->Location; ?></p>
                 <p><?php echo $data['post']->SalaryRange; ?></p>
@@ -82,7 +105,7 @@
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
-
+                
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -91,7 +114,7 @@
                 </div>
             </div>
             <div class="buttons">
-                <button onclick="goToCompany()" class="apply-btn">View Company</button>
+                <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
             </div>
         </div>     
     </div>
@@ -100,3 +123,55 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
+
+<script>
+    function goToMakeComplaint(jobId) {
+        window.location.href = "/uniquest/student/make_complain/" + jobId;
+    }
+</script>
+
+<script>
+    function toggleFavorite(icon) {
+    icon.classList.toggle("fa-regular");
+    icon.classList.toggle("fa-solid");
+    icon.classList.toggle("icon-active");
+}
+
+function toggleBookmark(icon, jobId) {
+icon.classList.toggle("fa-regular");
+icon.classList.toggle("fa-solid");
+icon.classList.toggle("icon-active");
+}
+
+// Function to bookmark a job
+function bookmarkJob(jobId, iconElement) {
+    // Create a new FormData object to send the jobId
+    const formData = new FormData();
+    formData.append('job_id', jobId); // Append the job ID to the request data
+
+    // Create a new XMLHttpRequest to send the data to the server
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
+
+    // Set up the callback for when the request completes
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+        } else {
+            alert('Failed to bookmark the job.');
+        }
+    };
+
+    // Send the request with the form data
+    xhr.send(formData);
+}
+
+function goToCompanyDescription($companyID) {
+    window.location.href = "/uniquest/student/companydescription/"+$companyID;
+}
+function goToAddReview(companyID){
+    window.location.href = "/uniquest/student/addReview/" + companyID;
+}  
+</script>

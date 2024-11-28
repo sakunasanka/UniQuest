@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/adm_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/analytics.css">
 
 <header class="header">

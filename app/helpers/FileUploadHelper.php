@@ -50,7 +50,7 @@ class FileUploadHelper
     {
         $response = [
             'success' => false,
-            'file_name' => '',
+            'file_name' => null,
             'error' => ''
         ];
 

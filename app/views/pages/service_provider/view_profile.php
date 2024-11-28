@@ -10,32 +10,43 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Company Logo"> 
+            <div class="view-card-pic">
+                <img
+                    src="<?php echo empty($data['user']['CompanyLogo'])
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['user']['CompanyLogo']; ?>"
+                    alt="Profile Picture">
+
+                <ul class="view-card-options">
+                    <li><a onclick="showdeleteaccountconfirm()">Deactivate Account</a></li>
+                    <li><a href="<?php echo URLROOT ?>/user/logout">Log Out</a></li>
+                </ul>
+            </div>
 
             <div class="view-card-content">
-                <h1>Acme Inc.</h1>
-                <h2>Software & Technology</h2>
-                <p>Acme Inc. is a leading software company that specializes in developing innovative solutions for businesses of all sizes. With a team of talented engineers and designers, we are committed to delivering high-quality products that help our clients achieve their goals.</p>
+                <h1><?php echo $data['user']['CompanyName'] ?></h1>
+                <h2><?php echo $data['user']['Industry'] ?></h2>
+                <p><?php echo $data['user']['Description'] ?></p>
 
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        123 Main Street, Colombo
+                        <?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['user']['City'] ?></span>
                     </div>
                     <div>
-                        <span>Phone</span>
-                        +94 11-345-2686
+                        <span>Contact No</span>
+                        <?php echo $data['user']['ContactNo'] ?>
                     </div>
                     <div>
                         <span>Email</span>
-                        info@academic.com
+                        <?php echo $data['user']['Email'] ?>
                     </div>
                     <div>
                         <span>Website</span>
-                        <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
+                        <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
                     </div>
                 </div>
-                <div class="edit-btn"> 
+                <div class="edit-btn">
                     <button class="edit-btn" onclick="window.location.href='/uniquest/service_provider/edit_profile';">
                         <span class="material-symbols-outlined"> edit </span>
                         Edit Profile
@@ -43,38 +54,40 @@
                 </div>
             </div>
         </div>
-            <div class="view-card view-card-2">
-                <div class="reviews-section">
-                    <h4>Reviews and Ratings about this company</h4>
+        <div class="view-card-2">
+            <div class="reviews-section">
+                <h4>Reviews and Ratings about this company</h4>
 
-                    <!-- Reviews on Main Page -->
-                    <?php for ($i = 0; $i < 3; $i++): ?>
-                        <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
-                            <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
-                            <div class="review-details">
-                                <span class="reviewer-name">- John Doe</span>
-                                <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                            </div>
-                            <div class="review-actions">
-                                <button class="like-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined like-icon">thumb_up</span>
-                                </button>
-                                <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
-
-                                <button class="dislike-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined dislike-icon">thumb_down</span>
-                                </button>
-                                <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
-                            </div>
+                <!-- Reviews on Main Page -->
+                <?php for ($i = 0; $i < 3; $i++): ?>
+                    <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
+                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
+                        <div class="review-details">
+                            <span class="reviewer-name">- John Doe</span>
+                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                         </div>
-                    <?php endfor; ?>
-                </div>
-                <div class="buttons">
-                        <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
-                </div>
-            </div>    
+                        <div class="review-actions">
+                            <button class="like-btn" data-id="<?php echo $i; ?>">
+                                <span class="material-symbols-outlined like-icon">thumb_up</span>
+                            </button>
+                            <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
+
+                            <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                            </button>
+                            <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                        </div>
+                    </div>
+                <?php endfor; ?>
+            </div>
+            <div class="buttons">
+                <button class="seemore">
+                    <p onclick="toggleMoreReviews()">See more reviews...</p>
+                </button>
+            </div>
         </div>
     </div>
+</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 

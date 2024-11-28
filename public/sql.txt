@@ -191,6 +191,10 @@ CREATE TABLE IF NOT EXISTS `uniquest`.`BookmarkJobs` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+ALTER TABLE `uniquest`.`BookmarkJobs`
+ADD COLUMN `bookmark_create_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+
 -- -----------------------------------------------------
 -- Table `uniquest`.`Complaint`
 -- -----------------------------------------------------
@@ -277,6 +281,95 @@ JOIN
     `uniquest`.`user` u ON c.CompanyID = u.UserID 
 ORDER BY 
     cm.ComplainedDate ASC;
+
+-- -----------------------------------------------------
+-- View `uniquest`.`v_bookmarkedJobs`
+-- -----------------------------------------------------
+
+CREATE VIEW v_bookmarkedJobs AS
+SELECT 
+    bj.StudentID,                   -- From BookmarkJobs table
+    j.JobID,                        -- From Jobs table
+    c.CompanyID,                    -- From Company table
+    j.Title,                        -- Job title
+    c.CompanyLogo,                  -- Company logo
+    c.CompanyName,                  -- Company name
+    j.Description,                  -- Job description
+    j.Location,                     -- Job location
+    j.Category,                     -- Job category
+    j.JobBenefits,                  -- Job benefits
+    j.Address,                      -- Job address
+    j.RequiredQualifications,       -- Job qualifications
+    j.SalaryRange,                  -- Salary range
+    u.Email,        -- Company's email from User table
+    u.ContactNo,  -- Company's contact number from User table
+    j.create_at AS jobs_create_at,    -- Job creation timestamp
+    c.create_at AS company_create_at, -- Company creation timestamp
+    bj.bookmark_create_at
+FROM 
+    BookmarkJobs bj
+INNER JOIN 
+    Jobs j ON bj.JobID = j.JobID
+INNER JOIN 
+    company c ON j.CompanyID = c.CompanyID
+INNER JOIN 
+    user u ON c.CompanyID = u.UserID
+ORDER BY 
+    bj.bookmark_create_at DESC;
+
+
+-- -----------------------------------------------------
+-- View `uniquest`.`StudentJobComplaints`
+-- -----------------------------------------------------
+
+CREATE VIEW StudentJobComplaints AS
+SELECT 
+    jobs.Title AS JobTitle,
+    user.Email AS CompanyEmail,
+    complaint_jobs.Description AS Complaint,
+    CONCAT(student.FirstName, ' ', student.LastName) AS StudentName,
+    complaint_jobs.ComplainedDate,
+    complaint_jobs.Status
+FROM 
+    complaint_jobs
+JOIN 
+    jobs ON complaint_jobs.JobID = jobs.JobID
+JOIN 
+    company ON jobs.CompanyID = company.CompanyID
+JOIN 
+    user ON company.CompanyID = user.UserID
+JOIN 
+    student ON complaint_jobs.StudentID = student.StudentID;
+
+
+-- -----------------------------------------------------
+-- View `uniquest`.`CompanyReviews`
+-- -----------------------------------------------------
+
+CREATE VIEW CompanyReviews AS
+SELECT 
+    c.CompanyID,
+    c.CompanyName,
+    c.Description AS CompanyDescription,
+    c.CompanyLogo,
+    r.ReviewID,
+    r.Rating,
+    r.Comment,
+    r.StudentID,
+    r.created_at,
+    CONCAT(s.FirstName, ' ', s.LastName) AS StudentName
+
+FROM 
+    company c
+JOIN 
+    Review r
+ON 
+    c.CompanyID = r.CompanyID
+JOIN 
+    student s
+ON 
+    r.StudentID = s.StudentID;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

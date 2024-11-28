@@ -12,7 +12,8 @@
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
         </div>
         <div class="container">
-            <div class="search-bar-container">
+            <?php require APPROOT . '/views/components/searchBar.php'; ?>
+            <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -23,7 +24,7 @@
                         <span>Filters</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
@@ -47,11 +48,13 @@
                                     Colombo, Western Province
                                 </div>
                             </div>
-                            <div class="card-icons">
-                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
-                            </div>
+                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                                <div class="card-icons">
+                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                                </div>
+                            <?php endif;?>    
                         </div>
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -91,6 +94,6 @@
 
 <script>
     function goToInternshipDescription() {
-        window.location.href = "/uniquest/student/internshipdescription";
+        window.location.href = "/uniquest/student/internshipdescription/"+10;
     }
 </script>

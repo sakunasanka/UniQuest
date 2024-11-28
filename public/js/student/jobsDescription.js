@@ -8,7 +8,7 @@ function goToContactPage() {
 }
 
 function goToAddReview() {
-    window.location.href = "/uniquest/student/rate_review_company"; 
+    window.location.href = "/uniquest/student/addReview";
 }
 
 function goToCompany() {

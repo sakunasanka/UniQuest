@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/adm_header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
