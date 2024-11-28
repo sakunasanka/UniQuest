@@ -1,14 +1,9 @@
 <aside class="sidebar">
     <nav class="nav-menu">
-        <button class="nav-btn" data-path="/UniQuest/verification_team/profile">
+        <!-- <button class="nav-btn" data-path="/UniQuest/verification_team/profile">
             <span class="material-symbols-outlined"> person </span>
             Profile
-        </button>
-
-        <button class="nav-btn" data-path="/UniQuest/verification_team/dashboard">
-            <span class="material-symbols-outlined"> dashboard </span>
-            Dashboard
-        </button>
+        </button> -->
 
         <button class="nav-btn" data-paths="/UniQuest/verification_team/user_ver_pending,/UniQuest/verification_team/user_ver_not">
             <span class="material-symbols-outlined"> person_check </span>

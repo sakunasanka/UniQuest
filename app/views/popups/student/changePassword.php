@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/studentPopups.css">
 <div class="popup-container">
-    <div class="popup" id="popup-stu">
+    <div class="popup" id="popup-changepw">
         <div class="overlay"></div>
         <div class="content">
-            <button class="close-btn" onclick="ToggleChangePasswordForm()"><i class="fa fa-times"></i></button><button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button>
+        <div class="close-btn-container"><button class="close-btn" onclick="ToggleChangePasswordForm()"><i class="fa fa-times"></i></button></div>
             <h2>Change password</h2>
 
             <form action="#" method="post">
@@ -38,4 +38,3 @@
 </div>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/change_password.js"></script>
-

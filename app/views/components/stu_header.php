@@ -25,6 +25,7 @@
                     <div class="dropdown-content">
                         <a href="/UniQuest/student/jobs">Part-time Jobs</a>
                         <a href="/UniQuest/student/internships">Internships</a>
+                        <a href="/UniQuest/student/company">Companies</a>
                     </div>
                 </li>
                 <li><a href="/UniQuest/about" class="hov">About Us</a></li>
@@ -37,4 +38,3 @@
             </div>
         </div>
     </nav>
-

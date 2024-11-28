@@ -7,12 +7,13 @@
     
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/internships">Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/internships">Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/company">Companies</button>
         </div>
         <div class="container">
-            <div class="search-bar-container">
+            <?php require APPROOT . '/views/components/searchBar.php'; ?>
+            <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -23,13 +24,16 @@
                         <span>Filters</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="cards-container">
                 <form id="bookmarkForm" method="POST" action="<?php echo URLROOT; ?>/student/addBookmarkJob" class="hidden-form"></form>
                 <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
-                            <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
+                            <img src="<?php echo empty($post->CompanyLogo)
+                                            ? URLROOT . '/images/profile_pic_preview.png'
+                                            : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                                alt="Burger King Logo">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
@@ -47,12 +51,15 @@
                                         <?php echo $post->Location; ?>
                                 </div>
                             </div>
-                            <div class="card-icons">
-                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                
-                                <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
-                            </div>
+                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+ 
+                                <div class="card-icons">
+                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    
+                                    <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                                </div>
+                            <?php endif;?>
                         </div>
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -79,7 +86,7 @@
 
 <script>
     function goToJobDescription(jobId) {
-        window.location.href = "/uniquest/student/jobsdescription/" + jobId;
+        window.location.href = "/UniQuest/student/jobsdescription/" + jobId;
     }
 </script>
 

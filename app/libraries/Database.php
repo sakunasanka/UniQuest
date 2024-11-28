@@ -120,4 +120,3 @@ class Database
         return $this->dbh->lastInsertId();
     }
 }
-

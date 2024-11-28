@@ -27,14 +27,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                <tr>
                         <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
+                        <td>uniquest@gmail.com</td>
                         <td>Part Time</td>
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
+                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/ptjob_ver_detail'">
                                 preview
                             </span>
                         </td>

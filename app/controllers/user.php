@@ -9,9 +9,16 @@ class User extends Controller
         $this->model = $this->model('userModel');
     }
 
+    public function auth($method) {
+        $protectedMethods = ['profile', 'deactivate'];
+        if (in_array($method, $protectedMethods)) {
+            AuthMiddleware::requireAuth();
+        }
+    }
+
     public function index()
     {
-        echo 'user/index';
+        $this->login();
     }
 
     public function login() {
@@ -43,8 +50,9 @@ class User extends Controller
                     // Create session
                     $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
-                    die('Deactive');//TODO: Handle this
-
+                    //activate account again and logge in user
+                    $this->model->activateAccount($loggedInUser->UserID);
+                    $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
                     if ($loggedInUser->Role === 'Student') {
                         $this->view('pages/login/wait_to_verify_stu');
@@ -109,13 +117,13 @@ class User extends Controller
     
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/user/profile');
+                Redirect::to(URLROOT . '/student/jobs');
             } else if ($user['Role'] === 'Company') {
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
-                Redirect::to(URLROOT . '/verification_team/user_ver_all');
+                Redirect::to(URLROOT . '/verification_team/user_ver_pending');
             }
             //print user details
             // print_r($_SESSION);
