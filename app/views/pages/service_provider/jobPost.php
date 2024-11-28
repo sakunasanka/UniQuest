@@ -27,7 +27,7 @@
                             <span class="form-invalid"><?php echo $data['Description_err']; ?></span>
 
                             <label for="jobBenefits">Job Benefits:</label>
-                            <input type="text" id="jobBenefits" name="jobBenefits" placeholder="Job Benefits" value="<?php $data['job_benifits']; ?>">
+                            <textarea id="jobBenefits" name="jobBenefits" placeholder="Job Benefits" value="<?php $data['job_benifits']; ?>"></textarea>
                             <span class="form-invalid"><?php echo $data['job_benifits_err']; ?></span>
 
                             <label for="jobType">Job Type:</label>

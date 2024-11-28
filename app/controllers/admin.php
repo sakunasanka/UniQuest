@@ -3,6 +3,17 @@ class Admin extends Controller
 {
     private $model;
 
+    public function __construct()
+    {
+        // Check if user is logged in
+        AuthMiddleware::requireAuth();
+        // Check if user has the required role
+        AuthMiddleware::requireRole('Admin');
+
+        // Load model
+        $this->model = $this->model('userModel');
+    }
+
     private function prepareData($post = [], $files = [])
     {
         return [
@@ -30,15 +41,9 @@ class Admin extends Controller
         ];
     }
 
-    public function __construct()
-    {
-        // Load model
-        $this->model = $this->model('userModel');
-    }
-
     public function index()
     {
-        echo 'admin/index';
+        // $this->dashboard();
     }
 
     public function students_mng()

@@ -3,6 +3,17 @@ class Service_provider extends Controller
 {
     private $model;
 
+    public function __construct()
+    {
+        // Check if user is logged in
+        AuthMiddleware::requireAuth();
+        // Check if user has the required role
+        AuthMiddleware::requireRole('Company');
+        
+        // Load model
+        $this->model = $this->model('userModel');
+    }
+
     private function prepareEditProfileData($post = [], $files = [])
     {
         $user = $this->model->getUserDetails($_SESSION['user_id']);
@@ -34,15 +45,9 @@ class Service_provider extends Controller
         ];
     }
 
-    public function __construct()
-    {
-        // Load model
-        $this->model = $this->model('userModel');
-    }
-
     public function index()
     {
-        echo 'service_provider/index';
+        // $this->dashboard();
     }
 
     public function contact_admin()

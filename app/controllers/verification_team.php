@@ -5,13 +5,18 @@ class Verification_team extends Controller
 
     public function __construct()
     {
+        // Check if user is logged in
+        AuthMiddleware::requireAuth();
+        // Check if user has the required role
+        AuthMiddleware::requireRole('VT-Member');
+
         // Load model
         $this->model = $this->model('userModel');
     }
 
     public function index()
     {
-        echo 'verification_team/index';
+        // echo 'verification_team/index';
     }
 
     public function user_verified()
