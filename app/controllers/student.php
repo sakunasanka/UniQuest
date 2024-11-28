@@ -139,7 +139,7 @@ class Student extends Controller
             $this->view('pages/student/edit_profile', $data);
         }
     }
-    
+
     public function delete_account()
     {
         $this->view('popups/student/deactivate_account');
@@ -147,7 +147,7 @@ class Student extends Controller
 
     public function addReview($id = null)
     {
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -174,7 +174,7 @@ class Student extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
+                    Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']);
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
                 }
@@ -197,23 +197,6 @@ class Student extends Controller
         }
     }
 
-    public function editReview($id)
-    {
-        $review = $this->model('RateAndReviewModel')->getReviewById($id);
-
-        if (!$review) {
-            Redirect::to(URLROOT . '/student/rate_review_company');
-            return;
-        }
-
-        $data = [
-            'review' => $review,
-            'rating_err' => '',
-            'comment_err' => ''
-        ];
-
-        $this->view('pages/student/edit_review', $data);
-    }
 
     public function updateReview($id)
     {
@@ -222,8 +205,8 @@ class Student extends Controller
 
             $data = [
                 'review_id' => $id,
-                'rating' => $_POST['rating'] ?? '',
-                'comment' => trim($_POST['comment'] ?? ''),
+                'rating' => $_POST['Rating'] ?? '',
+                'comment' => trim($_POST['Comment'] ?? ''),
                 'rating_err' => '',
                 'comment_err' => ''
             ];
@@ -237,7 +220,7 @@ class Student extends Controller
 
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->updateReview($data)) {
-                    Redirect::to(URLROOT . '/student/rate_review_company');
+                    Redirect::to(URLROOT . '/student/myreviews');
                 } else {
                     die('Something went wrong');
                 }
@@ -245,39 +228,55 @@ class Student extends Controller
                 $this->view('pages/student/edit_review', $data);
             }
         } else {
-            Redirect::to(URLROOT . '/student/rate_review_company');
+
+            $review = $this->model('RateAndReviewModel')->getReviewById($id);
+
+            // if (!$review) {
+            // Redirect::to(URLROOT . '/student/rate_review_company');
+            // return;
+            // }
+
+            // Ensure the review belongs to the logged-in student
+            // if ($review->StudentID !== $_SESSION['user_id']) {
+            //     Redirect::to(URLROOT . '/student/editReview');
+            // return;
+            // }
+
+            $data = [
+                'review_id' => $id,
+                'review' => $review,
+                'rating' => $review->Rating,
+                'comment' => $review->Comment,
+                'rating_err' => '',
+                'comment_err' => ''
+            ];
+
+            $this->view('pages/student/edit_review', $data);
         }
     }
 
     public function deleteReview($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Check if the review exists
-            $review = $this->model('RateAndReviewModel')->getReviewById($id);
+        // Check if the review exists
+        // $review = $this->model('RateAndReviewModel')->getReviewById($id);
 
-            if (!$review) {
-                Redirect::to(URLROOT . '/student/rate_review_company');
-                return;
-            }
+        // if (!$review) {
+        //     Redirect::to(URLROOT . '/student/rate_review_company');
+        //     return;
+        // }
 
-            // Ensure the review belongs to the logged-in student
-            if ($review->student_id != $_SESSION['user_id']) {
-                Redirect::to(URLROOT . '/student/rate_review_company');
-                return;
-            }
+        // Ensure the review belongs to the logged-in student
 
-            // Attempt to delete the review
-            if ($this->model('RateAndReviewModel')->deleteReviewById($id)) {
-                Redirect::to(URLROOT . '/student/rate_review_company');
-            } else {
-                die('Something went wrong while deleting the review.');
-            }
+
+        // Attempt to delete the review
+        if ($this->model('RateAndReviewModel')->deleteReviewById($id)) {
+            Redirect::to(URLROOT . '/student/myreviews');
         } else {
-            Redirect::to(URLROOT . '/student/rate_review_company');
+            die('Something went wrong while deleting the review.');
         }
     }
 
-    
+
     public function rate_review_company()
     {
         $this->view('pages/student/rate_review_company');
@@ -299,29 +298,27 @@ class Student extends Controller
     }
 
     public function jobs()
-    {   
+    {
         $posts = $this->model('M_jobpost')->getPosts();
 
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
-        // Get bookmarked jobs for the user
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        } 
-        else {
+            // Get bookmarked jobs for the user
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
 
-        $data =[
+        $data = [
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds
         ];
 
         $this->view('pages/student/jobs', $data);
-        
     }
     public function notifications()
     {
@@ -330,7 +327,7 @@ class Student extends Controller
 
     public function company()
     {
-        
+
         $this->view('pages/student/company');
     }
 
@@ -340,22 +337,21 @@ class Student extends Controller
     }
 
     public function saveJobs()
-    {   
+    {
 
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
-          // Get bookmarked jobs for the user
-        $posts = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        } 
-        else {
+            // Get bookmarked jobs for the user
+            $posts = $this->model('jobModel')->getBookmarkedJobs($userId);
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
 
-           $data =[
+        $data = [
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds
@@ -378,7 +374,7 @@ class Student extends Controller
     {
         $posts = $this->model('M_jobpost')->getpostbyid($id);
 
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $data = [
@@ -386,25 +382,21 @@ class Student extends Controller
                 'posts' => $posts
             ];
             $this->model('jobModel')->create_complaint($data);
-            
-            Redirect::to(URLROOT . '/student/make_complain/'.$id);
-              
-        }
 
-        else {
+            Redirect::to(URLROOT . '/student/make_complain/' . $id);
+        } else {
             $data = [
                 'complaint' => '',
                 'posts' => $posts
             ];
             $this->view('pages/student/make_complain', $data);
         }
-        
     }
 
     public function companyDescription($id)
     {
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -432,7 +424,7 @@ class Student extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']); //To be corrected
+                    Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']); //To be corrected
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
                 }
@@ -455,28 +447,27 @@ class Student extends Controller
             $this->view('pages/student/companyDescription', $data);
         }
     }
- 
+
     public function internshipDescription($id)
     {
         if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; 
-    
-        // Get bookmarked jobs for the user
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        $posts = $this->model('M_jobpost')->getpostbyid($id);
-        $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-        } 
-        else {
+            $userId = $_SESSION['user_id'];
+
+            // Get bookmarked jobs for the user
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+            $posts = $this->model('M_jobpost')->getpostbyid($id);
+            $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
+            $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    
-            $data =[
+
+            $data = [
                 'post' => $posts,
                 'post_com' => $posts_com_id,
                 'bookmarkedJobs' => $bookmarkedJobs,
@@ -489,7 +480,7 @@ class Student extends Controller
                 'rating_err' => '',
                 'comment_err' => ''
             ];
-        
+
             if (empty($data['rating'])) {
                 $data['rating_err'] = 'Please provide a rating.';
             }
@@ -500,7 +491,7 @@ class Student extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);  //To be corrected
+                    Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']);  //To be corrected
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
                 }
@@ -524,7 +515,7 @@ class Student extends Controller
             ];
 
             $this->view('pages/student/internshipDescription', $data);
-        }    
+        }
     }
 
     public function jobsApply()
@@ -546,28 +537,28 @@ class Student extends Controller
     {
         $this->view('pages/student/internships');
     }
-  
-    public function jobsDescription($id){
-        
+
+    public function jobsDescription($id)
+    {
+
         if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; 
-    
-        // Get bookmarked jobs for the user
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        $posts = $this->model('M_jobpost')->getpostbyid($id);
-        $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-        } 
-        else {
+            $userId = $_SESSION['user_id'];
+
+            // Get bookmarked jobs for the user
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+            $posts = $this->model('M_jobpost')->getpostbyid($id);
+            $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
+            $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    
-            $data =[
+
+            $data = [
                 'post' => $posts,
                 'post_com' => $posts_com_id,
                 'bookmarkedJobs' => $bookmarkedJobs,
@@ -580,7 +571,7 @@ class Student extends Controller
                 'rating_err' => '',
                 'comment_err' => ''
             ];
-        
+
             if (empty($data['rating'])) {
                 $data['rating_err'] = 'Please provide a rating.';
             }
@@ -591,7 +582,7 @@ class Student extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']); //To be corrected
+                    Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']); //To be corrected
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
                 }
@@ -615,8 +606,7 @@ class Student extends Controller
             ];
 
             $this->view('pages/student/jobsDescription', $data);
-        }    
-    
+        }
     }
 
     public function myreviews()
@@ -628,7 +618,5 @@ class Student extends Controller
         ];
 
         $this->view('pages/student/myreviews', $data);
-
     }
-
 }

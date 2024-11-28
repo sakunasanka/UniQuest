@@ -38,8 +38,8 @@
                                         <span class="dislike-count" data-id="<?php echo $review->ReviewID; ?>">0 dislikes</span>
                                     </div>
                                     <div class="post-control-btn-row">
-                                        <button class="post-control-btn edit">EDIT</button>
-                                        <button class="post-control-btn delete">DELETE</button>
+                                    <a href="<?php echo URLROOT; ?>/student/updateReview/<?php echo $review->ReviewID; ?>"><button class="post-control-btn edit">EDIT</button></a>
+                                    <a href="<?php echo URLROOT; ?>/student/deleteReview/<?php echo $review->ReviewID; ?>"> <button class="post-control-btn delete">DELETE</button></a>
                                     </div>
                                 <?php endif; ?>
                             </div>
