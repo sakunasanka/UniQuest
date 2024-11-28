@@ -7,9 +7,9 @@
 
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/internships">Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/internships">Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/company">Companies</button>
         </div>
         <div class="container">
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
@@ -92,6 +92,6 @@
 
 <script>
     function goToCompanyDescription() {
-        window.location.href = "/uniquest/student/companydescription/"+10045;
+        window.location.href = "/UniQuest/student/companydescription/"+10045;
     }
 </script>

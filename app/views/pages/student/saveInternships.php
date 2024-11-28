@@ -7,12 +7,13 @@
 
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
-                <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/saveInternships">Saved Internships</button>
-                <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/saveJobs">Saved Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/saveInternships">Saved Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/saveCompanies">Saved Companies</button>
         </div>
         <div class="container">
-            <div class="search-bar-container">
+            <?php require APPROOT . '/views/components/searchBar.php'; ?>
+            <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -23,7 +24,7 @@
                         <span>Filters</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="cards-container">
                 <?php for ($i = 0; $i < 6; $i++): ?>
@@ -31,7 +32,7 @@
                         <div class="card-logo" onclick="goToInternshipDescription()">
                             <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="job">
                         </div>
-                        <div class="card-content" >
+                        <div class="card-content">
                             <div class="content-hover-class" onclick="goToInternshipDescription()">
                                 <div class="title-content">
                                     <h3 class="job-title">Software Engineering Internship</h3>
@@ -40,9 +41,9 @@
                                     </div>
                                 </div>
                                 <p class="company-name"><b>Begood solutions</b> </p>
-                                
-                            
-                                
+
+
+
                                 <div class="job-location-details">
                                     Colombo, Western Province
                                 </div>
@@ -62,13 +63,14 @@
                     </div>
                 <?php endfor; ?>
             </div>
-        </div>  
+        </div>
     </div>
 </div>
 
 <style>
     .icon-active {
-        color: #e74c3c; /* Active color */
+        color: #e74c3c;
+        /* Active color */
     }
 </style>
 
@@ -91,6 +93,6 @@
 
 <script>
     function goToInternshipDescription() {
-        window.location.href = "/uniquest/student/internshipdescription";
+        window.location.href = "/UniQuest/student/internshipdescription";
     }
 </script>

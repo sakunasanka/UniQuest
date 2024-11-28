@@ -90,8 +90,12 @@
                     <strong>CV </strong>
                     <span class="col">:</span>
                     <span>
-                            <a href="" target="_blank">View CV</a>
+                        <a href="" target="_blank">View CV</a>
                     </span>
+                </div>
+                <div class="btn-row">
+                    <div></div>
+                    <button class="contact-btn" onclick="">Contact</button>
                 </div>
             </div>
 
