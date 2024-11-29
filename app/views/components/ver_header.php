@@ -20,7 +20,7 @@
                 <img src="<?php echo URLROOT; ?>/images/UniQuest3.png" alt="UniQuest Logo">
             </div>
             <ul class="nav-links">
-                <li><a href="/uniquest/home" class="hov">Home</a></li>
+                <li><a href="/UniQuest/home" class="hov">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
                     <div class="dropdown-content">
@@ -35,7 +35,7 @@
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
-                <a href="/uniquest/service_provider/notifications"><span class="material-symbols-outlined">notifications</span></a>
+                <a href="/UniQuest/verification_team/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>
         </div>

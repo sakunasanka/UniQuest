@@ -157,9 +157,9 @@ class User extends Controller
             } else if ($user['Role'] === 'Company') {
                 $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {
-                $this->view('pages/admin/profile', $data); //TODO: Create admin profile view
+                $this->view('pages/admin/view_profile', $data); //TODO: Create admin profile view
             } else if ($user['Role'] === 'VT-Member') {
-                $this->view('pages/vt-member/profile', $data);//TODO: Create VT-Member profile view
+                $this->view('pages/verification_team/view_profile', $data);//TODO: Create VT-Member profile view
             } else {
                 // Redirect to login page
                 Redirect::to(URLROOT . '/login');
