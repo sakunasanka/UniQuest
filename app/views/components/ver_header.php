@@ -30,7 +30,7 @@
                     </div>
                 </li>
                 <li><a href="/uniquest/verification_team/user_ver_all" class="hov">Go to verify</a></li>
-                <li><a href="/uniquest/about" class="hov">About Us</a></li>
+                <!-- <li><a href="/uniquest/about" class="hov">About Us</a></li> -->
                 <li><a href="/uniquest/service_provider/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
