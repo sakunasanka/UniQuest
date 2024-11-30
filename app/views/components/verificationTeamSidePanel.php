@@ -1,15 +1,5 @@
 <aside class="sidebar">
     <nav class="nav-menu">
-        <button class="nav-btn" data-path="/UniQuest/verification_team/profile">
-            <span class="material-symbols-outlined"> person </span>
-            Profile
-        </button>
-
-        <button class="nav-btn" data-path="/UniQuest/verification_team/dashboard">
-            <span class="material-symbols-outlined"> dashboard </span>
-            Dashboard
-        </button>
-
         <button class="nav-btn" data-paths="/UniQuest/verification_team/user_ver_pending,/UniQuest/verification_team/user_ver_not">
             <span class="material-symbols-outlined"> person_check </span>
             User Verification
@@ -25,6 +15,10 @@
             Verified By Me
         </button>
 
+        <button class="nav-btn" data-path="/UniQuest/user/profile">
+            <span class="material-symbols-outlined"> person </span>
+            Profile
+        </button>
     </nav>
 
     <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">

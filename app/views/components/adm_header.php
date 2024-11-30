@@ -30,7 +30,7 @@
                         <a href="/UniQuest/student/company">Companies</a>
                     </div>
                 </li>
-                <li><a href="/uniquest/about" class="hov">About Us</a></li>
+                <!-- <li><a href="/uniquest/about" class="hov">About Us</a></li> -->
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">

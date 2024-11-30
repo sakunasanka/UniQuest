@@ -34,7 +34,7 @@
                         <td>2024/05/16</td>
                         <td><span class="status pending">Pending</span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
+                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/ptjob_ver_detail'">
                                 preview
                             </span>
                         </td>

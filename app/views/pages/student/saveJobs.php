@@ -4,15 +4,16 @@
 
 <div class="main-container">
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-    
+
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/saveJobs">Saved Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/saveInternships">Saved Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/saveCompanies">Saved Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/saveJobs">Saved Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/saveInternships">Saved Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/saveCompanies">Saved Companies</button>
         </div>
         <div class="container">
-            <div class="search-bar-container">
+            <?php require APPROOT . '/views/components/searchBar.php'; ?>
+            <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -23,12 +24,15 @@
                         <span>Filters</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="cards-container">
-                <?php foreach($data['posts'] as $post): ?>
+                <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
-                        <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
-                            <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
+                    <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
+                            <img src="<?php echo empty($post->CompanyLogo)
+                                            ? URLROOT . '/images/profile_pic_preview.png'
+                                            : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                                alt="Burger King Logo">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
@@ -41,16 +45,16 @@
                                 <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
                                 <p class="job-salary"><?php echo $post->SalaryRange; ?></p>
                                 <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
-                                
+
                                 <div class="job-location-details">
-                                        <?php echo $post->Location; ?>
+                                    <?php echo $post->Location; ?>
                                 </div>
                             </div>
                             <div class="card-icons">
                                 <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                
-                                 <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this); // window.location.reload();"></i> 
+
+                                <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this); // window.location.reload();"></i>
                             </div>
                         </div>
                         <div class="social-media-icons">
@@ -60,15 +64,16 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
-                    <?php endforeach; ?>
+                <?php endforeach; ?>
             </div>
-        </div>  
+        </div>
     </div>
 </div>
 
 <style>
     .icon-active {
-        color: #e74c3c; /* Active color */
+        color: #e74c3c;
+        /* Active color */
     }
 </style>
 
@@ -78,45 +83,44 @@
 
 <script>
     function goToJobDescription(jobId) {
-        window.location.href = "/uniquest/student/jobsdescription/" + jobId;
+        window.location.href = "/UniQuest/student/jobsdescription/" + jobId;
     }
 </script>
 
 <script>
     function toggleFavorite(icon) {
-    icon.classList.toggle("fa-regular");
-    icon.classList.toggle("fa-solid");
-    icon.classList.toggle("icon-active");
-}
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
 
-function toggleBookmark(icon, jobId) {
-icon.classList.toggle("fa-regular");
-icon.classList.toggle("fa-solid");
-icon.classList.toggle("icon-active");
-}
+    function toggleBookmark(icon, jobId) {
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+        icon.classList.toggle("icon-active");
+    }
 
-// Function to bookmark a job
-function bookmarkJob(jobId, iconElement) {
-    // Create a new FormData object to send the jobId
-    const formData = new FormData();
-    formData.append('job_id', jobId); // Append the job ID to the request data
+    // Function to bookmark a job
+    function bookmarkJob(jobId, iconElement) {
+        // Create a new FormData object to send the jobId
+        const formData = new FormData();
+        formData.append('job_id', jobId); // Append the job ID to the request data
 
-    // Create a new XMLHttpRequest to send the data to the server
+        // Create a new XMLHttpRequest to send the data to the server
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
 
-    // Set up the callback for when the request completes
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
-        } else {
-            alert('Failed to bookmark the job.');
-        }
-    };
+        // Set up the callback for when the request completes
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+            } else {
+                alert('Failed to bookmark the job.');
+            }
+        };
 
-    // Send the request with the form data
-    xhr.send(formData);
-}
-
+        // Send the request with the form data
+        xhr.send(formData);
+    }
 </script>

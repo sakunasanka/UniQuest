@@ -1,5 +1,6 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
+<?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
@@ -64,7 +65,7 @@
 
             <div class="buttons btn-space-between">
             <?php  if ($_SESSION['user_role'] == 'Student'):?>
-                <button onclick="goToAddReview()" class="apply-btn">Add review</button>
+                <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
                
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
             <?php else:?>
@@ -100,7 +101,7 @@
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
 
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                <p><?php echo $data['post']->Address; ?></p>
+                <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>

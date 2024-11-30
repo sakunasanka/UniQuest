@@ -74,19 +74,19 @@
             <!-- Job Information Card -->
             <div class="job-card">
                 <div class="job-logo">
-                    <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
+                    <img src="<?php echo URLROOT; ?>/images/upeka.jpg" alt="Burger King Logo">
                 </div>
                 <div class="job-details">
-                    <h3>Delivery Rider</h3>
-                    <p>Negombo / Ja Ela / Kiribathgoda</p>
-                    <p>Rs. 2,000 (per day)</p>
-                    <p>9 days left</p>
+                    <h3>Female Promotion Assistant</h3>
+                    <p>Piliyandala</p>
+                    <p>Rs. 2500 (per day)</p>
+                    <p>2 hours ago</p>
                     <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                    <p>Colombo, Western Province</p>
+                    <p>Piliyandala</p>
                     <table class="table">
                         <tr><td>Education:</td><td>Ordinary Level</td></tr>
-                        <tr><td>Experience:</td><td>No Experience</td></tr>
-                        <tr><td>Salary Range:</td><td>Any</td></tr>
+                        <!-- <tr><td>Experience:</td><td>No Experience</td></tr> -->
+                        <tr><td>Salary Range:</td><td>Rs. 2500 (per day)</td></tr>
                     </table>
                     
                     <div class="social-media-icons">

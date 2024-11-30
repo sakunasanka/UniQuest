@@ -16,8 +16,8 @@
             <div class="page-wrapper">
                 <div class="sidebr">
                     <div class="upload-container">
-                        <input type="file" id="profilePic" name="profilePic" accept=".jpg, .jpeg, .png">
-                        <img src="<?php echo UPLOADROOT; ?>/profile_pictures/company/<?php echo $data['companyLogo']; ?>" alt="profilepic-placeholder">
+                        <input type="file" id="profilePic" name="companyLogo" accept=".jpg, .jpeg, .png">
+                        <img src="<?php echo UPLOADROOT .'/profile_pictures/company/' . $data['companyLogo']; ?>" alt="profilepic-placeholder" id="profilePicPreview">
                         <div class="upload-icon">⬆️</div>
                         <div class="upload-message">Image size should be under 5MB</div>
                     </div>
@@ -82,7 +82,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="description">Company Description</label>
-                            <textarea id="description" name="description" required><?php echo $data['description']; ?></textarea>
+                            <textarea id="description" name="description"><?php echo $data['description']; ?></textarea>
                         </div>
                     </div>
 
