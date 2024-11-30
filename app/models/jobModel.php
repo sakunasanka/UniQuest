@@ -37,7 +37,7 @@ class jobModel
 
     // Method to check if a job is bookmarked by the user
     public function isJobBookmarked($studentId, $jobId) {
-        $this->db->query("SELECT COUNT(*) AS count FROM bookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
+        $this->db->query("SELECT COUNT(*) AS count FROM BookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
         $this->db->bind(':studentId', $_SESSION['user_id']);
         $this->db->bind(':jobId', $jobId);
         $row = $this->db->single();
@@ -54,7 +54,7 @@ class jobModel
 
     //Method to remove a bookmark from the database
     public function removeBookmark($studentId, $jobId) {
-        $this->db->query("DELETE FROM bookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
+        $this->db->query("DELETE FROM BookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
         $this->db->bind(':studentId', $_SESSION['user_id']);
         $this->db->bind(':jobId', $jobId);
         return $this->db->execute();
