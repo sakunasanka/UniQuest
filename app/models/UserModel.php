@@ -14,7 +14,7 @@ class userModel
             if (!$this->db) {
                 throw new Exception("Database connection is not established.");
             }
-            $this->db->query('SELECT * FROM User WHERE Email = :email');
+            $this->db->query('SELECT * FROM user WHERE Email = :email');
             $this->db->bind(':email', $email);
             $user = $this->db->single();
             if ($user && $user->Status !== 'Deleted') {
@@ -57,7 +57,7 @@ class userModel
             $userId = $this->db->lastInsertId();
 
             //Insert into Company table
-            $this->db->query('INSERT INTO Company (CompanyID, CompanyName, Description, CompanyLogo, StreetNo, AddressLine1, AddressLine2, City, Industry, Website) VALUES (:companyID, :companyName, :description, :companyLogo, :streetNo, :addressLine1, :addressLine2, :city, :industry, :website)');
+            $this->db->query('INSERT INTO company (CompanyID, CompanyName, Description, CompanyLogo, StreetNo, AddressLine1, AddressLine2, City, Industry, Website) VALUES (:companyID, :companyName, :description, :companyLogo, :streetNo, :addressLine1, :addressLine2, :city, :industry, :website)');
             $this->db->bind(':companyID', $userId);
             $this->db->bind(':companyName', $data['companyName']);
             $this->db->bind(':description', $data['description']);
@@ -114,7 +114,7 @@ class userModel
             $userId = $this->db->lastInsertId();
 
             //Insert into Student table
-            $this->db->query('INSERT INTO Student (StudentID, FirstName, LastName, ProfilePic, Gender, DOB, NIC_No, NIC_Copy, CV, StreetNo, AddressLine1, AddressLine2, City, University, UniversityID, UniversityID_Copy) VALUES (:studentID, :firstName, :lastName, :profilePic, :gender, :dob, :nicNo, :nicCopy, :cv, :streetNo, :addressLine1, :addressLine2, :city, :university, :universityID, :universityIDCopy)');
+            $this->db->query('INSERT INTO student (StudentID, FirstName, LastName, ProfilePic, Gender, DOB, NIC_No, NIC_Copy, CV, StreetNo, AddressLine1, AddressLine2, City, University, UniversityID, UniversityID_Copy) VALUES (:studentID, :firstName, :lastName, :profilePic, :gender, :dob, :nicNo, :nicCopy, :cv, :streetNo, :addressLine1, :addressLine2, :city, :university, :universityID, :universityIDCopy)');
             $this->db->bind(':studentID', $userId);
             $this->db->bind(':firstName', $data['firstName']);
             $this->db->bind(':lastName', $data['lastName']);
@@ -177,7 +177,7 @@ class userModel
             $userId = $this->db->lastInsertId();
 
             //Insert into verification team table
-            $this->db->query('INSERT INTO VerificationTeam (VT_MemberID, FirstName, LastName, ProfilePic) VALUES (:vtMemberID, :firstName, :lastName, :profilePic)');
+            $this->db->query('INSERT INTO verificationteam (VT_MemberID, FirstName, LastName, ProfilePic) VALUES (:vtMemberID, :firstName, :lastName, :profilePic)');
             $this->db->bind(':vtMemberID', $userId);
             $this->db->bind(':firstName', $data['firstName']);
             $this->db->bind(':lastName', $data['lastName']);
@@ -226,26 +226,26 @@ class userModel
     public function getUserDetails($userId)
     {
         try {
-            $this->db->query('SELECT UserID, Email, Role, Status, ContactNo, RegisterDate FROM User WHERE UserID = :userId');
+            $this->db->query('SELECT UserID, Email, Role, Status, ContactNo, RegisterDate FROM user WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             $user = $this->db->single();
             if ($user->Role === 'Student') {
-                $this->db->query('SELECT * FROM Student WHERE StudentID = :userId');
+                $this->db->query('SELECT * FROM student WHERE StudentID = :userId');
                 $this->db->bind(':userId', $userId);
                 $student = $this->db->single();
                 return array_merge((array)$user, (array)$student);
             } else if ($user->Role === 'Company') {
-                $this->db->query('SELECT * FROM Company WHERE CompanyID = :userId');
+                $this->db->query('SELECT * FROM company WHERE CompanyID = :userId');
                 $this->db->bind(':userId', $userId);
                 $company = $this->db->single();
                 return array_merge((array)$user, (array)$company);
             } else if ($user->Role === 'VT-Member') {
-                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM VerificationTeam WHERE VT_MemberID = :userId');
+                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM verificationteam WHERE VT_MemberID = :userId');
                 $this->db->bind(':userId', $userId);
                 $vtMember = $this->db->single();
                 return array_merge((array)$user, (array)$vtMember);
             } else if ($user->Role === 'Admin') {
-                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM Admin WHERE AdminID = :userId');
+                $this->db->query('SELECT FirstName, LastName, ProfilePic FROM admin WHERE AdminID = :userId');
                 $this->db->bind(':userId', $userId);
                 $admin = $this->db->single();
                 return array_merge((array)$user, (array)$admin);
@@ -268,7 +268,7 @@ class userModel
             $this->db->beginTransaction();
 
             //Update User table
-            $this->db->query('UPDATE User SET ContactNo = :contactNo WHERE UserID = :userId');
+            $this->db->query('UPDATE user SET ContactNo = :contactNo WHERE UserID = :userId');
             $this->db->bind(':contactNo', $data['contactNo']);
             $this->db->bind(':userId', $data['userID']);
 
@@ -281,7 +281,7 @@ class userModel
 
             if ($data['role'] === 'Student') {
                 //Update Student table
-                $this->db->query('UPDATE Student SET FirstName = :firstName, LastName = :lastName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CV = :cv, ProfilePic = :profilePic WHERE StudentID = :userId');
+                $this->db->query('UPDATE student SET FirstName = :firstName, LastName = :lastName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CV = :cv, ProfilePic = :profilePic WHERE StudentID = :userId');
                 $this->db->bind(':firstName', $data['firstName']);
                 $this->db->bind(':lastName', $data['lastName']);
                 $this->db->bind(':streetNo', $data['streetNo']);
@@ -300,7 +300,7 @@ class userModel
                 }
             } else if ($data['role'] === 'Company') {
                 //Update Company table
-                $this->db->query('UPDATE Company SET CompanyName = :companyName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CompanyLogo = :companyLogo, Description = :description, Website = :website, Industry = :industry WHERE CompanyID = :userId');
+                $this->db->query('UPDATE company SET CompanyName = :companyName, StreetNo = :streetNo, AddressLine1 = :addressLine1, AddressLine2 = :addressLine2, City = :city, CompanyLogo = :companyLogo, Description = :description, Website = :website, Industry = :industry WHERE CompanyID = :userId');
                 $this->db->bind(':companyName', $data['companyName']);
                 $this->db->bind(':streetNo', $data['streetNo']);
                 $this->db->bind(':addressLine1', $data['addressLine1']);
@@ -320,20 +320,20 @@ class userModel
                 }
             } else if ($data['role'] === 'VT-Member') {
                 //Update VerificationTeam table
-                $this->db->query('UPDATE VerificationTeam SET FirstName = :firstName, LastName = :lastName WHERE VT_MemberID = :userId');
+                $this->db->query('UPDATE verificationteam SET FirstName = :firstName, LastName = :lastName WHERE VT_MemberID = :userId');
                 $this->db->bind(':firstName', $data['firstName']);
                 $this->db->bind(':lastName', $data['lastName']);
                 $this->db->bind(':userId', $data['userID']);
 
                 //Execute query
                 if (!$this->db->execute()) {
-                    error_log('Failed to update VerificationTeam table');
+                    error_log('Failed to update verificationteam table');
                     $this->db->rollBack();
                     return false;
                 }
             } else if ($data['role'] === 'Admin') {
                 //Update Admin table
-                $this->db->query('UPDATE Admin SET FirstName = :firstName, LastName = :lastName WHERE AdminID = :userId');
+                $this->db->query('UPDATE admin SET FirstName = :firstName, LastName = :lastName WHERE AdminID = :userId');
                 $this->db->bind(':firstName', $data['firstName']);
                 $this->db->bind(':lastName', $data['lastName']);
                 $this->db->bind(':userId', $data['userID']);
@@ -363,7 +363,7 @@ class userModel
         try {
             // Update User table with status and time of deactivation
             // $this->db->query('UPDATE User SET Status = "Deactive", DeactivationDate = NOW() WHERE UserID = :userId');
-            $this->db->query('UPDATE User SET Status = "Deactive" WHERE UserID = :userId');
+            $this->db->query('UPDATE user SET Status = "Deactive" WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             if ($this->db->execute()) {
                 return true;
@@ -382,7 +382,7 @@ class userModel
     // public function getAllStudentsAndCompanies()
     // {
     //     try {
-    //         $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE Role = "Student" OR Role = "Company"');
+    //         $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM user WHERE Role = "Student" OR Role = "Company"');
     //         $users = $this->db->resultSet();
     //         return $users;
 
@@ -399,7 +399,7 @@ class userModel
     public function getPendingStudentsAndCompanies()
     {
         try {
-            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Pending"');
+            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM user WHERE (Role = "Student" OR Role = "Company") AND Status = "Pending"');
             $users = $this->db->resultSet();
             return $users;
         } catch (PDOException $e) {
@@ -414,7 +414,7 @@ class userModel
     public function getNotVerifiedStudentsAndCompanies()
     {
         try {
-            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Not Approved"');
+            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM user WHERE (Role = "Student" OR Role = "Company") AND Status = "Not Approved"');
             $users = $this->db->resultSet();
             return $users;
         } catch (PDOException $e) {
@@ -429,7 +429,7 @@ class userModel
     public function approveUser($userId)
     {
         try {
-            $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
+            $this->db->query('UPDATE user SET Status = "Active" WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             if ($this->db->execute()) {
                 return true;
@@ -448,7 +448,7 @@ class userModel
     public function rejectUser($userId)
     {
         try {
-            $this->db->query('UPDATE User SET Status = "Not Approved" WHERE UserID = :userId');
+            $this->db->query('UPDATE user SET Status = "Not Approved" WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             if ($this->db->execute()) {
                 return true;
@@ -467,7 +467,7 @@ class userModel
     public function activateAccount($userId)
     {
         try {//todo: add logs
-            $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
+            $this->db->query('UPDATE user SET Status = "Active" WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             if ($this->db->execute()) {
                 return true;
@@ -486,7 +486,7 @@ class userModel
     public function getVTMembers()
     {
         try {
-            $this->db->query('SELECT UserID, Email, ContactNo, RegisterDate, Status FROM User WHERE Role = "VT-Member"');
+            $this->db->query('SELECT UserID, Email, ContactNo, RegisterDate, Status FROM user WHERE Role = "VT-Member"');
             $users = $this->db->resultSet();
             return $users;
         } catch (PDOException $e) {

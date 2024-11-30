@@ -39,7 +39,7 @@ class M_jobpost {
 
     public function create($data) {
         $this->db->query('
-            INSERT INTO jobs 
+            INSERT INTO Jobs 
             (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, CompanyID, Status) 
             VALUES 
             (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :company_id, :status)
@@ -63,7 +63,7 @@ class M_jobpost {
 
     public function edit($data) {
         $this->db->query('
-            UPDATE jobs 
+            UPDATE Jobs 
             SET 
                 Title = :job_name, 
                 Description = :job_description, 
@@ -89,7 +89,7 @@ class M_jobpost {
     }
 
     public function delete($postId){
-        $this->db->query('DELETE FROM jobs WHERE JobID=:id');
+        $this->db->query('DELETE FROM Jobs WHERE JobID=:id');
         $this->db->bind(':id',$postId );
         
 

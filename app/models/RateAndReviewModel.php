@@ -58,7 +58,7 @@ class RateAndReviewModel
     }
 
     public function getReviewById($reviewID){
-        $this->db->query('SELECT * FROM review WHERE ReviewID = :review_id');
+        $this->db->query('SELECT * FROM Review WHERE ReviewID = :review_id');
         $this->db->bind(':review_id', $reviewID);
         return $this->db->single();
     }
@@ -66,7 +66,7 @@ class RateAndReviewModel
     public function updateReview($data)
     {
         try {
-            $this->db->query('UPDATE review SET Rating = :rating, Comment = :comment WHERE ReviewID = :id');
+            $this->db->query('UPDATE Review SET Rating = :rating, Comment = :comment WHERE ReviewID = :id');
             $this->db->bind(':rating', $data['rating']);
             $this->db->bind(':comment', $data['comment']);
             $this->db->bind(':id', $data['review_id']);
@@ -82,7 +82,7 @@ class RateAndReviewModel
     public function deleteReviewById($id)
     {
         try {
-            $this->db->query('DELETE FROM review WHERE ReviewID = :id');
+            $this->db->query('DELETE FROM Review WHERE ReviewID = :id');
             $this->db->bind(':id', $id);
             // $this->db->bind(':user_id', $_SESSION['user_id']); // Ensure only the review's owner can delete it
 
