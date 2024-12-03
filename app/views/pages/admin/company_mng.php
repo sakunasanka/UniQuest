@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/popups/admin/deactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -42,7 +43,7 @@
                             <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/com_detail'">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
+                            <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
                                 person_remove
                             </span>
                         </td>
@@ -57,7 +58,7 @@
                             <span class="material-symbols-outlined action-btn view">
                                 account_box
                             </span>
-                            <span class="material-symbols-outlined action-btn activate">
+                            <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
                                 person_add
                             </span>
                         </td>

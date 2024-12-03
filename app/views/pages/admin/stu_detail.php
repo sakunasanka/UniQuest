@@ -95,7 +95,8 @@
                 </div>
                 <div class="btn-row">
                     <div></div>
-                    <button class="contact-btn" onclick="">Contact</button>
+                    <!-- <button class="contact-btn" onclick="">Contact</button>-->
+                    <?php require APPROOT . '/views/components/chat-sent.php'; ?>
                 </div>
             </div>
 

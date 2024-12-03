@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/popups/admin/deactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -22,8 +23,8 @@
             </div>
             <table>
                 <thead>
-                <tr>
-                        <th onclick="sortTable(0)">User Name</th>
+                    <tr>
+                        <th onclick="sortTable(0)">User ID</th>
                         <th onclick="sortTable(1)">Email</th>
                         <th onclick="sortTable(2)">Mobile Number</th>
                         <th onclick="sortTable(3)">Registered Date</th>
@@ -32,114 +33,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
-                        <td>Sakith</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit" data-tooltip="Edit Profile">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Pamali</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sakuna</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sakuna</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sehara</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Wameesha</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['vtMembers'] as $user) : ?>
+                        <tr>
+                            <td><?php echo $user->UserID; ?></td>
+                            <td><?php echo $user->Email; ?></td>
+                            <td><?php echo $user->ContactNo; ?></td>
+                            <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
+                            <?php if ($user->Status == 'Active') : ?>
+                                <td><span class="status active">Active</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
+                                        person_remove
+                                    </span>
+                                <?php else : ?>
+                                <td><span class="status inactive">Deactive</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
+                                        person_add
+                                    </span>
+                                <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

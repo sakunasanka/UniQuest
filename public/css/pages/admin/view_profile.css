@@ -1,0 +1,173 @@
+
+/* Profile Container */
+.profile-container {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Section Headers */
+h3 {
+    font-size: 22px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+/* Profile Section */
+.profile-section {
+    flex: 1;
+    min-width: 280px;
+    text-align: center;
+}
+
+.profile-section .profile-pic img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.profile-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-section ul li {
+    margin: 15px 0;
+}
+
+.profile-section ul li a {
+    text-decoration: none;
+    color: #0076cb;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.profile-section ul li a:hover {
+    color: #0056a8;
+    text-decoration: underline;
+}
+
+/* Info Section */
+.info-section {
+    flex: 2;
+    min-width: 280px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+label {
+    font-weight: bold;
+    color: #333;
+    min-width: 120px;
+    flex-shrink: 0;
+}
+
+.colon {
+    width: 20px;
+    text-align: center;
+    color: #555;
+}
+
+.kk {
+    font-size: 16px;
+    color: #555;
+    text-align: left;
+    flex-grow: 1;
+    word-wrap: break-word;
+}
+
+/* Edit Button */
+.edit-btn {
+    background-color: #04AA6D;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    align-self: flex-end;
+}
+
+.edit-btn:hover {
+    background-color: #038a56;
+}
+
+.btn-row {
+    margin-top: auto; /* Push the buttons to the bottom */
+    display: flex;
+    justify-content: space-between; /* Spread the buttons evenly */
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0; /* Add some padding for better spacing */
+}
+
+.btn-row button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+button.contact-btn {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+button.contact-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        gap: 30px;
+        padding: 15px;
+    }
+
+    .profile-section,
+    .info-section {
+        width: 100%;
+    }
+
+    label {
+        font-size: 14px;
+        min-width: auto;
+    }
+
+    .kk {
+        font-size: 14px;
+    }
+
+    .edit-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

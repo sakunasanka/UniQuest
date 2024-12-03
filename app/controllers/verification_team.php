@@ -16,7 +16,7 @@ class Verification_team extends Controller
 
     public function index()
     {
-        echo 'verification_team/index';
+        $this->user_ver_pending();
     }
 
     public function user_verified()
@@ -105,6 +105,11 @@ class Verification_team extends Controller
         $this->view('pages/verification_team/job_ver_pending');
     }
 
+    public function ptjob_ver_detail()
+    {
+        $this->view('pages/verification_team/ptjob_ver_detail');
+    }
+
     public function job_ver_not()
     {
         $this->view('pages/verification_team/job_ver_not');
@@ -112,6 +117,11 @@ class Verification_team extends Controller
 
     public function notifications()
     {
-        $this->view('pages/student/notification_alerts');
+        $this->view('pages/verification_team/notification_alerts');
+    }
+
+    public function contact_admin()
+    {
+        $this->view('pages/verification_team/contact_admin');
     }
 }

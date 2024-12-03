@@ -28,7 +28,7 @@
                         <a href="/UniQuest/student/company">Companies</a>
                     </div>
                 </li>
-                <li><a href="/UniQuest/about" class="hov">About Us</a></li>
+                <!-- <li><a href="/UniQuest/about" class="hov">About Us</a></li> -->
                 <li><a href="/UniQuest/contact" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>

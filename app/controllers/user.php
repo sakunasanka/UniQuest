@@ -18,7 +18,7 @@ class User extends Controller
 
     public function index()
     {
-        echo 'user/index';
+        $this->login();
     }
 
     public function login() {
@@ -50,8 +50,9 @@ class User extends Controller
                     // Create session
                     $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
-                    die('Deactive');//TODO: Handle this
-
+                    //activate account again and logge in user
+                    $this->model->activateAccount($loggedInUser->UserID);
+                    $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
                     if ($loggedInUser->Role === 'Student') {
                         $this->view('pages/login/wait_to_verify_stu');
@@ -156,9 +157,9 @@ class User extends Controller
             } else if ($user['Role'] === 'Company') {
                 $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {
-                $this->view('pages/admin/profile', $data); //TODO: Create admin profile view
+                $this->view('pages/admin/view_profile', $data); //TODO: Create admin profile view
             } else if ($user['Role'] === 'VT-Member') {
-                $this->view('pages/vt-member/profile', $data);//TODO: Create VT-Member profile view
+                $this->view('pages/verification_team/view_profile', $data);//TODO: Create VT-Member profile view
             } else {
                 // Redirect to login page
                 Redirect::to(URLROOT . '/login');

@@ -362,7 +362,8 @@ class userModel
     {
         try {
             // Update User table with status and time of deactivation
-            $this->db->query('UPDATE User SET Status = "Deactive", DeactivationDate = NOW() WHERE UserID = :userId');
+            // $this->db->query('UPDATE User SET Status = "Deactive", DeactivationDate = NOW() WHERE UserID = :userId');
+            $this->db->query('UPDATE User SET Status = "Deactive" WHERE UserID = :userId');
             $this->db->bind(':userId', $userId);
             if ($this->db->execute()) {
                 return true;
@@ -463,4 +464,39 @@ class userModel
         }
     }
 
+    public function activateAccount($userId)
+    {
+        try {//todo: add logs
+            $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
+            $this->db->bind(':userId', $userId);
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getVTMembers()
+    {
+        try {
+            $this->db->query('SELECT UserID, Email, ContactNo, RegisterDate, Status FROM User WHERE Role = "VT-Member"');
+            $users = $this->db->resultSet();
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
 }
+

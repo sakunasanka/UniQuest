@@ -47,7 +47,7 @@ class Service_provider extends Controller
 
     public function index()
     {
-        echo 'service_provider/index';
+        $this->dashboard();
     }
 
     public function contact_admin()

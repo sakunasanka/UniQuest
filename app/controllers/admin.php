@@ -43,7 +43,7 @@ class Admin extends Controller
 
     public function index()
     {
-        echo 'admin/index';
+        $this->dashboard();
     }
 
     public function students_mng()
@@ -68,7 +68,11 @@ class Admin extends Controller
 
     public function verTeam_mng()
     {
-        $this->view('pages/admin/verTeam_mng');
+        $vtMembers = $this->model->getVTMembers();
+        $data = [
+            'vtMembers' => $vtMembers
+        ];
+        $this->view('pages/admin/verTeam_mng', $data);
     }
 
     public function add_member()
@@ -101,7 +105,7 @@ class Admin extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Upload profile picture
-                $profilePicResponse = FileUploadHelper::uploadFile($data['profilePic'], PUBROOT . '/uploads/profile_pictures/vt_member');
+                $profilePicResponse = FileUploadHelper::uploadFile($data['profilePic'], PUBROOT . '/uploads/profile_pictures/vT-Member');
                 if ($profilePicResponse['success']) {
                     $data['profilePicName'] = $profilePicResponse['file_name'];
                 } else {
@@ -200,6 +204,22 @@ class Admin extends Controller
         }
     }
 
+    public function user_detail($userID)
+    {
+        $user = $this->model->getUserDetails($userID);
+        $data = [
+            'user' => $user
+        ];
+
+        if ($user['Role'] == 'Student') {
+            $this->view('pages/admin/stu_detail', $data);
+        } else if ($user['Role'] == 'Company') {
+            $this->view('pages/admin/com_detail', $data);
+        } else if ($user['Role'] == 'VT-Member') {
+            $this->view('pages/admin/vt_detail', $data);
+        }
+    }
+
     public function user_ver_detail($userID)
     {
         try {
@@ -211,6 +231,8 @@ class Admin extends Controller
                 $this->view('pages/admin/stu_ver_detail', $data);
             } else if ($user['Role'] == 'Company') {
                 $this->view('pages/admin/com_ver_detail', $data);
+            } else if ($user['Role'] == 'VT-Member') {
+                $this->view('pages/admin/vt_ver_detail', $data);
             }
         } catch (Exception $e) {
             die($e->getMessage());//TODO: Handle this
