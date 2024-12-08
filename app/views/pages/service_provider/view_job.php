@@ -72,7 +72,6 @@
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
 
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                <p><?php echo $data['post']->Address; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
