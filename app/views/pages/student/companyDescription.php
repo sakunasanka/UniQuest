@@ -9,11 +9,16 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Logo not available">
+            <div class="job-logo2">
+                <img src="<?php echo empty($data['post']->CompanyLogo)
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['post']->CompanyLogo; ?>"
+                    alt="Burger King Logo">
+            </div>
 
             <div class="view-card-content">
                 <div class="title-with-bookmark">
-                    <h1>Acme Inc.</h1>
+                    <h1><?php echo $data['post']->CompanyName; ?></h1>
                     <?php if ($_SESSION['user_role'] == 'Student'): ?>
                         <div class="card-icons">
                             <i class="fa fa-share-alt" aria-hidden="true"></i>
@@ -23,25 +28,25 @@
                 </div>
 
 
-                <h2>Software & Technology</h2>
-                <p>Acme Inc. is a leading software company that specializes in developing innovative solutions for businesses of all sizes. With a team of talented engineers and designers, we are committed to delivering high-quality products that help our clients achieve their goals.</p>
+                <h2><?php echo $data['post']->Industry; ?></h2>
+                <p><?php echo $data['post']->Description; ?></p>
 
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        123 Main Street, Colombo
+                        <?php echo $data['post']->Address; ?>
                     </div>
                     <div>
                         <span>Phone</span>
-                        +94 11-345-2686
+                        <?php echo $data['post']->ContactNo; ?>
                     </div>
                     <div>
                         <span>Email</span>
-                        info@academic.com
+                        <?php echo $data['post']->Email; ?>
                     </div>
                     <div>
                         <span>Website</span>
-                        <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
+                        <a href="http://www.acmeinc.com" target="_blank"><?php echo $data['post']->Website; ?></a>
                     </div>
                 </div>
 
