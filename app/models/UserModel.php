@@ -463,16 +463,21 @@ class userModel extends Model
 
             // Determine the role and fetch additional details
             $roleTables = [
-                'Student' => 'Student',
-                'Company' => 'Company',
-                'VT-Member' => 'VerificationTeam',
-                'Admin' => 'Admin'
+                'Student' => ['table' => 'Student', 'ID' => 'StudentID'],
+                'Company' => ['table' => 'Company', 'ID' => 'CompanyID'],
+                'VT-Member' => ['table' => 'VerificationTeam', 'ID' => 'VT_MemberID'],
+                'Admin' => ['table' => 'Admin', 'ID' => 'AdminID']
             ];
 
             $role = $user->Role;
-            if (isset($roleTables[$role])) {
-                $additionalDetails = $this->select($roleTables[$role], [["{$roleTables[$role]}ID", '=', $userId]]);
-                return array_merge((array)$user, (array)$additionalDetails);
+            if (array_key_exists($role, $roleTables)) {
+                $roleTable = $roleTables[$role]['table'];
+                $roleID = $roleTables[$role]['ID'];
+
+                $additionalDetails = $this->select($roleTable, [[$roleID, '=', $userId]]);
+                if ($additionalDetails) {
+                    return array_merge((array)$user, (array)$additionalDetails);
+                }
             }
 
             return (array)$user; // Return base user details if no additional table exists for the role
