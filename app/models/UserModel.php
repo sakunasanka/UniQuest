@@ -33,7 +33,20 @@ class userModel extends Model
 
     public function findUserByEmail($email) 
     {
-        return $this->select('User', ['Email' => $email]);
+        try {
+            $user = $this->select('user', [['Email', "=", $email]]);
+            if ($user && $user->Status !== 'Deleted') {
+                return $user;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
 
     // public function companyRegister(array $data)
@@ -442,22 +455,27 @@ class userModel extends Model
     public function getUserDetails($userId)
     {
         try {
-            $user = $this->select('User', ['UserID' => $userId]);
-            if ($user->Role === 'Student') {
-                $student = $this->select('Student', ['StudentID' => $userId]);
-                return array_merge((array)$user, (array)$student);
-            } else if ($user->Role === 'Company') {
-                $company = $this->select('Company', ['CompanyID' => $userId]);
-                return array_merge((array)$user, (array)$company);
-            } else if ($user->Role === 'VT-Member') {
-                $vtMember = $this->select('VerificationTeam', ['VT_MemberID' => $userId]);
-                return array_merge((array)$user, (array)$vtMember);
-            } else if ($user->Role === 'Admin') {
-                $admin = $this->select('Admin', ['AdminID' => $userId]);
-                return array_merge((array)$user, (array)$admin);
-            } else {
-                return false;
+            // Fetch user details
+            $user = $this->select('User', [['UserID', '=', $userId]]);
+            if (!$user) {
+                return false; // User not found
             }
+
+            // Determine the role and fetch additional details
+            $roleTables = [
+                'Student' => 'Student',
+                'Company' => 'Company',
+                'VT-Member' => 'VerificationTeam',
+                'Admin' => 'Admin'
+            ];
+
+            $role = $user->Role;
+            if (isset($roleTables[$role])) {
+                $additionalDetails = $this->select($roleTables[$role], [["{$roleTables[$role]}ID", '=', $userId]]);
+                return array_merge((array)$user, (array)$additionalDetails);
+            }
+
+            return (array)$user; // Return base user details if no additional table exists for the role
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
@@ -720,7 +738,12 @@ class userModel extends Model
     public function getPendingStudentsAndCompanies()
     {
         try {
-            $users = $this->selectAll('User', ['Status' => 'Pending'], ['Role' => 'Student', 'Role' => 'Company']);
+            // Use grouped conditions for more complex queries
+            $conditions = [
+                [['Role', '=', 'Student'], ['Role', '=', 'Company']],
+                ['Status', '=', 'Pending']
+            ];
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -730,12 +753,30 @@ class userModel extends Model
             return false;
         }
     }
+    
+    // public function getNotVerifiedStudentsAndCompanies()
+    // {
+    //     try {
+    //         $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Not Approved"');
+    //         $users = $this->db->resultSet();
+    //         return $users;
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     public function getNotVerifiedStudentsAndCompanies()
     {
         try {
-            $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE (Role = "Student" OR Role = "Company") AND Status = "Not Approved"');
-            $users = $this->db->resultSet();
+            $conditions = [
+                [['Role', '=', 'Student'], ['Role', '=', 'Company']],
+                ['Status', '=', 'Not Approved']
+            ];
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -746,12 +787,32 @@ class userModel extends Model
         }
     }
 
+    // public function approveUser($userId)
+    // {
+    //     try {
+    //         $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
+    //         $this->db->bind(':userId', $userId);
+    //         if ($this->db->execute()) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
+
     public function approveUser($userId)
     {
         try {
-            $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
-            $this->db->bind(':userId', $userId);
-            if ($this->db->execute()) {
+            $userData = [
+                'Status' => 'Active'
+            ];
+            if ($this->update('User', $userData, ['UserID' => $userId])) {
                 return true;
             } else {
                 return false;
@@ -764,13 +825,33 @@ class userModel extends Model
             return false;
         }
     }
+
+    // public function rejectUser($userId)
+    // {
+    //     try {
+    //         $this->db->query('UPDATE User SET Status = "Not Approved" WHERE UserID = :userId');
+    //         $this->db->bind(':userId', $userId);
+    //         if ($this->db->execute()) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     public function rejectUser($userId)
     {
         try {
-            $this->db->query('UPDATE User SET Status = "Not Approved" WHERE UserID = :userId');
-            $this->db->bind(':userId', $userId);
-            if ($this->db->execute()) {
+            $userData = [
+                'Status' => 'Not Approved'
+            ];
+            if ($this->update('User', $userData, ['UserID' => $userId])) {
                 return true;
             } else {
                 return false;
@@ -783,13 +864,33 @@ class userModel extends Model
             return false;
         }
     }
+
+    // public function activateAccount($userId)
+    // {
+    //     try {//todo: add logs
+    //         $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
+    //         $this->db->bind(':userId', $userId);
+    //         if ($this->db->execute()) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     public function activateAccount($userId)
     {
-        try {//todo: add logs
-            $this->db->query('UPDATE User SET Status = "Active" WHERE UserID = :userId');
-            $this->db->bind(':userId', $userId);
-            if ($this->db->execute()) {
+        try {
+            $userData = [
+                'Status' => 'Active'
+            ];
+            if ($this->update('User', $userData, ['UserID' => $userId])) {
                 return true;
             } else {
                 return false;
@@ -803,11 +904,24 @@ class userModel extends Model
         }
     }
 
-    public function getVTMembers()
-    {
+    // public function getVTMembers()
+    // {
+    //     try {
+    //         $this->db->query('SELECT UserID, Email, ContactNo, RegisterDate, Status FROM User WHERE Role = "VT-Member"');
+    //         $users = $this->db->resultSet();
+    //         return $users;
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
+
+    public function getVTMembers() {
         try {
-            $this->db->query('SELECT UserID, Email, ContactNo, RegisterDate, Status FROM User WHERE Role = "VT-Member"');
-            $users = $this->db->resultSet();
+            $users = $this->select('User', [['Role', '=', 'VT-Member']], 'UserID, Email, ContactNo, RegisterDate, Status', 'AND', true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
