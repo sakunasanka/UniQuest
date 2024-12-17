@@ -23,8 +23,8 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">User Name</th>
+                <tr>
+                        <th onclick="sortTable(0)">User ID</th>
                         <th onclick="sortTable(1)">Email</th>
                         <th onclick="sortTable(2)">Mobile Number</th>
                         <th onclick="sortTable(3)">Registered Date</th>
@@ -33,216 +33,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Sunil Perera</td>
-                        <td>sunil@uoc.com</td>
-                        <td>0774585126</td>
-                        <td>2024-10-25</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/stu_detail'">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Pamali</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/06/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sakuna</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/06/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sakuna</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/06/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sehara</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/06/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Damsara</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Wameesha</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Gayeshan</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/07/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sehara</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/07/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sakith</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/07/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Pamali</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/07/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Damsara</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/06/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sachin</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sakith</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>071 2519865</td>
-                        <td>2024/06/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['students'] as $student) : ?>
+                        <tr>
+                            <td><?php echo $student->UserID; ?></td>
+                            <td><?php echo $student->Email; ?></td>
+                            <td><?php echo $student->ContactNo; ?></td>
+                            <td><?php echo substr($student->RegisterDate, 0, 10); ?></td>
+                            <?php if ($student->Status == 'Active') : ?>
+                                <td><span class="status active">Active</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
+                                        person_remove
+                                    </span>
+                                </td>
+                            <?php elseif($student->Status == 'Deactive') : ?>
+                                <td><span class="status inactive">Deactive</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
+                                        person_add
+                                    </span>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

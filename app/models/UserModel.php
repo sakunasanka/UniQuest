@@ -708,23 +708,6 @@ class userModel extends Model
         }
     }
 
-    // public function getAllStudentsAndCompanies()
-    // {
-    //     try {
-    //         $this->db->query('SELECT UserID, Email, Role, RegisterDate, Status FROM User WHERE Role = "Student" OR Role = "Company"');
-    //         $users = $this->db->resultSet();
-    //         return $users;
-
-    //     } catch (PDOException $e) {
-    //         error_log("Database Error: " . $e->getMessage());
-    //         return false;
-
-    //     } catch (Exception $e) {
-    //         error_log("General Error: " . $e->getMessage());
-    //         return false;
-    //     }
-    // }
-
     // public function getPendingStudentsAndCompanies()
     // {
     //     try {
@@ -924,9 +907,14 @@ class userModel extends Model
     //     }
     // }
 
-    public function getVTMembers() {
+    public function getVerifiedUsersByRole($role)
+    {
         try {
-            $users = $this->select('User', [['Role', '=', 'VT-Member']], 'UserID, Email, ContactNo, RegisterDate, Status', 'AND', true);
+            $conditions = [
+                [['Status', '=', 'Active'], ['Status', '=', 'Deactive']],
+                ['Role', '=', $role]
+            ];
+            $users = $this->select('User', $conditions, 'UserID, Email, ContactNo, RegisterDate, Status', 'AND', true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());

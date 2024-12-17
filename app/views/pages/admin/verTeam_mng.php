@@ -48,7 +48,8 @@
                                     <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
                                         person_remove
                                     </span>
-                                <?php else : ?>
+                                </td>
+                            <?php else : ?>
                                 <td><span class="status inactive">Deactive</span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
@@ -57,7 +58,8 @@
                                     <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
                                         person_add
                                     </span>
-                                <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

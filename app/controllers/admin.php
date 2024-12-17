@@ -48,7 +48,11 @@ class Admin extends Controller
 
     public function students_mng()
     {
-        $this->view('pages/admin/students_mng');
+        $students = $this->model->getVerifiedUsersByRole('Student');
+        $data = [
+            'students' => $students
+        ];
+        $this->view('pages/admin/students_mng', $data);
     }
 
     public function add_student()
@@ -58,7 +62,11 @@ class Admin extends Controller
 
     public function company_mng()
     {
-        $this->view('pages/admin/company_mng');
+        $vtMembers = $this->model->getVerifiedUsersByRole('Company');
+        $data = [
+            'companies' => $vtMembers
+        ];
+        $this->view('pages/admin/company_mng', $data);
     }
 
     public function add_company()
@@ -68,7 +76,8 @@ class Admin extends Controller
 
     public function verTeam_mng()
     {
-        $vtMembers = $this->model->getVTMembers();
+        // $vtMembers = $this->model->getVTMembers();
+        $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member');
         $data = [
             'vtMembers' => $vtMembers
         ];
