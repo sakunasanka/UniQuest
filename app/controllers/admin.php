@@ -295,9 +295,17 @@ class Admin extends Controller
     //     $this->view('pages/admin/job_ver_all');
     // }
 
-    public function ptjob_detail()
+    public function job_detail($jobID)
     {
-        $this->view('pages/admin/ptjob_detail');
+        try {
+            $job = $this->model->getJobDetails($jobID);
+            $data = [
+                'job' => $job
+            ];
+            $this->view('pages/admin/job_detail', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function job_ver_pending()

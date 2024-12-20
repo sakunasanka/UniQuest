@@ -976,6 +976,23 @@ class userModel extends Model
             return false;
         }
     }
+
+    public function getJobDetails($jobId)
+    {
+        try {
+            $conditions = [
+                ['JobID', '=', $jobId]
+            ];
+            $job = $this->select('v_jobs', $conditions, '*', 'AND', false);
+            return $job;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
     
 }
 

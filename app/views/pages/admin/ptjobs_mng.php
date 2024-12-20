@@ -43,7 +43,7 @@
                             <?php if ($job->Status == 'Active') : ?>
                                 <td><span class="status active">Active</span></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/ptjob_detail/<?php echo $job->JobID; ?>'">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
                                         preview
                                     </span>
                                     <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
@@ -53,7 +53,7 @@
                             <?php else : ?>
                                 <td><span class="status inactive">Deactive</span></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/ptjob_detail/<?php echo $job->JobID; ?>'">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
                                         preview
                                     </span>
                                     <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
