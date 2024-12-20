@@ -924,6 +924,58 @@ class userModel extends Model
             return false;
         }
     }
+
+    public function getVerifiedJobsByCategory($category)
+    {
+        try {
+            $conditions = [
+                [['Status', '=', 'Active'], ['Status', '=', 'Deactive']],
+                ['Category', '=', $category]
+            ];
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', true);
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getPendingJobs()
+    {
+        try {
+            $conditions = [
+                ['Status', '=', 'Pending']
+            ];
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', true);
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getNotApprovedJobs()
+    {
+        try {
+            $conditions = [
+                ['Status', '=', 'Not Approved']
+            ];
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', true);
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
     
 }
 

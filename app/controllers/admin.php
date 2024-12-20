@@ -48,11 +48,15 @@ class Admin extends Controller
 
     public function students_mng()
     {
-        $students = $this->model->getVerifiedUsersByRole('Student');
-        $data = [
-            'students' => $students
-        ];
-        $this->view('pages/admin/students_mng', $data);
+        try {
+            $students = $this->model->getVerifiedUsersByRole('Student');
+            $data = [
+                'students' => $students
+            ];
+            $this->view('pages/admin/students_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_student()
@@ -62,11 +66,15 @@ class Admin extends Controller
 
     public function company_mng()
     {
-        $vtMembers = $this->model->getVerifiedUsersByRole('Company');
-        $data = [
-            'companies' => $vtMembers
-        ];
-        $this->view('pages/admin/company_mng', $data);
+        try {
+            $companies = $this->model->getVerifiedUsersByRole('Company');
+            $data = [
+                'companies' => $companies
+            ];
+            $this->view('pages/admin/company_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_company()
@@ -76,12 +84,16 @@ class Admin extends Controller
 
     public function verTeam_mng()
     {
-        // $vtMembers = $this->model->getVTMembers();
-        $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member');
-        $data = [
-            'vtMembers' => $vtMembers
-        ];
-        $this->view('pages/admin/verTeam_mng', $data);
+        try {
+            // $vtMembers = $this->model->getVTMembers();
+            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member');
+            $data = [
+                'vtMembers' => $vtMembers
+            ];
+            $this->view('pages/admin/verTeam_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_member()
@@ -169,22 +181,28 @@ class Admin extends Controller
 
     public function ptjobs_mng()
     {
-        $this->view('pages/admin/ptjobs_mng');
+        try {
+            $ptjobs = $this->model->getVerifiedJobsByCategory('Part-time');
+            $data = [
+                'ptjobs' => $ptjobs
+            ];
+            $this->view('pages/admin/ptjobs_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function intern_mng()
     {
-        $this->view('pages/admin/intern_mng');
-    }
-
-    public function stu_detail()
-    {
-        $this->view('pages/admin/stu_detail');
-    }
-
-    public function com_detail()
-    {
-        $this->view('pages/admin/com_detail');
+        try {
+            $interns = $this->model->getVerifiedJobsByCategory('Internship');
+            $data = [
+                'interns' => $interns
+            ];
+            $this->view('pages/admin/intern_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function user_ver_pending()
@@ -196,7 +214,7 @@ class Admin extends Controller
             ];
             $this->view('pages/admin/user_ver_pending', $data);
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -209,23 +227,27 @@ class Admin extends Controller
             ];
             $this->view('pages/admin/user_ver_not', $data);
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
     public function user_detail($userID)
     {
-        $user = $this->model->getUserDetails($userID);
-        $data = [
-            'user' => $user
-        ];
+        try {
+            $user = $this->model->getUserDetails($userID);
+            $data = [
+                'user' => $user
+            ];
 
-        if ($user['Role'] == 'Student') {
-            $this->view('pages/admin/stu_detail', $data);
-        } else if ($user['Role'] == 'Company') {
-            $this->view('pages/admin/com_detail', $data);
-        } else if ($user['Role'] == 'VT-Member') {
-            $this->view('pages/admin/vt_detail', $data);
+            if ($user['Role'] == 'Student') {
+                $this->view('pages/admin/stu_detail', $data);
+            } else if ($user['Role'] == 'Company') {
+                $this->view('pages/admin/com_detail', $data);
+            } else if ($user['Role'] == 'VT-Member') {
+                $this->view('pages/admin/vt_detail', $data);
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -244,7 +266,7 @@ class Admin extends Controller
                 $this->view('pages/admin/vt_ver_detail', $data);
             }
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -254,7 +276,7 @@ class Admin extends Controller
             $this->model->approveUser($userID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -264,7 +286,7 @@ class Admin extends Controller
             $this->model->rejectUser($userID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -280,7 +302,15 @@ class Admin extends Controller
 
     public function job_ver_pending()
     {
-        $this->view('pages/admin/job_ver_pending');
+        try {
+            $jobs = $this->model->getPendingJobs();
+            $data = [
+                'jobs' => $jobs
+            ];
+            $this->view('pages/admin/job_ver_pending', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function ptjob_ver_detail()
@@ -290,7 +320,15 @@ class Admin extends Controller
 
     public function job_ver_not()
     {
-        $this->view('pages/admin/job_ver_not');
+        try {
+            $jobs = $this->model->getNotApprovedJobs();
+            $data = [
+                'jobs' => $jobs
+            ];
+            $this->view('pages/admin/job_ver_not', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function dashboard()
@@ -311,5 +349,4 @@ class Admin extends Controller
     {
         $this->view('pages/student/notification_alerts');
     }
-
 }
