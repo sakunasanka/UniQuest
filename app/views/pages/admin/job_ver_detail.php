@@ -55,8 +55,8 @@
                     </div>
                 </div>
                 <div class="btn-row">
-                    <button class="reject-btn" onclick="">Reject</button>
-                    <button class="approve-btn" onclick="">Approve</button>
+                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_reject/<?php echo $data['job']->JobID; ?>'">Reject</button>
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_approve/<?php echo $data['job']->JobID; ?>'">Approve</button>
                 </div>
             </div>
         </div>

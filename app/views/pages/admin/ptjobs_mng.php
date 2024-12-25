@@ -46,7 +46,9 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
                                         preview
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
+                                    <!-- <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()"> -->
+                                        
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_deactivate/<?php echo $job->JobID; ?>'">
                                         block
                                     </span>
                                 </td>
@@ -56,7 +58,8 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
                                         preview
                                     </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
+                                    <!-- <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()"> -->
+                                    <span class="material-symbols-outlined action-btn activate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_activate/<?php echo $job->JobID; ?>'">
                                         check_circle
                                     </span>
                                 </td>

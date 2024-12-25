@@ -290,6 +290,26 @@ class Admin extends Controller
         }
     }
 
+    public function user_activate($userID)
+    {
+        try {
+            $this->model->activateAccount($userID);
+            Redirect::to(URLROOT . '/admin/students_mng');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function user_deactivate($userID)
+    {
+        try {
+            $this->model->deactivateAccount($userID);
+            Redirect::to(URLROOT . '/admin/students_mng');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
     // public function job_ver_all()
     // {
     //     $this->view('pages/admin/job_ver_all');
@@ -342,6 +362,46 @@ class Admin extends Controller
                 'jobs' => $jobs
             ];
             $this->view('pages/admin/job_ver_not', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_approve($jobID)
+    {
+        try {
+            $this->model->approveJob($jobID);
+            Redirect::to(URLROOT . '/admin/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_reject($jobID)
+    {
+        try {
+            $this->model->rejectJob($jobID);
+            Redirect::to(URLROOT . '/admin/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_activate($jobID)
+    {
+        try {
+            $this->model->activateJob($jobID);
+            Redirect::to(URLROOT . '/admin/ptjobs_mng');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_deactivate($jobID)
+    {
+        try {
+            $this->model->deactivateJob($jobID);
+            Redirect::to(URLROOT . '/admin/ptjobs_mng');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }

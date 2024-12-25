@@ -45,7 +45,8 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
+                                    <!-- <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()"> -->
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_deactivate/<?php echo $company->UserID; ?>'">
                                         person_remove
                                     </span>
                                 </td>
@@ -55,7 +56,8 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
+                                    <!-- <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()"> -->
+                                    <span class="material-symbols-outlined action-btn activate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_activate/<?php echo $company->UserID; ?>'">
                                         person_add
                                     </span>
                                 </td>

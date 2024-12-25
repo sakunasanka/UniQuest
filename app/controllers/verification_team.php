@@ -149,6 +149,27 @@ class Verification_team extends Controller
         }
     }
 
+    public function job_ver_approve($jobID)
+    {
+        try {
+            $this->model->approveJob($jobID);
+            Redirect::to(URLROOT . '/verification_team/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_reject($jobID)
+    {
+        try {
+            $this->model->rejectJob($jobID);
+            Redirect::to(URLROOT . '/verification_team/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+
     public function notifications()
     {
         $this->view('pages/verification_team/notification_alerts');
