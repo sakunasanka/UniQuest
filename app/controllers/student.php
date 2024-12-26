@@ -95,7 +95,7 @@ class Student extends Controller
             if (empty($data['name_err']) && empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
-                    redirect('service_provider/contact_admin');
+                    redirect('student/contact_admin');
                 } else {
                     die('Something went wrong. Please try again.');
                 }
