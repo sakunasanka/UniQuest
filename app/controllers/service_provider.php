@@ -52,8 +52,71 @@ class Service_provider extends Controller
 
     public function contact_admin()
     {
-        $this->view('pages/service_provider/contact_admin');
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Data for the contact form
+            $data = [
+                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
+                'topic' => trim($_POST['topic'] ?? ''),
+                'message' => trim($_POST['message'] ?? ''),
+
+                'name_err' => '',
+                'email_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+
+            // Validation checks
+            if (empty($data['name'])) {
+                $data['name_err'] = 'Please enter your name';
+            }
+
+            if (empty($data['email'])) {
+                $data['email_err'] = 'Please enter your email address';
+            } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $data['email_err'] = 'Please enter a valid email address';
+            }
+
+            if (empty($data['topic'])) {
+                $data['topic_err'] = 'Please select a topic';
+            }
+
+            if (empty($data['message'])) {
+                $data['message_err'] = 'Please enter your message';
+            }
+
+            // Ensure no errors before submitting
+            if (empty($data['name_err']) && empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
+                // If everything is valid, pass the data to the model to handle the contact (such as storing the message or emailing it)
+                if ($this->model('M_contact')->sendMessage($data)) {
+                    // Show a success flash message and redirect
+                    flash('contact-msg', 'Your message has been sent successfully.');
+                    redirect('service_provider/contact_admin');
+                } else {
+                    die('Something went wrong. Please try again.');
+                }
+            } else {
+                // If there are errors, reload the view with the errors
+                $this->view('pages/service_provider/contact_admin', $data);
+            }
+        } else {
+            // Initialize default data for the view on GET request
+            $data = [
+                'name' => '',
+                'email' => '',
+                'topic' => '',
+                'message' => '',
+                'name_err' => '',
+                'email_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+    
+     $this->view('pages/service_provider/contact_admin', $data);
     }
+}
 
     public function dashboard()
     {
