@@ -18,7 +18,7 @@
             <div class="card stat-card">
                 <div>
                     <h3>Total Jobs</h3>
-                    <p>50</p>
+                    <p><?php echo $data['job_count']; ?></p>
                 </div>
                 <div class="icon_">
                     <span class="material-symbols-outlined large-icon">work</span>
@@ -27,7 +27,7 @@
             <div class="card stat-card">
                 <div>
                     <h3>Active Jobs</h3>
-                    <p>08</p>
+                    <p><?php echo $data['activeJobCount']; ?></p>
                 </div>
                 <div class="icon_">
                     <span class="material-symbols-outlined large-icon">work</span>

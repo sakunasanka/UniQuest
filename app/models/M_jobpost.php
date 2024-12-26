@@ -22,6 +22,21 @@ class M_jobpost {
         return $row;
     }
 
+    public function getJobCountByCompany() {
+        $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single(); 
+        return $row->job_count;
+    }
+
+    public function getActiveJobCountByCompany() {
+        $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id AND Status = :status');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $this->db->bind(':status', 'Active'); 
+        $row = $this->db->single(); 
+        return $row->job_count;
+    }
+
     public function getPost(){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
         $this->db->bind(':id', $_SESSION['user_id']);

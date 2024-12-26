@@ -107,7 +107,15 @@ class Service_provider extends Controller
 
     public function analytics()
     {
-        $this->view('pages/service_provider/ser_analytics');
+        $jobCount = $this->model('M_jobpost')->getJobCountByCompany();
+        $activeJobCount = $this->model('M_jobpost')->getActiveJobCountByCompany();
+        
+        $data = [
+            'job_count' => $jobCount,
+            'activeJobCount' => $activeJobCount
+        ];
+
+        $this->view('pages/service_provider/ser_analytics', $data);
     }
 
     public function notifications()
