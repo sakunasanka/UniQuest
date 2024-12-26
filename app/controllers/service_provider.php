@@ -90,7 +90,7 @@ class Service_provider extends Controller
             // Ensure no errors before submitting
             if (empty($data['name_err']) && empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
                 // If everything is valid, pass the data to the model to handle the contact (such as storing the message or emailing it)
-                if ($this->model('M_contact')->sendMessage($data)) {
+                if($ContactModel->sendMessage($data)){
                     // Show a success flash message and redirect
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('service_provider/contact_admin');
