@@ -34,7 +34,7 @@
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
-                <a href="/uniquest/service_provider/notifications"><span class="material-symbols-outlined">notifications</span></a>
+                <a href="/uniquest/admin/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>
         </div>
