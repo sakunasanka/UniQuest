@@ -8,7 +8,7 @@
         <div class="container">
             <div class="contact-left">
                 <h1>Contact Us</h1>
-                <form id="contactForm" action="<?php echo URLROOT; ?>/service_provider/contact_admin" method="POST">
+                <form id="contactForm" action="<?php echo URLROOT; ?>/vertification_team/contact_admin" method="POST">
                     
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" placeholder="Enter Your Name" value="<?php echo $data['name']; ?>" required>
