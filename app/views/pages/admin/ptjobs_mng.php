@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
-<?php require APPROOT . '/views/popups/admin/deactivateJob.php'; ?>
+<?php require APPROOT . '/views/popups/admin/activateDeactivateJob.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -46,20 +46,17 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
                                         preview
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()"> -->
-                                        
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_deactivate/<?php echo $job->JobID; ?>'">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateJob(<?php echo $job->JobID; ?>, 'Part-time')">
                                         block
                                     </span>
                                 </td>
-                            <?php else : ?>
+                            <?php elseif ($job->Status == 'Deactive') : ?>
                                 <td><span class="status inactive">Deactive</span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
                                         preview
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()"> -->
-                                    <span class="material-symbols-outlined action-btn activate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_activate/<?php echo $job->JobID; ?>'">
+                                    <span class="material-symbols-outlined action-btn activate" onclick="activateJob(<?php echo $job->JobID; ?>, 'Part-time')">
                                         check_circle
                                     </span>
                                 </td>

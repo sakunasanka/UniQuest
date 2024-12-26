@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
-<?php require APPROOT . '/views/popups/admin/deactivateAcc.php'; ?>
+<?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -45,8 +45,7 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()"> -->
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_deactivate/<?php echo $student->UserID; ?>'">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $student->UserID; ?>, 'Student')">
                                         person_remove
                                     </span>
                                 </td>
@@ -56,8 +55,7 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()"> -->
-                                    <span class="material-symbols-outlined action-btn activate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_activate/<?php echo $student->UserID; ?>'">
+                                    <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $student->UserID; ?>, 'Student')">
                                         person_add
                                     </span>
                             <?php endif; ?>

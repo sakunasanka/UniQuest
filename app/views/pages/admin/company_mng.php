@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
-<?php require APPROOT . '/views/popups/admin/deactivateAcc.php'; ?>
+<?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -45,19 +45,17 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()"> -->
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_deactivate/<?php echo $company->UserID; ?>'">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $company->UserID; ?>, 'Company')">
                                         person_remove
                                     </span>
                                 </td>
-                            <?php else : ?>
+                            <?php elseif ($company->Status == 'Deactive') : ?>
                                 <td><span class="status inactive">Deactive</span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()"> -->
-                                    <span class="material-symbols-outlined action-btn activate" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_activate/<?php echo $company->UserID; ?>'">
+                                    <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $company->UserID; ?>, 'Company')">
                                         person_add
                                     </span>
                                 </td>

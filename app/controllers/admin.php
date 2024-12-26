@@ -290,21 +290,33 @@ class Admin extends Controller
         }
     }
 
-    public function user_activate($userID)
+    public function user_activate($userID, $role)
     {
         try {
             $this->model->activateAccount($userID);
-            Redirect::to(URLROOT . '/admin/students_mng');
+            if ($role == 'Company') {
+                Redirect::to(URLROOT . '/admin/company_mng');
+            } else if ($role == 'Student') {
+                Redirect::to(URLROOT . '/admin/students_mng');
+            } else if ($role == 'VT-Member') {
+                Redirect::to(URLROOT . '/admin/verTeam_mng');
+            }
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_deactivate($userID)
+    public function user_deactivate($userID, $role)
     {
         try {
             $this->model->deactivateAccount($userID);
-            Redirect::to(URLROOT . '/admin/students_mng');
+            if ($role == 'Company') {
+                Redirect::to(URLROOT . '/admin/company_mng');
+            } else if ($role == 'Student') {
+                Redirect::to(URLROOT . '/admin/students_mng');
+            } else if ($role == 'VT-Member') {
+                Redirect::to(URLROOT . '/admin/verTeam_mng');
+            }
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -387,21 +399,29 @@ class Admin extends Controller
         }
     }
 
-    public function job_activate($jobID)
+    public function job_activate($jobID, $jobType)
     {
         try {
             $this->model->activateJob($jobID);
-            Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            if ($jobType == 'Part-time') {
+                Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            } else if ($jobType == 'Internship') {
+                Redirect::to(URLROOT . '/admin/intern_mng');
+            }
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function job_deactivate($jobID)
+    public function job_deactivate($jobID, $jobType)
     {
         try {
             $this->model->deactivateJob($jobID);
-            Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            if ($jobType == 'Part-time') {
+                Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            } else if ($jobType == 'Internship') {
+                Redirect::to(URLROOT . '/admin/intern_mng');
+            }
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
