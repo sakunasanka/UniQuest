@@ -33,4 +33,11 @@ class ContactModel
             return false;
         }
     }
+
+    public function getMessages()
+    {
+        $this->db->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
+        $results = $this->db->resultSet();
+        return $results;
+    }
 }

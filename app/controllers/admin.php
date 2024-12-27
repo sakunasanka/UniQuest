@@ -300,6 +300,13 @@ class Admin extends Controller
 
     public function notifications()
     {
+        $messages = $this->model('ContactModel')->getMessages();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
         $this->view('pages/admin/notification_alerts');
     }
 

@@ -53,17 +53,17 @@
               ]
           ];
           
-            foreach ($notifications as $notification) {
-                $readClass = $notification['read'] ? "read" : "unread";
+            foreach ($data['messages'] as $message) {
+                $readClass = $message['read'] ? "read" : "unread";
                 echo "
-                <div class='notification-item $readClass' onclick='selectNotification(\"{$notification['title']}\")'>
-                    <div class='badge {$notification['type']}'>{$notification['type']}</div>
+                <div class='notification-item $readClass' onclick='selectNotification(\"{$message->topic}\")'>
+                    <div class='badge message'>message</div> 
                     <div class='content'>
-                        <h4>{$notification['title']}</h4>
-                        <p>{$notification['content']}</p>
-                        <span class='author'>{$notification['author']}</span>
+                        <h4>{$message->topic}</h4>
+                        <p>{$message->message}</p>
+                        <span class='author'>{$message->name}</span>
                     </div>
-                    <div class='time'>{$notification['time']}</div>
+                    <div class='time'>{$message->created_at}</div>
                 </div>";
             }
             ?>
