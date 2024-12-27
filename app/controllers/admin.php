@@ -325,4 +325,16 @@ class Admin extends Controller
         }
     }
 
+    public function messages()
+    {
+        $messages = $this->model('ContactModel')->getMessages();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
+        $this->view('pages/admin/messages', $data);
+    }
+    
 }
