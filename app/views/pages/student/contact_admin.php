@@ -44,16 +44,16 @@ document.getElementById("contactForm").addEventListener("submit", function(event
     let isValid = true;
 
     // Email validation
-    const email = document.getElementById("email").value;
-    const emailError = document.getElementById("emailError");
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
-    if (!emailPattern.test(email)) {
-        emailError.textContent = "Please enter a valid email address.";
-        emailError.style.display = "block";
-        isValid = false;
-    } else {
-        emailError.style.display = "none";
-    }
+    //const email = document.getElementById("email").value;
+    //const emailError = document.getElementById("emailError");
+    //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
+    //if (!emailPattern.test(email)) {
+    //  emailError.textContent = "Please enter a valid email address.";
+    //  emailError.style.display = "block";
+    //isValid = false;
+    //} else {
+    //   emailError.style.display = "none";
+    // }
 
     // Submit the form if all fields are valid
     if (isValid) {

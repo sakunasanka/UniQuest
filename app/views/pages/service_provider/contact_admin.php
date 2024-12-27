@@ -14,10 +14,6 @@
                     <input type="text" id="name" name="name" placeholder="Enter Your Name" value="<?php echo $data['name']; ?>" required>
                     <span class="error-message"><?php echo $data['name_err']; ?></span>
 
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" required>
-                    <span class="error-message" id="emailError"></span>
-
                     <label for="topic">Topic:</label>
                     <select id="topic" name="topic" required>
                         <option value="job" <?php echo ($data['topic'] == 'job') ? 'selected' : ''; ?>>Job</option>
@@ -49,16 +45,16 @@ document.getElementById("contactForm").addEventListener("submit", function(event
     let isValid = true;
 
     // Email validation
-    const email = document.getElementById("email").value;
-    const emailError = document.getElementById("emailError");
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
-    if (!emailPattern.test(email)) {
-        emailError.textContent = "Please enter a valid email address.";
-        emailError.style.display = "block";
-        isValid = false;
-    } else {
-        emailError.style.display = "none";
-    }
+    //const email = document.getElementById("email").value;
+    //const emailError = document.getElementById("emailError");
+    //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
+    //if (!emailPattern.test(email)) {
+    //  emailError.textContent = "Please enter a valid email address.";
+    //    emailError.style.display = "block";
+    //    isValid = false;
+    //} else {
+    //    emailError.style.display = "none";
+    //}
 
     // Submit the form if all fields are valid
     if (isValid) {

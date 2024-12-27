@@ -17,7 +17,7 @@ class ContactModel
             return false;
         }
 
-        if (!isset($_SESSION['email'])) {
+        if (!isset($_SESSION['user_email'])) {
             return false; // Return false if the email session is not set
         }
 
@@ -26,7 +26,7 @@ class ContactModel
 
         // Bind parameters
         $this->db->bind(':name', $data['name']);
-        $this->db->bind(':email', $_SESSION['email']);
+        $this->db->bind(':email', $_SESSION['user_email']);
         $this->db->bind(':topic', $data['topic']);
         $this->db->bind(':message', $data['message']);
 
