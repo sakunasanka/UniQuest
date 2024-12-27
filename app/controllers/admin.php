@@ -300,7 +300,7 @@ class Admin extends Controller
 
     public function notifications()
     {
-        $this->view('pages/student/notification_alerts');
+        $this->view('pages/admin/notification_alerts');
     }
 
 }
