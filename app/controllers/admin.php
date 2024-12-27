@@ -307,7 +307,22 @@ class Admin extends Controller
             'messages' => $messages
         ];
 
-        $this->view('pages/admin/notification_alerts');
+        $this->view('pages/admin/notification_alerts', $data);
+    }
+
+    public function updateReadStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $id = $_POST['id'];
+
+            if ($this->model('ContactModel')->updateReadStatus($id)) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update read status.']);
+            }
+        } else {
+            http_response_code(405);
+        }
     }
 
 }

@@ -40,4 +40,12 @@ class ContactModel
         $results = $this->db->resultSet();
         return $results;
     }
+
+    public function updateReadStatus($id)
+    {
+        $this->db->query("UPDATE contact_messages SET read_status = 1 WHERE id = :id");
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
+
 }

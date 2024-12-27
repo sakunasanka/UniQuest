@@ -54,9 +54,17 @@
           ];
           
             foreach ($data['messages'] as $message) {
-                $readClass = $message['read'] ? "read" : "unread";
+                $readClass = $message->read_status ? "read" : "unread";
                 echo "
-                <div class='notification-item $readClass' onclick='selectNotification(\"{$message->topic}\")'>
+                <div class='notification-item $readClass' data-id='{$message->id}' 
+                    onclick='selectNotification(
+                        \"{$message->id}\",
+                        \"{$message->topic}\",
+                        \"{$message->message}\",
+                        \"{$message->name}\",
+                        \"{$message->email}\",
+                        \"{$message->created_at}\"
+                    )'>
                     <div class='badge message'>message</div> 
                     <div class='content'>
                         <h4>{$message->topic}</h4>
@@ -96,8 +104,52 @@
         });
     }
 
-    function selectNotification(title) {
+    function selectNotification(id, topic, content, author,email, time) {
+        // Update the sidebar with notification details
         const details = document.getElementById('notificationDetails');
-        details.innerHTML = `<h3>${title}</h3><p>Details about "${title}" will be displayed here.</p>`;
+        details.innerHTML = `
+            <h3>${topic}</h3>
+            <p>${content}</p>
+            <br>
+            <span>From: ${author}  <br> ${email}</span>
+            <br>
+            <br>
+            <span>Received: ${time}</span>
+        `;
+
+    function markAsRead(notificationId) {
+        // Select the notification element
+        const notificationItem = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+
+        if (notificationItem && notificationItem.classList.contains('unread')) {
+            // Remove 'unread' class to indicate it's been read
+            notificationItem.classList.remove('unread');
+
+            // Send an AJAX request to mark it as read in the database
+            fetch('<?php echo URLROOT; ?>/admin/updateReadStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: notificationId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Failed to mark as read in the database.");
+                    // Add the 'unread' class back in case of failure
+                    notificationItem.classList.add('unread');
+                }
+            })
+            .catch(error => {
+                console.error('Error marking notification as read:', error);
+                alert("An error occurred while marking as read.");
+                // Revert the visual change if the request fails
+                notificationItem.classList.add('unread');
+            });
+        }
     }
+
+}
+
 </script>
