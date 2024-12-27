@@ -13,10 +13,6 @@
                     <input type="text" id="name" name="name" placeholder="Enter Your Name" value="<?php echo $data['name']; ?>" required>
                     <span class="error-message"><?php echo $data['name_err']; ?></span>
 
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" required>
-                    <span class="error-message" id="emailError"></span>
-
                     <label for="topic">Topic:</label>
                     <select id="topic" name="topic" required>
                         <option value="job" <?php echo ($data['topic'] == 'job') ? 'selected' : ''; ?>>Job</option>

@@ -62,12 +62,10 @@ class Student extends Controller
              // Data for the contact form
              $data = [
                 'name' => trim($_POST['name'] ?? ''),
-                'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
 
                 'name_err' => '',
-                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
@@ -77,11 +75,6 @@ class Student extends Controller
                 $data['name_err'] = 'Please enter your name';
             }
 
-            if (empty($data['email'])) {
-                $data['email_err'] = 'Please enter your email address';
-            } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                $data['email_err'] = 'Please enter a valid email address';
-            }
 
             if (empty($data['topic'])) {
                 $data['topic_err'] = 'Please select a topic';
@@ -92,7 +85,7 @@ class Student extends Controller
             }
 
             // Ensure no errors before submitting
-            if (empty($data['name_err']) && empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['name_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('student/contact_admin');
@@ -106,11 +99,9 @@ class Student extends Controller
             // Initialize default data for the view on GET request
             $data = [
                 'name' => '',
-                'email' => '',
                 'topic' => '',
                 'message' => '',
                 'name_err' => '',
-                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];

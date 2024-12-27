@@ -13,8 +13,12 @@ class ContactModel
     public function sendMessage($data)
     {
         // Validation
-        if (empty($data['name']) || empty($data['email']) || empty($data['topic']) || empty($data['message'])) {
+        if (empty($data['name']) || empty($data['topic']) || empty($data['message'])) {
             return false;
+        }
+
+        if (!isset($_SESSION['email'])) {
+            return false; // Return false if the email session is not set
         }
 
         $this->db->query("INSERT INTO contact_messages (name, email, topic, message) 
@@ -22,7 +26,7 @@ class ContactModel
 
         // Bind parameters
         $this->db->bind(':name', $data['name']);
-        $this->db->bind(':email', $data['email']);
+        $this->db->bind(':email', $_SESSION['email']);
         $this->db->bind(':topic', $data['topic']);
         $this->db->bind(':message', $data['message']);
 
