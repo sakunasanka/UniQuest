@@ -152,3 +152,10 @@ form h3 {
 .save-btn:hover {
     background-color: #038a27;
 }
+
+.error-msg {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    padding-left: 15px;
+}

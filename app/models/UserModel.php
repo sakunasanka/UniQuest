@@ -1,7 +1,7 @@
 <?php
 class userModel extends Model
 {
-    public function findUserByEmail($email) 
+    public function findUserByEmail($email)
     {
         try {
             $user = $this->select('user', [['Email', "=", $email]]);
@@ -235,76 +235,97 @@ class userModel extends Model
         try {
             $this->db->beginTransaction();
 
+            // Validate essential data
+            if (empty($data['userID']) || empty($data['role'])) {
+                throw new Exception("Invalid data: Missing userID or role.");
+            }
+
             // Update User table
-            $userData = [
-                'ContactNo' => $data['contactNo']
-            ];
+            $userData = ['ContactNo' => $data['contactNo'] ?? null];
             if (!$this->update('user', $userData, ['UserID' => $data['userID']])) {
                 $this->db->rollBack();
+                error_log("Failed to update 'user' table for UserID: " . $data['userID']);
                 return false;
             }
 
-            if ($data['role'] === 'Student') {
-                // Update Student table
-                $studentData = [
-                    'FirstName' => $data['firstName'],
-                    'LastName' => $data['lastName'],
-                    'StreetNo' => $data['streetNo'],
-                    'AddressLine1' => $data['addressLine1'],
-                    'AddressLine2' => $data['addressLine2'],
-                    'City' => $data['city'],
-                    'CV' => $data['cvName'],
-                    'ProfilePic' => $data['profilePicName']
-                ];
-                if (!$this->update('student', $studentData, ['StudentID' => $data['userID']])) {
+            // Handle updates based on role
+            switch ($data['role']) {
+                case 'Student':
+                    $studentData = [
+                        'FirstName' => $data['firstName'] ?? null,
+                        'LastName' => $data['lastName'] ?? null,
+                        'StreetNo' => $data['streetNo'] ?? null,
+                        'AddressLine1' => $data['addressLine1'] ?? null,
+                        'AddressLine2' => $data['addressLine2'] ?? null,
+                        'City' => $data['city'] ?? null,
+                        'CV' => $data['cvName'] ?? null,
+                        'ProfilePic' => $data['profilePicName'] ?? null
+                    ];
+                    if (!$this->update('student', $studentData, ['StudentID' => $data['userID']])) {
+                        $this->db->rollBack();
+                        error_log("Failed to update 'student' table for StudentID: " . $data['userID']);
+                        return false;
+                    }
+                    break;
+
+                case 'Company':
+                    $companyData = [
+                        'CompanyName' => $data['companyName'] ?? null,
+                        'StreetNo' => $data['streetNo'] ?? null,
+                        'AddressLine1' => $data['addressLine1'] ?? null,
+                        'AddressLine2' => $data['addressLine2'] ?? null,
+                        'City' => $data['city'] ?? null,
+                        'CompanyLogo' => $data['companyLogoName'] ?? null,
+                        'Description' => $data['description'] ?? null,
+                        'Website' => $data['website'] ?? null,
+                        'Industry' => $data['industry'] ?? null
+                    ];
+                    if (!$this->update('company', $companyData, ['CompanyID' => $data['userID']])) {
+                        $this->db->rollBack();
+                        error_log("Failed to update 'company' table for CompanyID: " . $data['userID']);
+                        return false;
+                    }
+                    break;
+
+                case 'VT-Member':
+                    $vtData = [
+                        'FirstName' => $data['firstName'] ?? null,
+                        'LastName' => $data['lastName'] ?? null
+                    ];
+                    if (!$this->update('verificationteam', $vtData, ['VT_MemberID' => $data['userID']])) {
+                        $this->db->rollBack();
+                        error_log("Failed to update 'verificationteam' table for VT_MemberID: " . $data['userID']);
+                        return false;
+                    }
+                    break;
+
+                case 'Admin':
+                    $adminData = [
+                        'FirstName' => $data['firstName'] ?? null,
+                        'LastName' => $data['lastName'] ?? null
+                    ];
+                    if (!$this->update('admin', $adminData, ['AdminID' => $data['userID']])) {
+                        $this->db->rollBack();
+                        error_log("Failed to update 'admin' table for AdminID: " . $data['userID']);
+                        return false;
+                    }
+                    break;
+
+                default:
                     $this->db->rollBack();
+                    error_log("Invalid role specified: " . $data['role']);
                     return false;
-                }
-            } else if ($data['role'] === 'Company') {
-                // Update Company table
-                $companyData = [
-                    'CompanyName' => $data['companyName'],
-                    'StreetNo' => $data['streetNo'],
-                    'AddressLine1' => $data['addressLine1'],
-                    'AddressLine2' => $data['addressLine2'],
-                    'City' => $data['city'],
-                    'CompanyLogo' => $data['companyLogoName'],
-                    'Description' => $data['description'],
-                    'Website' => $data['website'],
-                    'Industry' => $data['industry']
-                ];
-                if (!$this->update('company', $companyData, ['CompanyID' => $data['userID']])) {
-                    $this->db->rollBack();
-                    return false;
-                }
-            } else if ($data['role'] === 'VT-Member') {
-                // Update VerificationTeam table
-                $vtData = [
-                    'FirstName' => $data['firstName'],
-                    'LastName' => $data['lastName']
-                ];
-                if (!$this->update('verificationteam', $vtData, ['VT_MemberID' => $data['userID']])){
-                    $this->db->rollBack();
-                    return false;
-                }
-            } else if ($data['role'] === 'Admin') {
-                // Update Admin table
-                $adminData = [
-                    'FirstName' => $data['firstName'],
-                    'LastName' => $data['lastName']
-                ];
-                if (!$this->update('admin', $adminData, ['AdminID' => $data['userID']])){
-                    $this->db->rollBack();
-                    return false;
-                }
             }
 
+            // Commit the transaction
             $this->db->commit();
             return true;
         } catch (PDOException $e) {
+            $this->db->rollBack();
             error_log("Database Error: " . $e->getMessage());
             return false;
         } catch (Exception $e) {
+            $this->db->rollBack();
             error_log("General Error: " . $e->getMessage());
             return false;
         }
@@ -335,10 +356,10 @@ class userModel extends Model
         try {
             // Use grouped conditions for more complex queries
             $conditions = [
-                [['Role', '=', 'Student'], ['Role', '=', 'Company']],
+                ['Role', 'IN', ['Student','Company']],
                 ['Status', '=', 'Pending']
             ];
-            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', true);
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -353,10 +374,10 @@ class userModel extends Model
     {
         try {
             $conditions = [
-                [['Role', '=', 'Student'], ['Role', '=', 'Company']],
+                ['Role', 'IN', ['Student','Company']],
                 ['Status', '=', 'Not Approved']
             ];
-            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', true);
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -430,11 +451,24 @@ class userModel extends Model
     public function getVerifiedUsersByRole($role)
     {
         try {
+            // Conditions for the query
             $conditions = [
-                [['Status', '=', 'Active'], ['Status', '=', 'Deactive']],
-                ['Role', '=', $role]
+                ['Status', 'IN', ['Active', 'Deactive']], // Use IN clause for Status
+                ['Role', '=', $role] // Use simple equality for Role
             ];
-            $users = $this->select('User', $conditions, 'UserID, Email, ContactNo, RegisterDate, Status', 'AND', true);
+
+            // Fetch users using the select method
+            $users = $this->select(
+                'User', // Table name
+                $conditions, // Conditions array
+                'UserID, Email, ContactNo, RegisterDate, Status', // Columns to select
+                'AND', // Logical operator (AND between conditions)
+                '', // No GROUP BY
+                '', // No ORDER BY
+                0, // No LIMIT
+                true // Fetch all results
+            );
+
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -449,10 +483,10 @@ class userModel extends Model
     {
         try {
             $conditions = [
-                [['Status', '=', 'Active'], ['Status', '=', 'Deactive']],
+                ['Status', 'IN', ['Active', 'Deactive']],
                 ['Category', '=', $category]
             ];
-            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', true);
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -463,13 +497,14 @@ class userModel extends Model
         }
     }
 
+
     public function getPendingJobs()
     {
         try {
             $conditions = [
                 ['Status', '=', 'Pending']
             ];
-            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', true);
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -486,7 +521,7 @@ class userModel extends Model
             $conditions = [
                 ['Status', '=', 'Not Approved']
             ];
-            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', true);
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -503,7 +538,7 @@ class userModel extends Model
             $conditions = [
                 ['JobID', '=', $jobId]
             ];
-            $job = $this->select('v_jobs', $conditions, '*', 'AND', false);
+            $job = $this->select('v_jobs', $conditions, '*', 'AND', '', '', 0, false);
             return $job;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -593,6 +628,4 @@ class userModel extends Model
             return false;
         }
     }
-    
 }
-
