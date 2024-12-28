@@ -429,7 +429,25 @@ class Admin extends Controller
 
     public function dashboard()
     {
-        $this->view('pages/admin/adminDash');
+        try {
+            $studentCount = $this->model->getCountRegisteredUsers('Student');
+            $companyCount = $this->model->getCountRegisteredUsers('Company');
+            $activeJobCount = $this->model->getCountActiveJobs();
+            $pendingUserCount = $this->model->getCountPendingUsers();
+            $pendingJobCount = $this->model->getCountPendingJobs();
+
+            $data = [
+                'studentCount' => $studentCount,
+                'companyCount' => $companyCount,
+                'activeJobCount' => $activeJobCount,
+                'pendingUserCount' => $pendingUserCount,
+                'pendingJobCount' => $pendingJobCount
+            ];
+
+            $this->view('pages/admin/adminDash', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function jobPost()

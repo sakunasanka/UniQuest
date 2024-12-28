@@ -28,7 +28,7 @@ class Model
         }
     }
 
-    protected function buildWhereClause($conditions, &$bindings)
+    protected function buildWhereClause($conditions, &$bindings, $logicalOperator = 'AND')
     {
         // Initialize an index to create unique placeholders for binding values
         $index = 0;
@@ -81,8 +81,8 @@ class Model
             }
         }
 
-        // Join all condition strings with 'AND' to form the complete WHERE clause
-        return implode(' AND ', $conditionStrings);
+        // Join all condition strings with logical operator to form the complete WHERE clause
+        return implode(" $logicalOperator ", $conditionStrings);
     }
 
 
@@ -195,4 +195,56 @@ class Model
         // Execute the query and return the result
         return $fetchAll ? $this->db->resultSet() : $this->db->single();
     }
+
+    // public function getCount(
+    //     string $table,
+    //     array $where = [],
+    //     string $logicalOperator = 'AND',
+    //     string $groupBy = '',
+    //     string $orderBy = ''
+    // ) {
+    //     try {
+    //         // Start building the query
+    //         $query = "SELECT COUNT(*) AS rowCount FROM $table";
+    //         $bindings = [];
+
+    //         // Add WHERE clause if conditions are provided
+    //         if ($where) {
+    //             $query .= ' WHERE ' . $this->buildWhereClause($where, $bindings, $logicalOperator);
+    //         }
+
+    //         // Add GROUP BY clause if provided
+    //         if (!empty($groupBy)) {
+    //             $query .= " GROUP BY $groupBy";
+    //         }
+
+    //         // Add ORDER BY clause if provided
+    //         if (!empty($orderBy)) {
+    //             $query .= " ORDER BY $orderBy";
+    //         }
+
+    //         // Prepare the query
+    //         $this->db->query($query);
+
+    //         // Bind the parameters
+    //         $this->bindParams($bindings);
+
+    //         // Execute and fetch the result
+    //         $result = $this->db->resultSet();
+
+    //         // If GROUP BY is used, count the rows in the grouped result set
+    //         if (!empty($groupBy)) {
+    //             return count($result);
+    //         }
+
+    //         // Otherwise, return the single row count
+    //         return $result[0]['rowCount'] ?? 0;
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 }

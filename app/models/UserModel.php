@@ -356,7 +356,7 @@ class userModel extends Model
         try {
             // Use grouped conditions for more complex queries
             $conditions = [
-                ['Role', 'IN', ['Student','Company']],
+                ['Role', 'IN', ['Student', 'Company']],
                 ['Status', '=', 'Pending']
             ];
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
@@ -374,7 +374,7 @@ class userModel extends Model
     {
         try {
             $conditions = [
-                ['Role', 'IN', ['Student','Company']],
+                ['Role', 'IN', ['Student', 'Company']],
                 ['Status', '=', 'Not Approved']
             ];
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
@@ -626,6 +626,89 @@ class userModel extends Model
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return false;
+        }
+    }
+
+    public function getCountRegisteredUsers($role)
+    {
+        try {
+            // Get users by role
+            $users = $this->getVerifiedUsersByRole($role);
+
+            // Return the count of users based on role
+            if ($users !== false) {
+                return count($users);  // Count the result array
+            }
+            return 0;  // Return 0 if there was an error
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return 0;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function getCountPendingUsers()
+    {
+        try {
+            // Get pending students and companies
+            $pendingUsers = $this->getPendingStudentsAndCompanies();
+
+            // Return the count of pending users
+            if ($pendingUsers !== false) {
+                return count($pendingUsers);  // Count the result array
+            }
+            return 0;  // Return 0 if there was an error
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return 0;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    // count pending job
+    public function getCountPendingJobs()
+    {
+        try {
+            // Get pending jobs
+            $pendingJobs = $this->getPendingJobs();
+
+            // Return the count of pending jobs
+            if ($pendingJobs !== false) {
+                return count($pendingJobs);  // Count the result array
+            }
+            return 0;  // Return 0 if there was an error
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return 0;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    //get count of active jobs
+    public function getCountActiveJobs()
+    {
+        try {
+            // Get active jobs
+            $activePartTimes = $this->getVerifiedJobsByCategory('Part-time');
+            $activeInternships = $this->getVerifiedJobsByCategory('Internship');
+
+            // Return the count of active jobs
+            if ($activePartTimes !== false && $activeInternships !== false) {
+                return count($activePartTimes) + count($activeInternships);  // Count the result array
+            }
+            return 0;  // Return 0 if there was an error
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return 0;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return 0;
         }
     }
 }

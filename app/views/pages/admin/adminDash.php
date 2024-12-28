@@ -14,17 +14,17 @@
         <div class="dashboard-card" onclick="goToStuMng()">
             <h3>Registered Students</h3>
             <p>The total number of students registered on UniQuest.</p>
-            <h1><?php echo 2500; ?></h1>
+            <h1><?php echo $data['studentCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToComMng()">
             <h3>Registered Companies</h3>
             <p>The total number of companies registered on UniQuest.</p>
-            <h1><?php echo 1500; ?></h1>
+            <h1><?php echo $data['companyCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToJobMng()">
             <h3>Active Job Postings</h3>
             <p>The number of job postings currently active on UniQuest.</p>
-            <h1><?php echo 2000; ?></h1>
+            <h1><?php echo $data['activeJobCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToComMng()">
             <h3>Most Popular Company</h3>
@@ -44,12 +44,12 @@
         <div class="dashboard-card" onclick="goToStuMng()">
             <h3>Pending User Verification</h3>
             <p>The number of user verifications pending action.</p>
-            <h1><?php echo 20; ?></h1>
+            <h1><?php echo $data['pendingUserCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToJobMng()">
             <h3>Pending Job Verification</h3>
             <p>The number of job verifications pending action.</p>
-            <h1><?php echo 50; ?></h1>
+            <h1><?php echo $data['pendingJobCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToComplaintMng()">
             <h3>Pending Complaints</h3>
