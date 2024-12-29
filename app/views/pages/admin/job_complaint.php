@@ -28,24 +28,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($data['complaints_job'] as $complaints_job):?>
-                    <tr>
-                        <td><?php echo $complaints_job->JobTitle?></td>
-                        <td><?php echo $complaints_job->CompanyEmail?></td>
-                        <td><?php echo $complaints_job->Complaint?></td>
-                        <td><?php echo $complaints_job->StudentName?></td>
-                        <td><?php echo $complaints_job->ComplainedDate?></td>
-                        <?php if ($complaints_job->Status == 'Pending') : ?>
-                        <td><span class="status pending"><?php echo $complaints_job->Status?></span></td>
-                        <?php elseif ($complaints_job->Status == 'Resolved') : ?>
-                        <td><span class="status active"><?php echo $complaints_job->Status?></span></td>
-                        <?php endif; ?>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaints_job->ComplaintID; ?>'">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['complaints_job'] as $complaints_job): ?>
+                        <tr>
+                            <td><?php echo $complaints_job->JobTitle ?></td>
+                            <td><?php echo $complaints_job->CompanyEmail ?></td>
+                            <td><?php echo $complaints_job->Complaint ?></td>
+                            <td><?php echo $complaints_job->StudentName ?></td>
+                            <td><?php echo substr($complaints_job->ComplainedDate, 0, 10) ?></td>
+                            <?php if ($complaints_job->Status == 'Pending') : ?>
+                                <td><span class="status pending"><?php echo $complaints_job->Status ?></span></td>
+                            <?php elseif ($complaints_job->Status == 'Resolved') : ?>
+                                <td><span class="status active"><?php echo $complaints_job->Status ?></span></td>
+                            <?php elseif ($complaints_job->Status == 'Rejected') : ?>
+                                <td><span class="status inactive"><?php echo $complaints_job->Status ?></span></td>
+                            <?php endif; ?>
+                            <td class="action">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaints_job->ComplaintID; ?>'">
+                                    preview
+                                </span>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>

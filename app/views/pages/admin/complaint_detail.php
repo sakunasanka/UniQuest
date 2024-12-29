@@ -62,8 +62,8 @@
                     </span>
                 </div>
                 <div class="btn-row">
-                    <button class="reject-btn" onclick="">Reject</button>
-                    <button class="approve-btn" onclick="">Resolve</button>
+                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/reject_complaint/<?php echo $data['complaint']->ComplaintID; ?>'">Reject</button>
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/resolve_complaint/<?php echo $data['complaint']->ComplaintID; ?>'">Resolve</button>
                 </div>
             </div>
 

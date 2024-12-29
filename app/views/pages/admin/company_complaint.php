@@ -31,7 +31,7 @@
                             <td><?php echo $complaint->CompanyName; ?></td>
                             <td><?php echo $complaint->CompanyEmail; ?></td>
                             <td><?php echo $complaint->ComplaintCount; ?></td>
-                            <td><?php echo $complaint->LastComplainedDate; ?></td>
+                            <td><?php echo substr($complaint->LastComplainedDate, 0, 10); ?></td>
                             <td class="action">
                                 <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_company/<?php echo $complaint->CompanyID; ?>'">
                                     preview

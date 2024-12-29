@@ -36,11 +36,13 @@
                             <td><?php echo $complaint->CompanyEmail ?></td>
                             <td><?php echo $complaint->Complaint ?></td>
                             <td><?php echo $complaint->StudentName ?></td>
-                            <td><?php echo $complaint->ComplainedDate ?></td>
+                            <td><?php echo substr($complaint->ComplainedDate, 0, 10); ?></td>
                             <?php if ($complaint->Status == 'Pending') : ?>
                                 <td><span class="status pending"><?php echo $complaint->Status ?></span></td>
                             <?php elseif ($complaint->Status == 'Resolved') : ?>
                                 <td><span class="status active"><?php echo $complaint->Status ?></span></td>
+                            <?php elseif ($complaint->Status == 'Rejected') : ?>
+                                <td><span class="status inactive"><?php echo $complaint->Status ?></span></td>
                             <?php endif; ?>
                             <td class="action">
                                 <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaint->ComplaintID; ?>'">

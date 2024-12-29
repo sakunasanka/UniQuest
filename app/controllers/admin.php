@@ -196,6 +196,26 @@ class Admin extends Controller
         $this->view('pages/admin/complaint_company', $data);
     }
 
+    public function resolve_complaint($complaintID)
+    {
+        try {
+            $this->model('ComplaintModel')->resolveComplaint($complaintID);
+            Redirect::to(URLROOT . '/admin/job_complaint');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function reject_complaint($complaintID)
+    {
+        try {
+            $this->model('ComplaintModel')->rejectComplaint($complaintID);
+            Redirect::to(URLROOT . '/admin/job_complaint');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
     public function ptjobs_mng()
     {
         try {

@@ -54,7 +54,6 @@ class ComplaintModel extends Model {
         }
     }
 
-    // method to get complaints grouped by companyName with last complained date
     public function getComplaintsGroupedByCompany()
     {
         try {
@@ -88,6 +87,34 @@ class ComplaintModel extends Model {
         try {
             $complaints = $this->select('studentjobcomplaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, false);
             return $complaints->PendingCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function resolveComplaint($complaintId)
+    {
+        try {
+            $this->update('studentjobcomplaints', ['Status' =>  'Resolved'], ['ComplaintID' => $complaintId]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function rejectComplaint($complaintId)
+    {
+        try {
+            $this->update('studentjobcomplaints', ['Status' => 'Rejected'], ['ComplaintID' => $complaintId]);
+            return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
