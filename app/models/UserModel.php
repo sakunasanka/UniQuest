@@ -669,7 +669,6 @@ class userModel extends Model
         }
     }
 
-    // count pending job
     public function getCountPendingJobs()
     {
         try {
@@ -690,7 +689,6 @@ class userModel extends Model
         }
     }
 
-    //get count of active jobs
     public function getCountActiveJobs()
     {
         try {

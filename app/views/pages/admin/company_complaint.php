@@ -22,132 +22,23 @@
                         <th onclick="sortTable(1)">Company Email</th>
                         <th onclick="sortTable(2)">No of complaints</th>
                         <th onclick="sortTable(3)">Most recent complaint date</th>
-                        <th onclick="sortTable(4)">Status</th>
                         <th class="no-sort">View</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Company 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>3</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>1</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>4</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>2</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>1</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>3</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>1</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Resolved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
+                    <?php foreach ($data['complaints_com'] as $complaint) : ?>
+                        <tr>
+                            <td><?php echo $complaint->CompanyName; ?></td>
+                            <td><?php echo $complaint->CompanyEmail; ?></td>
+                            <td><?php echo $complaint->ComplaintCount; ?></td>
+                            <td><?php echo $complaint->LastComplainedDate; ?></td>
+                            <td class="action">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_company/<?php echo $complaint->CompanyID; ?>'">
+                                    preview
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>

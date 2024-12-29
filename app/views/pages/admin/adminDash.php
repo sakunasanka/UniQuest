@@ -54,7 +54,7 @@
         <div class="dashboard-card" onclick="goToComplaintMng()">
             <h3>Pending Complaints</h3>
             <p>The number of complaints pending action.</p>
-            <h1><?php echo 15; ?></h1>
+            <h1><?php echo $data['pendingComplaintCount']; ?></h1>
         </div>
     </div>
     </main>

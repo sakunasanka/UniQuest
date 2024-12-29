@@ -154,7 +154,7 @@ class Admin extends Controller
 
     public function job_complaint()
     {
-        $complaints_job = $this->model('jobModel')->getComplaintsJob();
+        $complaints_job = $this->model('jobModel')->getAllComplaints();
 
         $data = [
             'complaints_job' => $complaints_job
@@ -165,18 +165,35 @@ class Admin extends Controller
 
     public function company_complaint()
     {
-        // $complaints_com = $this->model('jobModel')->getComplains();
+        $complaints_com = $this->model('jobModel')->getComplaintsGroupedByCompany();
 
-        // $data = [
-        //     'complaints_com' => $complaints_com
-        // ];
+        $data = [
+            'complaints_com' => $complaints_com
+        ];
 
-        $this->view('pages/admin/company_complaint');
+        $this->view('pages/admin/company_complaint', $data);
     }
 
-    public function complaint_detail()
+    public function complaint_detail($complaintID)
     {
-        $this->view('pages/admin/complaint_detail');
+        $complaint = $this->model('jobModel')->getComplaintDetails($complaintID);
+
+        $data = [
+            'complaint' => $complaint
+        ];
+
+        $this->view('pages/admin/complaint_detail', $data);
+    }
+
+    public function complaint_company($company)
+    {
+        $complaints = $this->model('jobModel')->getComplaintsByCompany($company);
+
+        $data = [
+            'complaints' => $complaints
+        ];
+
+        $this->view('pages/admin/complaint_company', $data);
     }
 
     public function ptjobs_mng()
@@ -435,13 +452,15 @@ class Admin extends Controller
             $activeJobCount = $this->model->getCountActiveJobs();
             $pendingUserCount = $this->model->getCountPendingUsers();
             $pendingJobCount = $this->model->getCountPendingJobs();
+            $pendingComplaintCount = $this->model('jobModel')->getCountPendingComplaints();
 
             $data = [
                 'studentCount' => $studentCount,
                 'companyCount' => $companyCount,
                 'activeJobCount' => $activeJobCount,
                 'pendingUserCount' => $pendingUserCount,
-                'pendingJobCount' => $pendingJobCount
+                'pendingJobCount' => $pendingJobCount,
+                'pendingComplaintCount' => $pendingComplaintCount->PendingCount
             ];
 
             $this->view('pages/admin/adminDash', $data);

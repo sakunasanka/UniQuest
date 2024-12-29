@@ -1,7 +1,7 @@
 <?php
-class jobModel
+class jobModel extends Model
 {
-    private $db;
+    protected $db;
 
     public function __construct()
     {
@@ -9,34 +9,35 @@ class jobModel
     }
 
     public function addUserPostBookmark($userId, $jobId)
-{
-    try {
+    {
+        try {
 
-        // Prepare the query to insert the bookmark into the database
-        $this->db->query("INSERT IGNORE INTO BookmarkJobs (studentId, jobId) VALUES(:studentId, :jobId)");
+            // Prepare the query to insert the bookmark into the database
+            $this->db->query("INSERT IGNORE INTO BookmarkJobs (studentId, jobId) VALUES(:studentId, :jobId)");
 
-        // Bind the parameters to the query
-        $this->db->bind(':studentId', $_SESSION['user_id']);
-        $this->db->bind(':jobId', $jobId);
-        // Execute the query and check if the bookmark was successfully added
-        if ($this->db->execute()) {
-            return true;
-        } else {
+            // Bind the parameters to the query
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobId', $jobId);
+            // Execute the query and check if the bookmark was successfully added
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            // Catch any database errors and log them
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            // Catch any general errors and log them
+            error_log("Error: " . $e->getMessage());
             return false;
         }
-    } catch (PDOException $e) {
-        // Catch any database errors and log them
-        error_log("Database Error: " . $e->getMessage());
-        return false;
-    } catch (Exception $e) {
-        // Catch any general errors and log them
-        error_log("Error: " . $e->getMessage());
-        return false;
     }
-}
 
     // Method to check if a job is bookmarked by the user
-    public function isJobBookmarked($studentId, $jobId) {
+    public function isJobBookmarked($studentId, $jobId)
+    {
         $this->db->query("SELECT COUNT(*) AS count FROM bookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
         $this->db->bind(':studentId', $_SESSION['user_id']);
         $this->db->bind(':jobId', $jobId);
@@ -45,7 +46,8 @@ class jobModel
     }
 
     //Method to get bookmarked jobs
-    public function getBookmarkedJobs($studentId) {
+    public function getBookmarkedJobs($studentId)
+    {
         // Fetch only the IDs of bookmarked jobs for the user
         $this->db->query("SELECT * FROM v_bookmarkedJobs WHERE studentId = :studentId");
         $this->db->bind(':studentId', $studentId);
@@ -53,20 +55,16 @@ class jobModel
     }
 
     //Method to remove a bookmark from the database
-    public function removeBookmark($studentId, $jobId) {
+    public function removeBookmark($studentId, $jobId)
+    {
         $this->db->query("DELETE FROM bookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
         $this->db->bind(':studentId', $_SESSION['user_id']);
         $this->db->bind(':jobId', $jobId);
         return $this->db->execute();
     }
 
-    public function getComplaintsJob() {
-        $this->db->query('SELECT * FROM StudentJobComplaints');
-        $results = $this->db->resultSet();
-        return $results;
-    }
-
-    public function create_complaint($data) {
+    public function create_complaint($data)
+    {
         try {
             $this->db->query('INSERT INTO complaint_jobs (studentId, jobID, description) VALUES (:studentId, :jobID, :description)');
             $this->db->bind(':studentId', $_SESSION['user_id']);
@@ -79,5 +77,74 @@ class jobModel
         }
     }
 
+    public function getAllComplaints()
+    {
+        try {
+            $complaints = $this->select('studentjobcomplaints', [], '*', '', '', '', 0, true);
+            return $complaints;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getComplaintDetails($complaintId)
+    {
+        try {
+            $complaint = $this->select('studentjobcomplaints', [['ComplaintID', '=',  $complaintId]], '*', 'AND', '', '', 0, false);
+            return $complaint;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // method to get complaints grouped by companyName with last complained date
+    public function getComplaintsGroupedByCompany()
+    {
+        try {
+            $complaints = $this->select('studentjobcomplaints', [], 'CompanyID, CompanyName, CompanyEmail, Status, MAX(ComplainedDate) AS LastComplainedDate, COUNT(CompanyID) AS ComplaintCount', '', 'CompanyID', 'ComplaintCount DESC', 0, true);
+            return $complaints;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getComplaintsByCompany($companyID)
+    {
+        try {
+            $complaints = $this->select('studentjobcomplaints', [['CompanyID', '=', $companyID]], '*', '', '', '', 0, true);
+            return $complaints;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getCountPendingComplaints()
+    {
+        try {
+            $complaints = $this->select('studentjobcomplaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, false);
+            return $complaints;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
-?>
