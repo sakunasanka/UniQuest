@@ -199,7 +199,7 @@ class Admin extends Controller
     public function ptjobs_mng()
     {
         try {
-            $ptjobs = $this->model->getVerifiedJobsByCategory('Part-time');
+            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time');
             $data = [
                 'ptjobs' => $ptjobs
             ];
@@ -212,7 +212,7 @@ class Admin extends Controller
     public function intern_mng()
     {
         try {
-            $interns = $this->model->getVerifiedJobsByCategory('Internship');
+            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship');
             $data = [
                 'interns' => $interns
             ];
@@ -347,7 +347,7 @@ class Admin extends Controller
     public function job_detail($jobID)
     {
         try {
-            $job = $this->model->getJobDetails($jobID);
+            $job = $this->model('jobModel')->getJobDetails($jobID);
             $data = [
                 'job' => $job
             ];
@@ -360,7 +360,7 @@ class Admin extends Controller
     public function job_ver_pending()
     {
         try {
-            $jobs = $this->model->getPendingJobs();
+            $jobs = $this->model('jobModel')->getPendingJobs();
             $data = [
                 'jobs' => $jobs
             ];
@@ -373,7 +373,7 @@ class Admin extends Controller
     public function job_ver_detail($jobID)
     {
         try {
-            $job = $this->model->getJobDetails($jobID);
+            $job = $this->model('jobModel')->getJobDetails($jobID);
             $data = [
                 'job' => $job
             ];
@@ -386,7 +386,7 @@ class Admin extends Controller
     public function job_ver_not()
     {
         try {
-            $jobs = $this->model->getNotApprovedJobs();
+            $jobs = $this->model('jobModel')->getNotApprovedJobs();
             $data = [
                 'jobs' => $jobs
             ];
@@ -399,7 +399,7 @@ class Admin extends Controller
     public function job_ver_approve($jobID)
     {
         try {
-            $this->model->approveJob($jobID);
+            $this->model('jobModel')->approveJob($jobID);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -409,7 +409,7 @@ class Admin extends Controller
     public function job_ver_reject($jobID)
     {
         try {
-            $this->model->rejectJob($jobID);
+            $this->model('jobModel')->rejectJob($jobID);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -419,7 +419,7 @@ class Admin extends Controller
     public function job_activate($jobID, $jobType)
     {
         try {
-            $this->model->activateJob($jobID);
+            $this->model('jobModel')->activateJob($jobID);
             if ($jobType == 'Part-time') {
                 Redirect::to(URLROOT . '/admin/ptjobs_mng');
             } else if ($jobType == 'Internship') {
@@ -433,7 +433,7 @@ class Admin extends Controller
     public function job_deactivate($jobID, $jobType)
     {
         try {
-            $this->model->deactivateJob($jobID);
+            $this->model('jobModel')->deactivateJob($jobID);
             if ($jobType == 'Part-time') {
                 Redirect::to(URLROOT . '/admin/ptjobs_mng');
             } else if ($jobType == 'Internship') {
@@ -449,9 +449,9 @@ class Admin extends Controller
         try {
             $studentCount = $this->model->getCountRegisteredUsers('Student');
             $companyCount = $this->model->getCountRegisteredUsers('Company');
-            $activeJobCount = $this->model->getCountActiveJobs();
+            $activeJobCount = $this->model('jobModel')->getCountActiveJobs();
             $pendingUserCount = $this->model->getCountPendingUsers();
-            $pendingJobCount = $this->model->getCountPendingJobs();
+            $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
             $pendingComplaintCount = $this->model('jobModel')->getCountPendingComplaints();
 
             $data = [
@@ -460,7 +460,7 @@ class Admin extends Controller
                 'activeJobCount' => $activeJobCount,
                 'pendingUserCount' => $pendingUserCount,
                 'pendingJobCount' => $pendingJobCount,
-                'pendingComplaintCount' => $pendingComplaintCount->PendingCount
+                'pendingComplaintCount' => $pendingComplaintCount
             ];
 
             $this->view('pages/admin/adminDash', $data);

@@ -77,6 +77,185 @@ class jobModel extends Model
         }
     }
 
+    public function getVerifiedJobsByCategory($category)
+    {
+        try {
+            $conditions = [
+                ['Status', 'IN', ['Active', 'Deactive']],
+                ['Category', '=', $category]
+            ];
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    public function getPendingJobs()
+    {
+        try {
+            $conditions = [
+                ['Status', '=', 'Pending']
+            ];
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getNotApprovedJobs()
+    {
+        try {
+            $conditions = [
+                ['Status', '=', 'Not Approved']
+            ];
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getJobDetails($jobId)
+    {
+        try {
+            $conditions = [
+                ['JobID', '=', $jobId]
+            ];
+            $job = $this->select('v_jobs', $conditions, '*', 'AND', '', '', 0, false);
+            return $job;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function approveJob($jobId)
+    {
+        try {
+            $jobData = [
+                'Status' => 'Active'
+            ];
+            if ($this->update('Jobs', $jobData, ['JobID' => $jobId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function rejectJob($jobId)
+    {
+        try {
+            $jobData = [
+                'Status' => 'Not Approved'
+            ];
+            if ($this->update('Jobs', $jobData, ['JobID' => $jobId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function activateJob($jobId)
+    {
+        try {
+            $jobData = [
+                'Status' => 'Active'
+            ];
+            if ($this->update('Jobs', $jobData, ['JobID' => $jobId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deactivateJob($jobId)
+    {
+        try {
+            $jobData = [
+                'Status' => 'Deactive'
+            ];
+            if ($this->update('Jobs', $jobData, ['JobID' => $jobId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getCountPendingJobs()
+    {
+        try {
+            // Get pending jobs
+            $pendingJobs = $this->select('Jobs', [['Status', '=', 'Pending']], 'COUNT(JobID) AS PendingJobCount', '', '', '', 0, false);
+            return $pendingJobs->PendingJobCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return 0;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function getCountActiveJobs()
+    {
+        try {
+            $activeJobs = $this->select('Jobs', [['Status', '=', 'Active']], 'COUNT(JobID) AS ActiveJobCount', '', '', '', 0, false);
+            return $activeJobs->ActiveJobCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return 0;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
     public function getAllComplaints()
     {
         try {
@@ -138,7 +317,7 @@ class jobModel extends Model
     {
         try {
             $complaints = $this->select('studentjobcomplaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, false);
-            return $complaints;
+            return $complaints->PendingCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
