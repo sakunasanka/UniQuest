@@ -63,19 +63,19 @@ class jobModel extends Model
         return $this->db->execute();
     }
 
-    public function create_complaint($data)
-    {
-        try {
-            $this->db->query('INSERT INTO complaint_jobs (studentId, jobID, description) VALUES (:studentId, :jobID, :description)');
-            $this->db->bind(':studentId', $_SESSION['user_id']);
-            $this->db->bind(':jobID', $data['posts']->JobID);
-            $this->db->bind(':description', $data['complaint']);
-            return $this->db->execute();
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        }
-    }
+    // public function create_complaint($data)
+    // {
+    //     try {
+    //         $this->db->query('INSERT INTO complaint_jobs (studentId, jobID, description) VALUES (:studentId, :jobID, :description)');
+    //         $this->db->bind(':studentId', $_SESSION['user_id']);
+    //         $this->db->bind(':jobID', $data['posts']->JobID);
+    //         $this->db->bind(':description', $data['complaint']);
+    //         return $this->db->execute();
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     public function getVerifiedJobsByCategory($category)
     {
@@ -256,74 +256,4 @@ class jobModel extends Model
         }
     }
 
-    public function getAllComplaints()
-    {
-        try {
-            $complaints = $this->select('studentjobcomplaints', [], '*', '', '', '', 0, true);
-            return $complaints;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function getComplaintDetails($complaintId)
-    {
-        try {
-            $complaint = $this->select('studentjobcomplaints', [['ComplaintID', '=',  $complaintId]], '*', 'AND', '', '', 0, false);
-            return $complaint;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    // method to get complaints grouped by companyName with last complained date
-    public function getComplaintsGroupedByCompany()
-    {
-        try {
-            $complaints = $this->select('studentjobcomplaints', [], 'CompanyID, CompanyName, CompanyEmail, Status, MAX(ComplainedDate) AS LastComplainedDate, COUNT(CompanyID) AS ComplaintCount', '', 'CompanyID', 'ComplaintCount DESC', 0, true);
-            return $complaints;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function getComplaintsByCompany($companyID)
-    {
-        try {
-            $complaints = $this->select('studentjobcomplaints', [['CompanyID', '=', $companyID]], '*', '', '', '', 0, true);
-            return $complaints;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function getCountPendingComplaints()
-    {
-        try {
-            $complaints = $this->select('studentjobcomplaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, false);
-            return $complaints->PendingCount;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
-        }
-    }
 }

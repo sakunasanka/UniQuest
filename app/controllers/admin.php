@@ -154,7 +154,7 @@ class Admin extends Controller
 
     public function job_complaint()
     {
-        $complaints_job = $this->model('jobModel')->getAllComplaints();
+        $complaints_job = $this->model('ComplaintModel')->getAllComplaints();
 
         $data = [
             'complaints_job' => $complaints_job
@@ -165,7 +165,7 @@ class Admin extends Controller
 
     public function company_complaint()
     {
-        $complaints_com = $this->model('jobModel')->getComplaintsGroupedByCompany();
+        $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany();
 
         $data = [
             'complaints_com' => $complaints_com
@@ -176,7 +176,7 @@ class Admin extends Controller
 
     public function complaint_detail($complaintID)
     {
-        $complaint = $this->model('jobModel')->getComplaintDetails($complaintID);
+        $complaint = $this->model('ComplaintModel')->getComplaintDetails($complaintID);
 
         $data = [
             'complaint' => $complaint
@@ -187,7 +187,7 @@ class Admin extends Controller
 
     public function complaint_company($company)
     {
-        $complaints = $this->model('jobModel')->getComplaintsByCompany($company);
+        $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company);
 
         $data = [
             'complaints' => $complaints
@@ -452,7 +452,7 @@ class Admin extends Controller
             $activeJobCount = $this->model('jobModel')->getCountActiveJobs();
             $pendingUserCount = $this->model->getCountPendingUsers();
             $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
-            $pendingComplaintCount = $this->model('jobModel')->getCountPendingComplaints();
+            $pendingComplaintCount = $this->model('ComplaintModel')->getCountPendingComplaints();
 
             $data = [
                 'studentCount' => $studentCount,

@@ -393,7 +393,7 @@ class Student extends Controller
                 'complaint' => trim($_POST['complaint']),
                 'posts' => $posts
             ];
-            $this->model('jobModel')->create_complaint($data);
+            $this->model('ComplaintModel')->createComplaint($data);
             
             Redirect::to(URLROOT . '/student/make_complain/'.$id);
               
