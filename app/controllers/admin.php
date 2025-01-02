@@ -336,5 +336,31 @@ class Admin extends Controller
 
         $this->view('pages/admin/messages', $data);
     }
+
+    // In AdminController.php
+    public function fetchMessageDetails($id) {
+        // Check if the user has the right role and permissions
+        if (!isset($_SESSION['user_role'])) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
+
+        // Get the database connection
+        $db = $this->model('ContactModel'); 
+
+        // Fetch the message details by ID
+        $message = $db->getMessageById($id);
+
+        if ($message) {
+            http_response_code(200);
+            echo json_encode($message); // Send message as JSON
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Message not found']);
+        }
+        $this->view('pages/admin/messages/messageview', $data);
+    }
+
     
 }

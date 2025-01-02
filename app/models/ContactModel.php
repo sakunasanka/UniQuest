@@ -52,4 +52,13 @@ class ContactModel
         return $this->db->execute();
     }
 
+    // In MessageModel.php
+    public function getMessageById($id) {
+        $sql = "SELECT id, topic, email, name, created_at, message FROM messages WHERE id = :id LIMIT 1";
+        $this->db->query($sql);
+        $this->db->bind(':id', $id);
+
+        return $this->db->single(); // Fetch single result
+    }
+
 }

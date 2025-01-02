@@ -9,8 +9,9 @@
     <main class="content-area">
 
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/job_complaint">Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/company_complaint">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/messages">Students</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/messages">Companies</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/messages">Verification Team</button>
         </div>
     
         <div class="table-block">
@@ -37,7 +38,7 @@
                         <td><?php echo $message->created_at?></td>
                         <td><span class="status active"><?php echo $message->read_status?></span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail'">
+                            <span class="material-symbols-outlined action-btn view" onclick="fetchMessageDetails(<?php echo $message->id; ?>)">
                                 preview
                             </span>
                         </td>
@@ -50,6 +51,7 @@
     </main>
 </div>
 
+<script src="<?php echo URLROOT; ?>/public/js/admin/popups.js"></script>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
