@@ -151,13 +151,31 @@ class jobModel extends Model
     {
         try {
             $jobData = [
-                'Status' => 'Active'
+                'Status' => 'Active',
+                'VerifiedDate' => date('Y-m-d H:i:s')
             ];
-            if ($this->update('Jobs', $jobData, ['JobID' => $jobId])) {
-                return true;
-            } else {
+            $this->db->beginTransaction();
+
+            if (!$this->update('Jobs', $jobData, ['JobID' => $jobId])) {
+                $this->db->rollBack();
+                return false;
+            } 
+
+            $logData = [
+                'EntityID' => $jobId,
+                'EntityType' => 'Job',
+                'Action' => 'Approve',
+                'ActionBy' => $_SESSION['user_id'],
+                'ActionDate' => date('Y-m-d H:i:s')
+            ];
+
+            if (!$this->insert('VerificationLogs', $logData)) {
+                $this->db->rollBack();
                 return false;
             }
+
+            $this->db->commit();
+            return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
@@ -171,13 +189,31 @@ class jobModel extends Model
     {
         try {
             $jobData = [
-                'Status' => 'Not Approved'
+                'Status' => 'Not Approved',
+                'VerifiedDate' => date('Y-m-d H:i:s')
             ];
-            if ($this->update('Jobs', $jobData, ['JobID' => $jobId])) {
-                return true;
-            } else {
+            $this->db->beginTransaction();
+
+            if (!$this->update('Jobs', $jobData, ['JobID' => $jobId])) {
+                $this->db->rollBack();
+                return false;
+            } 
+
+            $logData = [
+                'EntityID' => $jobId,
+                'EntityType' => 'Job',
+                'Action' => 'Reject',
+                'ActionBy' => $_SESSION['user_id'],
+                'ActionDate' => date('Y-m-d H:i:s')
+            ];
+
+            if (!$this->insert('VerificationLogs', $logData)) {
+                $this->db->rollBack();
                 return false;
             }
+
+            $this->db->commit();
+            return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
@@ -253,6 +289,21 @@ class jobModel extends Model
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return 0;
+        }
+    }
+
+    public function getVerifiedJobsByMe($userId)
+    {
+        try {
+            // Get users verified by the current user
+            $verifiedEntities = $this->select('v_verifiedJobs', [['ActionBy', '=', $userId]], '*', 'AND', '', '', 0, true);
+            return $verifiedEntities;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return [];
         }
     }
 

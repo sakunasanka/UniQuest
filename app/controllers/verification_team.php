@@ -21,12 +21,28 @@ class Verification_team extends Controller
 
     public function user_verified()
     {
-        $this->view('pages/verification_team/user_verified');
+        try {
+            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id']);
+            $data = [
+                'users' => $users
+            ];
+            $this->view('pages/verification_team/user_verified', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function job_verified()
     {
-        $this->view('pages/verification_team/job_verified');
+        try {
+            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id']);
+            $data = [
+                'jobs' => $jobs
+            ];
+            $this->view('pages/verification_team/job_verified', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function user_ver_pending()
@@ -113,7 +129,7 @@ class Verification_team extends Controller
     public function job_ver_pending()
     {
         try {
-            $jobs = $this->model->getPendingJobs();
+            $jobs = $this->model('jobModel')->getPendingJobs();
             $data = [
                 'jobs' => $jobs
             ];
@@ -126,7 +142,7 @@ class Verification_team extends Controller
     public function job_ver_detail($jobID)
     {
         try {
-            $job = $this->model->getJobDetails($jobID);
+            $job = $this->model('jobModel')->getJobDetails($jobID);
             $data = [
                 'job' => $job
             ];
@@ -136,10 +152,23 @@ class Verification_team extends Controller
         }
     }
 
+    public function job_detail($jobID)
+    {
+        try {
+            $job = $this->model('jobModel')->getJobDetails($jobID);
+            $data = [
+                'job' => $job
+            ];
+            $this->view('pages/verification_team/job_detail', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
     public function job_ver_not()
     {
         try {
-            $jobs = $this->model->getNotApprovedJobs();
+            $jobs = $this->model('jobModel')->getNotApprovedJobs();
             $data = [
                 'jobs' => $jobs
             ];
@@ -152,7 +181,7 @@ class Verification_team extends Controller
     public function job_ver_approve($jobID)
     {
         try {
-            $this->model->approveJob($jobID);
+            $this->model('jobModel')->approveJob($jobID);
             Redirect::to(URLROOT . '/verification_team/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -162,7 +191,7 @@ class Verification_team extends Controller
     public function job_ver_reject($jobID)
     {
         try {
-            $this->model->rejectJob($jobID);
+            $this->model('jobModel')->rejectJob($jobID);
             Redirect::to(URLROOT . '/verification_team/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
