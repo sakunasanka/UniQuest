@@ -371,6 +371,20 @@ ON
     r.StudentID = s.StudentID;
 
 
+//application customization
+
+CREATE TABLE application_form_fields (
+    field_id INT AUTO_INCREMENT PRIMARY KEY, -- Standalone primary key with auto-increment
+    job_id INT NOT NULL,                     -- Foreign key linking to a specific job
+    field_name VARCHAR(255) NOT NULL,        -- Name of the application form field
+    field_type VARCHAR(50) NOT NULL,         -- Type of the field (e.g., 'text', 'checkbox')
+    is_required BOOLEAN DEFAULT TRUE,        -- Indicates if the field is mandatory
+    UNIQUE KEY (job_id, field_name),         -- Ensures unique fields for each job
+    FOREIGN KEY (job_id) REFERENCES jobs(JobID) ON DELETE CASCADE -- Cascade delete if job is removed
+);
+
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

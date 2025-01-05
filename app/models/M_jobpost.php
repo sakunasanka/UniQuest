@@ -58,6 +58,12 @@ class M_jobpost {
 
         // Execute and return the result
         return $this->db->execute();
+        if ($this->db->execute()) {
+            // Return the last inserted JobID
+            return $this->db->lastInsertId();
+        } else {
+            return false;
+        }
     }
 
 

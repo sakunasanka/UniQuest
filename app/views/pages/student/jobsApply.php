@@ -7,14 +7,14 @@
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
     <div class="content-area">
         <div class="header">
-            <h1>Apply for this job</h1>
+            <h1>Application Form for <?php echo $data['job']->Title; ?></h1>
         </div>
         <p>Please fill out the details below to submit your application</p>
         
         <div class="form-section">
             <!-- Form Container -->
             <div class="form-container">
-                <form action="submitApplication.php" method="POST">
+                <form action="<?php echo URLROOT; ?>/student/submit_application/<?php echo $data['job']->JobID; ?>" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="fullName">Full Name *</label>
                         <input type="text" id="fullName" name="fullName" required>
@@ -64,6 +64,20 @@
                             <option value="No">No</option>
                         </select>
                     </div>
+
+                    <?php foreach($data['fields'] as $field): ?>
+                        <div class="form-group">
+                            <label><?php echo $field->field_name; ?></label>
+                            <?php switch($field->field_type):
+                                case 'file': ?>
+                                    <input type="file" name="field_<?php echo $field->field_id; ?>" required>
+                                    <?php break;
+                                default: ?>
+                                    <input type="text" name="field_<?php echo $field->field_id; ?>" required>
+                            <?php endswitch; ?>
+                        </div>
+                    <?php endforeach; ?>
+
                     
                     <p>Please note that once you hit the submit button, the application will be directly sent to the recruiter.</p>
                     
