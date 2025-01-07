@@ -1,0 +1,158 @@
+CREATE VIEW v_verifiedJobs AS
+SELECT 
+    j.JobID,
+    j.Title,
+    j.Email,
+    j.Category,
+    j.Status,
+    v.ActionBy,
+    v.ActionDate
+FROM 
+    v_jobs j
+JOIN 
+    verificationlogs v
+ON 
+    j.JobID = v.EntityID
+WHERE 
+    v.EntityType = 'Job'
+    AND v.Action = 'Approve';
+
+
+CREATE VIEW v_verifiedUsers AS
+SELECT 
+    u.UserID,
+    u.Email,
+    u.Role,
+    u.Status,
+    v.ActionBy,
+    v.ActionDate
+FROM 
+    user u
+JOIN 
+    verificationlogs v
+ON 
+    u.UserID = v.EntityID
+WHERE 
+    v.EntityType = 'User'
+    AND v.Action = 'Approve';
+
+
+
+
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER after_user_verified
+AFTER UPDATE ON user
+FOR EACH ROW
+BEGIN
+    -- Handle status change to 'Active' (Approval)
+    IF NEW.Status = 'Active' AND (OLD.Status = 'Pending' OR OLD.Status = 'Not Approved') THEN
+        INSERT INTO verificationlogs 
+        (
+            EntityID, 
+            EntityType, 
+            Action, 
+            ActionBy, 
+            ActionDate, 
+            Comments
+        ) 
+        VALUES 
+        (
+            NEW.UserID, 
+            'User', 
+            'Approve', 
+            NEW.VerifiedBy, 
+            NOW(), 
+            'User status changed to Active by admin'
+        );
+    END IF;
+
+    -- Handle status change to 'Not Approved' (Rejection)
+    IF NEW.Status = 'Not Approved' AND OLD.Status = 'Pending' THEN
+        INSERT INTO verificationlogs 
+        (
+            EntityID, 
+            EntityType, 
+            Action, 
+            ActionBy, 
+            ActionDate, 
+            Comments
+        ) 
+        VALUES 
+        (
+            NEW.UserID, 
+            'User', 
+            'Reject', 
+            NEW.VerifiedBy, 
+            NOW(), 
+            'User status changed to Not Approved by admin'
+        );
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER after_job_verified
+AFTER UPDATE ON jobs
+FOR EACH ROW
+BEGIN
+    -- Handle status change to 'Active' (Approval)
+    IF NEW.Status = 'Active' AND (OLD.Status = 'Pending' OR OLD.Status = 'Not Approved') THEN
+        INSERT INTO verificationlogs 
+        (
+            EntityID, 
+            EntityType, 
+            Action, 
+            ActionBy, 
+            ActionDate, 
+            Comments
+        ) 
+        VALUES 
+        (
+            NEW.JobID, 
+            'Job', 
+            'Approve', 
+            NEW.VerifiedBy, 
+            NOW(), 
+            'Job status changed to Active'
+        );
+    END IF;
+
+    -- Handle status change to 'Not Approved' (Rejection)
+    IF NEW.Status = 'Not Approved' AND OLD.Status = 'Pending' THEN
+        INSERT INTO verificationlogs 
+        (
+            EntityID, 
+            EntityType, 
+            Action, 
+            ActionBy, 
+            ActionDate, 
+            Comments
+        ) 
+        VALUES 
+        (
+            NEW.JobID, 
+            'Job', 
+            'Reject', 
+            NEW.VerifiedBy, 
+            NOW(), 
+            'Job status changed to Not Approved'
+        );
+    END IF;
+END$$
+
+DELIMITER ;
+
+
+
+
+
+
+

@@ -393,31 +393,14 @@ class userModel extends Model
         try {
             $userData = [
                 'Status' => 'Active',
-                'VerifiedDate' => date('Y-m-d H:i:s')
+                'VerifiedDate' => date('Y-m-d H:i:s'),
+                'VerifiedBy' => $_SESSION['user_id']
             ];
-            $this->db->beginTransaction();
-
-            if (!$this->update('User', $userData, ['UserID' => $userId])) {
-                $this->db->rollBack();
-                return false;
-            } 
-
-            $logData = [
-                'EntityID' => $userId,
-                'EntityType' => 'User',
-                'Action' => 'Approve',
-                'ActionBy' => $_SESSION['user_id'],
-                'ActionDate' => date('Y-m-d H:i:s')
-            ];
-
-            if (!$this->insert('VerificationLogs', $logData)) {
-                $this->db->rollBack();
+            if ($this->update('User', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
                 return false;
             }
-
-            $this->db->commit();
-            return true;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
@@ -432,31 +415,14 @@ class userModel extends Model
         try {
             $userData = [
                 'Status' => 'Not Approved',
-                'VerifiedDate' => date('Y-m-d H:i:s')
+                'VerifiedDate' => date('Y-m-d H:i:s'),
+                'VerifiedBy' => $_SESSION['user_id']
             ];
-            $this->db->beginTransaction();
-
-            if (!$this->update('User', $userData, ['UserID' => $userId])) {
-                $this->db->rollBack();
-                return false;
-            } 
-
-            $logData = [
-                'EntityID' => $userId,
-                'EntityType' => 'User',
-                'Action' => 'Reject',
-                'ActionBy' => $_SESSION['user_id'],
-                'ActionDate' => date('Y-m-d H:i:s')
-            ];
-
-            if (!$this->insert('VerificationLogs', $logData)) {
-                $this->db->rollBack();
+            if ($this->update('User', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
                 return false;
             }
-
-            $this->db->commit();
-            return true;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
