@@ -173,6 +173,25 @@ class Admin extends Controller
         $this->view('pages/admin/stu_detail');
     }
 
+    public function sendMessage() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $chatModel = $this->model('chatModel');
+    
+            // Collect data
+            $sender_id = $_SESSION['user_id'];
+            $receiver_id = $_POST['receiver_id'];
+            $message = $_POST['message'];
+    
+            // Save the message
+            if ($chatModel->sendMessage($sender_id, $receiver_id, $message, 'Admin')) {
+                // Redirect to prevent form resubmission
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+            } else {
+                die("Something went wrong while sending the message.");
+            }
+        }
+    }
+
     public function com_detail()
     {
         $this->view('pages/admin/com_detail');

@@ -22,3 +22,19 @@ document.addEventListener("DOMContentLoaded", function () {
         backgroundOverlay.classList.add("hidden");
     });
 });
+
+const backgroundOverlay = document.getElementById('backgroundOverlay');
+const chatPopup = document.getElementById('chatPopup');
+const openPopupBtn = document.getElementById('openPopupBtn');
+const closePopupBtn = document.getElementById('closePopupBtn');
+
+openPopupBtn.addEventListener('click', () => {
+    backgroundOverlay.classList.remove('hidden');
+    chatPopup.classList.remove('hidden');
+});
+
+closePopupBtn.addEventListener('click', () => {
+    backgroundOverlay.classList.add('hidden');
+    chatPopup.classList.add('hidden');
+});
+
