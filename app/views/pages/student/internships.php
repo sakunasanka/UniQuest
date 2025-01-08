@@ -2,8 +2,16 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+    <?php else: ?>       
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php endif; ?>
+
 <div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+        <?php else: ?>    
+    <?php endif; ?>    
 
     <div class="content-area">
         <div class="tabs-header">
@@ -48,7 +56,7 @@
                                     Colombo, Western Province
                                 </div>
                             </div>
-                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+                            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                                 <div class="card-icons">
                                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                     <i class="fa fa-share-alt" aria-hidden="true"></i>

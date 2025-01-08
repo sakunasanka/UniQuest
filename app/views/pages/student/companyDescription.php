@@ -4,8 +4,15 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+    <?php else: ?>       
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php endif; ?>
+
 <div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php endif; ?>    
 
     <div class="content-area">
         <div class="view-card">
@@ -14,7 +21,7 @@
             <div class="view-card-content">
                 <div class="title-with-bookmark">
                     <h1>Acme Inc.</h1>
-                    <?php if ($_SESSION['user_role'] == 'Student'): ?>
+                    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                         <div class="card-icons">
                             <i class="fa fa-share-alt" aria-hidden="true"></i>
                             <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
@@ -86,7 +93,7 @@
                             <span class="reviewer-name">- John Doe</span>
                             <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                         </div>
-                        <?php if (($_SESSION['user_role'] == 'Student') || ($_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
+                        <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                             <div class="review-actions">
                                 <button class="like-btn" data-id="<?php echo $i; ?>">
                                     <span class="material-symbols-outlined like-icon">thumb_up</span>
@@ -103,7 +110,7 @@
                 <?php endfor; ?>
             </div>
             <div class="buttons btn-space-between">
-                <?php if ($_SESSION['user_role'] == 'Student'): ?>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
                     <!-- <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button> -->
                     <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
 
