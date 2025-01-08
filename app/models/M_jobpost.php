@@ -8,6 +8,18 @@ class M_jobpost {
         $this->db = Database::getInstance();
     }
 
+    public function getLatestJobId() {
+        $this->db->query('SELECT * FROM jobs ORDER BY create_at DESC LIMIT 1');
+        
+        $row = $this->db->single();
+        
+        if($row) {
+            return $row->JobID;
+        }
+        
+        return false;
+    }
+
     public function getpostbyid($jobpostId){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.JobID = :id');
         $this->db->bind(':id', $jobpostId);
@@ -59,8 +71,7 @@ class M_jobpost {
         // Execute and return the result
         return $this->db->execute();
         if ($this->db->execute()) {
-            // Return the last inserted JobID
-            return $this->db->lastInsertId();
+            return $this->db->lastInsertId(); // Return the last inserted ID
         } else {
             return false;
         }

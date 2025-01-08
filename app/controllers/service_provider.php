@@ -338,8 +338,10 @@ class Service_provider extends Controller
 
             //make sure no errors
             if (empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err'])  && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])) {
-                if ($jobId = $this->model('M_jobpost')->create($data)) {
+                if ($this->model('M_jobpost')->create($data)) {
                     
+                    $jobId = $this->model('M_jobpost')->getLatestJobId();
+
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
                     // redirect('service_provider/ongoing_jobs');
                 } else {
