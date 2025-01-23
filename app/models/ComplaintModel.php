@@ -95,6 +95,7 @@ class ComplaintModel extends Model {
             return false;
         }
     }
+    
 
     public function resolveComplaint($complaintId)
     {

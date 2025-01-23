@@ -25,32 +25,38 @@
                     </div>
                 </div>
             </div> -->
-        
             <div class="cards-container">
-                <?php for ($i = 0; $i < 6; $i++): ?>
+                
+                <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToCompanyDescription()">
-                            <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
+                        <img
+                            src="<?php echo empty($post->CompanyLogo)
+                                        ? URLROOT . '/images/profile_pic_preview.png'
+                                        : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                            alt="Profile Picture">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToCompanyDescription()">
                                 <div class="title-content">
-                                    <h3 class="company-title">Spotify</h3>
+                                    <h3 class="company-title"><?php echo $post->Title; ?></h3>
                                     <div class="job-rating">
                                         <i class="fa fa-star"></i> 4.8
                                     </div>
                                 </div>
-
+                                
+                                
                                 <div class="job-location-details">
-                                    Colombo, Western Province
+                                        <?php echo $post->Location; ?>
                                 </div>
                             </div>
-                            
                             <?php  if ($_SESSION['user_role'] == 'Student'):?>
+ 
                                 <div class="card-icons">
                                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                     <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                    <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                                    
+                                    <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                                 </div>
                             <?php endif;?>
                         </div>
@@ -61,8 +67,9 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
-                <?php endfor; ?>
+                    <?php endforeach; ?>
             </div>
+            
         </div>
     </div>
 </div>
@@ -72,7 +79,23 @@
         color: #e74c3c; /* Active color */
     }
 </style>
+<!-- -------------------------------------------- -->
 
+<!-- <script>
+    function goToJobDescription(jobId) {
+        window.location.href = "/UniQuest/student/jobsdescription/" + jobId;
+    }
+</script> -->
+
+
+
+
+
+
+
+
+
+<!-- ------------------------------- -->
 <script>
     function toggleFavorite(icon) {
         icon.classList.toggle("fa-regular");
