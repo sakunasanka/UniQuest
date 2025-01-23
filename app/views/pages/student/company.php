@@ -39,7 +39,7 @@
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToCompanyDescription()">
                                 <div class="title-content">
-                                    <h3 class="company-title"><?php echo $post->Title; ?></h3>
+                                    <h3 class="company-title"><?php echo $post->CompanyName; ?></h3>
                                     <div class="job-rating">
                                         <i class="fa fa-star"></i> 4.8
                                     </div>
@@ -47,7 +47,7 @@
                                 
                                 
                                 <div class="job-location-details">
-                                        <?php echo $post->Location; ?>
+                                        <?php echo $post->City; ?>
                                 </div>
                             </div>
                             <?php  if ($_SESSION['user_role'] == 'Student'):?>
@@ -56,7 +56,6 @@
                                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                     <i class="fa fa-share-alt" aria-hidden="true"></i>
                                     
-                                    <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                                 </div>
                             <?php endif;?>
                         </div>

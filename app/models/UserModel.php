@@ -19,8 +19,7 @@ class userModel extends Model
         }
     }
     public function getcompany(){
-        $this->db->query('SELECT * FROM company WHERE CompanyID = :id');
-        $this->db->bind(':id', $_SESSION['user_id']);
+        $this->db->query('SELECT * FROM company ');
         $results = $this->db->resultSet();
         return $results;
     }
