@@ -278,6 +278,14 @@ button.reject-btn:hover {
     background-color: #c82333;
 }
 
+button.contact-btn {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+button.contact-btn:hover {
+    background-color: #0056b3;
+}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

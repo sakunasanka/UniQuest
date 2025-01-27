@@ -8,14 +8,25 @@ class Core
 
     public function __construct()
     {
+        // Get URL
         $url = $this->getURL();
 
+        //Apply custom URL middleware to handle routing or transformations
+        $url = URLMiddleware::handle($url);
+
         // Look in controllers for first value
-        if (isset($url[0]) && file_exists('../app/controllers/' . ucwords($url[0]) . '.php')) {
-            // If exists, set as controller
-            $this->currentController = ucwords($url[0]);
-            // Unset 0 Index
-            unset($url[0]);
+        if (isset($url[0])) {
+            if (file_exists('../app/controllers/' . ucwords($url[0]) . '.php')) {
+                // If exists, set as controller
+                $this->currentController = ucwords($url[0]);
+                // Unset 0 Index
+                unset($url[0]);
+            } else {
+                // Controller does not exist
+                // Redirect to error page
+                require_once '../app/views/pages/404_not_found/page_not_found.php';
+                exit;
+            }
         }
         // Require the controller
         require_once '../app/controllers/' . $this->currentController . '.php';
@@ -31,10 +42,21 @@ class Core
 
                 // Unset 1 index
                 unset($url[1]);
+            } else {
+                // Method does not exist
+                // Redirect to error page
+                require_once '../app/views/pages/404_not_found/page_not_found.php';
+                exit;
             }
+        } else {
+            // Default method
+            $this->currentMethod = 'index';
         }
         //get params
         $this->params = $url ? array_values($url) : [];
+
+        // Apply middleware
+        $this->applyMiddleware($this->currentController, $this->currentMethod);
 
         // Call a callback with array of params
         call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
@@ -51,5 +73,14 @@ class Core
         }
 
         return [];
+    }
+
+    private function applyMiddleware($Controller, $method)
+    {
+        // Check if the controller has an auth method
+        if (method_exists($Controller, 'auth')) {
+            // Call the auth method
+            $Controller->auth($method);
+        }
     }
 }

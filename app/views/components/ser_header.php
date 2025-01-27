@@ -22,7 +22,15 @@
             <ul class="nav-links">
                 <li><a href="/uniquest/home" class="hov">Home</a></li>
                 <li><a href="/uniquest/service_provider/dashboard" class="hov">Dashboard</a></li>
-                <li><a href="/uniquest/about" class="hov">About Us</a></li>
+                <!-- <li class="dropdown">
+                    <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
+                    <div class="dropdown-content">
+                        <a href="/UniQuest/student/jobs">Part-time Jobs</a>
+                        <a href="/UniQuest/student/internships">Internships</a>
+                        <a href="/UniQuest/student/company">Companies</a>
+                    </div>
+                </li> -->
+                <!-- <li><a href="/uniquest/about" class="hov">About Us</a></li> -->
                 <li><a href="/uniquest/service_provider/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
@@ -32,4 +40,3 @@
             </div>
         </div>
     </nav>
-

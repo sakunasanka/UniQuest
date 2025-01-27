@@ -7,12 +7,13 @@
 
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/internships">Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/internships">Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/company">Companies</button>
         </div>
         <div class="container">
-            <div class="search-bar-container">
+            <?php require APPROOT . '/views/components/searchBar.php'; ?>
+            <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -23,34 +24,40 @@
                         <span>Filters</span>
                     </div>
                 </div>
-            </div>
-        
+            </div> -->
             <div class="cards-container">
-                <?php for ($i = 0; $i < 6; $i++): ?>
+                
+                <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToCompanyDescription()">
-                            <img src="<?php echo URLROOT; ?>/images/spotify.png" alt="job">
+                        <img
+                            src="<?php echo empty($post->CompanyLogo)
+                                        ? URLROOT . '/images/profile_pic_preview.png'
+                                        : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                            alt="Profile Picture">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToCompanyDescription()">
                                 <div class="title-content">
-                                    <h3 class="company-title">Spotify</h3>
+                                    <h3 class="company-title"><?php echo $post->CompanyName; ?></h3>
                                     <div class="job-rating">
                                         <i class="fa fa-star"></i> 4.8
                                     </div>
                                 </div>
-
+                                
+                                
                                 <div class="job-location-details">
-                                    Colombo, Western Province
+                                        <?php echo $post->City; ?>
                                 </div>
                             </div>
-                            
-
-                            <div class="card-icons">
-                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
-                            </div>
+                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+ 
+                                <div class="card-icons">
+                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    
+                                </div>
+                            <?php endif;?>
                         </div>
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -59,8 +66,9 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
-                <?php endfor; ?>
+                    <?php endforeach; ?>
             </div>
+            
         </div>
     </div>
 </div>
@@ -70,7 +78,23 @@
         color: #e74c3c; /* Active color */
     }
 </style>
+<!-- -------------------------------------------- -->
 
+<!-- <script>
+    function goToJobDescription(jobId) {
+        window.location.href = "/UniQuest/student/jobsdescription/" + jobId;
+    }
+</script> -->
+
+
+
+
+
+
+
+
+
+<!-- ------------------------------- -->
 <script>
     function toggleFavorite(icon) {
         icon.classList.toggle("fa-regular");
@@ -90,6 +114,6 @@
 
 <script>
     function goToCompanyDescription() {
-        window.location.href = "/uniquest/student/companydescription";
+        window.location.href = "/UniQuest/student/companydescription/"+10045;
     }
 </script>

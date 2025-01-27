@@ -18,75 +18,31 @@
             <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Title</th>
-                        <th onclick="sortTable(1)">Company Email</th>
-                        <th onclick="sortTable(2)">Job Type</th>
-                        <th onclick="sortTable(3)">Requested Date</th>
-                        <th onclick="sortTable(4)">Status</th>
+                        <th onclick="sortTable(0)">Job ID</th>
+                        <th onclick="sortTable(1)">Title</th>
+                        <th onclick="sortTable(2)">Company Email</th>
+                        <th onclick="sortTable(3)">Job Type</th>
+                        <th onclick="sortTable(4)">Requested Date</th>
+                        <th onclick="sortTable(5)">Status</th>
                         <th class="no-sort">View</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Internship</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Internship</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['jobs'] as $job) : ?>
+                        <tr>
+                            <td><?php echo $job->JobID; ?></td>
+                            <td><?php echo $job->Title; ?></td>
+                            <td><?php echo $job->Email; ?></td>
+                            <td><?php echo $job->Category; ?></td>
+                            <td><?php echo substr($job->jobs_create_at, 0, 10); ?></td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td class="action">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_ver_detail/<?php echo $job->JobID; ?>'">
+                                    preview
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

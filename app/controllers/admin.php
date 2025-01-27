@@ -3,6 +3,17 @@ class Admin extends Controller
 {
     private $model;
 
+    public function __construct()
+    {
+        // Check if user is logged in
+        AuthMiddleware::requireAuth();
+        // Check if user has the required role
+        AuthMiddleware::requireRole('Admin');
+
+        // Load model
+        $this->model = $this->model('userModel');
+    }
+
     private function prepareData($post = [], $files = [])
     {
         return [
@@ -30,20 +41,22 @@ class Admin extends Controller
         ];
     }
 
-    public function __construct()
-    {
-        // Load model
-        $this->model = $this->model('userModel');
-    }
-
     public function index()
     {
-        echo 'admin/index';
+        $this->dashboard();
     }
 
     public function students_mng()
     {
-        $this->view('pages/admin/students_mng');
+        try {
+            $students = $this->model->getVerifiedUsersByRole('Student');
+            $data = [
+                'students' => $students
+            ];
+            $this->view('pages/admin/students_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_student()
@@ -53,7 +66,15 @@ class Admin extends Controller
 
     public function company_mng()
     {
-        $this->view('pages/admin/company_mng');
+        try {
+            $companies = $this->model->getVerifiedUsersByRole('Company');
+            $data = [
+                'companies' => $companies
+            ];
+            $this->view('pages/admin/company_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_company()
@@ -63,7 +84,16 @@ class Admin extends Controller
 
     public function verTeam_mng()
     {
-        $this->view('pages/admin/verTeam_mng');
+        try {
+            // $vtMembers = $this->model->getVTMembers();
+            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member');
+            $data = [
+                'vtMembers' => $vtMembers
+            ];
+            $this->view('pages/admin/verTeam_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_member()
@@ -96,7 +126,7 @@ class Admin extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Upload profile picture
-                $profilePicResponse = FileUploadHelper::uploadFile($data['profilePic'], PUBROOT . '/uploads/profile_pictures/vt_member');
+                $profilePicResponse = FileUploadHelper::uploadFile($data['profilePic'], PUBROOT . '/uploads/profile_pictures/vT-Member');
                 if ($profilePicResponse['success']) {
                     $data['profilePicName'] = $profilePicResponse['file_name'];
                 } else {
@@ -124,7 +154,7 @@ class Admin extends Controller
 
     public function job_complaint()
     {
-        $complaints_job = $this->model('jobModel')->getComplaintsJob();
+        $complaints_job = $this->model('ComplaintModel')->getAllComplaints();
 
         $data = [
             'complaints_job' => $complaints_job
@@ -135,33 +165,81 @@ class Admin extends Controller
 
     public function company_complaint()
     {
-        // $complaints_com = $this->model('jobModel')->getComplains();
+        $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany();
 
-        // $data = [
-        //     'complaints_com' => $complaints_com
-        // ];
+        $data = [
+            'complaints_com' => $complaints_com
+        ];
 
-        $this->view('pages/admin/company_complaint');
+        $this->view('pages/admin/company_complaint', $data);
+    }
+
+    public function complaint_detail($complaintID)
+    {
+        $complaint = $this->model('ComplaintModel')->getComplaintDetails($complaintID);
+
+        $data = [
+            'complaint' => $complaint
+        ];
+
+        $this->view('pages/admin/complaint_detail', $data);
+    }
+
+    public function complaint_company($company)
+    {
+        $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company);
+
+        $data = [
+            'complaints' => $complaints
+        ];
+
+        $this->view('pages/admin/complaint_company', $data);
+    }
+
+    public function resolve_complaint($complaintID)
+    {
+        try {
+            $this->model('ComplaintModel')->resolveComplaint($complaintID);
+            Redirect::to(URLROOT . '/admin/job_complaint');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function reject_complaint($complaintID)
+    {
+        try {
+            $this->model('ComplaintModel')->rejectComplaint($complaintID);
+            Redirect::to(URLROOT . '/admin/job_complaint');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function ptjobs_mng()
     {
-        $this->view('pages/admin/ptjobs_mng');
+        try {
+            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time');
+            $data = [
+                'ptjobs' => $ptjobs
+            ];
+            $this->view('pages/admin/ptjobs_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function intern_mng()
     {
-        $this->view('pages/admin/intern_mng');
-    }
-
-    public function stu_detail()
-    {
-        $this->view('pages/admin/stu_detail');
-    }
-
-    public function com_detail()
-    {
-        $this->view('pages/admin/com_detail');
+        try {
+            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship');
+            $data = [
+                'interns' => $interns
+            ];
+            $this->view('pages/admin/intern_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function user_ver_pending()
@@ -173,7 +251,7 @@ class Admin extends Controller
             ];
             $this->view('pages/admin/user_ver_pending', $data);
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -186,7 +264,27 @@ class Admin extends Controller
             ];
             $this->view('pages/admin/user_ver_not', $data);
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function user_detail($userID)
+    {
+        try {
+            $user = $this->model->getUserDetails($userID);
+            $data = [
+                'user' => $user
+            ];
+
+            if ($user['Role'] == 'Student') {
+                $this->view('pages/admin/stu_detail', $data);
+            } else if ($user['Role'] == 'Company') {
+                $this->view('pages/admin/com_detail', $data);
+            } else if ($user['Role'] == 'VT-Member') {
+                $this->view('pages/admin/vt_detail', $data);
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -201,9 +299,11 @@ class Admin extends Controller
                 $this->view('pages/admin/stu_ver_detail', $data);
             } else if ($user['Role'] == 'Company') {
                 $this->view('pages/admin/com_ver_detail', $data);
+            } else if ($user['Role'] == 'VT-Member') {
+                $this->view('pages/admin/vt_ver_detail', $data);
             }
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -213,7 +313,7 @@ class Admin extends Controller
             $this->model->approveUser($userID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -223,7 +323,39 @@ class Admin extends Controller
             $this->model->rejectUser($userID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function user_activate($userID, $role)
+    {
+        try {
+            $this->model->activateAccount($userID);
+            if ($role == 'Company') {
+                Redirect::to(URLROOT . '/admin/company_mng');
+            } else if ($role == 'Student') {
+                Redirect::to(URLROOT . '/admin/students_mng');
+            } else if ($role == 'VT-Member') {
+                Redirect::to(URLROOT . '/admin/verTeam_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function user_deactivate($userID, $role)
+    {
+        try {
+            $this->model->deactivateAccount($userID);
+            if ($role == 'Company') {
+                Redirect::to(URLROOT . '/admin/company_mng');
+            } else if ($role == 'Student') {
+                Redirect::to(URLROOT . '/admin/students_mng');
+            } else if ($role == 'VT-Member') {
+                Redirect::to(URLROOT . '/admin/verTeam_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -232,19 +364,129 @@ class Admin extends Controller
     //     $this->view('pages/admin/job_ver_all');
     // }
 
+    public function job_detail($jobID)
+    {
+        try {
+            $job = $this->model('jobModel')->getJobDetails($jobID);
+            $data = [
+                'job' => $job
+            ];
+            $this->view('pages/admin/job_detail', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
     public function job_ver_pending()
     {
-        $this->view('pages/admin/job_ver_pending');
+        try {
+            $jobs = $this->model('jobModel')->getPendingJobs();
+            $data = [
+                'jobs' => $jobs
+            ];
+            $this->view('pages/admin/job_ver_pending', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_detail($jobID)
+    {
+        try {
+            $job = $this->model('jobModel')->getJobDetails($jobID);
+            $data = [
+                'job' => $job
+            ];
+            $this->view('pages/admin/job_ver_detail', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function job_ver_not()
     {
-        $this->view('pages/admin/job_ver_not');
+        try {
+            $jobs = $this->model('jobModel')->getNotApprovedJobs();
+            $data = [
+                'jobs' => $jobs
+            ];
+            $this->view('pages/admin/job_ver_not', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_approve($jobID)
+    {
+        try {
+            $this->model('jobModel')->approveJob($jobID);
+            Redirect::to(URLROOT . '/admin/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_reject($jobID)
+    {
+        try {
+            $this->model('jobModel')->rejectJob($jobID);
+            Redirect::to(URLROOT . '/admin/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_activate($jobID, $jobType)
+    {
+        try {
+            $this->model('jobModel')->activateJob($jobID);
+            if ($jobType == 'Part-time') {
+                Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            } else if ($jobType == 'Internship') {
+                Redirect::to(URLROOT . '/admin/intern_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_deactivate($jobID, $jobType)
+    {
+        try {
+            $this->model('jobModel')->deactivateJob($jobID);
+            if ($jobType == 'Part-time') {
+                Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            } else if ($jobType == 'Internship') {
+                Redirect::to(URLROOT . '/admin/intern_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function dashboard()
     {
-        $this->view('pages/admin/adminDash');
+        try {
+            $studentCount = $this->model->getCountRegisteredUsers('Student');
+            $companyCount = $this->model->getCountRegisteredUsers('Company');
+            $activeJobCount = $this->model('jobModel')->getCountActiveJobs();
+            $pendingUserCount = $this->model->getCountPendingUsers();
+            $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
+            $pendingComplaintCount = $this->model('ComplaintModel')->getCountPendingComplaints();
+
+            $data = [
+                'studentCount' => $studentCount,
+                'companyCount' => $companyCount,
+                'activeJobCount' => $activeJobCount,
+                'pendingUserCount' => $pendingUserCount,
+                'pendingJobCount' => $pendingJobCount,
+                'pendingComplaintCount' => $pendingComplaintCount
+            ];
+
+            $this->view('pages/admin/adminDash', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function jobPost()
@@ -260,5 +502,4 @@ class Admin extends Controller
     {
         $this->view('pages/student/notification_alerts');
     }
-
 }

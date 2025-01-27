@@ -25,10 +25,11 @@
                     <div class="dropdown-content">
                         <a href="/UniQuest/student/jobs">Part-time Jobs</a>
                         <a href="/UniQuest/student/internships">Internships</a>
+                        <a href="/UniQuest/student/company">Companies</a>
                     </div>
                 </li>
-                <li><a href="/UniQuest/about" class="hov">About Us</a></li>
-                <li><a href="/UniQuest/contact" class="hov">Contact Us</a></li>
+                <!-- <li><a href="/UniQuest/about" class="hov">About Us</a></li> -->
+                <li><a href="/UniQuest/student/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
@@ -37,4 +38,3 @@
             </div>
         </div>
     </nav>
-

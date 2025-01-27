@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/popups/admin/activateDeactivateJob.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -21,241 +22,47 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">Title</th>
-                        <th onclick="sortTable(1)">Company Name</th>
-                        <th onclick="sortTable(2)">Email</th>
-                        <th onclick="sortTable(3)">Posted Date</th>
-                        <th onclick="sortTable(4)">Status</th>
+                <tr>
+                        <th onclick="sortTable(0)">Job ID</th>
+                        <th onclick="sortTable(1)">Title</th>
+                        <th onclick="sortTable(2)">Company Name</th>
+                        <th onclick="sortTable(3)">Company Email</th>
+                        <th onclick="sortTable(4)">Posted Date</th>
+                        <th onclick="sortTable(5)">Status</th>
                         <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 2</td>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 2</td>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 2</td>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 2</td>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 1</td>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" data-tooltip="Deactivate User">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Internship 2</td>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['interns'] as $job) : ?>
+                        <tr>
+                            <td><?php echo $job->JobID; ?></td>
+                            <td><?php echo $job->Title; ?></td>
+                            <td><?php echo $job->CompanyName; ?></td>
+                            <td><?php echo $job->Email; ?></td>
+                            <td><?php echo substr($job->jobs_create_at, 0, 10);; ?></td>
+                            <?php if ($job->Status == 'Active') : ?>
+                                <td><span class="status active">Active</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
+                                        preview
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateJob(<?php echo $job->JobID; ?>, 'Internship')">
+                                        block
+                                    </span>
+                                </td>
+                            <?php elseif ($job->Status == 'Deactive') : ?>
+                                <td><span class="status inactive">Deactive</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
+                                        preview
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn activate" onclick="activateJob(<?php echo $job->JobID; ?>, 'Internship')">
+                                        check_circle
+                                    </span>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
