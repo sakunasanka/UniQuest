@@ -100,6 +100,19 @@ class M_jobpost {
             return false;
         }
     }
+
+    public function getPartTimeJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Part-time' ");
+        return $this->db->resultSet();
+    }
+
+    public function getInternshipJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Internship' ");
+        return $this->db->resultSet();
+    }
+
     
 
 }

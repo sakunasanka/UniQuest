@@ -18,7 +18,11 @@ class userModel extends Model
             return false;
         }
     }
-
+    public function getcompany(){
+        $this->db->query('SELECT * FROM company ');
+        $results = $this->db->resultSet();
+        return $results;
+    }
     public function companyRegister(array $data)
     {
         try {
