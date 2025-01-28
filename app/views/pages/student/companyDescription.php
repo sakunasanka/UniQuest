@@ -37,10 +37,14 @@
                     <div>
                         <span>Address</span>
                         <?php 
-                        $address = $data['post']->StreetNo . ', ' . 
-                                $data['post']->AddressLine1 . ', ' . 
-                                $data['post']->AddressLine2 . ', ' . 
-                                $data['post']->City;
+                        $addressParts = [
+                            rtrim($data['post']->StreetNo, ','),        // Remove trailing comma if it exists
+                            rtrim($data['post']->AddressLine1, ','),
+                            rtrim($data['post']->AddressLine2, ','),
+                            rtrim($data['post']->City, ',')
+                        ];
+
+                        $address = implode(', ', array_filter($addressParts)); // Join parts with commas
                         echo $address;
                         ?>
                     </div>
