@@ -81,7 +81,6 @@
 </style>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>
