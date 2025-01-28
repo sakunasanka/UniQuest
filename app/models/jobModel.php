@@ -8,7 +8,7 @@ class jobModel extends Model
         $this->db = Database::getInstance();
     }
 
-    public function addUserPostBookmark($userId, $jobId)
+    public function addUserPostBookmark($jobId)
     {
         try {
 
@@ -36,7 +36,7 @@ class jobModel extends Model
     }
 
     // Method to check if a job is bookmarked by the user
-    public function isJobBookmarked($studentId, $jobId)
+    public function isJobBookmarked($jobId)
     {
         $this->db->query("SELECT COUNT(*) AS count FROM bookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
         $this->db->bind(':studentId', $_SESSION['user_id']);
@@ -49,13 +49,29 @@ class jobModel extends Model
     public function getBookmarkedJobs($studentId)
     {
         // Fetch only the IDs of bookmarked jobs for the user
-        $this->db->query("SELECT * FROM v_bookmarkedJobs WHERE studentId = :studentId");
+        $this->db->query("SELECT * FROM v_bookmarkedJobs WHERE studentId = :studentId AND Category = 'Part-time'");
+        $this->db->bind(':studentId', $studentId);
+        return $this->db->resultSet();
+    }
+
+    public function getBookmarkedInternships($studentId)
+    {
+        // Fetch only the IDs of bookmarked jobs for the user
+        $this->db->query("SELECT * FROM v_bookmarkedJobs WHERE studentId = :studentId AND Category = 'Internship'");
+        $this->db->bind(':studentId', $studentId);
+        return $this->db->resultSet();
+    }
+
+    public function getBookmarkedCompanies($studentId)
+    {
+        // Fetch only the IDs of bookmarked jobs for the user
+        $this->db->query("SELECT * FROM v_bookmarkedCompanies WHERE studentId = :studentId");
         $this->db->bind(':studentId', $studentId);
         return $this->db->resultSet();
     }
 
     //Method to remove a bookmark from the database
-    public function removeBookmark($studentId, $jobId)
+    public function removeBookmark($jobId)
     {
         $this->db->query("DELETE FROM bookmarkJobs WHERE studentId = :studentId AND jobId = :jobId");
         $this->db->bind(':studentId', $_SESSION['user_id']);
