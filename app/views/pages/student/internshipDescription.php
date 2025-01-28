@@ -17,22 +17,73 @@
 
     <div class="content-area">
         <div class="job-description">
-            <h2>Title</h2>
-            <p>Location</p>
-           
-            <h3>Qualifications:</h3>
+            <h2><?php echo $data['post']->Title; ?></h2>
+            <p><?php echo $data['post']->Location; ?></p>
+            <h3>Description:</h3>
+            <!-- <ul>
+                <li><?php echo $data['post']->Description; ?></li>
+            </ul> -->
             <ul>
-                <li>Should own a Motorbike</li>
+            <?php
+                $description = $data['post']->Description;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $descriptionArray = explode("\n", $description);
+
+                // Generate the list items
+                foreach ($descriptionArray as $description) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($description))) {
+                        echo '<li>' . htmlspecialchars(trim($description)) . '</li>';
+                    }
+                }
+            ?>
+            </ul>
+            <h3>Qualifications:</h3>
+            <!-- <ul>
+                <li><?php echo $data['post']->RequiredQualifications; ?></li>
                 <li>With a valid driver's license</li>
                 <li>Should own a Motorbike</li>
+            </ul> -->
+            <ul>
+            <?php
+                $qualifications = $data['post']->RequiredQualifications;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $qualificationsArray = explode("\n", $qualifications);
+
+                // Generate the list items
+                foreach ($qualificationsArray as $qualification) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($qualification))) {
+                        echo '<li>' . htmlspecialchars(trim($qualification)) . '</li>';
+                    }
+                }
+            ?>
             </ul>
 
             <h3>Benefits:</h3>
-            <ul>
-                <li>Meals during service hours</li>
+            <!-- <ul>
+                <li><?php echo $data['post']->JobBenefits; ?></li>
                 <li>Special Extra Allowances</li>
                 <li>Meals during service hours</li>
                 <li>Accommodation is provided</li>
+            </ul> -->
+            <ul>
+            <?php
+                $jobBenefits = $data['post']->JobBenefits;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $benefitArray = explode("\n", $jobBenefits);
+
+                // Generate the list items
+                foreach ($benefitArray as $benefit) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($benefit))) {
+                        echo '<li>' . htmlspecialchars(trim($benefit)) . '</li>';
+                    }
+                }
+            ?>
             </ul>
             <?php  if ($_SESSION['user_role'] == 'Student'):?>
                 <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
@@ -44,7 +95,7 @@
             <?php endif;?>    
 
             <div class="reviews-section">
-                <h4>Reviews and Ratings about this company</h4>
+                <h3>Reviews and Ratings about this company</h3>
 
                  <!-- Reviews on Main Page -->
                  <?php for ($i = 0; $i < 3; $i++): ?>
@@ -97,24 +148,25 @@
                                     
                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                 </div>
-            <?php endif;?>    
+            <?php endif;?> 
             <div class="job-logo">
-                <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
+                <img src="<?php echo empty($data['post']->CompanyLogo)
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['post']->CompanyLogo; ?>"
+                    alt="Burger King Logo">
             </div>
             <div class="job-details">
-                    
                 <h3><?php echo $data['post']->Title; ?></h3>
-                <p><?php echo $data['post']->Location; ?></p>
+                <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                 <p><?php echo $data['post']->SalaryRange; ?></p>
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
-
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
-                
+
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -123,9 +175,9 @@
                 </div>
             </div>
             <div class="buttons">
-            <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
+                <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
             </div>
-        </div>     
+        </div>    
     </div>
 </div>
 

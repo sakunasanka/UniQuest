@@ -23,13 +23,19 @@
             <div class="user-details">
                 <h2>Complaint Details</h2>
                 <div class="profile-pic">
-                    <div class="profile-card" onclick="window.location.href='<?php echo URLROOT; ?>/admin/stu_detail'">
-                        <img src="<?php echo URLROOT . '/images/profile_pic_preview.png' ?>"
+                    <div class="profile-card" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['complaint']->StudentID; ?>'">
+                        <img
+                            src="<?php echo empty($data['complaint']->StudentProfilePic)
+                                        ? URLROOT . '/images/profile_pic_preview.png'
+                                        : UPLOADROOT . '/profile_pictures/student/' . $data['complaint']->StudentProfilePic; ?>"
                             alt="Profile Picture">
                         <strong>Student </strong>
                     </div>
-                    <div class="profile-card" onclick="window.location.href='<?php echo URLROOT; ?>/admin/com_detail'">
-                        <img src="<?php echo URLROOT . '/images/profile_pic_preview.png' ?>"
+                    <div class="profile-card" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['complaint']->CompanyID; ?>'">
+                        <img
+                            src="<?php echo empty($data['complaint']->CompanyLogo)
+                                        ? URLROOT . '/images/profile_pic_preview.png'
+                                        : UPLOADROOT . '/profile_pictures/company/' . $data['complaint']->CompanyLogo; ?>"
                             alt="Profile Picture">
                         <strong>Company </strong>
                     </div>
@@ -37,12 +43,14 @@
                 <div class="detail-row">
                     <strong>Job Post </strong>
                     <span class="col">:</span>
-                    <span><a href="<?php echo URLROOT; ?>/admin/ptjob_detail">Delivery Rider</a></span>
+                    <span><a href="<?php echo URLROOT; ?>/admin/job_detail/<?php echo $data['complaint']->JobID; ?>">
+                            <?php echo $data['complaint']->JobTitle ?>
+                        </a></span>
                 </div>
                 <div class="detail-row">
                     <strong>Complaint Date </strong>
                     <span class="col">:</span>
-                    <span>2024-10-25</span>
+                    <span><?php echo $data['complaint']->ComplainedDate ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Complaint Discription </strong>
@@ -50,12 +58,12 @@
                 </div>
                 <div class="detail-row">
                     <span>
-                        Student has not received the payment for the work done. The company has not responded to the student's messages.   
+                        <?php echo $data['complaint']->Complaint ?>
                     </span>
                 </div>
                 <div class="btn-row">
-                    <button class="reject-btn" onclick="">Reject</button>
-                    <button class="approve-btn" onclick="">Resolve</button>
+                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/reject_complaint/<?php echo $data['complaint']->ComplaintID; ?>'">Reject</button>
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/resolve_complaint/<?php echo $data['complaint']->ComplaintID; ?>'">Resolve</button>
                 </div>
             </div>
 

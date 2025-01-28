@@ -20,35 +20,46 @@
 
             <div class="view-card-content">
                 <div class="title-with-bookmark">
-                    <h1>Acme Inc.</h1>
+                    <h1><?php echo $data['post']->CompanyName;?></h1>
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                         <div class="card-icons">
                             <i class="fa fa-share-alt" aria-hidden="true"></i>
-                            <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                            <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
                         </div>
                     <?php endif; ?>
                 </div>
 
 
-                <h2>Software & Technology</h2>
-                <p>Acme Inc. is a leading software company that specializes in developing innovative solutions for businesses of all sizes. With a team of talented engineers and designers, we are committed to delivering high-quality products that help our clients achieve their goals.</p>
+                <h2><?php echo $data['post']->Industry;?></h2>
+                <p><?php echo $data['post']->Description;?></p>
 
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        123 Main Street, Colombo
+                        <?php 
+                        $address = $data['post']->StreetNo . ', ' . 
+                                $data['post']->AddressLine1 . ', ' . 
+                                $data['post']->AddressLine2 . ', ' . 
+                                $data['post']->City;
+                        echo $address;
+                        ?>
                     </div>
                     <div>
                         <span>Phone</span>
-                        +94 11-345-2686
+                        <?php echo $data['post']->ContactNo; ?>
                     </div>
                     <div>
                         <span>Email</span>
-                        info@academic.com
+                        <?php echo $data['post']->Email; ?>
                     </div>
                     <div>
                         <span>Website</span>
-                        <a href="http://www.acmeinc.com" target="_blank">www.acmeinc.com</a>
+                        <a href="<?php echo (strpos($data['post']->Website, 'http://') === 0 || strpos($data['post']->Website, 'https://') === 0) 
+                                    ? $data['post']->Website 
+                                    : 'http://' . $data['post']->Website; ?>" 
+                        target="_blank">
+                            <?php echo $data['post']->Website; ?>
+                        </a>
                     </div>
                 </div>
 
@@ -135,10 +146,9 @@
 
 <script>
     function goToJobDescription() {
-        window.location.href = "/uniquest/student/jobsdescription/" + 10;
+        window.location.href = "/uniquest/student/jobsdescription/" + 23;
     }
 </script>
-
 
 <script>
     function toggleFavorite(icon) {
@@ -147,9 +157,32 @@
         icon.classList.toggle("icon-active");
     }
 
-    function toggleBookmark(icon) {
+    function toggleBookmark(icon, companyId) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
         icon.classList.toggle("icon-active");
+    }
+
+    // Function to bookmark a company
+    function bookmarkCompany(companyId, iconElement) {
+        // Create a new FormData object to send the companyId
+        const formData = new FormData();
+        formData.append('company_id', companyId); // Append the company ID to the request data
+        // Create a new XMLHttpRequest to send the data to the server
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?php echo URLROOT; ?>/company/toggleBookmark', true);
+
+        // Set up the callback for when the request completes
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+            } else {
+                alert('Failed to bookmark the company.');
+            }
+        };
+
+        // Send the request with the form data
+        xhr.send(formData);
     }
 </script>
