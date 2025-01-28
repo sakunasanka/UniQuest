@@ -46,7 +46,10 @@ class RateAndReviewModel
     public function getReviewsByCompanyId()
     {
         $this->db->query('SELECT * FROM companyreviews WHERE CompanyID = :company_id ORDER BY created_at DESC');
-        $this->db->bind(':company_id', $_SESSION['user_id']);
+        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): 
+            $this->db->bind(':company_id', $_SESSION['user_id']);
+        else:
+        endif;        
         return $this->db->resultSet();
     }
 

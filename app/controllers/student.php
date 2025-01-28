@@ -321,6 +321,7 @@ class Student extends Controller
         else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
+            $bookmarkedJobIds = [];
         }
 
         $data =[
@@ -546,6 +547,14 @@ class Student extends Controller
     {
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; 
+        }
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }    
     
         // Get bookmarked jobs for the user
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
@@ -553,11 +562,6 @@ class Student extends Controller
         $posts = $this->model('M_jobpost')->getpostbyid($id);
         $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
         $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-        } 
-        else {
-            $userId = null;
-            $bookmarkedJobs = []; // No bookmarks if not logged in
-        }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -604,7 +608,7 @@ class Student extends Controller
                 'rating' => '',
                 'comment' => '',
                 'user_id' => '',
-                'company_id' => $posts->CompanyID,
+                'company_id' => $_POST['company_id'] ?? '',
                 'rating_err' => '',
                 'comment_err' => ''
             ];
@@ -659,6 +663,14 @@ class Student extends Controller
         
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; 
+        }
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }    
     
         // Get bookmarked jobs for the user
         $posts = $this->model('M_jobpost')->getpostbyid($id);
@@ -672,11 +684,8 @@ class Student extends Controller
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
         $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-        } 
-        else {
-            $userId = null;
-            $bookmarkedJobs = []; // No bookmarks if not logged in
-        }
+         
+        
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
