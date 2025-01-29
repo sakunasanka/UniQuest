@@ -341,7 +341,7 @@ class Student extends Controller
     {
 
         {   
-            $posts = $this->model('UserModel')->getcompany();
+            $posts = $this->model('userModel')->getcompany();
            
     
             if (isset($_SESSION['user_id'])) {
