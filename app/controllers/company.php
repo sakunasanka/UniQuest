@@ -1,6 +1,6 @@
 <?php
 
-class Jobs extends Controller
+class Company extends Controller
 {
     private $model;
 
@@ -12,16 +12,16 @@ class Jobs extends Controller
         AuthMiddleware::requireRole('Student');
         
         // Load model
-        $this->model = $this->model('jobModel');
+        $this->model = $this->model('companyModel');
     }
 
     public function index()
     {   
         $data = [];
-        $this->view('pages/student/jobs', $data);
+        $this->view('pages/student/company', $data);
     }
 
-    public function bookmarkJob()
+    public function bookmarkCompany()
     {
         // Ensure the request is POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,19 +35,19 @@ class Jobs extends Controller
                 return;
             }
 
-            // Get job ID from POST data
-            $jobId = $_POST['job_id'] ?? null; // Use null coalescing operator to avoid undefined index
+            // Get company ID from POST data
+            $companyId = $_POST['company_id'] ?? null; // Use null coalescing operator to avoid undefined index
 
-            // Check if job ID is provided
-            if (!empty($jobId)) {
-                // Attempt to bookmark the job
-                if ($this->model->addUserPostBookmark($jobId)) {
+            // Check if company ID is provided
+            if (!empty($companyId)) {
+                // Attempt to bookmark the company
+                if ($this->model->addUserPostBookmark($companyId)) {
                     echo "Bookmark added successfully!";
                 } else {
                     echo "Failed to add bookmark. Please check the database.";
                 }
             } else {
-                echo "Job ID is missing!";
+                echo "Company ID is missing!";
             }
         } else {
             echo "Invalid request method.";
@@ -67,19 +67,19 @@ class Jobs extends Controller
                 return;
             }
 
-            // Get job ID from POST data
-            $jobId = $_POST['job_id'] ?? null; // Use null coalescing operator to avoid undefined index
+            // Get company ID from POST data
+            $companyId = $_POST['company_id'] ?? null; // Use null coalescing operator to avoid undefined index
 
-            // Check if job ID is provided
-            if (!empty($jobId)) {
+            // Check if company ID is provided
+            if (!empty($companyId)) {
                 // Attempt to remove the bookmark
-                if ($this->model->removeBookmark($jobId)) {
+                if ($this->model->removeBookmark($companyId)) {
                     echo "Bookmark removed successfully!";
                 } else {
                     echo "Failed to remove bookmark. Please check the database.";
                 }
             } else {
-                echo "Job ID is missing!";
+                echo "Company ID is missing!";
             }
         } else {
             echo "Invalid request method.";
@@ -99,29 +99,29 @@ class Jobs extends Controller
                 return;
             }
 
-            // Get job ID from POST data
-            $jobId = $_POST['job_id'] ?? null; // Use null coalescing operator to avoid undefined index
+            // Get company ID from POST data
+            $companyId = $_POST['company_id'] ?? null; // Use null coalescing operator to avoid undefined index
 
-            // Check if job ID is provided
-            if (!empty($jobId)) {
-                // Check if the job is already bookmarked
-                if ($this->model->isJobBookmarked($jobId)) {
+            // Check if company ID is provided
+            if (!empty($companyId)) {
+                // Check if the company is already bookmarked
+                if ($this->model->isCompanyBookmarked($companyId)) {
                     // If bookmarked, remove the bookmark
-                    if ($this->model->removeBookmark($jobId)) {
+                    if ($this->model->removeBookmark($companyId)) {
                         echo "Bookmark removed successfully!";
                     } else {
                         echo "Failed to remove bookmark. Please check the database.";
                     }
                 } else {
                     // If not bookmarked, add the bookmark
-                    if ($this->model->addUserPostBookmark($jobId)) {
+                    if ($this->model->addUserPostBookmark($companyId)) {
                         echo "Bookmark added successfully!";
                     } else {
                         echo "Failed to add bookmark. Please check the database.";
                     }
                 }
             } else {
-                echo "Job ID is missing!";
+                echo "Company ID is missing!";
             }
         } else {
             echo "Invalid request method.";
