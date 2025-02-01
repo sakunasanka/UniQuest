@@ -18,10 +18,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Company</th>
-                        <th onclick="sortTable(1)">Company Email</th>
-                        <th onclick="sortTable(2)">No of complaints</th>
-                        <th onclick="sortTable(3)">Most recent complaint date</th>
+                        <th onclick="sortTable(0, 'CompanyName')">Company</th>
+                        <th onclick="sortTable(1, 'Email')">Company Email</th>
+                        <th onclick="sortTable(2, 'ComplaintCount')">No of complaints</th>
+                        <th onclick="sortTable(3, 'LastComplainedDate')">Most recent complaint date</th>
                         <th class="no-sort">View</th>
                     </tr>
                 </thead>
@@ -45,6 +45,9 @@
     </main>
 </div>
 
+<script>
+    const totalPages = <?php echo $data['totalPages']; ?>;
+</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 

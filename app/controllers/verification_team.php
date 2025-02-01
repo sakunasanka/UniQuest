@@ -19,12 +19,23 @@ class Verification_team extends Controller
         $this->user_ver_pending();
     }
 
-    public function user_verified()
+    public function user_verified($queryParam = [])
     {
         try {
-            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id']);
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id'], $page, $limit, $sort, $order);
             $data = [
-                'users' => $users
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/verification_team/user_verified', $data);
         } catch (Exception $e) {
@@ -32,12 +43,23 @@ class Verification_team extends Controller
         }
     }
 
-    public function job_verified()
+    public function job_verified($queryParam = [])
     {
         try {
-            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id']);
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id'], $page, $limit, $sort, $order);
             $data = [
-                'jobs' => $jobs
+                'jobs' => $jobs['data'],
+                'currentPage' => $jobs['currentPage'],
+                'rowsPerPage' => $jobs['limit'],
+                'totalRows' => $jobs['totalRows'],
+                'totalPages' => $jobs['totalPages'],
+                'isLastPage' => $jobs['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/verification_team/job_verified', $data);
         } catch (Exception $e) {
@@ -45,12 +67,23 @@ class Verification_team extends Controller
         }
     }
 
-    public function user_ver_pending()
+    public function user_ver_pending($queryParam = [])
     {
         try {
-            $users = $this->model->getPendingStudentsAndCompanies();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
-                'users' => $users
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/verification_team/user_ver_pending', $data);
         } catch (Exception $e) {
@@ -58,12 +91,23 @@ class Verification_team extends Controller
         }
     }
 
-    public function user_ver_not()
+    public function user_ver_not($queryParam = [])
     {
         try {
-            $users = $this->model->getNotVerifiedStudentsAndCompanies();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
-                'users' => $users
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/verification_team/user_ver_not', $data);
         } catch (Exception $e) {
@@ -126,12 +170,23 @@ class Verification_team extends Controller
         }
     }
 
-    public function job_ver_pending()
+    public function job_ver_pending($queryParam = [])
     {
         try {
-            $jobs = $this->model('jobModel')->getPendingJobs();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order);
             $data = [
-                'jobs' => $jobs
+                'jobs' => $jobs['data'],
+                'currentPage' => $jobs['currentPage'],
+                'rowsPerPage' => $jobs['limit'],
+                'totalRows' => $jobs['totalRows'],
+                'totalPages' => $jobs['totalPages'],
+                'isLastPage' => $jobs['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/verification_team/job_ver_pending', $data);
         } catch (Exception $e) {
@@ -165,12 +220,23 @@ class Verification_team extends Controller
         }
     }
 
-    public function job_ver_not()
+    public function job_ver_not($queryParam = [])
     {
         try {
-            $jobs = $this->model('jobModel')->getNotApprovedJobs();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order);
             $data = [
-                'jobs' => $jobs
+                'jobs' => $jobs['data'],
+                'currentPage' => $jobs['currentPage'],
+                'rowsPerPage' => $jobs['limit'],
+                'totalRows' => $jobs['totalRows'],
+                'totalPages' => $jobs['totalPages'],
+                'isLastPage' => $jobs['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/verification_team/job_ver_not', $data);
         } catch (Exception $e) {
