@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/popups/admin/messageview.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -38,7 +39,7 @@
                         <td><?php echo $message->created_at?></td>
                         <td><span class="status active"><?php echo $message->read_status?></span></td>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view" onclick="fetchMessageDetails(<?php echo $message->id; ?>)">
+                            <span class="material-symbols-outlined action-btn view" onclick="togglePopup2()">
                                 preview
                             </span>
                         </td>
@@ -55,5 +56,6 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

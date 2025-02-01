@@ -170,28 +170,63 @@ class Admin extends Controller
 
     public function stu_detail()
     {
-        $this->view('pages/admin/stu_detail');
+        $messages = $this->model('ContactModel')->getMessages();
+
+        $data = [
+            'message' => $messages
+        ];
+        
+        $this->view('pages/admin/stu_detail', $data);
     }
 
-    public function sendMessage() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $chatModel = $this->model('chatModel');
+    public function sendMessage()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize input
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
-            // Collect data
-            $sender_id = $_SESSION['user_id'];
-            $receiver_id = $_POST['receiver_id'];
-            $message = $_POST['message'];
+            // Data for the chat message
+            $data = [
+                'sender_id' => $_SESSION['user_id'], // Admin ID from session
+                'receiver_id' => trim($_POST['receiver_id'] ?? ''), // Student ID
+                'message' => trim($_POST['message'] ?? ''),
     
-            // Save the message
-            if ($chatModel->sendMessage($sender_id, $receiver_id, $message, 'Admin')) {
-                // Redirect to prevent form resubmission
-                header('Location: ' . $_SERVER['HTTP_REFERER']);
-            } else {
-                die("Something went wrong while sending the message.");
+                // Error handling
+                'receiver_id_err' => '',
+                'message_err' => ''
+            ];
+    
+            // Validation checks
+            if (empty($data['receiver_id'])) {
+                $data['receiver_id_err'] = 'Receiver ID is required.';
             }
+    
+            if (empty($data['message'])) {
+                $data['message_err'] = 'Message cannot be empty.';
+            }
+    
+            // Ensure no errors before submitting
+            if (empty($data['receiver_id_err']) && empty($data['message_err'])) {
+                $chatModel = $this->model('ChatModel');
+    
+                // Attempt to send the message
+                if ($chatModel->sendMessage($data['sender_id'], $data['receiver_id'], $data['message'], 'Admin')) {
+                    flash('chat-msg', 'Message sent successfully.');
+                    redirect('admin/stu_detail' . $data['receiver_id']);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with validation errors
+                $this->view('pages/admin/stu_detail', $data);
+            }
+        } else {
+            // For a GET request, redirect back
+            redirect('admin/students');
         }
     }
 
+    
     public function com_detail()
     {
         $this->view('pages/admin/com_detail');

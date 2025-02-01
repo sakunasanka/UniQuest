@@ -27,19 +27,20 @@ async function fetchMessageDetails(id) {
 }
 
 
-function showMessageDetails(message) {
-    // Populate popup fields with data
-    document.getElementById('message-topic').textContent = message.topic;
-    document.getElementById('message-email').textContent = message.email;
-    document.getElementById('message-name').textContent = message.name;
-    document.getElementById('message-date').textContent = message.created_at;
-    document.getElementById('message-content').textContent = message.message;
+function showMessageDetails(topic, email, name, createdAt, message, status) {
+    // Update the popup content with the message details
+    document.getElementById('msg-topic').innerText = topic;
+    document.getElementById('msg-email').innerText = email;
+    document.getElementById('msg-name').innerText = name;
+    document.getElementById('msg-created').innerText = createdAt;
+    document.getElementById('msg-status').innerText = status;
+    document.getElementById('msg-message').innerText = message;
 
-    // Display the popup
-    toggleMessagePopup();
+    // Show the popup
+    togglePopup2();
 }
 
-function toggleMessagePopup() {
-    const popup = document.getElementById('message-popup');
+function togglePopup2() {
+    const popup = document.getElementById('popup-2');
     popup.classList.toggle('active');
 }
