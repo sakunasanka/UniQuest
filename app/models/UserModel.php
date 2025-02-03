@@ -355,7 +355,7 @@ class userModel extends Model
         }
     }
 
-    public function getPendingStudentsAndCompanies()
+    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             // Use grouped conditions for more complex queries
@@ -363,7 +363,7 @@ class userModel extends Model
                 ['Role', 'IN', ['Student', 'Company']],
                 ['Status', '=', 'Pending']
             ];
-            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -374,14 +374,14 @@ class userModel extends Model
         }
     }
 
-    public function getNotVerifiedStudentsAndCompanies()
+    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
                 ['Status', '=', 'Not Approved']
             ];
-            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -456,7 +456,7 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByRole($role)
+    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             // Conditions for the query
@@ -472,8 +472,9 @@ class userModel extends Model
                 'UserID, Email, ContactNo, RegisterDate, Status', // Columns to select
                 'AND', // Logical operator (AND between conditions)
                 '', // No GROUP BY
-                '', // No ORDER BY
-                0, // No LIMIT
+                $sort . ' ' . $order,// ORDER BY
+                $rowsPerPage, // LIMIT
+                $pageNumber, // Page number
                 true // Fetch all results
             );
 
@@ -491,8 +492,8 @@ class userModel extends Model
     {
         try {
             // Get users by role
-            $users = $this->select('User', [['Role', '=', $role]], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, true);
-            return $users[0]->UserCount;
+            $users = $this->select('User', [['Role', '=', $role]], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, 1, true);
+            return $users['data'][0]->UserCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return 0;
@@ -506,8 +507,8 @@ class userModel extends Model
     {
         try {
             // Get pending students and companies
-            $pendingUsers = $this->select('User', [['Status', '=', 'Pending']], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, true);
-            return $pendingUsers[0]->PendingUserCount;
+            $pendingUsers = $this->select('User', [['Status', '=', 'Pending']], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, 1, true);
+            return $pendingUsers['data'][0]->PendingUserCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return 0;
@@ -517,11 +518,11 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByMe($userId)
+    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId]], '*', 'AND', '', '', 0, true);
+            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
