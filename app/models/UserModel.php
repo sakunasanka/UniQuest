@@ -335,6 +335,26 @@ class userModel extends Model
         }
     }
 
+    public function changePassword($userId, $newPassword)
+    {
+        try {
+            $userData = [
+                'Password' => $newPassword
+            ];
+            if ($this->update('user', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function deactivateAccount($userId)
     {
         try {
