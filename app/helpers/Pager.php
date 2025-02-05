@@ -56,7 +56,7 @@ class Pager {
 
     private function pageButton($page, $label, $class = "", $disable = "") {
         $disabled = ($disable) ? "disabled" : "";
-        $url = $this->baseUrl . "page=$page&limit={$this->limit}";
+        $url = $this->baseUrl . "&page=$page&limit={$this->limit}";
         return "<button onclick=\"window.location.href='$url'\" class='page-btn $class' $disabled>$label</button>";
     }
 }
