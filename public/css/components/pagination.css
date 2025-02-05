@@ -24,7 +24,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.page-btn:hover:not(.active) {
+.page-btn:hover:not(.active):not(:disabled) {
     color: #000;
     font-weight: bold;
     text-shadow: 0 0 3px #e7e7e7;

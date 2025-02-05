@@ -1,7 +1,14 @@
-<div class="pagination">
-    <!-- <button class="page-btn prev">&laquo;</button> -->
-    <!-- <button class="page-btn active">1</button> -->
-    <!-- <button class="page-btn next">&raquo;</button> -->
-</div>
+<!-- <div class="pagination"> -->
+<!-- <button class="page-btn prev">&laquo;</button> -->
+<!-- <button class="page-btn active">1</button> -->
+<!-- <button class="page-btn next">&raquo;</button> -->
+<!-- </div> -->
 
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script>
+<!-- <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminPagination.js"></script> -->
+
+
+<?php
+// require_once 'Pager.php';
+$pager = new Pager($data['totalRows'], $data['rowsPerPage']);
+echo $pager->render();
+?>
