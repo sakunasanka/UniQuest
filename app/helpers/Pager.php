@@ -1,12 +1,13 @@
 <?php
 class Pager {
+    private static $instance = null;
     private $currentPage;
     private $totalItems;
     private $limit;
     private $totalPages;
     private $baseUrl;
 
-    public function __construct($totalItems, $limit = 10) {
+    private function __construct($totalItems, $limit = 10) {
         $this->totalItems = $totalItems;
         $this->limit = $limit;
         $this->currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
@@ -14,6 +15,13 @@ class Pager {
 
         // Generate the base URL dynamically
         $this->baseUrl = $this->generateBaseUrl();
+    }
+
+    public static function getInstance($totalItems, $limit = 10) {
+        if (self::$instance === null) {
+            self::$instance = new self($totalItems, $limit);
+        }
+        return self::$instance;
     }
 
     private function generateBaseUrl() {
@@ -34,7 +42,7 @@ class Pager {
     public function render() {
         if ($this->totalPages <= 1) return ""; // No pagination needed
 
-        $pagination = '<div class="pagination">';
+        $pagination = '<div class="pagination-buttons">';
 
         // Previous button (always displayed but disabled if on first page)
         $prevDisabled = ($this->currentPage <= 1) ? "disabled" : "";
