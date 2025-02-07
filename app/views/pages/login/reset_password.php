@@ -20,16 +20,9 @@
                 <img src="<?php echo URLROOT; ?>/images/service-provider.png" alt="student">
             </div>
             <div class="form-side">
-                <form action="<?php echo URLROOT ?>/user/login" method="POST">
+                <form action="<?php echo URLROOT ?>/user/reset_password/?token=<?php echo $_GET['token'] ?? '' ; ?>" method="POST">
                     <div class="form-row">
-                        <h1>Login</h1>
-                    </div>
-                    <div class="form-row">
-                        <div class="input-container">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" required>
-                            <span class="error-msg"><?php echo $data['email_err']; ?></span>
-                        </div>
+                        <h1>Reset Password</h1>
                     </div>
                     <div class="form-row">
                         <div class="input-container">
@@ -40,19 +33,19 @@
                     </div>
                     <div class="form-row">
                         <div class="input-container">
-                            <a class="forget-password" href="/UniQuest/recover">Forgot password?</a>
+                            <label for="password">Confirm Password</label>
+                            <input type="password" name="confirm_password" placeholder="Enter Your Confirm Password" required>
+                            <span class="error-msg"><?php echo $data['confirm_password_err']; ?></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-container">
+                            <span class="error-msg"><?php echo $data['error']; ?></span>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="input-center">
-                            <button type="submit">Log in</button>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="input-center">
-                            <div class="reg">
-                                <span>Do not have an account?</span> <a href="/UniQuest/register"> Register now</a>
-                            </div>
+                            <button type="submit">Reset</button>
                         </div>
                     </div>
                 </form>

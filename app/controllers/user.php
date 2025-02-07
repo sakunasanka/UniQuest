@@ -251,7 +251,150 @@ class User extends Controller
         }
     }
 
+    public function forgot_password()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST array
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
+            $data = [
+                'email' => trim($_POST['email'] ?? ''),
+                'email_err' => ''
+            ];
+
+            // Validate email
+            if (Validator::isEmpty($data['email'])) {
+                $data['email_err'] = 'Please enter your email address';
+            } elseif (!Validator::isValidEmail($data['email'])) {
+                $data['email_err'] = 'Please enter a valid email address';
+            } elseif (!$this->model->findUserByEmail($data['email'])) {
+                $data['email_err'] = 'No user found with that email address';
+            }
+
+            // Check if there are no validation errors
+            if (empty($data['email_err'])) {
+                // Save token to database
+                $token = $this->model->savePasswordResetToken($data['email']);
+                if (!$token) {
+                    // Return error response
+                    //TODO: Add logs for this error
+                    $data['email_err'] = 'An error occurred. Please try again later';
+                    $this->view('pages/login/forgot_password', $data);
+                    exit;
+                }
+
+                // Send password reset email
+                $resetLink = URLROOT . '/user/reset_password?token=' . $token;
+                $subject = 'Password Reset Link';
+                $message = 'Click the following link to reset your password: ' . $resetLink;
+                $result = MailHelper::sendEmail($data['email'], '', $subject, $message);
+
+                if ($result === true) {
+                    // Return success response+
+                    $this->view('pages/login/email_sent', $data);
+                } else {
+                    // Return error response
+                    //TODO: Add logs for this error
+                    $data['email_err'] = 'An error occurred. Please try again later';
+                    $this->view('pages/login/forgot_password', $data);
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/login/forgot_password', $data);
+            }
+        } else {
+            $data = [
+                'email' => '',
+                'email_err' => ''
+            ];
+
+            // Load view
+            $this->view('pages/login/forgot_password', $data);
+        }
+    }
+
+    public function reset_password($queryParams = [])
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST array
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+
+            $data = [
+                'password' => trim($_POST['password'] ?? ''),
+                'confirm_password' => trim($_POST['confirm_password'] ?? ''),
+                'password_err' => '',
+                'confirm_password_err' => '',
+                'error' => ''
+            ];
+
+            // Validate password
+            if (Validator::isEmpty($data['password'])) {
+                $data['password_err'] = 'Please enter password';
+            } elseif (!Validator::isValidPassword($data['password'])) {
+                $data['password_err'] = 'Password must be at least 8 characters long and contain at least one number, one uppercase letter, one lowercase letter, and one special character';
+            }
+
+            // Validate confirm password
+            if (Validator::isEmpty($data['confirm_password'])) {
+                $data['confirm_password_err'] = 'Please confirm password';
+            } elseif (!Validator::isValidConfirmPassword($data['confirm_password'], $data['confirm_password'])) {
+                $data['confirm_password_err'] = 'Passwords do not match';
+            }
+
+            // Check if there are no validation errors
+            if (empty($data['password_err']) && empty($data['confirm_password_err'])) {
+                // Get token from URL
+                $token = $queryParams['token'];
+
+                if (!$token) {
+                    // Return error response
+                    $data['error'] = 'Empty token';
+                    $this->view('pages/login/reset_password', $data);
+                    exit;
+                }
+
+                // Get user ID from token
+                $userDetails = $this->model->getUserIDFromToken($token);
+                if (!$userDetails->UserID) {
+                    // Return error response
+                    $data['error'] = 'Invalid token';
+                    $this->view('pages/login/reset_password', $data);
+                    exit;
+                } else {
+                    // Check if token has expired
+                    if ($userDetails->Expiration < date('Y-m-d H:i:s')) {
+                        // Return error response
+                        $data['error'] = 'Token has expired';
+                        $this->view('pages/login/reset_password', $data);
+                        exit;
+                    }
+                }
+
+                // Hash password
+                $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
+
+                // Update password
+                $this->model->changePassword($userDetails->UserID, $hashed_password);
+
+                //redirect to login page
+                Redirect::to(URLROOT . '/login');
+            }
+
+            // Load view with errors
+            $this->view('pages/login/reset_password', $data);
+
+        } else {
+            $data = [
+                'password' => '',
+                'confirm_password' => '',
+                'password_err' => '',
+                'confirm_password_err' => '',
+                'error' => ''
+            ];
+            // Load view
+            $this->view('pages/login/reset_password', $data);
+        }
+    }
 
     public function deactivate()
     {

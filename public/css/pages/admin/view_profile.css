@@ -56,11 +56,13 @@ h3 {
     color: #0076cb;
     font-size: 16px;
     transition: color 0.3s;
+    text-decoration: none;
 }
 
 .profile-section ul li a:hover {
     color: #0056a8;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Info Section */

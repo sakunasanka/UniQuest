@@ -151,8 +151,23 @@ END$$
 DELIMITER ;
 
 
+-- Creat table for store password_reset Token
+CREATE TABLE `password_reset` (
+	`UserID` INT(10) NOT NULL,
+	`Token` VARCHAR(255) NOT NULL,
+	`Expiration` DATETIME NOT NULL,
+	PRIMARY KEY (`UserID`, `Token`),
+	CONSTRAINT `password_reset` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON UPDATE CASCADE ON DELETE CASCADE
+);
 
 
+-- Alter table user to add VerifiedBy foreign key
+ALTER TABLE `user` 
+ADD CONSTRAINT `fk_verifiedby_user`
+    FOREIGN KEY (`VerifiedBy`) 
+    REFERENCES `user`(`UserID`) 
+    ON DELETE SET NULL 
+    ON UPDATE CASCADE;
 
 
 

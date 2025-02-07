@@ -20,9 +20,9 @@
                 <img src="<?php echo URLROOT; ?>/images/service-provider.png" alt="student">
             </div>
             <div class="form-side">
-                <form action="<?php echo URLROOT ?>/user/login" method="POST">
+                <form action="<?php echo URLROOT ?>/recover" method="POST">
                     <div class="form-row">
-                        <h1>Login</h1>
+                        <h1>Forgot Password</h1>
                     </div>
                     <div class="form-row">
                         <div class="input-container">
@@ -32,26 +32,18 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="input-container">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" placeholder="Enter Your Password" required>
-                            <span class="error-msg"><?php echo $data['password_err']; ?></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="input-container">
-                            <a class="forget-password" href="/UniQuest/recover">Forgot password?</a>
+                        <div class="input-center">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="input-center">
-                            <button type="submit">Log in</button>
+                            <button type="submit">Send </button>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="input-center">
                             <div class="reg">
-                                <span>Do not have an account?</span> <a href="/UniQuest/register"> Register now</a>
+                                <span>Do not have an account?</span> <a href="/uniquest/register"> Register now</a>
                             </div>
                         </div>
                     </div>
