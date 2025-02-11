@@ -15,6 +15,7 @@ require_once 'helpers/FileUploadHelper.php';
 require_once 'helpers/session_Helper.php';
 require_once 'helpers/TimeConvert_Helper.php';
 require_once 'helpers/MailHelper.php';
+require_once 'helpers/LogHelper.php';
 
 //load middlewares
 require_once 'middlewares/AuthMiddleware.php';

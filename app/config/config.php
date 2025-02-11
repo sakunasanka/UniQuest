@@ -24,6 +24,13 @@
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
+    // ini_set('log_errors', 1);
+
+    // Define paths for other log files
+    define('ERROR_LOG', APPROOT . '/logs/error.log');
+    define('MAIL_LOG', APPROOT . '/logs/mail.log');
+    define('DEBUG_LOG', APPROOT . '/logs/debug.log');
+
     session_start();
 
     //mail config

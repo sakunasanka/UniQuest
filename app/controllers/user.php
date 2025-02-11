@@ -9,6 +9,17 @@ class User extends Controller
         $this->model = $this->model('userModel');
     }
 
+    private function validateEmail(&$data)
+    {
+        if (Validator::isEmpty($data['email'])) {
+            $data['email_err'] = 'Please enter your email address';
+        } elseif (!Validator::isValidEmail($data['email'])) {
+            $data['email_err'] = 'Please enter a valid email address';
+        } elseif (!$this->model->findUserByEmail($data['email'])) {
+            $data['email_err'] = 'No user found with that email address';
+        }
+    }
+
     public function auth($method)
     {
         $protectedMethods = ['profile', 'deactivate'];
@@ -177,7 +188,7 @@ class User extends Controller
             error_reporting(0); // Hide warnings (useful in production)
 
             // Sanitize POST array
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             $data = [
                 'current_password' => trim($_POST['current_password'] ?? ''),
@@ -263,13 +274,7 @@ class User extends Controller
             ];
 
             // Validate email
-            if (Validator::isEmpty($data['email'])) {
-                $data['email_err'] = 'Please enter your email address';
-            } elseif (!Validator::isValidEmail($data['email'])) {
-                $data['email_err'] = 'Please enter a valid email address';
-            } elseif (!$this->model->findUserByEmail($data['email'])) {
-                $data['email_err'] = 'No user found with that email address';
-            }
+            $this->validateEmail($data);
 
             // Check if there are no validation errors
             if (empty($data['email_err'])) {
@@ -277,24 +282,37 @@ class User extends Controller
                 $token = $this->model->savePasswordResetToken($data['email']);
                 if (!$token) {
                     // Return error response
-                    //TODO: Add logs for this error
+                    //Add logs for this error
+                    LogHelper::logError('Error saving password reset token for ' . $data['email']);
                     $data['email_err'] = 'An error occurred. Please try again later';
                     $this->view('pages/login/forgot_password', $data);
                     exit;
                 }
 
-                // Send password reset email
-                $resetLink = URLROOT . '/user/reset_password?token=' . $token;
-                $subject = 'Password Reset Link';
-                $message = 'Click the following link to reset your password: ' . $resetLink;
-                $result = MailHelper::sendEmail($data['email'], '', $subject, $message);
+                //log the token
+                LogHelper::logDebug('Password reset token generated for ' . $data['email']);
 
-                if ($result === true) {
-                    // Return success response+
-                    $this->view('pages/login/email_sent', $data);
-                } else {
-                    // Return error response
-                    //TODO: Add logs for this error
+                try {
+                    // Send password reset email
+                    $resetLink = URLROOT . '/user/reset_password?token=' . $token;
+                    $subject = 'Password Reset Link';
+                    $message = 'Click the following link to reset your password: ' . $resetLink;
+                    $result = MailHelper::sendEmail($data['email'], '', $subject, $message);
+
+                    if ($result === true) {
+                        // Return success response
+                        LogHelper::logMail('Password reset email sent to ' . $data['email']);
+                        $this->view('pages/login/email_sent', $data);
+                    } else {
+                        // Return error response
+                        //Add logs for this error
+                        LogHelper::logMail('Error sending password reset email to ' . $data['email']);
+                        $data['email_err'] = 'An error occurred. Please try again later';
+                        $this->view('pages/login/forgot_password', $data);
+                    }
+                } catch (Exception $e) {
+                    // Log exception and return error response
+                    error_log('Exception while sending password reset email: ' . $e->getMessage());
                     $data['email_err'] = 'An error occurred. Please try again later';
                     $this->view('pages/login/forgot_password', $data);
                 }
@@ -347,42 +365,57 @@ class User extends Controller
                 $token = $queryParams['token'];
 
                 if (!$token) {
-                    // Return error response
+                    //log the error
+                    LogHelper::logError('Empty token');
+                    // Return error response 
                     $data['error'] = 'Empty token';
                     $this->view('pages/login/reset_password', $data);
                     exit;
                 }
 
-                // Get user ID from token
-                $userDetails = $this->model->getUserIDFromToken($token);
-                if (!$userDetails->UserID) {
-                    // Return error response
-                    $data['error'] = 'Invalid token';
-                    $this->view('pages/login/reset_password', $data);
-                    exit;
-                } else {
-                    // Check if token has expired
-                    if ($userDetails->Expiration < date('Y-m-d H:i:s')) {
+                try {
+                    // Get user ID from token
+                    $userDetails = $this->model->getUserIDFromToken($token);
+                    if (!$userDetails->UserID) {
+                        //log the error
+                        LogHelper::logError('Invalid token');
                         // Return error response
-                        $data['error'] = 'Token has expired';
+                        $data['error'] = 'Invalid token';
                         $this->view('pages/login/reset_password', $data);
                         exit;
+                    } else {
+                        // Check if token has expired
+                        if ($userDetails->Expiration < date('Y-m-d H:i:s')) {
+                            //log the error
+                            LogHelper::logError('Token has expired for user ID: ' . $userDetails->UserID);
+                            // Return error response
+                            $data['error'] = 'Token has expired';
+                            $this->view('pages/login/reset_password', $data);
+                            exit;
+                        }
                     }
+
+                    // Hash password
+                    $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
+                    // Update password
+                    $this->model->changePassword($userDetails->UserID, $hashed_password);
+                    //log the password change
+                    LogHelper::logDebug('Password reset for user ID: ' . $userDetails->UserID);
+
+                    //TODO: delete token from database
+
+                    //redirect to login page
+                    Redirect::to(URLROOT . '/login');
+                } catch (Exception $e) {
+                    // Log exception and return error response
+                    error_log('Exception while resetting password: ' . $e->getMessage());
+                    $data['error'] = 'An error occurred. Please try again later';
+                    $this->view('pages/login/reset_password', $data);
                 }
-
-                // Hash password
-                $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
-
-                // Update password
-                $this->model->changePassword($userDetails->UserID, $hashed_password);
-
-                //redirect to login page
-                Redirect::to(URLROOT . '/login');
             }
 
             // Load view with errors
             $this->view('pages/login/reset_password', $data);
-
         } else {
             $data = [
                 'password' => '',
