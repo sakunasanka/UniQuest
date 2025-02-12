@@ -17,6 +17,9 @@
     //uploads Root
     define('UPLOADROOT', 'http://localhost/UniQuest/public/uploads');
 
+    //template Root
+    define('TEMPLATEROOT', dirname(dirname(dirname(__FILE__))) . '/templates');
+
     //Site Name
     define('SITENAME', 'UniQuest');
 

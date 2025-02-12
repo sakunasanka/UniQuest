@@ -49,22 +49,34 @@ class MailHelper
     //send email with token to verify company email
     public static function sendEmailWithTokenCompany($toEmail, $token)
     {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . '\emails\verification_email_comp.html');
+        //create link
         $link = URLROOT . '/register/verifyCompEmail?token=' . $token;
-        $subject = 'Verify Email';
-        $body = '<p>Click the link below to verify your email</p>';
-        $body .= '<a href="' . $link . '">Verify Email</a>';
 
-        return self::sendEmail($toEmail, '', $subject, $body);
+        //replace placeholders
+        $template = str_replace('{{verification_link}}', $link, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Verify Your Email";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
     }
 
     //send email with token to verify student email
     public static function sendEmailWithTokenStudent($toEmail, $token)
     {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . '\emails\verification_email_stu.html');
+        //create link
         $link = URLROOT . '/register/verifyStuEmail?token=' . $token;
-        $subject = 'Verify Student Email';
-        $body = '<p>Click the link below to verify your email</p>';
-        $body .= '<a href="' . $link . '">Verify Email</a>';
 
-        return self::sendEmail($toEmail, '', $subject, $body);
+        //replace placeholders
+        $template = str_replace('{{verification_link}}', $link, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Verify Your Email";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
     }
 }
