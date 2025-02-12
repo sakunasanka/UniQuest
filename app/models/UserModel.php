@@ -512,8 +512,8 @@ class userModel extends Model
     {
         try {
             // Get users by role
-            $users = $this->select('User', [['Role', '=', $role]], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, 1, true);
-            return $users['data'][0]->UserCount;
+            $users = $this->select('User', [['Role', '=', $role], ['Status', '=', 'Active']], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, true);
+            return $users[0]->UserCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return 0;

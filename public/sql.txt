@@ -386,6 +386,7 @@ ORDER BY
 
 CREATE VIEW StudentJobComplaints AS
 SELECT 
+    complaint_jobs.ComplaintID AS ComplaintID,
     jobs.Title AS JobTitle,
     user.Email AS CompanyEmail,
     complaint_jobs.Description AS Complaint,
