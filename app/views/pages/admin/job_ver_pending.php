@@ -17,15 +17,19 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'JobID')">Job ID</th>
-                        <th onclick="sortTable(1, 'Title')">Title</th>
-                        <th onclick="sortTable(2, 'Email')">Company Email</th>
-                        <th onclick="sortTable(3, 'Category')">Job Type</th>
-                        <th onclick="sortTable(4, 'jobs_create_at')">Requested Date</th>
-                        <th onclick="sortTable(5, 'Status')">Status</th>
-                        <th class="no-sort">View</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "JobID" => "Job ID",
+                        "Title" => "Title",
+                        "Email" => "Company Email",
+                        "Category" => "Job Type",
+                        "jobs_create_at" => "Requested Date",
+                        "Status" => "Status",
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
                     <?php foreach ($data['jobs'] as $job) : ?>
@@ -50,10 +54,6 @@
     </main>
 </div>
 
-<script>
-    const totalPages = <?php echo $data['totalPages']; ?>;
-</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
