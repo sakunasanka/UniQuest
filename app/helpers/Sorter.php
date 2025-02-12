@@ -8,7 +8,7 @@ class Sorter {
 
     private function __construct($columns) {
         $this->columns = $columns;
-        $this->currentSort = isset($_GET['sort']) ? $_GET['sort'] : "UserID"; // Default sort column
+        $this->currentSort = isset($_GET['sort']) ? $_GET['sort'] : array_key_first($columns);
         $this->currentOrder = isset($_GET['order']) ? $_GET['order'] : "ASC"; // Default order
         $this->baseUrl = $this->generateBaseUrl();
     }
