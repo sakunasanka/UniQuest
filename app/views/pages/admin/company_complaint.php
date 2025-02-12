@@ -17,17 +17,23 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'CompanyName')">Company</th>
-                        <th onclick="sortTable(1, 'Email')">Company Email</th>
-                        <th onclick="sortTable(2, 'ComplaintCount')">No of complaints</th>
-                        <th onclick="sortTable(3, 'LastComplainedDate')">Most recent complaint date</th>
-                        <th class="no-sort">View</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "CompanyID" => "CompanyID",
+                        "CompanyName" => "Company Name",
+                        "Email" => "Company Email",
+                        "ComplaintCount" => "No of complaints",
+                        "LastComplainedDate" => "Most recent complaint date",
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
                     <?php foreach ($data['complaints_com'] as $complaint) : ?>
                         <tr>
+                            <td><?php echo $complaint->CompanyID; ?></td>
                             <td><?php echo $complaint->CompanyName; ?></td>
                             <td><?php echo $complaint->CompanyEmail; ?></td>
                             <td><?php echo $complaint->ComplaintCount; ?></td>
@@ -45,10 +51,6 @@
     </main>
 </div>
 
-<script>
-    const totalPages = <?php echo $data['totalPages']; ?>;
-</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

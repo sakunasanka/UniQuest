@@ -220,7 +220,7 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
             $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order);
@@ -251,15 +251,30 @@ class Admin extends Controller
         $this->view('pages/admin/complaint_detail', $data);
     }
 
-    public function complaint_company($company)
+    public function complaint_company($company, $queryParam = [])
     {
-        $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-        $data = [
-            'complaints' => $complaints
-        ];
+            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order);
 
-        $this->view('pages/admin/complaint_company', $data);
+            $data = [
+                'complaints' => $complaints['data'],
+                'currentPage' => $complaints['currentPage'],
+                'rowsPerPage' => $complaints['limit'],
+                'totalRows' => $complaints['totalRows'],
+                'totalPages' => $complaints['totalPages'],
+                'isLastPage' => $complaints['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/complaint_company', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function resolve_complaint($complaintID)
