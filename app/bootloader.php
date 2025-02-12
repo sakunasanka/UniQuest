@@ -17,6 +17,8 @@ require_once 'helpers/TimeConvert_Helper.php';
 require_once 'helpers/Pager.php';
 require_once 'helpers/Sorter.php';
 require_once 'helpers/MailHelper.php';
+require_once 'helpers/LogHelper.php';
+require_once 'helpers/TokenHelper.php';
 
 
 //load middlewares

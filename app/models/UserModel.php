@@ -18,7 +18,8 @@ class userModel extends Model
             return false;
         }
     }
-    public function getcompany(){
+    public function getcompany()
+    {
         $this->db->query('SELECT * FROM company ');
         $results = $this->db->resultSet();
         return $results;
@@ -492,7 +493,7 @@ class userModel extends Model
                 'UserID, Email, ContactNo, RegisterDate, Status', // Columns to select
                 'AND', // Logical operator (AND between conditions)
                 '', // No GROUP BY
-                $sort . ' ' . $order,// ORDER BY
+                $sort . ' ' . $order, // ORDER BY
                 $rowsPerPage, // LIMIT
                 $pageNumber, // Page number
                 true // Fetch all results
@@ -567,7 +568,7 @@ class userModel extends Model
 
             // Set token expiration time
             $token_expiration = date('Y-m-d H:i:s', strtotime('+1 hour'));
-            
+
             // Save token to the database
             $tokenData = [
                 'UserID' => $user->UserID,
@@ -596,6 +597,108 @@ class userModel extends Model
             $tokenData = $this->select('password_reset', [['Token', '=', $token]], 'UserID, Expiration', 'AND', '', '', 0, 1, false);
             if ($tokenData) {
                 return $tokenData;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function storeToken($email, $token, $expiration)
+    {
+        try {
+            // Save token to the database
+            $tokenData = [
+                'Email' => $email,
+                'Token' => $token,
+                'Expiration' => $expiration
+            ];
+
+            if ($this->insert('token', $tokenData)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getTokenDetails($token)
+    {
+        try {
+            // Get the token details from the database
+            $tokenData = $this->select('token', [['Token', '=', $token]], 'Email, Expiration', 'AND', '', '', 0, 1, false);
+            if ($tokenData) {
+                return $tokenData;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteToken($token)
+    {
+        try {
+            // Delete the token from the database
+            if ($this->delete('token', ['Token', '=', $token])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function verifyEmail($email)
+    {
+        try {
+            $emailData = [
+                'Email' => $email,
+                'VerifiedDate' => date('Y-m-d H:i:s'),
+                'isVerified' => 'Y'
+            ];
+
+            if ($this->insert('email_verification', $emailData)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function isEmailVerified($email)
+    {
+        try {
+            $emailData = $this->select('email_verification', [['Email', '=', $email]], 'isVerified', 'AND', '', '', 0, 1, false);
+            if ($emailData->isVerified === 'Y') {
+                return true;
             } else {
                 return false;
             }
