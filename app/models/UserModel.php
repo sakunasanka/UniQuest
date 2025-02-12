@@ -18,7 +18,11 @@ class userModel extends Model
             return false;
         }
     }
-
+    public function getcompany(){
+        $this->db->query('SELECT * FROM company ');
+        $results = $this->db->resultSet();
+        return $results;
+    }
     public function companyRegister(array $data)
     {
         try {
@@ -331,6 +335,26 @@ class userModel extends Model
         }
     }
 
+    public function changePassword($userId, $newPassword)
+    {
+        try {
+            $userData = [
+                'Password' => $newPassword
+            ];
+            if ($this->update('user', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function deactivateAccount($userId)
     {
         try {
@@ -351,7 +375,7 @@ class userModel extends Model
         }
     }
 
-    public function getPendingStudentsAndCompanies()
+    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             // Use grouped conditions for more complex queries
@@ -359,7 +383,7 @@ class userModel extends Model
                 ['Role', 'IN', ['Student', 'Company']],
                 ['Status', '=', 'Pending']
             ];
-            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -370,14 +394,14 @@ class userModel extends Model
         }
     }
 
-    public function getNotVerifiedStudentsAndCompanies()
+    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
                 ['Status', '=', 'Not Approved']
             ];
-            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', '', 0, true);
+            $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -452,7 +476,7 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByRole($role)
+    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             // Conditions for the query
@@ -468,8 +492,9 @@ class userModel extends Model
                 'UserID, Email, ContactNo, RegisterDate, Status', // Columns to select
                 'AND', // Logical operator (AND between conditions)
                 '', // No GROUP BY
-                '', // No ORDER BY
-                0, // No LIMIT
+                $sort . ' ' . $order,// ORDER BY
+                $rowsPerPage, // LIMIT
+                $pageNumber, // Page number
                 true // Fetch all results
             );
 
@@ -502,8 +527,8 @@ class userModel extends Model
     {
         try {
             // Get pending students and companies
-            $pendingUsers = $this->select('User', [['Status', '=', 'Pending']], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, true);
-            return $pendingUsers[0]->PendingUserCount;
+            $pendingUsers = $this->select('User', [['Status', '=', 'Pending']], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, 1, true);
+            return $pendingUsers['data'][0]->PendingUserCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return 0;
@@ -513,11 +538,11 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByMe($userId)
+    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId]], '*', 'AND', '', '', 0, true);
+            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -525,6 +550,61 @@ class userModel extends Model
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function savePasswordResetToken($email)
+    {
+        try {
+            // Check if the user exists
+            $user = $this->findUserByEmail($email);
+            if (!$user) {
+                return false;
+            }
+
+            // Generate token
+            $token = bin2hex(random_bytes(50));
+
+            // Set token expiration time
+            $token_expiration = date('Y-m-d H:i:s', strtotime('+1 hour'));
+            
+            // Save token to the database
+            $tokenData = [
+                'UserID' => $user->UserID,
+                'Token' => $token,
+                'Expiration' => $token_expiration
+            ];
+
+            if ($this->insert('password_reset', $tokenData)) {
+                return $token;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getUserIDFromToken($token)
+    {
+        try {
+            // Get the user ID from the token
+            $tokenData = $this->select('password_reset', [['Token', '=', $token]], 'UserID, Expiration', 'AND', '', '', 0, 1, false);
+            if ($tokenData) {
+                return $tokenData;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
         }
     }
 }

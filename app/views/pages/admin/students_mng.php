@@ -23,12 +23,12 @@
             </div>
             <table>
                 <thead>
-                <tr>
-                        <th onclick="sortTable(0)">User ID</th>
-                        <th onclick="sortTable(1)">Email</th>
-                        <th onclick="sortTable(2)">Mobile Number</th>
-                        <th onclick="sortTable(3)">Registered Date</th>
-                        <th onclick="sortTable(4)">Status</th>
+                    <tr>
+                        <th onclick="sortTable(0, 'UserID')">User ID</th>
+                        <th onclick="sortTable(1,'Email')">Email</th>
+                        <th onclick="sortTable(2, 'ContactNo')">Mobile Number</th>
+                        <th onclick="sortTable(3, 'RegisterDate')">Registered Date</th>
+                        <th onclick="sortTable(4, 'Status')">Status</th>
                         <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
@@ -49,7 +49,7 @@
                                         person_remove
                                     </span>
                                 </td>
-                            <?php elseif($student->Status == 'Deactive') : ?>
+                            <?php elseif ($student->Status == 'Deactive') : ?>
                                 <td><span class="status inactive">Deactive</span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
@@ -58,7 +58,7 @@
                                     <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $student->UserID; ?>, 'Student')">
                                         person_add
                                     </span>
-                            <?php endif; ?>
+                                <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -68,6 +68,9 @@
     </main>
 </div>
 
+<script>
+    const totalPages = <?php echo $data['totalPages']; ?>;
+</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
