@@ -17,7 +17,7 @@
         </button>
         <div class="container">
             <div class="image-side">
-                <img src="<?php echo URLROOT; ?>/images/service-provider.png" alt="student">
+                <img src="<?php echo URLROOT; ?>/images/resetpw.png" alt="student">
             </div>
             <div class="form-side">
                 <form action="<?php echo URLROOT ?>/user/reset_password/?token=<?php echo $_GET['token'] ?? '' ; ?>" method="POST">

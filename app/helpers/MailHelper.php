@@ -79,4 +79,21 @@ class MailHelper
 
         return self::sendEmail($toEmail, '', $subject, $template);
     }
+
+    //send email with token to reset password
+    public static function sendEmailWithTokenResetPassword($toEmail, $token)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . '\emails\reset_password.html');
+        //create link
+        $link = URLROOT . '/user/reset_password?token=' . $token;
+
+        //replace placeholders
+        $template = str_replace('{{reset_link}}', $link, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Reset Your Password";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
+    }
 }
