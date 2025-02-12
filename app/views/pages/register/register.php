@@ -21,7 +21,7 @@
                 <h1>Student</h1>
             </div>
         </button>
-        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/company';">
+        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/sendCompVeriEmail';">
             <div class="image-section">
                 <img src="<?php echo URLROOT; ?>/images/service.png" alt="Student Registration">
                 <h1>Company</h1>

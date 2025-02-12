@@ -45,4 +45,15 @@ class MailHelper
             return "Exception: " . $e->getMessage(); // Show exception message
         }
     }
+
+    //send email with token to verify company email
+    public static function sendEmailWithTokenCompany($toEmail, $token)
+    {
+        $link = URLROOT . '/register/verifyCompEmail?token=' . $token;
+        $subject = 'Verify Email';
+        $body = '<p>Click the link below to verify your email</p>';
+        $body .= '<a href="' . $link . '">Verify Email</a>';
+
+        return self::sendEmail($toEmail, '', $subject, $body);
+    }
 }
