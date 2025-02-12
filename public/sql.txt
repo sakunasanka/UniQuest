@@ -383,7 +383,44 @@ CREATE TABLE application_form_fields (
     FOREIGN KEY (job_id) REFERENCES jobs(JobID) ON DELETE CASCADE -- Cascade delete if job is removed
 );
 
+--
+-- Table structure for table application_fields
+--
 
+CREATE TABLE application_fields (
+  id int(11) NOT NULL,
+  job_id int(11) DEFAULT NULL,
+  fullname tinyint(1) DEFAULT NULL,
+  photo tinyint(1) DEFAULT NULL,
+  email tinyint(1) DEFAULT NULL,
+  contact tinyint(1) DEFAULT NULL,
+  address tinyint(1) DEFAULT NULL,
+  nic tinyint(1) DEFAULT NULL,
+  nic_copy tinyint(1) DEFAULT NULL,
+  gender tinyint(1) DEFAULT NULL,
+  dob tinyint(1) DEFAULT NULL,
+  qualifications tinyint(1) DEFAULT NULL,
+  experience tinyint(1) DEFAULT NULL,
+  skills tinyint(1) DEFAULT NULL,
+  cv tinyint(1) DEFAULT NULL,
+  linkedin tinyint(1) DEFAULT NULL,
+  other1 varchar(255) DEFAULT NULL,
+  other2 varchar(255) DEFAULT NULL,
+  other3 varchar(255) DEFAULT NULL,
+  created_at timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE application_fields
+  ADD PRIMARY KEY (id),
+  ADD KEY job_id (job_id);
+
+ALTER TABLE application_fields
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+ALTER TABLE application_fields
+  ADD CONSTRAINT application_fields_ibfk_1 FOREIGN KEY (job_id) REFERENCES jobs (JobID) ON DELETE CASCADE;
+COMMIT;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
