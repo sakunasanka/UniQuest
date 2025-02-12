@@ -68,10 +68,10 @@ class ComplaintModel extends Model {
         }
     }
 
-    public function getComplaintsByCompany($companyID)
+    public function getComplaintsByCompany($companyID, $pageNumber = 1, $rowsPerPage = 2, $sort = "ComplaintID", $order = "ASC")
     {
         try {
-            $complaints = $this->select('studentjobcomplaints', [['CompanyID', '=', $companyID]], '*', '', '', '', 0, 1, true);
+            $complaints = $this->select('studentjobcomplaints', [['CompanyID', '=', $companyID]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $complaints;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
