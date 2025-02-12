@@ -182,7 +182,7 @@ class Register extends Controller
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
-                if (strtotime($tokenDetails->Expiration) > strtotime(date('Y-m-d H:i:s'))) {
+                if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
                     $this->model->deleteToken($token);
 
@@ -272,7 +272,7 @@ class Register extends Controller
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
-                if (strtotime($tokenDetails->Expiration) > strtotime(date('Y-m-d H:i:s'))) {
+                if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
                     $this->model->deleteToken($token);
 
@@ -310,7 +310,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif(!$this->model->isEmailVerified($data['email'])){
+            } elseif (!$this->model->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 
@@ -373,7 +373,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif(!$this->model->isEmailVerified($data['email'])){
+            } elseif (!$this->model->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 
