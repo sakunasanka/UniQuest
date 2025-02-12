@@ -18,76 +18,32 @@
             <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Title</th>
-                        <th onclick="sortTable(1)">Company Email</th>
-                        <th onclick="sortTable(2)">Job Type</th>
-                        <th onclick="sortTable(3)">Requested Date</th>
-                        <th onclick="sortTable(4)">Status</th>
+                        <th onclick="sortTable(0, 'Title')">Title</th>
+                        <th onclick="sortTable(1, 'Email')">Company Email</th>
+                        <th onclick="sortTable(2, 'Category')">Job Type</th>
+                        <th onclick="sortTable(3, 'ActionDate')">Verified Date</th>
+                        <th onclick="sortTable(4, 'Status')">Status</th>
                         <th class="no-sort">View</th>
                     </tr>
                 </thead>
-                <tbody>
+                <?php foreach ($data['jobs'] as $job) : ?>
                     <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
+                        <td><?php echo $job->Title; ?></td>
+                        <td><?php echo $job->Email; ?></td>
+                        <td><?php echo $job->Category; ?></td>
+                        <td><?php echo substr($job->ActionDate, 0, 10); ?></td>
+                        <?php if ($job->Status == 'Active') : ?>
+                            <td><span class="status active">Active</span></td>
+                        <?php elseif ($job->Status == 'Deactive') : ?>
+                            <td><span class="status inactive">Deactive</span></td>
+                        <?php endif; ?>
                         <td class="action">
-                            <span class="material-symbols-outlined action-btn view" data-tooltip="View Profile">
+                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_detail/<?php echo $job->JobID; ?>'">
                                 preview
                             </span>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Internship</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 2</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Internship</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Title 1</td>
-                        <td>sakiththewmika@gmail.com</td>
-                        <td>Part Time</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Approved</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
+                <?php endforeach; ?>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
@@ -96,7 +52,9 @@
 
 <!-- Footer -->
 
-
+<script>
+    const totalPages = <?php echo $data['totalPages']; ?>;
+</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 

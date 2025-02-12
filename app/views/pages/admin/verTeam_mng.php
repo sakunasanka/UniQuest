@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
-<?php require APPROOT . '/views/popups/admin/deactivateAcc.php'; ?>
+<?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -24,11 +24,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">User ID</th>
-                        <th onclick="sortTable(1)">Email</th>
-                        <th onclick="sortTable(2)">Mobile Number</th>
-                        <th onclick="sortTable(3)">Registered Date</th>
-                        <th onclick="sortTable(4)">Status</th>
+                        <th onclick="sortTable(0, 'UserID')">User ID</th>
+                        <th onclick="sortTable(1,'Email')">Email</th>
+                        <th onclick="sortTable(2, 'ContactNo')">Mobile Number</th>
+                        <th onclick="sortTable(3, 'RegisterDate')">Registered Date</th>
+                        <th onclick="sortTable(4, 'Status')">Status</th>
                         <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
@@ -45,19 +45,21 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
                                         person_remove
                                     </span>
-                                <?php else : ?>
+                                </td>
+                            <?php elseif ($user->Status == 'Deactive') : ?>
                                 <td><span class="status inactive">Deactive</span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
+                                    <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
                                         person_add
                                     </span>
-                                <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -67,6 +69,9 @@
     </main>
 </div>
 
+<script>
+    const totalPages = <?php echo $data['totalPages']; ?>;
+</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>

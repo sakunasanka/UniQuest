@@ -46,9 +46,28 @@ class Admin extends Controller
         $this->dashboard();
     }
 
-    public function students_mng()
+    public function students_mng($queryParam = [])
     {
-        $this->view('pages/admin/students_mng');
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order);
+            $data = [
+                'students' => $students['data'],
+                'currentPage' => $students['currentPage'],
+                'rowsPerPage' => $students['limit'],
+                'totalRows' => $students['totalRows'],
+                'totalPages' => $students['totalPages'],
+                'isLastPage' => $students['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/admin/students_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_student()
@@ -56,9 +75,32 @@ class Admin extends Controller
         $this->view('pages/admin/add_student');
     }
 
-    public function company_mng()
+    public function company_mng($queryParam = [])
     {
-        $this->view('pages/admin/company_mng');
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            // $page = $_GET['page'] ?? 1;
+            // $limit = $_GET['limit'] ?? 2;
+            // $sort = $_GET['sort'] ?? 'UserID';
+            // $order = $_GET['order'] ?? 'ASC';
+
+            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order);
+            $data = [
+                'companies' => $companies['data'],
+                'currentPage' => $companies['currentPage'],
+                'rowsPerPage' => $companies['limit'],
+                'totalRows' => $companies['totalRows'],
+                'totalPages' => $companies['totalPages'],
+                'isLastPage' => $companies['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/admin/company_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_company()
@@ -66,13 +108,28 @@ class Admin extends Controller
         $this->view('pages/admin/add_company');
     }
 
-    public function verTeam_mng()
+    public function verTeam_mng($queryParam = [])
     {
-        $vtMembers = $this->model->getVTMembers();
-        $data = [
-            'vtMembers' => $vtMembers
-        ];
-        $this->view('pages/admin/verTeam_mng', $data);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order);
+            $data = [
+                'vtMembers' => $vtMembers['data'],
+                'currentPage' => $vtMembers['currentPage'],
+                'rowsPerPage' => $vtMembers['limit'],
+                'totalRows' => $vtMembers['totalRows'],
+                'totalPages' => $vtMembers['totalPages'],
+                'isLastPage' => $vtMembers['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/admin/verTeam_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function add_member()
@@ -131,54 +188,148 @@ class Admin extends Controller
         }
     }
 
-    public function job_complaint()
+    public function job_complaint($queryParam = [])
     {
-        $complaints_job = $this->model('jobModel')->getComplaintsJob();
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order);
+
+            $data = [
+                'complaints_job' => $complaints_job['data'],
+                'currentPage' => $complaints_job['currentPage'],
+                'rowsPerPage' => $complaints_job['limit'],
+                'totalRows' => $complaints_job['totalRows'],
+                'totalPages' => $complaints_job['totalPages'],
+                'isLastPage' => $complaints_job['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/job_complaint', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function company_complaint($queryParam = [])
+    {
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order);
+
+            $data = [
+                'complaints_com' => $complaints_com['data'],
+                'currentPage' => $complaints_com['currentPage'],
+                'rowsPerPage' => $complaints_com['limit'],
+                'totalRows' => $complaints_com['totalRows'],
+                'totalPages' => $complaints_com['totalPages'],
+                'isLastPage' => $complaints_com['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/company_complaint', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function complaint_detail($complaintID)
+    {
+        $complaint = $this->model('ComplaintModel')->getComplaintDetails($complaintID);
 
         $data = [
-            'complaints_job' => $complaints_job
+            'complaint' => $complaint
         ];
 
-        $this->view('pages/admin/job_complaint', $data);
+        $this->view('pages/admin/complaint_detail', $data);
     }
 
-    public function company_complaint()
+    public function complaint_company($company)
     {
-        // $complaints_com = $this->model('jobModel')->getComplains();
-
-        // $data = [
-        //     'complaints_com' => $complaints_com
-        // ];
-
-        $this->view('pages/admin/company_complaint');
-    }
-
-    public function complaint_detail()
-    {
-        $this->view('pages/admin/complaint_detail');
-    }
-
-    public function ptjobs_mng()
-    {
-        $this->view('pages/admin/ptjobs_mng');
-    }
-
-    public function intern_mng()
-    {
-        $this->view('pages/admin/intern_mng');
-    }
-
-    public function stu_detail()
-    {
-        $messages = $this->model('ContactModel')->getMessages();
+        $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company);
 
         $data = [
-            'message' => $messages
+            'complaints' => $complaints
         ];
-        
-        $this->view('pages/admin/stu_detail', $data);
+
+        $this->view('pages/admin/complaint_company', $data);
     }
 
+    public function resolve_complaint($complaintID)
+    {
+        try {
+            $this->model('ComplaintModel')->resolveComplaint($complaintID);
+            Redirect::to(URLROOT . '/admin/job_complaint');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function reject_complaint($complaintID)
+    {
+        try {
+            $this->model('ComplaintModel')->rejectComplaint($complaintID);
+            Redirect::to(URLROOT . '/admin/job_complaint');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function ptjobs_mng($queryParam = [])
+    {
+          try {
+              // Get the requested data from query params
+              $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+              $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+              $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+              $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+              $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order);
+              $data = [
+                  'ptjobs' => $ptjobs['data'],
+                  'currentPage' => $ptjobs['currentPage'],
+                  'rowsPerPage' => $ptjobs['limit'],
+                  'totalRows' => $ptjobs['totalRows'],
+                  'totalPages' => $ptjobs['totalPages'],
+                  'isLastPage' => $ptjobs['isLastPage'] ? 'yes' : 'no',
+              ];
+              $this->view('pages/admin/ptjobs_mng', $data);
+          } catch (Exception $e) {
+              die($e->getMessage()); //TODO: Handle this
+          }
+      }
+
+    public function intern_mng($queryParam = [])
+    {
+          try {
+              // Get the requested data from query params
+              $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+              $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+              $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+              $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+              $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order);
+              $data = [
+                  'interns' => $interns['data'],
+                  'currentPage' => $interns['currentPage'],
+                  'rowsPerPage' => $interns['limit'],
+                  'totalRows' => $interns['totalRows'],
+                  'totalPages' => $interns['totalPages'],
+                  'isLastPage' => $interns['isLastPage'] ? 'yes' : 'no',
+              ];
+              $this->view('pages/admin/intern_mng', $data);
+          } catch (Exception $e) {
+              die($e->getMessage()); //TODO: Handle this
+          }
+    }
+  
     public function sendMessage()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -226,51 +377,71 @@ class Admin extends Controller
         }
     }
 
-    
-    public function com_detail()
-    {
-        $this->view('pages/admin/com_detail');
-    }
-
-    public function user_ver_pending()
+    public function user_ver_pending($queryParam = [])
     {
         try {
-            $users = $this->model->getPendingStudentsAndCompanies();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
-                'users' => $users
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/user_ver_pending', $data);
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_ver_not()
+    public function user_ver_not($queryParam = [])
     {
         try {
-            $users = $this->model->getNotVerifiedStudentsAndCompanies();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
-                'users' => $users
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/user_ver_not', $data);
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
     public function user_detail($userID)
     {
-        $user = $this->model->getUserDetails($userID);
-        $data = [
-            'user' => $user
-        ];
+        try {
+            $user = $this->model->getUserDetails($userID);
+            $data = [
+                'user' => $user
+            ];
 
-        if ($user['Role'] == 'Student') {
-            $this->view('pages/admin/stu_detail', $data);
-        } else if ($user['Role'] == 'Company') {
-            $this->view('pages/admin/com_detail', $data);
-        } else if ($user['Role'] == 'VT-Member') {
-            $this->view('pages/admin/vt_detail', $data);
+            if ($user['Role'] == 'Student') {
+                $this->view('pages/admin/stu_detail', $data);
+            } else if ($user['Role'] == 'Company') {
+                $this->view('pages/admin/com_detail', $data);
+            } else if ($user['Role'] == 'VT-Member') {
+                $this->view('pages/admin/vt_detail', $data);
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -289,7 +460,7 @@ class Admin extends Controller
                 $this->view('pages/admin/vt_ver_detail', $data);
             }
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -299,7 +470,7 @@ class Admin extends Controller
             $this->model->approveUser($userID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -309,7 +480,39 @@ class Admin extends Controller
             $this->model->rejectUser($userID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
-            die($e->getMessage());//TODO: Handle this
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function user_activate($userID, $role)
+    {
+        try {
+            $this->model->activateAccount($userID);
+            if ($role == 'Company') {
+                Redirect::to(URLROOT . '/admin/company_mng');
+            } else if ($role == 'Student') {
+                Redirect::to(URLROOT . '/admin/students_mng');
+            } else if ($role == 'VT-Member') {
+                Redirect::to(URLROOT . '/admin/verTeam_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function user_deactivate($userID, $role)
+    {
+        try {
+            $this->model->deactivateAccount($userID);
+            if ($role == 'Company') {
+                Redirect::to(URLROOT . '/admin/company_mng');
+            } else if ($role == 'Student') {
+                Redirect::to(URLROOT . '/admin/students_mng');
+            } else if ($role == 'VT-Member') {
+                Redirect::to(URLROOT . '/admin/verTeam_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
         }
     }
 
@@ -318,29 +521,151 @@ class Admin extends Controller
     //     $this->view('pages/admin/job_ver_all');
     // }
 
-    public function ptjob_detail()
+    public function job_detail($jobID)
     {
-        $this->view('pages/admin/ptjob_detail');
+        try {
+            $job = $this->model('jobModel')->getJobDetails($jobID);
+            $data = [
+                'job' => $job
+            ];
+            $this->view('pages/admin/job_detail', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
-    public function job_ver_pending()
+    public function job_ver_pending($queryParam = [])
     {
-        $this->view('pages/admin/job_ver_pending');
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order);
+            $data = [
+                'jobs' => $jobs['data'],
+                'currentPage' => $jobs['currentPage'],
+                'rowsPerPage' => $jobs['limit'],
+                'totalRows' => $jobs['totalRows'],
+                'totalPages' => $jobs['totalPages'],
+                'isLastPage' => $jobs['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/admin/job_ver_pending', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
-    public function ptjob_ver_detail()
+    public function job_ver_detail($jobID)
     {
-        $this->view('pages/admin/ptjob_ver_detail');
+        try {
+            $job = $this->model('jobModel')->getJobDetails($jobID);
+            $data = [
+                'job' => $job
+            ];
+            $this->view('pages/admin/job_ver_detail', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
-    public function job_ver_not()
+    public function job_ver_not($queryParam = [])
     {
-        $this->view('pages/admin/job_ver_not');
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order);
+            $data = [
+                'jobs' => $jobs['data'],
+                'currentPage' => $jobs['currentPage'],
+                'rowsPerPage' => $jobs['limit'],
+                'totalRows' => $jobs['totalRows'],
+                'totalPages' => $jobs['totalPages'],
+                'isLastPage' => $jobs['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/admin/job_ver_not', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_approve($jobID)
+    {
+        try {
+            $this->model('jobModel')->approveJob($jobID);
+            Redirect::to(URLROOT . '/admin/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_ver_reject($jobID)
+    {
+        try {
+            $this->model('jobModel')->rejectJob($jobID);
+            Redirect::to(URLROOT . '/admin/job_ver_pending');
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_activate($jobID, $jobType)
+    {
+        try {
+            $this->model('jobModel')->activateJob($jobID);
+            if ($jobType == 'Part-time') {
+                Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            } else if ($jobType == 'Internship') {
+                Redirect::to(URLROOT . '/admin/intern_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function job_deactivate($jobID, $jobType)
+    {
+        try {
+            $this->model('jobModel')->deactivateJob($jobID);
+            if ($jobType == 'Part-time') {
+                Redirect::to(URLROOT . '/admin/ptjobs_mng');
+            } else if ($jobType == 'Internship') {
+                Redirect::to(URLROOT . '/admin/intern_mng');
+            }
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function dashboard()
     {
-        $this->view('pages/admin/adminDash');
+        try {
+            $studentCount = $this->model->getCountRegisteredUsers('Student');
+            $companyCount = $this->model->getCountRegisteredUsers('Company');
+            $activeJobCount = $this->model('jobModel')->getCountActiveJobs();
+            $pendingUserCount = $this->model->getCountPendingUsers();
+            $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
+            $pendingComplaintCount = $this->model('ComplaintModel')->getCountPendingComplaints();
+
+            $data = [
+                'studentCount' => $studentCount,
+                'companyCount' => $companyCount,
+                'activeJobCount' => $activeJobCount,
+                'pendingUserCount' => $pendingUserCount,
+                'pendingJobCount' => $pendingJobCount,
+                'pendingComplaintCount' => $pendingComplaintCount
+            ];
+
+            $this->view('pages/admin/adminDash', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function jobPost()
@@ -415,6 +740,4 @@ class Admin extends Controller
         }
         $this->view('pages/admin/messages/messageview', $data);
     }
-
-    
 }
