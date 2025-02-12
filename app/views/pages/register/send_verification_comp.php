@@ -17,17 +17,23 @@
         </button>
         <div class="container">
             <div class="image-side">
-                <img src="<?php echo URLROOT; ?>/images/service-provider.png" alt="student">
+                <img src="<?php echo URLROOT; ?>/images/service.png" alt="student">
             </div>
             <div class="form-side">
                 <form action="<?php echo URLROOT ?>/register/sendCompVeriEmail" method="POST">
                     <div class="form-row">
-                        <h1>Verify Email</h1>
+                        <h1>Verify Your Email</h1>
+                    </div>
+                     <div class="form-row">
+                        <div class="input-container">
+                            <p>Enter your company email address below to receive the verification link.
+                                It will redirect you to the registration page after successful verification.</p>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="input-container">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" required>
+                            <!-- <label for="email">Email</label> -->
+                            <input type="email" name="email" placeholder="Enter Your Company Email" value="<?php echo $data['email']; ?>" required>
                             <span class="error-msg"><?php echo $data['email_err']; ?></span>
                         </div>
                     </div>
