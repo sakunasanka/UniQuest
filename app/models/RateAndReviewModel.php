@@ -43,21 +43,37 @@ class RateAndReviewModel
         }
     }
 
-    public function getReviewsByCompanyId($company_id)
+    public function getReviewsByCompanyId()
     {
         $this->db->query('SELECT * FROM companyreviews WHERE CompanyID = :company_id ORDER BY created_at DESC');
-        $this->db->bind(':company_id', $company_id);
+        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): 
+            $this->db->bind(':company_id', $_SESSION['user_id']);
+        else:
+        endif;        
         return $this->db->resultSet();
+    }
+
+    public function getReviewsByStuId()
+    {
+        $this->db->query('SELECT * FROM companyreviews WHERE StudentID = :student_id ORDER BY created_at DESC');
+        $this->db->bind(':student_id', $_SESSION['user_id']);
+        return $this->db->resultSet();
+    }
+
+    public function getReviewById($reviewID){
+        $this->db->query('SELECT * FROM review WHERE ReviewID = :review_id');
+        $this->db->bind(':review_id', $reviewID);
+        return $this->db->single();
     }
     
     public function updateReview($data)
     {
         try {
-            $this->db->query('UPDATE review SET Rating = :rating, Comment = :comment WHERE id = :id AND user_id = :user_id');
+            $this->db->query('UPDATE review SET Rating = :rating, Comment = :comment WHERE ReviewID = :id');
             $this->db->bind(':rating', $data['rating']);
             $this->db->bind(':comment', $data['comment']);
-            $this->db->bind(':id', $data['id']);
-            $this->db->bind(':user_id', $_SESSION['user_id']);
+            $this->db->bind(':id', $data['review_id']);
+            // $this->db->bind(':user_id', $_SESSION['user_id']);
             
             return $this->db->execute();
         } catch (PDOException $e) {
@@ -69,9 +85,9 @@ class RateAndReviewModel
     public function deleteReviewById($id)
     {
         try {
-            $this->db->query('DELETE FROM review WHERE id = :id AND user_id = :user_id');
+            $this->db->query('DELETE FROM review WHERE ReviewID = :id');
             $this->db->bind(':id', $id);
-            $this->db->bind(':user_id', $_SESSION['user_id']); // Ensure only the review's owner can delete it
+            // $this->db->bind(':user_id', $_SESSION['user_id']); // Ensure only the review's owner can delete it
 
             return $this->db->execute();
         } catch (PDOException $e) {

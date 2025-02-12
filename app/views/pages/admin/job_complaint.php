@@ -18,30 +18,36 @@
             <table>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Title</th>
-                        <th onclick="sortTable(1)">Company Email</th>
-                        <th onclick="sortTable(2)">Complaint</th>
-                        <th onclick="sortTable(3)">Student Name</th>
-                        <th onclick="sortTable(4)">Complained Date</th>
-                        <th onclick="sortTable(5)">Status</th>
+                        <th onclick="sortTable(0, 'JobTitle')">Title</th>
+                        <th onclick="sortTable(1, 'CompanyEmail')">Company Email</th>
+                        <th onclick="sortTable(2, 'Complaint')">Complaint</th>
+                        <th onclick="sortTable(3, 'StudentName')">Student Name</th>
+                        <th onclick="sortTable(4, 'ComplainedDate')">Complained Date</th>
+                        <th onclick="sortTable(5, 'Status')">Status</th>
                         <th class="no-sort">View</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($data['complaints_job'] as $complaints_job):?>
-                    <tr>
-                        <td><?php echo $complaints_job->JobTitle?></td>
-                        <td><?php echo $complaints_job->CompanyEmail?></td>
-                        <td><?php echo $complaints_job->Complaint?></td>
-                        <td><?php echo $complaints_job->StudentName?></td>
-                        <td><?php echo $complaints_job->ComplainedDate?></td>
-                        <td><span class="status active"><?php echo $complaints_job->Status?></span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['complaints_job'] as $complaints_job): ?>
+                        <tr>
+                            <td><?php echo $complaints_job->JobTitle ?></td>
+                            <td><?php echo $complaints_job->CompanyEmail ?></td>
+                            <td><?php echo $complaints_job->Complaint ?></td>
+                            <td><?php echo $complaints_job->StudentName ?></td>
+                            <td><?php echo substr($complaints_job->ComplainedDate, 0, 10) ?></td>
+                            <?php if ($complaints_job->Status == 'Pending') : ?>
+                                <td><span class="status pending"><?php echo $complaints_job->Status ?></span></td>
+                            <?php elseif ($complaints_job->Status == 'Resolved') : ?>
+                                <td><span class="status active"><?php echo $complaints_job->Status ?></span></td>
+                            <?php elseif ($complaints_job->Status == 'Rejected') : ?>
+                                <td><span class="status inactive"><?php echo $complaints_job->Status ?></span></td>
+                            <?php endif; ?>
+                            <td class="action">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaints_job->ComplaintID; ?>'">
+                                    preview
+                                </span>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -50,7 +56,9 @@
     </main>
 </div>
 
-
+<script>
+    const totalPages = <?php echo $data['totalPages']; ?>;
+</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 

@@ -10,4 +10,9 @@ class Home extends Controller
     {
         $this->view('pages/home/homepage');
     }
+
+    public function unauth()
+    {
+        $this->view('pages/403_forbidden/403_forbidden');
+    }
 }

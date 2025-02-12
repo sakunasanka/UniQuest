@@ -1,9 +1,10 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/studentPopups.css">
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/rate_review_company.css">
-<div class="popup-container">
-    <div class="popup" id="popup-stu">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/review_popup.css">
+<div class="popup-container bottom-div">
+    <div class="popup" id="popup-addreview">
         <div class="overlay"></div>
-        <div class="content">
+        <div class="content popup_top_padding">
+        <div class="close-btn-container"><button class="close-btn" onclick="ToggleAddReview()"><i class="fa fa-times"></i></button></div>
             <div class="review-form">
                 <h2>Share your experience</h2>
                 <form action="<?php echo URLROOT ?>/student/addReview" method="POST">
@@ -33,5 +34,5 @@
     </div>
 </div>
 
-<script src="<?php echo URLROOT; ?>/public/js/student/change_password.js"></script>
-
+<script src="<?php echo URLROOT; ?>/public/js/student/addReview_popup.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/student/starhover.js"></script>

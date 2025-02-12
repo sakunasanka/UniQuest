@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITENAME ?></title>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar2.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -22,15 +22,15 @@
             <ul class="nav-links">
                 <li><a href="/uniquest/home" class="hov">Home</a></li>
                 <li><a href="/uniquest/service_provider/dashboard" class="hov">Dashboard</a></li>
-                <li class="dropdown">
+                <!-- <li class="dropdown">
                     <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
                     <div class="dropdown-content">
                         <a href="/UniQuest/student/jobs">Part-time Jobs</a>
                         <a href="/UniQuest/student/internships">Internships</a>
                         <a href="/UniQuest/student/company">Companies</a>
                     </div>
-                </li>
-                <li><a href="/uniquest/about" class="hov">About Us</a></li>
+                </li> -->
+                <!-- <li><a href="/uniquest/about" class="hov">About Us</a></li> -->
                 <li><a href="/uniquest/service_provider/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
@@ -40,4 +40,3 @@
             </div>
         </div>
     </nav>
-

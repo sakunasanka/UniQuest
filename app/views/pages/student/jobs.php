@@ -2,17 +2,28 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+    <?php else: ?>       
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php endif; ?>
+
 <div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+        <?php else: ?>    
+    <?php endif; ?>    
     
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/student/jobs">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/uniquest/student/internships">Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/student/company">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/internships">Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/company">Companies</button>
         </div>
         <div class="container">
+
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
+
+
             <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
@@ -30,7 +41,10 @@
                 <?php foreach($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
-                            <img src="<?php echo URLROOT; ?>/images/job.png" alt="job">
+                            <img src="<?php echo empty($post->CompanyLogo)
+                                            ? URLROOT . '/images/profile_pic_preview.png'
+                                            : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                                alt="Burger King Logo">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
@@ -48,15 +62,15 @@
                                         <?php echo $post->Location; ?>
                                 </div>
                             </div>
-                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
- 
+                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                                 <div class="card-icons">
                                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                     <i class="fa fa-share-alt" aria-hidden="true"></i>
                                     
                                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                                 </div>
-                            <?php endif;?>
+                            <?php else: ?>
+                            <?php endif; ?>
                         </div>
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -78,12 +92,11 @@
 </style>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>
     function goToJobDescription(jobId) {
-        window.location.href = "/uniquest/student/jobsdescription/" + jobId;
+        window.location.href = "/UniQuest/student/jobsdescription/" + jobId;
     }
 </script>
 

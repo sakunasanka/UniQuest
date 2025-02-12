@@ -6,6 +6,11 @@ class Jobs extends Controller
 
     public function __construct()
     {
+        // Check if user is logged in
+        AuthMiddleware::requireAuth();
+        // Check if user has the required role
+        AuthMiddleware::requireRole('Student');
+        
         // Load model
         $this->model = $this->model('jobModel');
     }
@@ -36,7 +41,7 @@ class Jobs extends Controller
             // Check if job ID is provided
             if (!empty($jobId)) {
                 // Attempt to bookmark the job
-                if ($this->model->addUserPostBookmark($userId, $jobId)) {
+                if ($this->model->addUserPostBookmark($jobId)) {
                     echo "Bookmark added successfully!";
                 } else {
                     echo "Failed to add bookmark. Please check the database.";
@@ -68,7 +73,7 @@ class Jobs extends Controller
             // Check if job ID is provided
             if (!empty($jobId)) {
                 // Attempt to remove the bookmark
-                if ($this->model->removeBookmark($userId, $jobId)) {
+                if ($this->model->removeBookmark($jobId)) {
                     echo "Bookmark removed successfully!";
                 } else {
                     echo "Failed to remove bookmark. Please check the database.";
@@ -100,16 +105,16 @@ class Jobs extends Controller
             // Check if job ID is provided
             if (!empty($jobId)) {
                 // Check if the job is already bookmarked
-                if ($this->model->isJobBookmarked($userId, $jobId)) {
+                if ($this->model->isJobBookmarked($jobId)) {
                     // If bookmarked, remove the bookmark
-                    if ($this->model->removeBookmark($userId, $jobId)) {
+                    if ($this->model->removeBookmark($jobId)) {
                         echo "Bookmark removed successfully!";
                     } else {
                         echo "Failed to remove bookmark. Please check the database.";
                     }
                 } else {
                     // If not bookmarked, add the bookmark
-                    if ($this->model->addUserPostBookmark($userId, $jobId)) {
+                    if ($this->model->addUserPostBookmark($jobId)) {
                         echo "Bookmark added successfully!";
                     } else {
                         echo "Failed to add bookmark. Please check the database.";

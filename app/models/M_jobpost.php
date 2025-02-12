@@ -15,9 +15,9 @@ class M_jobpost {
         return $row;
     }
 
-    public function getpostbycompanyid($jobpostId){
-        $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
-        $this->db->bind(':id', $jobpostId);
+    public function getpostbycompanyid($companyId){
+        $this->db->query('SELECT * FROM v_companies WHERE v_companies.CompanyID = :id');
+        $this->db->bind(':id', $companyId);
         $row = $this->db->single();
         return $row;
     }
@@ -40,9 +40,9 @@ class M_jobpost {
     public function create($data) {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, Location, Category, JobBenefits, Address, RequiredQualifications, SalaryRange, CompanyID) 
+            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, CompanyID, Status) 
             VALUES 
-            (:job_name, :Description, :job_location, :job_category, :job_benifits, :adress, :required_skills, :salary_range, :company_id)
+            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :company_id, :status)
         ');
 
         // Bind the values from $data array
@@ -51,10 +51,10 @@ class M_jobpost {
         $this->db->bind(':job_location', $data['job_location']);
         $this->db->bind(':job_category', $data['job_category']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
-        $this->db->bind(':adress', $data['adress']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
         $this->db->bind(':company_id', $_SESSION['user_id']);
+        $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
         return $this->db->execute();
@@ -100,6 +100,19 @@ class M_jobpost {
             return false;
         }
     }
+
+    public function getPartTimeJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Part-time' ");
+        return $this->db->resultSet();
+    }
+
+    public function getInternshipJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Internship' ");
+        return $this->db->resultSet();
+    }
+
     
 
 }
