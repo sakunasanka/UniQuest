@@ -19,7 +19,8 @@
                 <thead>
                     <?php
                     $columns = [
-                        "CompanyName" => "Job ID",
+                        "CompanyID" => "CompanyID",
+                        "CompanyName" => "Company Name",
                         "Email" => "Company Email",
                         "ComplaintCount" => "No of complaints",
                         "LastComplainedDate" => "Most recent complaint date",
@@ -32,6 +33,7 @@
                 <tbody>
                     <?php foreach ($data['complaints_com'] as $complaint) : ?>
                         <tr>
+                            <td><?php echo $complaint->CompanyID; ?></td>
                             <td><?php echo $complaint->CompanyName; ?></td>
                             <td><?php echo $complaint->CompanyEmail; ?></td>
                             <td><?php echo $complaint->ComplaintCount; ?></td>
