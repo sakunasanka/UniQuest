@@ -54,6 +54,7 @@ class Core
         }
         //get params
         $this->params = $url ? array_values($url) : [];
+        $this->params[] = $_GET;  // Pass all query parameters as the last parameter
 
         // Apply middleware
         $this->applyMiddleware($this->currentController, $this->currentMethod);

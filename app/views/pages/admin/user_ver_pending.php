@@ -17,14 +17,18 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">User ID</th>
-                        <th onclick="sortTable(1)">Email</th>
-                        <th onclick="sortTable(2)">Account Type</th>
-                        <th onclick="sortTable(3)">Requested Date</th>
-                        <th onclick="sortTable(4)">Status</th>
-                        <th class="no-sort">View</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "UserID" => "UserID",
+                        "Email" => "Email",
+                        "Role" => "Account Type",
+                        "RegisterDate" => "Registered Date",
+                        "Status" => "Status",
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
                     <?php foreach ($data['users'] as $user) : ?>
@@ -48,8 +52,6 @@
     </main>
 </div>
 
-
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
