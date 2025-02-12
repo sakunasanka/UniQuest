@@ -15,7 +15,7 @@
                             <span class="reviewer-name">- John Doe</span>
                             <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                         </div>
-                        <?php  if (($_SESSION['user_role'] == 'Student') ||($_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
+                        <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
                             <div class="review-actions">
                                 <button class="like-btn" data-id="<?php echo $i; ?>">
                                     <span class="material-symbols-outlined like-icon">thumb_up</span>

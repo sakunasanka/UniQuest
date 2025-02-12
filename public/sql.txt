@@ -167,8 +167,27 @@ CREATE VIEW v_jobs AS
     INNER JOIN user ON company.CompanyID = user.UserID
     ORDER BY jobs.Create_at DESC;
 
-
-
+CREATE VIEW v_companies AS
+SELECT 
+    company.CompanyID AS CompanyID,           -- Company details
+    company.CompanyName AS CompanyName,
+    company.Description AS Description,
+    company.CompanyLogo AS CompanyLogo,
+    company.StreetNo AS StreetNo,
+    company.AddressLine1 AS AddressLine1,
+    company.AddressLine2 AS AddressLine2,
+    company.City AS City,
+    company.Industry AS Industry,
+    company.Website AS Website,
+    company.create_at AS company_create_at,   -- Company creation timestamp
+    user.Email AS Email,
+    user.ContactNo AS ContactNo
+FROM 
+    company
+INNER JOIN 
+    user ON company.CompanyID = user.UserID   -- Join on matching IDs
+ORDER BY 
+    company.create_at DESC;                   -- Sort by company creation timestamp
 
 -- -----------------------------------------------------
 -- Table uniquest.BookmarkJobs
@@ -194,6 +213,28 @@ ENGINE = InnoDB;
 ALTER TABLE uniquest.BookmarkJobs
 ADD COLUMN bookmark_create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
+-- -----------------------------------------------------
+-- Table uniquest.BookmarkCompanies
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS uniquest.BookmarkCompanies (
+  StudentID INT NOT NULL,
+  CompanyID INT NOT NULL,
+  bookmark_create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  PRIMARY KEY (StudentID, CompanyID),
+  INDEX fk_Student_has_Companies_Companies1_idx (CompanyID ASC),
+  INDEX fk_Student_has_Companies_Student1_idx (StudentID ASC),
+  CONSTRAINT fk_Student_has_Companies_Student1
+    FOREIGN KEY (StudentID)
+    REFERENCES uniquest.student (StudentID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_Student_has_Companies_Companies1
+    FOREIGN KEY (CompanyID)
+    REFERENCES uniquest.company (CompanyID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table uniquest.Complaint
@@ -317,6 +358,27 @@ INNER JOIN
 ORDER BY 
     bj.bookmark_create_at DESC;
 
+CREATE VIEW v_bookmarkedCompanies AS
+SELECT 
+    bc.StudentID,                   -- Student who bookmarked the company
+    c.CompanyID,                   -- Company ID
+    c.CompanyName,                 -- Name of the company
+    c.Description,                 -- Company description
+    c.CompanyLogo,                 -- Company logo
+    c.StreetNo,                    -- Street number of the company
+    c.AddressLine1,                -- First address line
+    c.AddressLine2,                -- Second address line
+    c.City,                        -- City
+    c.Industry,                    -- Industry
+    c.Website,                     -- Company website
+    c.create_at AS company_create_at,  -- Company creation timestamp
+    bc.bookmark_create_at          -- When the bookmark was created
+FROM 
+    BookmarkCompanies bc
+INNER JOIN 
+    company c ON bc.CompanyID = c.CompanyID
+ORDER BY 
+    bc.bookmark_create_at DESC;    -- Ordered by bookmark creation timestamp
 
 -- -----------------------------------------------------
 -- View uniquest.StudentJobComplaints
@@ -324,6 +386,7 @@ ORDER BY
 
 CREATE VIEW StudentJobComplaints AS
 SELECT 
+    complaint_jobs.ComplaintID AS ComplaintID,
     jobs.Title AS JobTitle,
     user.Email AS CompanyEmail,
     complaint_jobs.Description AS Complaint,

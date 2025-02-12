@@ -18,7 +18,11 @@ class userModel extends Model
             return false;
         }
     }
-
+    public function getcompany(){
+        $this->db->query('SELECT * FROM company ');
+        $results = $this->db->resultSet();
+        return $results;
+    }
     public function companyRegister(array $data)
     {
         try {
@@ -331,6 +335,26 @@ class userModel extends Model
         }
     }
 
+    public function changePassword($userId, $newPassword)
+    {
+        try {
+            $userData = [
+                'Password' => $newPassword
+            ];
+            if ($this->update('user', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function deactivateAccount($userId)
     {
         try {
@@ -488,8 +512,8 @@ class userModel extends Model
     {
         try {
             // Get users by role
-            $users = $this->select('User', [['Role', '=', $role]], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, 1, true);
-            return $users['data'][0]->UserCount;
+            $users = $this->select('User', [['Role', '=', $role], ['Status', '=', 'Active']], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, true);
+            return $users[0]->UserCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return 0;
@@ -526,6 +550,61 @@ class userModel extends Model
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function savePasswordResetToken($email)
+    {
+        try {
+            // Check if the user exists
+            $user = $this->findUserByEmail($email);
+            if (!$user) {
+                return false;
+            }
+
+            // Generate token
+            $token = bin2hex(random_bytes(50));
+
+            // Set token expiration time
+            $token_expiration = date('Y-m-d H:i:s', strtotime('+1 hour'));
+            
+            // Save token to the database
+            $tokenData = [
+                'UserID' => $user->UserID,
+                'Token' => $token,
+                'Expiration' => $token_expiration
+            ];
+
+            if ($this->insert('password_reset', $tokenData)) {
+                return $token;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getUserIDFromToken($token)
+    {
+        try {
+            // Get the user ID from the token
+            $tokenData = $this->select('password_reset', [['Token', '=', $token]], 'UserID, Expiration', 'AND', '', '', 0, 1, false);
+            if ($tokenData) {
+                return $tokenData;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
         }
     }
 }

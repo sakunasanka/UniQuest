@@ -25,6 +25,17 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
     session_start();
-    
+
+    //mail config
+    define('SMTP_SETTINGS', [
+        'smtp_host' => 'smtp.gmail.com',
+        'smtp_auth' => true,
+        'smtp_username' => 'pkmsakiththewmikasl@gmail.com', // Your Gmail address
+        'smtp_password' => 'tivk biwx biqm bxai',   // Use Gmail App Password
+        'smtp_secure' => 'tls',  // Encryption method (TLS/SSL)
+        'smtp_port' => 587,  // Port (TLS = 587, SSL = 465)
+        'from_email' => 'pkmasakiththewmikasl@gmail.com',
+        'from_name' => 'UniQuest',
+    ]);
     
 ?>
