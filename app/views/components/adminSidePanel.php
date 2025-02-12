@@ -30,7 +30,7 @@
             Complaints
         </button>
         
-        <button class="nav-btn" data-paths="/UniQuest/admin/messages">
+        <button class="nav-btn" data-paths="/UniQuest/admin/messages_stu">
         <span class="material-symbols-outlined">sms</span>
             Messages
         </button>

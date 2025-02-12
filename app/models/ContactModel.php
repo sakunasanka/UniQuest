@@ -38,11 +38,55 @@ class ContactModel
         }
     }
 
-    public function getMessages()
+    public function getMessagesStu()
     {
-        $this->db->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
-        $results = $this->db->resultSet();
-        return $results;
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT sender_id, MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE sender_role = 'Student'
+                    GROUP BY sender_id
+                ) m2 ON m1.sender_id = m2.sender_id AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role = 'Student'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
+    }
+
+    public function getMessagesCom()
+    {
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT sender_id, MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE sender_role = 'Company'
+                    GROUP BY sender_id
+                ) m2 ON m1.sender_id = m2.sender_id AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role = 'Company'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
+    }
+
+    public function getMessagesVer()
+    {
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT sender_id, MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE sender_role = 'VT-Member'
+                    GROUP BY sender_id
+                ) m2 ON m1.sender_id = m2.sender_id AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role = 'VT-Member'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
     }
 
     public function updateReadStatus($id)

@@ -442,22 +442,70 @@ class Admin extends Controller
 
     public function user_detail($userID)
     {
-        try {
-            $user = $this->model->getUserDetails($userID);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+            
             $data = [
-                'user' => $user
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
             ];
 
-            if ($user['Role'] == 'Student') {
-                $this->view('pages/admin/stu_detail', $data);
-            } else if ($user['Role'] == 'Company') {
-                $this->view('pages/admin/com_detail', $data);
-            } else if ($user['Role'] == 'VT-Member') {
-                $this->view('pages/admin/vt_detail', $data);
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
             }
-        } catch (Exception $e) {
-            die($e->getMessage()); //TODO: Handle this
+
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('admin/user_detail/' . $userID);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with errors
+                $this->loadUserDetailView($data);
+            }
+        } else {
+            // Load initial view without POST request
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
         }
+    }
+
+    private function loadUserDetailView($data)
+    {
+        if ($data['user']['Role'] == 'Student') {
+            $this->view('pages/admin/stu_detail', $data);
+        } elseif ($data['user']['Role'] == 'Company') {
+            $this->view('pages/admin/com_detail', $data);
+        } elseif ($data['user']['Role'] == 'VT-Member') {
+            $this->view('pages/admin/vt_detail', $data);
+        } 
     }
 
     public function user_ver_detail($userID)
@@ -719,16 +767,40 @@ class Admin extends Controller
         }
     }
 
-    public function messages()
+    public function messages_stu()
     {
-        $messages = $this->model('ContactModel')->getMessages();
+        $messages = $this->model('ContactModel')->getMessagesStu();
 
         // Load the view with the messages
         $data = [
             'messages' => $messages
         ];
 
-        $this->view('pages/admin/messages', $data);
+        $this->view('pages/admin/messages_stu', $data);
+    }
+
+    public function messages_com()
+    {
+        $messages = $this->model('ContactModel')->getMessagesCom();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
+        $this->view('pages/admin/messages_com', $data);
+    }
+
+    public function messages_ver()
+    {
+        $messages = $this->model('ContactModel')->getMessagesVer();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
+        $this->view('pages/admin/messages_ver', $data);
     }
 
     // In AdminController.php
@@ -753,6 +825,37 @@ class Admin extends Controller
             http_response_code(404);
             echo json_encode(['error' => 'Message not found']);
         }
-        $this->view('pages/admin/messages/messageview', $data);
+        $this->view('pages/admin/messages/messageview');
+        //correct this line
+    }
+
+    public function editMessage($messageId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = json_decode(file_get_contents("php://input"), true);
+    
+            if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
+                if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'error' => 'Failed to edit message.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Edit time limit expired.']);
+            }
+        }
+    }
+    
+    public function deleteMessage($messageId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
+                if ($this->model('chatModel')->deleteMessage($messageId)) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Delete time limit expired.']);
+            }
+        }
     }
 }

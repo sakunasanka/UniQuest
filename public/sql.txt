@@ -300,6 +300,18 @@ CREATE TABLE uniquest.complaint_company (
   FOREIGN KEY (CompanyID) REFERENCES uniquest.company(CompanyID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    topic ENUM('Job', 'Internship', 'General Information') NOT NULL,
+    message TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    read_status ENUM('Unread', 'Read') DEFAULT 'Unread',
+    FOREIGN KEY (sender_id) REFERENCES User(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES User(UserID) ON DELETE CASCADE
+);
+
 -- -----------------------------------------------------
 -- View uniquest.StudentCompanyComplaints
 -- -----------------------------------------------------
@@ -432,6 +444,28 @@ JOIN
     student s
 ON 
     r.StudentID = s.StudentID;
+
+
+-- -----------------------------------------------------
+-- View uniquest.messages_with_roles
+-- -----------------------------------------------------
+
+CREATE VIEW messages_with_roles AS
+SELECT 
+    m.id,
+    m.sender_id,
+    u1.Role AS sender_role,
+    u1.Email AS sender_email,
+    m.receiver_id,
+    u2.Role AS receiver_role,
+    u2.Email AS receiver_email,
+    m.topic,
+    m.message,
+    m.created_at,
+    m.read_status
+FROM messages m
+JOIN User u1 ON m.sender_id = u1.UserID
+JOIN User u2 ON m.receiver_id = u2.UserID;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
