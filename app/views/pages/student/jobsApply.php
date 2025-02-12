@@ -14,76 +14,73 @@
         <div class="form-section">
             <!-- Form Container -->
             <div class="form-container">
-                <form action="<?php echo URLROOT; ?>/student/submit_application/<?php echo $data['job']->JobID; ?>" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="fullName">Full Name *</label>
-                        <input type="text" id="fullName" name="fullName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="mobileNumber">Mobile Number *</label>
-                        <input type="text" id="mobileNumber" name="mobileNumber" required>
-                        <span class="error-message"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required>
-                        <span class="error-message"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="nic">NIC *</label>
-                        <input type="text" id="nic" name="nic" required>
-                        <span class="error-message"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address">Address *</label>
-                        <input type="text" id="address" name="address" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="gender">Gender *</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="education">Education qualifications*</label>
-                        <textarea id="education" name="education" rows="2"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ageCheck">Are you 18+ years old? *</label>
-                        <select id="ageCheck" name="ageCheck" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-
-                    <?php foreach($data['fields'] as $field): ?>
-                        <div class="form-group">
-                            <label><?php echo $field->field_name; ?></label>
-                            <?php switch($field->field_type):
-                                case 'file': ?>
-                                    <input type="file" name="field_<?php echo $field->field_id; ?>" required>
-                                    <?php break;
-                                default: ?>
-                                    <input type="text" name="field_<?php echo $field->field_id; ?>" required>
-                            <?php endswitch; ?>
-                        </div>
-                    <?php endforeach; ?>
-
+        <form action="<?php echo URLROOT; ?>/student/submit_application/<?php echo $data['job']->JobID; ?>" 
+              method="POST" 
+              enctype="multipart/form-data"
+              class="application-form">
+            
+            <?php 
+            $fields = $data['fields'];
+            if ($fields): 
+                foreach ($fields as $fieldName => $fieldConfig): 
+            ?>
+                <div class="form-group">
+                    <label for="<?php echo $fieldName; ?>"><?php echo $fieldConfig['label']; ?> *</label>
                     
-                    <p>Please note that once you hit the submit button, the application will be directly sent to the recruiter.</p>
+                    <?php switch($fieldConfig['type']):
+                        case 'textarea': ?>
+                            <textarea 
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                rows="4"
+                                required
+                            ></textarea>
+                            <?php break;
+
+                        case 'select': ?>
+                            <select 
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                required
+                            >
+                                <option value="">Select <?php echo $fieldConfig['label']; ?></option>
+                                <?php foreach($fieldConfig['options'] as $option): ?>
+                                    <option value="<?php echo $option; ?>"><?php echo $option; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php break;
+
+                        case 'file': ?>
+                            <input 
+                                type="file"
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                accept="<?php echo $fieldConfig['accept']; ?>"
+                                required
+                            >
+                            <?php break;
+
+                        default: ?>
+                            <input 
+                                type="<?php echo $fieldConfig['type']; ?>"
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                required
+                            >
+                    <?php endswitch; ?>
                     
-                    <button type="submit" class="submit-button">SUBMIT</button>
-                </form>
-            </div>
+                    <span class="error-message" id="<?php echo $fieldName; ?>-error"></span>
+                </div>
+            <?php 
+                endforeach;
+            endif; 
+            ?>
+
+            <p class="form-notice">Please note that once you submit, the application will be directly sent to the recruiter.</p>
+            
+            <button type="submit" class="submit-button">SUBMIT</button>
+        </form>
+    </div>
 
             <!-- Job Information Card -->
             <div class="job-card">

@@ -91,39 +91,95 @@ class M_applicationFields {
         }
     }
 
-    private function saveCustomFieldName($jobId, $fieldNumber, $fieldName) {
+    // private function saveCustomFieldName($jobId, $fieldNumber, $fieldName) {
+    //     try {
+    //         $sql = "INSERT INTO custom_field_names (job_id, field_number, field_name) 
+    //                VALUES (:job_id, :field_number, :field_name)";
+            
+    //         $this->db->query($sql);
+    //         $this->db->bind(':job_id', $jobId);
+    //         $this->db->bind(':field_number', $fieldNumber);
+    //         $this->db->bind(':field_name', $fieldName);
+            
+    //         return $this->db->execute();
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
+    public function getFieldsByJobId($jobId) {
         try {
-            $sql = "INSERT INTO custom_field_names (job_id, field_number, field_name) 
-                   VALUES (:job_id, :field_number, :field_name)";
-            
-            $this->db->query($sql);
+            $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
             $this->db->bind(':job_id', $jobId);
-            $this->db->bind(':field_number', $fieldNumber);
-            $this->db->bind(':field_name', $fieldName);
             
-            return $this->db->execute();
+            $fields = $this->db->single();
+            
+            // Convert database results into a structured array for easier form generation
+            if ($fields) {
+                $formFields = [];
+                
+                // Standard fields mapping
+                $fieldMapping = [
+                    'fullname' => ['type' => 'text', 'label' => 'Full Name'],
+                    'photo' => ['type' => 'file', 'label' => 'Photo', 'accept' => 'image/*'],
+                    'email' => ['type' => 'email', 'label' => 'Email Address'],
+                    'contact' => ['type' => 'text', 'label' => 'Contact Number'],
+                    'address' => ['type' => 'text', 'label' => 'Address'],
+                    'nic' => ['type' => 'text', 'label' => 'NIC Number'],
+                    'nic_copy' => ['type' => 'file', 'label' => 'NIC Copy', 'accept' => '.pdf,.jpg,.jpeg,.png'],
+                    'gender' => ['type' => 'select', 'label' => 'Gender', 'options' => ['Male', 'Female', 'Other']],
+                    'dob' => ['type' => 'date', 'label' => 'Date of Birth'],
+                    'qualifications' => ['type' => 'textarea', 'label' => 'Educational Qualifications'],
+                    'experience' => ['type' => 'textarea', 'label' => 'Work Experience'],
+                    'skills' => ['type' => 'textarea', 'label' => 'Skills'],
+                    'cv' => ['type' => 'file', 'label' => 'CV/Resume', 'accept' => '.pdf,.doc,.docx'],
+                    'linkedin' => ['type' => 'url', 'label' => 'LinkedIn Profile']
+                ];
+
+                // Add only the fields that are set to true
+                foreach ($fieldMapping as $field => $config) {
+                    if ($fields->$field === true || $fields->$field === 1) {
+                        $formFields[$field] = $config;
+                    }
+                }
+
+                // Add custom fields if they exist
+                for ($i = 1; $i <= 3; $i++) {
+                    $otherField = 'other' . $i;
+                    if (!empty($fields->$otherField)) {
+                        $formFields[$otherField] = [
+                            'type' => 'text',
+                            'label' => $fields->$otherField
+                        ];
+                    }
+                }
+
+                return $formFields;
+            }
+            
+            return null;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
         }
     }
-
-    public function getFieldsByJobId($jobId) {
-        $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
-        $this->db->bind(':job_id', $jobId);
-        
-        $fields = $this->db->single();
-        
-        // Get custom field names if they exist
-        if ($fields) {
-            $this->db->query('SELECT * FROM custom_field_names WHERE job_id = :job_id');
-            $this->db->bind(':job_id', $jobId);
-            $customFields = $this->db->resultSet();
-            
-            $fields->custom_fields = $customFields;
-        }
-        
-        return $fields;
-    }
 }
+    // public function getFieldsByJobId($jobId) {
+    //     $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
+    //     $this->db->bind(':job_id', $jobId);
+        
+    //     $fields = $this->db->single();
+        
+    //     // Get custom field names if they exist
+    //     if ($fields) {
+    //         $this->db->query('SELECT * FROM custom_field_names WHERE job_id = :job_id');
+    //         $this->db->bind(':job_id', $jobId);
+    //         $customFields = $this->db->resultSet();
+            
+    //         $fields->custom_fields = $customFields;
+    //     }
+        
+    //     return $fields;
+    // }
+
 ?>
