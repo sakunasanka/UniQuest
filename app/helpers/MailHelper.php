@@ -56,4 +56,15 @@ class MailHelper
 
         return self::sendEmail($toEmail, '', $subject, $body);
     }
+
+    //send email with token to verify student email
+    public static function sendEmailWithTokenStudent($toEmail, $token)
+    {
+        $link = URLROOT . '/register/verifyStuEmail?token=' . $token;
+        $subject = 'Verify Student Email';
+        $body = '<p>Click the link below to verify your email</p>';
+        $body .= '<a href="' . $link . '">Verify Email</a>';
+
+        return self::sendEmail($toEmail, '', $subject, $body);
+    }
 }

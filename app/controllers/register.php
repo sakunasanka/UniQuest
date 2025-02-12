@@ -154,7 +154,7 @@ class Register extends Controller
                 }
             } else {
                 // Load view with errors
-                $this->view('pages/register/send_verification', $data);
+                $this->view('pages/register/send_verification_comp', $data);
             }
         } else {
             // Init data
@@ -164,7 +164,7 @@ class Register extends Controller
             ];
 
             // Load view
-            $this->view('pages/register/send_verification', $data);
+            $this->view('pages/register/send_verification_comp', $data);
         }
     }
 
@@ -192,8 +192,98 @@ class Register extends Controller
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
 
-                    // Redirect to login page
+                    // Redirect to register page
                     Redirect::to(URLROOT . '/register/company');
+                } else {
+                    //error message for expired token
+                    die('Token expired');
+                }
+            } else {
+                //error message for invalid token
+                die('Invalid token');
+            }
+        } else {
+            //TODO: Handle this
+            die('Token not found');
+        }
+    }
+
+    //send verification email to company
+    public function sendStuVeriEmail()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            $_POST = filter_input_array(INPUT_POST);
+
+            // Init data
+            $data = [
+                'email' => strtolower(trim($_POST['email'])),
+                'email_err' => ''
+            ];
+
+            // Validate email
+            $this->validateEmail($data);
+
+            // Check if there are no errors
+            if (empty($data['email_err'])) {
+                //Generate the token
+                $token = TokenHelper::generateToken();
+                LogHelper::logDebug('Token generated: ' . $token);
+                //Generate the expiry date
+                $expiryDate = TokenHelper::generateExpiryDate();
+
+                // Save token to database
+                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                    LogHelper::logDebug('Token saved to database');
+                    // Send token to email
+                    MailHelper::sendEmailWithTokenStudent($data['email'], $token);
+                    // Redirect to verify email page
+                    $this->view('pages/register/email_sent', $data);
+                } else {
+                    LogHelper::logError('Token not saved to database');
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/register/send_verification_stu', $data);
+            }
+        } else {
+            // Init data
+            $data = [
+                'email' => '',
+                'email_err' => ''
+            ];
+
+            // Load view
+            $this->view('pages/register/send_verification_stu', $data);
+        }
+    }
+
+    //verify email using token
+    public function verifyStuEmail($queryparams = [])
+    {
+        //check if token is set
+        if (isset($queryparams['token'])) {
+            //get token from query params
+            $token = $queryparams['token'];
+
+            //get token details
+            $tokenDetails = $this->model->getTokenDetails($token);
+
+            //check if token is valid
+            if ($tokenDetails) {
+                //check if token is expired
+                if (strtotime($tokenDetails->Expiration) > strtotime(date('Y-m-d H:i:s'))) {
+                    //delete token
+                    $this->model->deleteToken($token);
+
+                    //store email as verified
+                    $this->model->verifyEmail($tokenDetails->Email);
+
+                    //store verified email in session
+                    $_SESSION['verified_email'] = $tokenDetails->Email;
+
+                    // Redirect to register page
+                    Redirect::to(URLROOT . '/register/student');
                 } else {
                     //error message for expired token
                     die('Token expired');
@@ -283,6 +373,8 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
+            } elseif(!$this->model->isEmailVerified($data['email'])){
+                $data['email_err'] = 'Email is not verified';
             }
 
             //vallidate input data
@@ -330,7 +422,8 @@ class Register extends Controller
 
                 //register student
                 if ($this->model->studentRegister($data)) {
-                    //clear data array
+                    //clear data array and session
+                    $_SESSION['verified_email'] = '';
                     $data = [];
                     // Redirect to login page
                     Redirect::to(URLROOT . '/login');
