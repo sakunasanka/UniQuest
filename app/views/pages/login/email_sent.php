@@ -17,7 +17,7 @@
         </button>
         <div class="container">
             <div class="image-side">
-                <img src="<?php echo URLROOT; ?>/images/service-provider.png" alt="student">
+                <img src="<?php echo URLROOT; ?>/images/Mail sent2.png" alt="student">
             </div>
             <div class="form-side">
                 <div>
@@ -26,14 +26,18 @@
                     </div>
                     <div class="form-row">
                         <div class="input-container">
-                            <span class="success-msg">Email sent successfully</span>
-                            <span class="success-msg">Please check your email for the reset link</span>
+                            <p>An email has been sent to your email address. 
+                                Please check your email and follow the link to reset your password.</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-center">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="input-center">
                             <div class="reg">
-                                <span>Do not have an account?</span> <a href="/uniquest/register"> Register now</a>
+                                <span>Go back to</span> <a href="/UniQuest"> Home Page</a>
                             </div>
                         </div>
                     </div>
