@@ -1,10 +1,12 @@
 <?php
+// Manually include PHPMailer files
+require 'C:\xampp\htdocs\UniQuest\PHPMailer\PHPMailer.php';
+require 'C:\xampp\htdocs\UniQuest\PHPMailer\Exception.php';
+require 'C:\xampp\htdocs\UniQuest\PHPMailer\SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// Ensure PHPMailer is loaded
-require_once __DIR__ . '/../../vendor/autoload.php';
+use PHPMailer\PHPMailer\SMTP;
 
 class MailHelper
 {
