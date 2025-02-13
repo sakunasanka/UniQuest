@@ -27,9 +27,9 @@ class M_jobpost {
         return $row;
     }
 
-    public function getpostbycompanyid($jobpostId){
-        $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
-        $this->db->bind(':id', $jobpostId);
+    public function getpostbycompanyid($companyId){
+        $this->db->query('SELECT * FROM v_companies WHERE v_companies.CompanyID = :id');
+        $this->db->bind(':id', $companyId);
         $row = $this->db->single();
         return $row;
     }
@@ -117,6 +117,19 @@ class M_jobpost {
             return false;
         }
     }
+
+    public function getPartTimeJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Part-time' ");
+        return $this->db->resultSet();
+    }
+
+    public function getInternshipJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Internship' ");
+        return $this->db->resultSet();
+    }
+
     
 
 }

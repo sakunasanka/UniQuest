@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITENAME ?></title>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar2.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -34,7 +34,7 @@
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
-                <a href="/uniquest/service_provider/notifications"><span class="material-symbols-outlined">notifications</span></a>
+                <a href="/uniquest/admin/notifications"><span class="material-symbols-outlined">notifications</span></a>
                 <span class="notification-badge">1</span>
             </div>
         </div>

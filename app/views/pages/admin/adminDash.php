@@ -14,17 +14,17 @@
         <div class="dashboard-card" onclick="goToStuMng()">
             <h3>Registered Students</h3>
             <p>The total number of students registered on UniQuest.</p>
-            <h1><?php echo 2500; ?></h1>
+            <h1><?php echo $data['studentCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToComMng()">
             <h3>Registered Companies</h3>
             <p>The total number of companies registered on UniQuest.</p>
-            <h1><?php echo 1500; ?></h1>
+            <h1><?php echo $data['companyCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToJobMng()">
             <h3>Active Job Postings</h3>
             <p>The number of job postings currently active on UniQuest.</p>
-            <h1><?php echo 2000; ?></h1>
+            <h1><?php echo $data['activeJobCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToComMng()">
             <h3>Most Popular Company</h3>
@@ -41,20 +41,20 @@
             <p>The revenue gained by the premium users this month.</p>
             <h1><?php echo 25000; ?></h1>
         </div>
-        <div class="dashboard-card" onclick="goToStuMng()">
+        <div class="dashboard-card" onclick="goToUserVer()">
             <h3>Pending User Verification</h3>
             <p>The number of user verifications pending action.</p>
-            <h1><?php echo 20; ?></h1>
+            <h1><?php echo $data['pendingUserCount']; ?></h1>
         </div>
-        <div class="dashboard-card" onclick="goToJobMng()">
+        <div class="dashboard-card" onclick="goToJobsVer()">
             <h3>Pending Job Verification</h3>
             <p>The number of job verifications pending action.</p>
-            <h1><?php echo 50; ?></h1>
+            <h1><?php echo $data['pendingJobCount']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToComplaintMng()">
             <h3>Pending Complaints</h3>
             <p>The number of complaints pending action.</p>
-            <h1><?php echo 15; ?></h1>
+            <h1><?php echo $data['pendingComplaintCount']; ?></h1>
         </div>
     </div>
     </main>
@@ -83,5 +83,13 @@
 
     function goToComplaintMng() {
         window.location.href = "<?php echo URLROOT; ?>/admin/job_complaint";
+    }
+
+    function goToUserVer() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/user_ver_pending";
+    }
+
+    function goToJobsVer() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/job_ver_pending";
     }
 </script>

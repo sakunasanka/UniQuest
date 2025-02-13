@@ -1,4 +1,11 @@
 /* Navbar Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .navbar {
     background-color: #2D2D2D;
     padding: 15px 30px;
@@ -124,6 +131,22 @@
     font-size: 0.8rem;
     border-radius: 50%;
     padding: 2px 5px;
+}
+
+/* Navbar Button */
+.nav-button a {
+    background-color: #299b63; /* Green color for the button */
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button a:hover {
+    background-color: #137d4a; /* Slightly darker green on hover */
 }
 
 /* Responsive Navbar */

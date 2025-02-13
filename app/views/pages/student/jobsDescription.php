@@ -4,8 +4,16 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+    <?php else: ?>       
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php endif; ?>
+
 <div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php else: ?>    
+    <?php endif; ?>      
     
     <div class="content-area">
         <div class="job-description">
@@ -77,13 +85,14 @@
                 }
             ?>
             </ul>
-            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
                 <div class="buttons">
                     <button onclick="goToApplyPage(<?php echo $post->JobID; ?>)" class="apply-btn">Apply</button>
                     <button onclick="goToContactPage()" class="contact-btn">Contact</button>
                 </div>
+            <?php else: ?>    
             <?php endif;?>    
 
             <div class="reviews-section">
@@ -97,7 +106,7 @@
                             <span class="reviewer-name">- John Doe</span>
                             <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
                         </div>
-                        <?php  if (($_SESSION['user_role'] == 'Student') ||($_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
+                        <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
                             <div class="review-actions">
                                 <button class="like-btn" data-id="<?php echo $i; ?>">
                                     <span class="material-symbols-outlined like-icon">thumb_up</span>
@@ -109,13 +118,14 @@
                                 </button>
                                 <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
                             </div>
-                        <?php endif;?>    
+                            <?php else: ?>
+                            <?php endif; ?> 
                     </div>
                 <?php endfor; ?>
             </div>
 
             <div class="buttons btn-space-between">
-            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
                
                 <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
@@ -125,7 +135,7 @@
         
             <?php endif;?>    
             </div>
-            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="make-complain">
                     <button class="make-complain-btn"><p onclick="goToMakeComplaint(<?php echo $post->JobID; ?>)">Click here to make a complain about this job</p></button>
                 </div>
@@ -133,7 +143,7 @@
         </div>
 
         <div class="job-card">
-            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="card-icons">
                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                     <i class="fa fa-share-alt" aria-hidden="true"></i>

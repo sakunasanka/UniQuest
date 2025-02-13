@@ -22,7 +22,6 @@
                 </div>
                 <ul>
                     <li><a onclick="ToggleChangePasswordForm()">Change Password</a></li>
-                    <li><a onclick="showdeleteaccountconfirm()">Deactivate Account</a></li>
                 </ul>
             </div>
             <div class="info-section">
