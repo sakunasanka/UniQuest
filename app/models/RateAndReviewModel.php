@@ -46,7 +46,10 @@ class RateAndReviewModel
     public function getReviewsByCompanyId()
     {
         $this->db->query('SELECT * FROM companyreviews WHERE CompanyID = :company_id ORDER BY created_at DESC');
-        $this->db->bind(':company_id', $_SESSION['user_id']);
+        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): 
+            $this->db->bind(':company_id', $_SESSION['user_id']);
+        else:
+        endif;        
         return $this->db->resultSet();
     }
 
@@ -93,5 +96,114 @@ class RateAndReviewModel
         }
     }
 
+    public function getTrendyCompanies()
+    {
+        // Calculate the date one week ago from today
+        $oneWeekAgo = date('Y-m-d H:i:s', strtotime('-1 week'));
+
+        // Step 1: Get the latest review from each student for each company with a rating >= 4
+        $this->db->query('
+            SELECT CompanyID, StudentID, MAX(created_at) as latest_review_date
+            FROM companyreviews
+            WHERE Rating >= 4 AND created_at >= :oneWeekAgo
+            GROUP BY CompanyID, StudentID
+        ');
+        $this->db->bind(':oneWeekAgo', $oneWeekAgo);
+        $latestReviews = $this->db->resultSet();
+
+        // Step 2: Extract the latest reviews for each company
+        $companyReviews = [];
+        foreach ($latestReviews as $review) {
+            $companyID = $review->CompanyID;
+            $studentID = $review->StudentID;
+            $latestReviewDate = $review->latest_review_date;
+
+            // Fetch the latest review details for this student and company
+            $this->db->query('
+                SELECT Rating
+                FROM companyreviews
+                WHERE CompanyID = :companyID AND StudentID = :studentID AND created_at = :latestReviewDate
+            ');
+            $this->db->bind(':companyID', $companyID);
+            $this->db->bind(':studentID', $studentID);
+            $this->db->bind(':latestReviewDate', $latestReviewDate);
+            $reviewDetails = $this->db->single();
+
+            // Add the rating to the company's review list
+            if (!isset($companyReviews[$companyID])) {
+                $companyReviews[$companyID] = [];
+            }
+            $companyReviews[$companyID][] = $reviewDetails->Rating;
+        }
+
+        // Step 3: Calculate the average rating for companies with more than 0 reviews
+        $trendyCompanies = [];
+        foreach ($companyReviews as $companyID => $ratings) {
+            if (count($ratings) >= 1) {
+                $averageRating = array_sum($ratings) / count($ratings);
+
+                // Fetch additional company details (CompanyLogo and City) from the companies table
+                $this->db->query('
+                    SELECT CompanyLogo, CompanyName, City
+                    FROM companyreviews
+                    WHERE CompanyID = :companyID
+                ');
+                $this->db->bind(':companyID', $companyID);
+                $companyDetails = $this->db->single();
+
+                // Step 4: Get the display rating of companies
+                // Fetch the latest review for each student per company, regardless of time
+                $this->db->query('
+                    SELECT StudentID, MAX(created_at) as latest_review_date
+                    FROM companyreviews
+                    WHERE CompanyID = :companyID
+                    GROUP BY StudentID
+                ');
+                $this->db->bind(':companyID', $companyID);
+                $displayReviews = $this->db->resultSet();
+
+                // Extract ratings for the latest reviews for each student in this company
+                $displayRatings = [];
+                foreach ($displayReviews as $displayReview) {
+                    $this->db->query('
+                        SELECT Rating
+                        FROM companyreviews
+                        WHERE CompanyID = :companyID AND StudentID = :studentID AND created_at = :latestReviewDate
+                    ');
+                    $this->db->bind(':companyID', $companyID);
+                    $this->db->bind(':studentID', $displayReview->StudentID);
+                    $this->db->bind(':latestReviewDate', $displayReview->latest_review_date);
+                    $rating = $this->db->single();
+                    $displayRatings[] = $rating->Rating;
+                }
+
+                // Calculate the display rating for the company (average of the latest reviews)
+                $displayRating = count($displayRatings) > 0 ? array_sum($displayRatings) / count($displayRatings) : 0;
+                
+                // Round off avg_rating and display_rating to 2 decimal places
+                $averageRating = round($averageRating, 2);
+                $displayRating = round($displayRating, 2);
+
+                // Add company details to the trendyCompanies array
+                $trendyCompanies[] = [
+                    'CompanyID' => $companyID,
+                    'avg_rating' => $averageRating,
+                    'total_reviews' => count($ratings),
+                    'CompanyLogo' => $companyDetails->CompanyLogo,
+                    'CompanyName' => $companyDetails->CompanyName,
+                    'City' => $companyDetails->City,
+                    'display_rating' => $displayRating
+                ];
+            }
+        }
+
+        // Step 5: Sort companies by average rating in descending order and limit to top 20 companies
+        usort($trendyCompanies, function ($a, $b) {
+            return $b['avg_rating'] <=> $a['avg_rating'];
+        });
+        $trendyCompanies = array_slice($trendyCompanies, 0, 20);
+
+        return $trendyCompanies;
+    }
 }
 ?>

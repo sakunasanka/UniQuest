@@ -8,6 +8,18 @@ class M_jobpost {
         $this->db = Database::getInstance();
     }
 
+    public function getLatestJobId() {
+        $this->db->query('SELECT * FROM jobs ORDER BY create_at DESC LIMIT 1');
+        
+        $row = $this->db->single();
+        
+        if($row) {
+            return $row->JobID;
+        }
+        
+        return false;
+    }
+
     public function getpostbyid($jobpostId){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.JobID = :id');
         $this->db->bind(':id', $jobpostId);
@@ -15,9 +27,9 @@ class M_jobpost {
         return $row;
     }
 
-    public function getpostbycompanyid($jobpostId){
-        $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
-        $this->db->bind(':id', $jobpostId);
+    public function getpostbycompanyid($companyId){
+        $this->db->query('SELECT * FROM v_companies WHERE v_companies.CompanyID = :id');
+        $this->db->bind(':id', $companyId);
         $row = $this->db->single();
         return $row;
     }
@@ -58,6 +70,11 @@ class M_jobpost {
 
         // Execute and return the result
         return $this->db->execute();
+        if ($this->db->execute()) {
+            return $this->db->lastInsertId(); // Return the last inserted ID
+        } else {
+            return false;
+        }
     }
 
 
@@ -100,6 +117,19 @@ class M_jobpost {
             return false;
         }
     }
+
+    public function getPartTimeJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Part-time' ");
+        return $this->db->resultSet();
+    }
+
+    public function getInternshipJobs()
+    {
+        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Internship' ");
+        return $this->db->resultSet();
+    }
+
     
 
 }

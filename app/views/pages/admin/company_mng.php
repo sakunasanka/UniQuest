@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
-<?php require APPROOT . '/views/popups/admin/deactivateAcc.php'; ?>
+<?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -23,241 +23,49 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">User Name</th>
-                        <th onclick="sortTable(1)">Email</th>
-                        <th onclick="sortTable(2)">Contact Number</th>
-                        <th onclick="sortTable(3)">Registered Date</th>
-                        <th onclick="sortTable(4)">Status</th>
-                        <th class="no-sort">Actions</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "UserID" => "UserID",
+                        "Email" => "Email",
+                        "ContactNo" => "Mobile Number",
+                        "RegisterDate" => "Registered Date",
+                        "Status" => "Status",
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Acme Inc</td>
-                        <td>info@academic.com</td>
-                        <td>0113452660</td>
-                        <td>2024-05-16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/com_detail'">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate" onclick="togglePopup1()">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate" onclick="togglePopup2()">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 3</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 4</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 5</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 4</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Compnay 5</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 4</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 5</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 4</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status inactive">Deactive</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                person_add
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 5</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Company 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>075 9851785</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status active">Active</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                account_box
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                person_remove
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['companies'] as $company) : ?>
+                        <tr>
+                            <td><?php echo $company->UserID; ?></td>
+                            <td><?php echo $company->Email; ?></td>
+                            <td><?php echo $company->ContactNo; ?></td>
+                            <td><?php echo substr($company->RegisterDate, 0, 10); ?></td>
+                            <?php if ($company->Status == 'Active') : ?>
+                                <td><span class="status active">Active</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $company->UserID; ?>, 'Company')">
+                                        person_remove
+                                    </span>
+                                </td>
+                            <?php elseif ($company->Status == 'Deactive') : ?>
+                                <td><span class="status inactive">Deactive</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $company->UserID; ?>, 'Company')">
+                                        person_add
+                                    </span>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
@@ -265,8 +73,8 @@
     </main>
 </div>
 
+
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

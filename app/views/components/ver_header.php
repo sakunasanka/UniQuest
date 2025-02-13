@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITENAME ?></title>
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar2.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/navbar.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -31,7 +31,7 @@
                 </li>
                 <li><a href="/uniquest/verification_team/user_ver_all" class="hov">Go to verify</a></li>
                 <!-- <li><a href="/uniquest/about" class="hov">About Us</a></li> -->
-                <li><a href="/uniquest/service_provider/contact_admin" class="hov">Contact Us</a></li>
+                <li><a href="/uniquest/verification_team/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
