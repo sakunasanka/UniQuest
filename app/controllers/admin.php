@@ -727,7 +727,7 @@ class Admin extends Controller
 
     public function notifications()
     {
-        $messages = $this->model('ContactModel')->getMessages();
+        $messages = $this->model('ContactModel')->getMessagesAll();
 
         // Load the view with the messages
         $data = [
