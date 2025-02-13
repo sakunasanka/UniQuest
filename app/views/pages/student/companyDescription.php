@@ -16,7 +16,12 @@
 
     <div class="content-area">
         <div class="view-card">
-            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Logo not available">
+            <div class="job-logo2">
+                <img src="<?php echo empty($data['post']->CompanyLogo)
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['post']->CompanyLogo; ?>"
+                    alt="Burger King Logo">
+            </div>
 
             <div class="view-card-content">
                 <div class="title-with-bookmark">
@@ -29,10 +34,9 @@
                     <?php endif; ?>
                 </div>
 
-
-                <h2><?php echo $data['post']->Industry;?></h2>
-                <p><?php echo $data['post']->Description;?></p>
-
+                <h2><?php echo $data['post']->Industry; ?></h2>
+                <p><?php echo $data['post']->Description; ?></p>
+              
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
