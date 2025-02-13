@@ -423,7 +423,20 @@ class Student extends Controller
 
     public function trendyCompany()
     {
-        $this->view('pages/student/trendyCompany');
+        $trendy_companies = $this->model('RateAndReviewModel')->getTrendyCompanies();
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+        } 
+        else {
+            $userId = null;
+        }
+
+        $data =[
+            'trendy_companies' => $trendy_companies
+        ];
+
+        $this->view('pages/student/trendyCompany', $data);
     }
 
     public function saveJobs()
