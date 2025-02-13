@@ -1,8 +1,8 @@
 <?php
 // Manually include PHPMailer files
-require 'C:\xampp\htdocs\UniQuest\PHPMailer\PHPMailer.php';
-require 'C:\xampp\htdocs\UniQuest\PHPMailer\Exception.php';
-require 'C:\xampp\htdocs\UniQuest\PHPMailer\SMTP.php';
+require PHPMAILERROOT . '/PHPMailer.php';
+require PHPMAILERROOT . '/Exception.php';
+require PHPMAILERROOT . '/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
