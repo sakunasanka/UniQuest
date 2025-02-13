@@ -299,82 +299,82 @@ class Admin extends Controller
 
     public function ptjobs_mng($queryParam = [])
     {
-          try {
-              // Get the requested data from query params
-              $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-              $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-              $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-              $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-              $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order);
-              $data = [
-                  'ptjobs' => $ptjobs['data'],
-                  'currentPage' => $ptjobs['currentPage'],
-                  'rowsPerPage' => $ptjobs['limit'],
-                  'totalRows' => $ptjobs['totalRows'],
-                  'totalPages' => $ptjobs['totalPages'],
-                  'isLastPage' => $ptjobs['isLastPage'] ? 'yes' : 'no',
-              ];
-              $this->view('pages/admin/ptjobs_mng', $data);
-          } catch (Exception $e) {
-              die($e->getMessage()); //TODO: Handle this
-          }
-      }
+            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order);
+            $data = [
+                'ptjobs' => $ptjobs['data'],
+                'currentPage' => $ptjobs['currentPage'],
+                'rowsPerPage' => $ptjobs['limit'],
+                'totalRows' => $ptjobs['totalRows'],
+                'totalPages' => $ptjobs['totalPages'],
+                'isLastPage' => $ptjobs['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/admin/ptjobs_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
 
     public function intern_mng($queryParam = [])
     {
-          try {
-              // Get the requested data from query params
-              $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-              $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-              $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-              $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-              $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order);
-              $data = [
-                  'interns' => $interns['data'],
-                  'currentPage' => $interns['currentPage'],
-                  'rowsPerPage' => $interns['limit'],
-                  'totalRows' => $interns['totalRows'],
-                  'totalPages' => $interns['totalPages'],
-                  'isLastPage' => $interns['isLastPage'] ? 'yes' : 'no',
-              ];
-              $this->view('pages/admin/intern_mng', $data);
-          } catch (Exception $e) {
-              die($e->getMessage()); //TODO: Handle this
-          }
+            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order);
+            $data = [
+                'interns' => $interns['data'],
+                'currentPage' => $interns['currentPage'],
+                'rowsPerPage' => $interns['limit'],
+                'totalRows' => $interns['totalRows'],
+                'totalPages' => $interns['totalPages'],
+                'isLastPage' => $interns['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/admin/intern_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
-  
+
     public function sendMessage()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize input
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
+
             // Data for the chat message
             $data = [
                 'sender_id' => $_SESSION['user_id'], // Admin ID from session
                 'receiver_id' => trim($_POST['receiver_id'] ?? ''), // Student ID
                 'message' => trim($_POST['message'] ?? ''),
-    
+
                 // Error handling
                 'receiver_id_err' => '',
                 'message_err' => ''
             ];
-    
+
             // Validation checks
             if (empty($data['receiver_id'])) {
                 $data['receiver_id_err'] = 'Receiver ID is required.';
             }
-    
+
             if (empty($data['message'])) {
                 $data['message_err'] = 'Message cannot be empty.';
             }
-    
+
             // Ensure no errors before submitting
             if (empty($data['receiver_id_err']) && empty($data['message_err'])) {
                 $chatModel = $this->model('ChatModel');
-    
+
                 // Attempt to send the message
                 if ($chatModel->sendMessage($data['sender_id'], $data['receiver_id'], $data['message'], 'Admin')) {
                     flash('chat-msg', 'Message sent successfully.');
@@ -451,7 +451,7 @@ class Admin extends Controller
 
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
-            
+
             $data = [
                 'userID' => $userID,
                 'user' => $this->model->getUserDetails($userID),
@@ -505,7 +505,7 @@ class Admin extends Controller
             $this->view('pages/admin/com_detail', $data);
         } elseif ($data['user']['Role'] == 'VT-Member') {
             $this->view('pages/admin/vt_detail', $data);
-        } 
+        }
     }
 
     public function user_ver_detail($userID)
@@ -531,6 +531,16 @@ class Admin extends Controller
     {
         try {
             $this->model->approveUser($userID);
+            // Send email to user
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailCompAccountApproved($email, $name);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailStuAccountApproved($email, $name);
+            }
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -804,7 +814,8 @@ class Admin extends Controller
     }
 
     // In AdminController.php
-    public function fetchMessageDetails($id) {
+    public function fetchMessageDetails($id)
+    {
         // Check if the user has the right role and permissions
         if (!isset($_SESSION['user_role'])) {
             http_response_code(401);
@@ -813,7 +824,7 @@ class Admin extends Controller
         }
 
         // Get the database connection
-        $db = $this->model('ContactModel'); 
+        $db = $this->model('ContactModel');
 
         // Fetch the message details by ID
         $message = $db->getMessageById($id);
@@ -829,10 +840,11 @@ class Admin extends Controller
         //correct this line
     }
 
-    public function editMessage($messageId) {
+    public function editMessage($messageId)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = json_decode(file_get_contents("php://input"), true);
-    
+
             if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
                 if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
                     echo json_encode(['success' => true]);
@@ -844,8 +856,9 @@ class Admin extends Controller
             }
         }
     }
-    
-    public function deleteMessage($messageId) {
+
+    public function deleteMessage($messageId)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
                 if ($this->model('chatModel')->deleteMessage($messageId)) {

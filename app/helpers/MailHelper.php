@@ -98,4 +98,40 @@ class MailHelper
 
         return self::sendEmail($toEmail, '', $subject, $template);
     }
+
+    //send email to notify student that their account has been approved with link to login
+    public static function sendEmailStuAccountApproved($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . '\emails\stu_account_approved.html');
+        //create link
+        $link = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{login_link}}', $link, $template);
+        $template = str_replace('{{name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Approved";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
+
+    //send email to notify company that their account has been approved with link to login
+    public static function sendEmailCompAccountApproved($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . '\emails\comp_account_approved.html');
+        //create link
+        $link = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{login_link}}', $link, $template);
+        $template = str_replace('{{company_name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Approved";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
 }
