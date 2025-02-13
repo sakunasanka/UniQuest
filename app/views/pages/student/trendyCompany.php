@@ -38,7 +38,7 @@
                                 <div class="title-content">
                                     <h3 class="company-title"><?php echo $post['CompanyName']; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i><?php echo $post['avg_rating']; ?>
+                                        <i class="fa fa-star"></i><?php echo $post['display_rating']; ?>
                                     </div>
                                 </div>
                                 <p class="review-count">Based on <span><?php echo $post['total_reviews']; ?></span> 
