@@ -358,32 +358,42 @@ class Student extends Controller
     }
 
     public function jobs()
-    {   
-        // $posts = $this->model('M_jobpost')->getPosts();
+    {
+        // Fetch part-time job posts
         $posts = $this->model('M_jobpost')->getPartTimeJobs();
+        $displayRatings = [];
 
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($posts as $post) {
+            $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+            $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+        }
+
+        // Check if the user is logged in
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
-        // Get bookmarked jobs for the user
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        } 
-        else {
+            // Get bookmarked jobs for the user
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
             $bookmarkedJobIds = [];
         }
 
-        $data =[
+        // Prepare data to pass to the view
+        $data = [
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
-            'bookmarkedJobIds' => $bookmarkedJobIds
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRatings' => $displayRatings // Add display ratings to the data array
         ];
 
+        // Load the view with the data
         $this->view('pages/student/jobs', $data);
-        
     }
+
     public function notifications()
     {
         $this->view('pages/student/notification_alerts');
@@ -394,7 +404,13 @@ class Student extends Controller
 
         {   
             $posts = $this->model('userModel')->getcompany();
-           
+            $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
     
             if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id']; // Get user ID from session
@@ -411,7 +427,8 @@ class Student extends Controller
             $data =[
                 'posts' => $posts,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
-                'bookmarkedCompanyIds' => $bookmarkedCompanyIds
+                'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
+                'displayRatings' => $displayRatings
             ];
     
             $this->view('pages/student/company', $data);
@@ -454,6 +471,13 @@ class Student extends Controller
 
           // Get bookmarked jobs for the user
         $posts = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         } 
@@ -465,7 +489,8 @@ class Student extends Controller
            $data =[
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
-            'bookmarkedJobIds' => $bookmarkedJobIds
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRatings' => $displayRatings
         ];
 
         $this->view('pages/student/saveJobs', $data);
@@ -478,6 +503,14 @@ class Student extends Controller
 
           // Get bookmarked jobs for the user
         $posts = $this->model('jobModel')->getBookmarkedInternships($userId);
+        $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
+
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         } 
@@ -489,7 +522,8 @@ class Student extends Controller
            $data =[
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
-            'bookmarkedJobIds' => $bookmarkedJobIds
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRatings' => $displayRatings
         ];
 
         $this->view('pages/student/saveInternships', $data);
@@ -502,6 +536,14 @@ class Student extends Controller
 
           // Get bookmarked jobs for the user
         $posts = $this->model('companyModel')->getBookmarkedCompanies($userId);
+        $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
+
         $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
         $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
         } 
@@ -513,7 +555,8 @@ class Student extends Controller
            $data =[
             'posts' => $posts,
             'bookmarkedCompanies' => $bookmarkedCompanies,
-            'bookmarkedCompanyIds' => $bookmarkedCompanyIds
+            'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
+            'displayRatings' => $displayRatings
         ];
 
         $this->view('pages/student/saveCompanies', $data);
@@ -725,6 +768,13 @@ class Student extends Controller
         {
             // Retrieve internship jobs
             $posts = $this->model('M_jobpost')->getInternshipJobs();
+            $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
         
             if (isset($_SESSION['user_id'])) {
                 $userId = $_SESSION['user_id']; // Get user ID from session
@@ -740,7 +790,8 @@ class Student extends Controller
             $data = [
                 'posts' => $posts,
                 'bookmarkedJobs' => $bookmarkedJobs,
-                'bookmarkedJobIds' => $bookmarkedJobIds
+                'bookmarkedJobIds' => $bookmarkedJobIds,
+                'displayRatings' => $displayRatings // Add display ratings to the data array
             ];
         
             $this->view('pages/student/jobs', $data); // Render internships view
