@@ -60,7 +60,7 @@
                                 <div class="card-icons">
                                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                     <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                    <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+                                    <i class="<?php echo in_array($post['CompanyID'], $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post['CompanyID']; ?>, this);"></i>  
                                 </div>
                             <?php endif;?>    
                         </div>
