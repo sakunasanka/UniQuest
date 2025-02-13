@@ -93,14 +93,24 @@ class jobModel extends Model
     //     }
     // }
 
-    public function getVerifiedJobsByCategory($category)
+    public function getVerifiedJobsByCategory($category, $pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
     {
         try {
             $conditions = [
                 ['Status', 'IN', ['Active', 'Deactive']],
                 ['Category', '=', $category]
             ];
-            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
+            $users = $this->select(
+                'v_jobs', 
+                $conditions, 
+                'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 
+                'AND', 
+                '', // GROUP BY
+                $sort . ' ' . $order,// ORDER BY
+                $rowsPerPage, // LIMIT
+                $pageNumber, // page number
+                true // fetch all
+            );
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -112,13 +122,13 @@ class jobModel extends Model
     }
 
 
-    public function getPendingJobs()
+    public function getPendingJobs($pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
     {
         try {
             $conditions = [
                 ['Status', '=', 'Pending']
             ];
-            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -129,13 +139,13 @@ class jobModel extends Model
         }
     }
 
-    public function getNotApprovedJobs()
+    public function getNotApprovedJobs($pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
     {
         try {
             $conditions = [
                 ['Status', '=', 'Not Approved']
             ];
-            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', '', 0, true);
+            $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -312,11 +322,11 @@ class jobModel extends Model
         }
     }
 
-    public function getVerifiedJobsByMe($userId)
+    public function getVerifiedJobsByMe($userId, $pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
     {
         try {
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedJobs', [['ActionBy', '=', $userId]], '*', 'AND', '', '', 0, true);
+            $verifiedEntities = $this->select('v_verifiedJobs', [['ActionBy', '=', $userId]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());

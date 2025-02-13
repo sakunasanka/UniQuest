@@ -142,6 +142,11 @@ form h3 {
     width: 100%;
 }
 
+/* for inputs with readonly option */
+.input-container input[readonly] {
+    background-color: #ddd;
+}
+
 .input-container input[type="radio"] {
     font-size: 1.2rem;
     margin-top: 12px;

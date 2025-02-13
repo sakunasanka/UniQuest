@@ -46,12 +46,23 @@ class Admin extends Controller
         $this->dashboard();
     }
 
-    public function students_mng()
+    public function students_mng($queryParam = [])
     {
         try {
-            $students = $this->model->getVerifiedUsersByRole('Student');
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order);
             $data = [
-                'students' => $students
+                'students' => $students['data'],
+                'currentPage' => $students['currentPage'],
+                'rowsPerPage' => $students['limit'],
+                'totalRows' => $students['totalRows'],
+                'totalPages' => $students['totalPages'],
+                'isLastPage' => $students['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/students_mng', $data);
         } catch (Exception $e) {
@@ -64,12 +75,27 @@ class Admin extends Controller
         $this->view('pages/admin/add_student');
     }
 
-    public function company_mng()
+    public function company_mng($queryParam = [])
     {
         try {
-            $companies = $this->model->getVerifiedUsersByRole('Company');
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            // $page = $_GET['page'] ?? 1;
+            // $limit = $_GET['limit'] ?? 2;
+            // $sort = $_GET['sort'] ?? 'UserID';
+            // $order = $_GET['order'] ?? 'ASC';
+
+            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order);
             $data = [
-                'companies' => $companies
+                'companies' => $companies['data'],
+                'currentPage' => $companies['currentPage'],
+                'rowsPerPage' => $companies['limit'],
+                'totalRows' => $companies['totalRows'],
+                'totalPages' => $companies['totalPages'],
+                'isLastPage' => $companies['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/company_mng', $data);
         } catch (Exception $e) {
@@ -82,13 +108,23 @@ class Admin extends Controller
         $this->view('pages/admin/add_company');
     }
 
-    public function verTeam_mng()
+    public function verTeam_mng($queryParam = [])
     {
         try {
-            // $vtMembers = $this->model->getVTMembers();
-            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member');
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order);
             $data = [
-                'vtMembers' => $vtMembers
+                'vtMembers' => $vtMembers['data'],
+                'currentPage' => $vtMembers['currentPage'],
+                'rowsPerPage' => $vtMembers['limit'],
+                'totalRows' => $vtMembers['totalRows'],
+                'totalPages' => $vtMembers['totalPages'],
+                'isLastPage' => $vtMembers['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/verTeam_mng', $data);
         } catch (Exception $e) {
@@ -152,26 +188,56 @@ class Admin extends Controller
         }
     }
 
-    public function job_complaint()
+    public function job_complaint($queryParam = [])
     {
-        $complaints_job = $this->model('ComplaintModel')->getAllComplaints();
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-        $data = [
-            'complaints_job' => $complaints_job
-        ];
+            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order);
 
-        $this->view('pages/admin/job_complaint', $data);
+            $data = [
+                'complaints_job' => $complaints_job['data'],
+                'currentPage' => $complaints_job['currentPage'],
+                'rowsPerPage' => $complaints_job['limit'],
+                'totalRows' => $complaints_job['totalRows'],
+                'totalPages' => $complaints_job['totalPages'],
+                'isLastPage' => $complaints_job['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/job_complaint', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
-    public function company_complaint()
+    public function company_complaint($queryParam = [])
     {
-        $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany();
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-        $data = [
-            'complaints_com' => $complaints_com
-        ];
+            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order);
 
-        $this->view('pages/admin/company_complaint', $data);
+            $data = [
+                'complaints_com' => $complaints_com['data'],
+                'currentPage' => $complaints_com['currentPage'],
+                'rowsPerPage' => $complaints_com['limit'],
+                'totalRows' => $complaints_com['totalRows'],
+                'totalPages' => $complaints_com['totalPages'],
+                'isLastPage' => $complaints_com['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/company_complaint', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function complaint_detail($complaintID)
@@ -185,15 +251,30 @@ class Admin extends Controller
         $this->view('pages/admin/complaint_detail', $data);
     }
 
-    public function complaint_company($company)
+    public function complaint_company($company, $queryParam = [])
     {
-        $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-        $data = [
-            'complaints' => $complaints
-        ];
+            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order);
 
-        $this->view('pages/admin/complaint_company', $data);
+            $data = [
+                'complaints' => $complaints['data'],
+                'currentPage' => $complaints['currentPage'],
+                'rowsPerPage' => $complaints['limit'],
+                'totalRows' => $complaints['totalRows'],
+                'totalPages' => $complaints['totalPages'],
+                'isLastPage' => $complaints['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/complaint_company', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function resolve_complaint($complaintID)
@@ -216,38 +297,118 @@ class Admin extends Controller
         }
     }
 
-    public function ptjobs_mng()
+    public function ptjobs_mng($queryParam = [])
     {
-        try {
-            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time');
+          try {
+              // Get the requested data from query params
+              $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+              $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+              $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+              $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+              $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order);
+              $data = [
+                  'ptjobs' => $ptjobs['data'],
+                  'currentPage' => $ptjobs['currentPage'],
+                  'rowsPerPage' => $ptjobs['limit'],
+                  'totalRows' => $ptjobs['totalRows'],
+                  'totalPages' => $ptjobs['totalPages'],
+                  'isLastPage' => $ptjobs['isLastPage'] ? 'yes' : 'no',
+              ];
+              $this->view('pages/admin/ptjobs_mng', $data);
+          } catch (Exception $e) {
+              die($e->getMessage()); //TODO: Handle this
+          }
+      }
+
+    public function intern_mng($queryParam = [])
+    {
+          try {
+              // Get the requested data from query params
+              $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+              $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+              $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+              $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+              $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order);
+              $data = [
+                  'interns' => $interns['data'],
+                  'currentPage' => $interns['currentPage'],
+                  'rowsPerPage' => $interns['limit'],
+                  'totalRows' => $interns['totalRows'],
+                  'totalPages' => $interns['totalPages'],
+                  'isLastPage' => $interns['isLastPage'] ? 'yes' : 'no',
+              ];
+              $this->view('pages/admin/intern_mng', $data);
+          } catch (Exception $e) {
+              die($e->getMessage()); //TODO: Handle this
+          }
+    }
+  
+    public function sendMessage()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize input
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+            // Data for the chat message
             $data = [
-                'ptjobs' => $ptjobs
+                'sender_id' => $_SESSION['user_id'], // Admin ID from session
+                'receiver_id' => trim($_POST['receiver_id'] ?? ''), // Student ID
+                'message' => trim($_POST['message'] ?? ''),
+    
+                // Error handling
+                'receiver_id_err' => '',
+                'message_err' => ''
             ];
-            $this->view('pages/admin/ptjobs_mng', $data);
-        } catch (Exception $e) {
-            die($e->getMessage()); //TODO: Handle this
+    
+            // Validation checks
+            if (empty($data['receiver_id'])) {
+                $data['receiver_id_err'] = 'Receiver ID is required.';
+            }
+    
+            if (empty($data['message'])) {
+                $data['message_err'] = 'Message cannot be empty.';
+            }
+    
+            // Ensure no errors before submitting
+            if (empty($data['receiver_id_err']) && empty($data['message_err'])) {
+                $chatModel = $this->model('ChatModel');
+    
+                // Attempt to send the message
+                if ($chatModel->sendMessage($data['sender_id'], $data['receiver_id'], $data['message'], 'Admin')) {
+                    flash('chat-msg', 'Message sent successfully.');
+                    redirect('admin/stu_detail' . $data['receiver_id']);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with validation errors
+                $this->view('pages/admin/stu_detail', $data);
+            }
+        } else {
+            // For a GET request, redirect back
+            redirect('admin/students');
         }
     }
 
-    public function intern_mng()
+    public function user_ver_pending($queryParam = [])
     {
         try {
-            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship');
-            $data = [
-                'interns' => $interns
-            ];
-            $this->view('pages/admin/intern_mng', $data);
-        } catch (Exception $e) {
-            die($e->getMessage()); //TODO: Handle this
-        }
-    }
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-    public function user_ver_pending()
-    {
-        try {
-            $users = $this->model->getPendingStudentsAndCompanies();
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
-                'users' => $users
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/user_ver_pending', $data);
         } catch (Exception $e) {
@@ -255,12 +416,23 @@ class Admin extends Controller
         }
     }
 
-    public function user_ver_not()
+    public function user_ver_not($queryParam = [])
     {
         try {
-            $users = $this->model->getNotVerifiedStudentsAndCompanies();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
-                'users' => $users
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/user_ver_not', $data);
         } catch (Exception $e) {
@@ -270,22 +442,70 @@ class Admin extends Controller
 
     public function user_detail($userID)
     {
-        try {
-            $user = $this->model->getUserDetails($userID);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+            
             $data = [
-                'user' => $user
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
             ];
 
-            if ($user['Role'] == 'Student') {
-                $this->view('pages/admin/stu_detail', $data);
-            } else if ($user['Role'] == 'Company') {
-                $this->view('pages/admin/com_detail', $data);
-            } else if ($user['Role'] == 'VT-Member') {
-                $this->view('pages/admin/vt_detail', $data);
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
             }
-        } catch (Exception $e) {
-            die($e->getMessage()); //TODO: Handle this
+
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('admin/user_detail/' . $userID);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with errors
+                $this->loadUserDetailView($data);
+            }
+        } else {
+            // Load initial view without POST request
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
         }
+    }
+
+    private function loadUserDetailView($data)
+    {
+        if ($data['user']['Role'] == 'Student') {
+            $this->view('pages/admin/stu_detail', $data);
+        } elseif ($data['user']['Role'] == 'Company') {
+            $this->view('pages/admin/com_detail', $data);
+        } elseif ($data['user']['Role'] == 'VT-Member') {
+            $this->view('pages/admin/vt_detail', $data);
+        } 
     }
 
     public function user_ver_detail($userID)
@@ -377,12 +597,23 @@ class Admin extends Controller
         }
     }
 
-    public function job_ver_pending()
+    public function job_ver_pending($queryParam = [])
     {
         try {
-            $jobs = $this->model('jobModel')->getPendingJobs();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order);
             $data = [
-                'jobs' => $jobs
+                'jobs' => $jobs['data'],
+                'currentPage' => $jobs['currentPage'],
+                'rowsPerPage' => $jobs['limit'],
+                'totalRows' => $jobs['totalRows'],
+                'totalPages' => $jobs['totalPages'],
+                'isLastPage' => $jobs['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/job_ver_pending', $data);
         } catch (Exception $e) {
@@ -403,12 +634,23 @@ class Admin extends Controller
         }
     }
 
-    public function job_ver_not()
+    public function job_ver_not($queryParam = [])
     {
         try {
-            $jobs = $this->model('jobModel')->getNotApprovedJobs();
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order);
             $data = [
-                'jobs' => $jobs
+                'jobs' => $jobs['data'],
+                'currentPage' => $jobs['currentPage'],
+                'rowsPerPage' => $jobs['limit'],
+                'totalRows' => $jobs['totalRows'],
+                'totalPages' => $jobs['totalPages'],
+                'isLastPage' => $jobs['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/admin/job_ver_not', $data);
         } catch (Exception $e) {
@@ -500,6 +742,120 @@ class Admin extends Controller
 
     public function notifications()
     {
-        $this->view('pages/student/notification_alerts');
+        $messages = $this->model('ContactModel')->getMessages();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
+        $this->view('pages/admin/notification_alerts', $data);
+    }
+
+    public function updateReadStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $id = $_POST['id'];
+
+            if ($this->model('ContactModel')->updateReadStatus($id)) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update read status.']);
+            }
+        } else {
+            http_response_code(405);
+        }
+    }
+
+    public function messages_stu()
+    {
+        $messages = $this->model('ContactModel')->getMessagesStu();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
+        $this->view('pages/admin/messages_stu', $data);
+    }
+
+    public function messages_com()
+    {
+        $messages = $this->model('ContactModel')->getMessagesCom();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
+        $this->view('pages/admin/messages_com', $data);
+    }
+
+    public function messages_ver()
+    {
+        $messages = $this->model('ContactModel')->getMessagesVer();
+
+        // Load the view with the messages
+        $data = [
+            'messages' => $messages
+        ];
+
+        $this->view('pages/admin/messages_ver', $data);
+    }
+
+    // In AdminController.php
+    public function fetchMessageDetails($id) {
+        // Check if the user has the right role and permissions
+        if (!isset($_SESSION['user_role'])) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
+
+        // Get the database connection
+        $db = $this->model('ContactModel'); 
+
+        // Fetch the message details by ID
+        $message = $db->getMessageById($id);
+
+        if ($message) {
+            http_response_code(200);
+            echo json_encode($message); // Send message as JSON
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Message not found']);
+        }
+        $this->view('pages/admin/messages/messageview');
+        //correct this line
+    }
+
+    public function editMessage($messageId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = json_decode(file_get_contents("php://input"), true);
+    
+            if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
+                if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'error' => 'Failed to edit message.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Edit time limit expired.']);
+            }
+        }
+    }
+    
+    public function deleteMessage($messageId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
+                if ($this->model('chatModel')->deleteMessage($messageId)) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Delete time limit expired.']);
+            }
+        }
     }
 }

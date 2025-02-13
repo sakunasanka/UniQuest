@@ -22,15 +22,19 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">Job ID</th>
-                        <th onclick="sortTable(1)">Title</th>
-                        <th onclick="sortTable(2)">Company Name</th>
-                        <th onclick="sortTable(3)">Company Email</th>
-                        <th onclick="sortTable(4)">Posted Date</th>
-                        <th onclick="sortTable(5)">Status</th>
-                        <th class="no-sort">Actions</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "JobID" => "Job ID",
+                        "Title" => "Title",
+                        "CompanyName" => "Company Name",
+                        "Email" => "Company Email",
+                        "jobs_create_at" => "Posted Date",
+                        "Status" => "Status",
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
                     <?php foreach ($data['ptjobs'] as $job) : ?>
@@ -70,10 +74,6 @@
     </main>
 </div>
 
-<!-- Footer -->
-
-
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

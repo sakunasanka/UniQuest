@@ -26,10 +26,10 @@ class ComplaintModel extends Model {
         }
     }
 
-    public function getAllComplaints()
+    public function getAllComplaints($pageNumber = 1, $rowsPerPage = 2, $sort = "ComplaintID", $order = "ASC")
     {
         try {
-            $complaints = $this->select('studentjobcomplaints', [], '*', '', '', '', 0, true);
+            $complaints = $this->select('studentjobcomplaints', [], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $complaints;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -43,7 +43,7 @@ class ComplaintModel extends Model {
     public function getComplaintDetails($complaintId)
     {
         try {
-            $complaint = $this->select('studentjobcomplaints', [['ComplaintID', '=',  $complaintId]], '*', 'AND', '', '', 0, false);
+            $complaint = $this->select('studentjobcomplaints', [['ComplaintID', '=',  $complaintId]], '*', 'AND', '', '', 0, 1, false);
             return $complaint;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -54,10 +54,11 @@ class ComplaintModel extends Model {
         }
     }
 
-    public function getComplaintsGroupedByCompany()
+    public function getComplaintsGroupedByCompany($pageNumber = 1, $rowsPerPage = 2, $sort = "CompanyID", $order = "ASC")
     {
         try {
-            $complaints = $this->select('studentjobcomplaints', [], 'CompanyID, CompanyName, CompanyEmail, Status, MAX(ComplainedDate) AS LastComplainedDate, COUNT(CompanyID) AS ComplaintCount', '', 'CompanyID', 'ComplaintCount DESC', 0, true);
+            // $complaints = $this->select('studentjobcomplaints', [], 'CompanyID, CompanyName, CompanyEmail, Status, MAX(ComplainedDate) AS LastComplainedDate, COUNT(CompanyID) AS ComplaintCount', '', 'CompanyID', 'ComplaintCount DESC', $rowsPerPage, $pageNumber, true);
+            $complaints = $this->select('v_comlaintsforcompany', [], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $complaints;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -68,10 +69,10 @@ class ComplaintModel extends Model {
         }
     }
 
-    public function getComplaintsByCompany($companyID)
+    public function getComplaintsByCompany($companyID, $pageNumber = 1, $rowsPerPage = 2, $sort = "ComplaintID", $order = "ASC")
     {
         try {
-            $complaints = $this->select('studentjobcomplaints', [['CompanyID', '=', $companyID]], '*', '', '', '', 0, true);
+            $complaints = $this->select('studentjobcomplaints', [['CompanyID', '=', $companyID]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $complaints;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -85,7 +86,7 @@ class ComplaintModel extends Model {
     public function getCountPendingComplaints()
     {
         try {
-            $complaints = $this->select('studentjobcomplaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, false);
+            $complaints = $this->select('studentjobcomplaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, 1, false);
             return $complaints->PendingCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
