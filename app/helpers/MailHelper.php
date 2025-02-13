@@ -1,8 +1,18 @@
 <?php
-// Manually include PHPMailer files
-require 'C:\xampp\htdocs\UniQuest\PHPMailer\PHPMailer.php';
-require 'C:\xampp\htdocs\UniQuest\PHPMailer\Exception.php';
-require 'C:\xampp\htdocs\UniQuest\PHPMailer\SMTP.php';
+// Auto-detect the base path based on the operating system
+$basePath = '';
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+    // Windows
+    $basePath = 'C:\xampp\htdocs\UniQuest\PHPMailer';
+} else {
+    // macOS, Linux, or other Unix-based systems
+    $basePath = '/Applications/XAMPP/xamppfiles/htdocs/UniQuest/PHPMailer';
+}
+
+// Use DIRECTORY_SEPARATOR to handle path separators
+require $basePath . DIRECTORY_SEPARATOR . 'PHPMailer.php';
+require $basePath . DIRECTORY_SEPARATOR . 'Exception.php';
+require $basePath . DIRECTORY_SEPARATOR . 'SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -52,7 +62,7 @@ class MailHelper
     public static function sendEmailWithTokenCompany($toEmail, $token)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\verification_email_comp.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'verification_email_comp.html');
         //create link
         $link = URLROOT . '/register/verifyCompEmail?token=' . $token;
 
@@ -69,7 +79,7 @@ class MailHelper
     public static function sendEmailWithTokenStudent($toEmail, $token)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\verification_email_stu.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'verification_email_stu.html');
         //create link
         $link = URLROOT . '/register/verifyStuEmail?token=' . $token;
 
@@ -86,7 +96,7 @@ class MailHelper
     public static function sendEmailWithTokenResetPassword($toEmail, $token)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\reset_password.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'reset_password.html');
         //create link
         $link = URLROOT . '/user/reset_password?token=' . $token;
 
