@@ -513,8 +513,16 @@ class userModel extends Model
     {
         try {
             // Get users by role
-            $users = $this->select('User', [['Role', '=', $role]], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, 1, true);
-            return $users['data'][0]->UserCount;
+            $users = $this->select('User', [['Role', '=', $role], ['Status', '=', 'Active']], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, true);
+            
+            // Check if the result is an object and access the property correctly
+            if (is_object($users)) {
+                return $users->UserCount;
+            } elseif (is_array($users) && !empty($users)) {
+                return $users[0]->UserCount;
+            } else {
+                return 0; // No users found
+            }
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return 0;

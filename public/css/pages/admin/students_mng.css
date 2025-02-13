@@ -74,7 +74,10 @@ table th {
     text-align: center;
     border-bottom: 2px solid #e2e2e2;
     background-color: #f5f5f5;
-    cursor: pointer;
+}
+
+table th.no-sort {
+    cursor: default;
 }
 
 tbody tr:hover {

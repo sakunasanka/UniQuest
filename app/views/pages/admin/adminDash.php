@@ -41,12 +41,12 @@
             <p>The revenue gained by the premium users this month.</p>
             <h1><?php echo 25000; ?></h1>
         </div>
-        <div class="dashboard-card" onclick="goToStuMng()">
+        <div class="dashboard-card" onclick="goToUserVer()">
             <h3>Pending User Verification</h3>
             <p>The number of user verifications pending action.</p>
             <h1><?php echo $data['pendingUserCount']; ?></h1>
         </div>
-        <div class="dashboard-card" onclick="goToJobMng()">
+        <div class="dashboard-card" onclick="goToJobsVer()">
             <h3>Pending Job Verification</h3>
             <p>The number of job verifications pending action.</p>
             <h1><?php echo $data['pendingJobCount']; ?></h1>
@@ -83,5 +83,13 @@
 
     function goToComplaintMng() {
         window.location.href = "<?php echo URLROOT; ?>/admin/job_complaint";
+    }
+
+    function goToUserVer() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/user_ver_pending";
+    }
+
+    function goToJobsVer() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/job_ver_pending";
     }
 </script>

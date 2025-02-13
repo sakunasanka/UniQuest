@@ -23,14 +23,18 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'UserID')">User ID</th>
-                        <th onclick="sortTable(1,'Email')">Email</th>
-                        <th onclick="sortTable(2, 'ContactNo')">Mobile Number</th>
-                        <th onclick="sortTable(3, 'RegisterDate')">Registered Date</th>
-                        <th onclick="sortTable(4, 'Status')">Status</th>
-                        <th class="no-sort">Actions</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "UserID" => "UserID",
+                        "Email" => "Email",
+                        "ContactNo" => "Mobile Number",
+                        "RegisterDate" => "Registered Date",
+                        "Status" => "Status",
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
                     <?php foreach ($data['companies'] as $company) : ?>
@@ -69,11 +73,8 @@
     </main>
 </div>
 
-<script>
-    const totalPages = <?php echo $data['totalPages']; ?>;
-</script>
+
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

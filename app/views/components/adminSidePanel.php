@@ -29,6 +29,11 @@
             <span class="material-symbols-outlined"> problem </span>
             Complaints
         </button>
+        
+        <button class="nav-btn" data-paths="/UniQuest/admin/messages_stu">
+        <span class="material-symbols-outlined">sms</span>
+            Messages
+        </button>
 
         <button class="nav-btn" data-path="/UniQuest/admin/analytics">
             <span class="material-symbols-outlined"> monitoring </span>
