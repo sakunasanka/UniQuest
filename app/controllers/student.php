@@ -56,7 +56,58 @@ class Student extends Controller
 
     public function contact_admin()
     {
-        $this->view('pages/student/contact_admin');
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+             // Data for the contact form
+             $data = [
+                'name' => trim($_POST['name'] ?? ''),
+                'topic' => trim($_POST['topic'] ?? ''),
+                'message' => trim($_POST['message'] ?? ''),
+
+                'name_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+
+            // Validation checks
+            if (empty($data['name'])) {
+                $data['name_err'] = 'Please enter your name';
+            }
+
+
+            if (empty($data['topic'])) {
+                $data['topic_err'] = 'Please select a topic';
+            }
+
+            if (empty($data['message'])) {
+                $data['message_err'] = 'Please enter your message';
+            }
+
+            // Ensure no errors before submitting
+            if (empty($data['name_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+                if($this->model('ContactModel')->sendMessage($data)){
+                    flash('contact-msg', 'Your message has been sent successfully.');
+                    redirect('student/contact_admin');
+                } else {
+                    die('Something went wrong. Please try again.');
+                }
+            } else {
+                $this->view('pages/student/contact_admin', $data);
+            }
+        } else {
+            // Initialize default data for the view on GET request
+            $data = [
+                'name' => '',
+                'topic' => '',
+                'message' => '',
+                'name_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+    
+        $this->view('pages/student/contact_admin', $data);
+        }
     }
 
     public function students_mng()
@@ -372,7 +423,27 @@ class Student extends Controller
 
     public function trendyCompany()
     {
-        $this->view('pages/student/trendyCompany');
+        $trendy_companies = $this->model('RateAndReviewModel')->getTrendyCompanies();
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+
+            // Get bookmarked companies for the user
+            $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
+            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        } 
+        else {
+            $userId = null;
+            $bookmarkedCompanies = []; // No bookmarks if not logged in
+        }
+
+        $data =[
+            'trendy_companies' => $trendy_companies,
+            'bookmarkedCompanies' => $bookmarkedCompanies,
+            'bookmarkedCompanyIds' => $bookmarkedCompanyIds
+        ];
+
+        $this->view('pages/student/trendyCompany', $data);
     }
 
     public function saveJobs()
@@ -617,10 +688,27 @@ class Student extends Controller
         }    
     }
 
-    public function jobsApply()
-    {
-        $this->view('pages/student/jobsApply');
+
+    public function jobsApply($jobId) {
+        // Load model and get application fields
+        $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
+    
+        // Fetch job details
+        $job = $this->model('M_jobpost')->getpostbyid($jobId);
+    
+        $data = [
+            'fields' => $applicationFields,
+            'job' => $job, // Pass job data to the view
+        ];
+    
+        $this->view('pages/student/jobsApply', $data); 
     }
+    
+
+    // public function jobsApply()
+    // {
+    //     $this->view('pages/student/jobsApply');
+    // }
 
     public function pending()
     {

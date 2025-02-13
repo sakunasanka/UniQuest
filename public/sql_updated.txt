@@ -1,53 +1,364 @@
-CREATE VIEW v_verifiedJobs AS
-SELECT 
-    j.JobID,
-    j.Title,
-    j.Email,
-    j.Category,
-    j.Status,
-    v.ActionBy,
-    v.ActionDate
-FROM 
-    v_jobs j
-JOIN 
-    verificationlogs v
-ON 
-    j.JobID = v.EntityID
-WHERE 
-    v.EntityType = 'Job'
-    AND v.Action = 'Approve';
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.4.32-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.8.0.6908
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-CREATE VIEW v_verifiedUsers AS
-SELECT 
-    u.UserID,
-    u.Email,
-    u.Role,
-    u.Status,
-    v.ActionBy,
-    v.ActionDate
-FROM 
-    user u
-JOIN 
-    verificationlogs v
-ON 
-    u.UserID = v.EntityID
-WHERE 
-    v.EntityType = 'User'
-    AND v.Action = 'Approve';
+-- Dumping database structure for uniquest
+CREATE DATABASE IF NOT EXISTS `uniquest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `uniquest`;
 
+-- Dumping structure for table uniquest.admin
+CREATE TABLE IF NOT EXISTS `admin` (
+  `AdminID` int(10) NOT NULL,
+  `FirstName` varchar(45) NOT NULL,
+  `LastName` varchar(45) NOT NULL,
+  `ProfilePic` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`AdminID`),
+  KEY `fk_Administration_User1_idx` (`AdminID`),
+  CONSTRAINT `fk_Administration_User1` FOREIGN KEY (`AdminID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- Data exporting was unselected.
 
+-- Dumping structure for table uniquest.bookmarkjobs
+CREATE TABLE IF NOT EXISTS `bookmarkjobs` (
+  `StudentID` int(11) NOT NULL,
+  `JobID` int(11) NOT NULL,
+  `bookmark_create_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`StudentID`,`JobID`),
+  KEY `fk_Student_has_Jobs_Jobs1_idx` (`JobID`),
+  KEY `fk_Student_has_Jobs_Student1_idx` (`StudentID`),
+  CONSTRAINT `fk_Student_has_Jobs_Jobs1` FOREIGN KEY (`JobID`) REFERENCES `jobs` (`JobID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_Student_has_Jobs_Student1` FOREIGN KEY (`StudentID`) REFERENCES `student` (`StudentID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Data exporting was unselected.
 
+-- Dumping structure for table uniquest.company
+CREATE TABLE IF NOT EXISTS `company` (
+  `CompanyID` int(10) NOT NULL,
+  `CompanyName` varchar(255) NOT NULL,
+  `Description` varchar(3000) DEFAULT NULL,
+  `CompanyLogo` varchar(255) DEFAULT NULL,
+  `StreetNo` varchar(45) NOT NULL,
+  `AddressLine1` varchar(45) NOT NULL,
+  `AddressLine2` varchar(45) DEFAULT NULL,
+  `City` varchar(45) NOT NULL,
+  `Industry` varchar(255) NOT NULL,
+  `Website` varchar(255) NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`CompanyID`),
+  KEY `fk_ServiceProvider_User1_idx` (`CompanyID`),
+  CONSTRAINT `fk_ServiceProvider_User1` FOREIGN KEY (`CompanyID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- Data exporting was unselected.
 
-DELIMITER $$
+-- Dumping structure for view uniquest.companyreviews
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `companyreviews` (
+	`CompanyID` INT(10) NOT NULL,
+	`CompanyName` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`CompanyDescription` VARCHAR(1) NULL COLLATE 'utf8_general_ci',
+	`CompanyLogo` VARCHAR(1) NULL COLLATE 'utf8_general_ci',
+	`ReviewID` INT(11) NOT NULL,
+	`Rating` INT(11) NULL,
+	`Comment` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`StudentID` INT(11) NOT NULL,
+	`created_at` TIMESTAMP NOT NULL,
+	`StudentName` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci'
+) ENGINE=MyISAM;
 
-CREATE TRIGGER after_user_verified
-AFTER UPDATE ON user
-FOR EACH ROW
-BEGIN
+-- Dumping structure for table uniquest.complaint_jobs
+CREATE TABLE IF NOT EXISTS `complaint_jobs` (
+  `ComplaintID` int(11) NOT NULL AUTO_INCREMENT,
+  `Description` varchar(45) DEFAULT NULL,
+  `Status` enum('Pending','Resolved','Rejected') NOT NULL DEFAULT 'Pending',
+  `StudentID` int(11) NOT NULL,
+  `JobID` int(11) NOT NULL,
+  `ComplainedDate` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ComplaintID`),
+  KEY `fk_Complaint_Student1_idx` (`StudentID`),
+  KEY `fk_Complaint_ServiceProvider1_idx` (`JobID`),
+  CONSTRAINT `fk_Complaint_ServiceProvider1` FOREIGN KEY (`JobID`) REFERENCES `jobs` (`JobID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_Complaint_Student1` FOREIGN KEY (`StudentID`) REFERENCES `student` (`StudentID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.contact_messages
+CREATE TABLE IF NOT EXISTS `contact_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `topic` varchar(50) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `read_status` enum('Read','Unread') NOT NULL DEFAULT 'Unread',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.email_verification
+CREATE TABLE IF NOT EXISTS `email_verification` (
+  `Email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `VerifiedDate` datetime NOT NULL,
+  `IsVerified` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`Email`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.jobs
+CREATE TABLE IF NOT EXISTS `jobs` (
+  `JobID` int(11) NOT NULL AUTO_INCREMENT,
+  `Title` varchar(100) DEFAULT NULL,
+  `Description` text DEFAULT NULL,
+  `Location` varchar(100) DEFAULT NULL,
+  `Category` enum('Full-time','Part-time','Internship') DEFAULT NULL,
+  `JobBenefits` text DEFAULT NULL,
+  `RequiredQualifications` text DEFAULT NULL,
+  `SalaryRange` varchar(45) DEFAULT NULL,
+  `CompanyID` int(11) NOT NULL,
+  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `Status` enum('Active','Deactive','Pending','Not Approved') NOT NULL DEFAULT 'Pending',
+  `VerifiedBy` int(10) NOT NULL,
+  `VerifiedDate` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`JobID`,`CompanyID`),
+  KEY `fk_Jobs_ServiceProvider1_idx` (`CompanyID`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for view uniquest.messages_with_roles
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `messages_with_roles` (
+	`id` INT(11) NOT NULL,
+	`name` VARCHAR(1) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`email` VARCHAR(1) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`topic` VARCHAR(1) NOT NULL COLLATE 'utf8mb4_general_ci',
+	`message` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+	`created_at` TIMESTAMP NOT NULL,
+	`read_status` ENUM('Read','Unread') NOT NULL COLLATE 'utf8mb4_general_ci',
+	`Role` ENUM('Admin','VT-Member','Student','Company') NULL COLLATE 'utf8_general_ci'
+) ENGINE=MyISAM;
+
+-- Dumping structure for table uniquest.password_reset
+CREATE TABLE IF NOT EXISTS `password_reset` (
+  `UserID` int(10) NOT NULL,
+  `Token` varchar(255) NOT NULL,
+  `Expiration` datetime NOT NULL,
+  PRIMARY KEY (`UserID`,`Token`) USING BTREE,
+  CONSTRAINT `password_reset` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.review
+CREATE TABLE IF NOT EXISTS `review` (
+  `ReviewID` int(11) NOT NULL AUTO_INCREMENT,
+  `Rating` int(11) DEFAULT NULL,
+  `Comment` varchar(45) DEFAULT NULL,
+  `StudentID` int(11) NOT NULL,
+  `CompanyID` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ReviewID`),
+  KEY `fk_Review_Student1_idx` (`StudentID`),
+  KEY `fk_Review_ServiceProvider1_idx` (`CompanyID`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.student
+CREATE TABLE IF NOT EXISTS `student` (
+  `StudentID` int(10) NOT NULL,
+  `FirstName` varchar(45) NOT NULL,
+  `LastName` varchar(45) NOT NULL,
+  `ProfilePic` varchar(255) DEFAULT NULL,
+  `Gender` enum('Male','Female') NOT NULL,
+  `DOB` date NOT NULL,
+  `NIC_No` varchar(12) NOT NULL,
+  `NIC_Copy` varchar(255) NOT NULL,
+  `CV` varchar(255) DEFAULT NULL,
+  `StreetNo` varchar(45) NOT NULL,
+  `AddressLine1` varchar(45) NOT NULL,
+  `AddressLine2` varchar(45) DEFAULT NULL,
+  `City` varchar(45) NOT NULL,
+  `University` varchar(255) NOT NULL,
+  `UniversityID` varchar(45) NOT NULL,
+  `UniversityID_Copy` varchar(255) NOT NULL,
+  PRIMARY KEY (`StudentID`),
+  KEY `fk_Student_User_idx` (`StudentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for view uniquest.studentjobcomplaints
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `studentjobcomplaints` (
+	`JobTitle` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`CompanyID` INT(10) NOT NULL,
+	`CompanyEmail` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`CompanyName` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`ComplaintID` INT(11) NOT NULL,
+	`Complaint` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`StudentName` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`ComplainedDate` DATETIME NOT NULL,
+	`Status` ENUM('Pending','Resolved','Rejected') NOT NULL COLLATE 'utf8mb4_general_ci'
+) ENGINE=MyISAM;
+
+-- Dumping structure for table uniquest.token
+CREATE TABLE IF NOT EXISTS `token` (
+  `Email` varchar(50) NOT NULL,
+  `Token` varchar(255) NOT NULL,
+  `Expiration` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.user
+CREATE TABLE IF NOT EXISTS `user` (
+  `UserID` int(10) NOT NULL AUTO_INCREMENT,
+  `Password` varchar(255) NOT NULL,
+  `Email` varchar(255) NOT NULL,
+  `Role` enum('Admin','VT-Member','Student','Company') NOT NULL,
+  `RegisterDate` datetime NOT NULL,
+  `ContactNo` varchar(10) NOT NULL DEFAULT '',
+  `Status` enum('Active','Deactive','Pending','Not Approved') NOT NULL,
+  `VerifiedBy` int(10) DEFAULT NULL,
+  `VerifiedDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`UserID`),
+  UNIQUE KEY `UserID_UNIQUE` (`UserID`),
+  UNIQUE KEY `Email_UNIQUE` (`Email`)
+) ENGINE=InnoDB AUTO_INCREMENT=10064 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.verificationlogs
+CREATE TABLE IF NOT EXISTS `verificationlogs` (
+  `LogID` int(11) NOT NULL AUTO_INCREMENT,
+  `EntityType` enum('User','Job') NOT NULL,
+  `EntityID` int(11) NOT NULL,
+  `ActionBy` int(11) NOT NULL,
+  `Action` enum('Reject','Approve') NOT NULL,
+  `Comment` varchar(255) DEFAULT NULL,
+  `ActionDate` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`LogID`),
+  KEY `ActionBy` (`ActionBy`),
+  CONSTRAINT `verificationlogs_ibfk_1` FOREIGN KEY (`ActionBy`) REFERENCES `user` (`UserID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table uniquest.verificationteam
+CREATE TABLE IF NOT EXISTS `verificationteam` (
+  `VT_MemberID` int(10) NOT NULL,
+  `FirstName` varchar(45) NOT NULL,
+  `LastName` varchar(45) NOT NULL,
+  `ProfilePic` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`VT_MemberID`),
+  KEY `fk_VerficationTeam_User1_idx` (`VT_MemberID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for view uniquest.v_bookmarkedjobs
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_bookmarkedjobs` (
+	`StudentID` INT(11) NOT NULL,
+	`JobID` INT(11) NOT NULL,
+	`CompanyID` INT(10) NOT NULL,
+	`Title` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`CompanyLogo` VARCHAR(1) NULL COLLATE 'utf8_general_ci',
+	`CompanyName` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`Description` TEXT NULL COLLATE 'utf8mb4_general_ci',
+	`Location` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`Category` ENUM('Full-time','Part-time','Internship') NULL COLLATE 'utf8mb4_general_ci',
+	`JobBenefits` TEXT NULL COLLATE 'utf8mb4_general_ci',
+	`Status` ENUM('Active','Deactive','Pending','Not Approved') NOT NULL COLLATE 'utf8mb4_general_ci',
+	`RequiredQualifications` TEXT NULL COLLATE 'utf8mb4_general_ci',
+	`SalaryRange` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`Email` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`ContactNo` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`jobs_create_at` DATETIME NOT NULL,
+	`company_create_at` DATETIME NOT NULL,
+	`bookmark_create_at` TIMESTAMP NOT NULL
+) ENGINE=MyISAM;
+
+-- Dumping structure for view uniquest.v_comlaintsforcompany
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_comlaintsforcompany` (
+	`CompanyID` INT(10) NOT NULL,
+	`CompanyEmail` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`CompanyName` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`ComplaintCount` BIGINT(21) NOT NULL,
+	`LastComplainedDate` DATETIME NULL
+) ENGINE=MyISAM;
+
+-- Dumping structure for view uniquest.v_jobs
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_jobs` (
+	`JobID` INT(11) NOT NULL,
+	`CompanyID` INT(10) NOT NULL,
+	`Title` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`CompanyLogo` VARCHAR(1) NULL COLLATE 'utf8_general_ci',
+	`CompanyName` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`Industry` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`Website` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`Description` TEXT NULL COLLATE 'utf8mb4_general_ci',
+	`Location` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`Address` MEDIUMTEXT NULL COLLATE 'utf8_general_ci',
+	`Category` ENUM('Full-time','Part-time','Internship') NULL COLLATE 'utf8mb4_general_ci',
+	`Status` ENUM('Active','Deactive','Pending','Not Approved') NOT NULL COLLATE 'utf8mb4_general_ci',
+	`JobBenefits` TEXT NULL COLLATE 'utf8mb4_general_ci',
+	`RequiredQualifications` TEXT NULL COLLATE 'utf8mb4_general_ci',
+	`SalaryRange` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`Email` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`ContactNo` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`jobs_create_at` DATETIME NOT NULL,
+	`company_create_at` DATETIME NOT NULL
+) ENGINE=MyISAM;
+
+-- Dumping structure for view uniquest.v_verifiedjobs
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_verifiedjobs` (
+	`JobID` INT(11) NOT NULL,
+	`Title` VARCHAR(1) NULL COLLATE 'utf8mb4_general_ci',
+	`Email` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`Category` ENUM('Full-time','Part-time','Internship') NULL COLLATE 'utf8mb4_general_ci',
+	`Status` ENUM('Active','Deactive','Pending','Not Approved') NOT NULL COLLATE 'utf8mb4_general_ci',
+	`ActionBy` INT(11) NOT NULL,
+	`ActionDate` DATETIME NULL
+) ENGINE=MyISAM;
+
+-- Dumping structure for view uniquest.v_verifiedusers
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `v_verifiedusers` (
+	`UserID` INT(10) NOT NULL,
+	`Email` VARCHAR(1) NOT NULL COLLATE 'utf8_general_ci',
+	`Role` ENUM('Admin','VT-Member','Student','Company') NOT NULL COLLATE 'utf8_general_ci',
+	`Status` ENUM('Active','Deactive','Pending','Not Approved') NOT NULL COLLATE 'utf8_general_ci',
+	`ActionBy` INT(11) NOT NULL,
+	`ActionDate` DATETIME NULL
+) ENGINE=MyISAM;
+
+-- Dumping structure for trigger uniquest.after_job_verified
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `after_job_verified` AFTER UPDATE ON `jobs` FOR EACH ROW BEGIN
     -- Handle status change to 'Active' (Approval)
     IF NEW.Status = 'Active' AND (OLD.Status = 'Pending' OR OLD.Status = 'Not Approved') THEN
         INSERT INTO verificationlogs 
@@ -57,62 +368,7 @@ BEGIN
             Action, 
             ActionBy, 
             ActionDate, 
-            Comments
-        ) 
-        VALUES 
-        (
-            NEW.UserID, 
-            'User', 
-            'Approve', 
-            NEW.VerifiedBy, 
-            NOW(), 
-            'User status changed to Active by admin'
-        );
-    END IF;
-
-    -- Handle status change to 'Not Approved' (Rejection)
-    IF NEW.Status = 'Not Approved' AND OLD.Status = 'Pending' THEN
-        INSERT INTO verificationlogs 
-        (
-            EntityID, 
-            EntityType, 
-            Action, 
-            ActionBy, 
-            ActionDate, 
-            Comments
-        ) 
-        VALUES 
-        (
-            NEW.UserID, 
-            'User', 
-            'Reject', 
-            NEW.VerifiedBy, 
-            NOW(), 
-            'User status changed to Not Approved by admin'
-        );
-    END IF;
-END$$
-
-DELIMITER ;
-
-
-
-DELIMITER $$
-
-CREATE TRIGGER after_job_verified
-AFTER UPDATE ON jobs
-FOR EACH ROW
-BEGIN
-    -- Handle status change to 'Active' (Approval)
-    IF NEW.Status = 'Active' AND (OLD.Status = 'Pending' OR OLD.Status = 'Not Approved') THEN
-        INSERT INTO verificationlogs 
-        (
-            EntityID, 
-            EntityType, 
-            Action, 
-            ActionBy, 
-            ActionDate, 
-            Comments
+            Comment
         ) 
         VALUES 
         (
@@ -134,7 +390,7 @@ BEGIN
             Action, 
             ActionBy, 
             ActionDate, 
-            Comments
+            Comment
         ) 
         VALUES 
         (
@@ -146,28 +402,176 @@ BEGIN
             'Job status changed to Not Approved'
         );
     END IF;
-END$$
-
+END//
 DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
+-- Dumping structure for trigger uniquest.after_user_verified
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `after_user_verified` AFTER UPDATE ON `user` FOR EACH ROW BEGIN
+    -- Handle status change to 'Active' (Approval)
+    IF NEW.Status = 'Active' AND (OLD.Status = 'Pending' OR OLD.Status = 'Not Approved') THEN
+        INSERT INTO verificationlogs 
+        (
+            EntityID, 
+            EntityType, 
+            Action, 
+            ActionBy, 
+            ActionDate, 
+            Comment
+        ) 
+        VALUES 
+        (
+            NEW.UserID, 
+            'User', 
+            'Approve', 
+            NEW.VerifiedBy, 
+            NOW(), 
+            'User status changed to Active'
+        );
+    END IF;
 
--- Creat table for store password_reset Token
-CREATE TABLE `password_reset` (
-	`UserID` INT(10) NOT NULL,
-	`Token` VARCHAR(255) NOT NULL,
-	`Expiration` DATETIME NOT NULL,
-	PRIMARY KEY (`UserID`, `Token`),
-	CONSTRAINT `password_reset` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON UPDATE CASCADE ON DELETE CASCADE
-);
+    -- Handle status change to 'Not Approved' (Rejection)
+    IF NEW.Status = 'Not Approved' AND OLD.Status = 'Pending' THEN
+        INSERT INTO verificationlogs 
+        (
+            EntityID, 
+            EntityType, 
+            Action, 
+            ActionBy, 
+            ActionDate, 
+            Comment
+        ) 
+        VALUES 
+        (
+            NEW.UserID, 
+            'User', 
+            'Reject', 
+            NEW.VerifiedBy, 
+            NOW(), 
+            'User status changed to Not Approved'
+        );
+    END IF;
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `companyreviews`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `companyreviews` AS SELECT `c`.`CompanyID` AS `CompanyID`, `c`.`CompanyName` AS `CompanyName`, `c`.`Description` AS `CompanyDescription`, `c`.`CompanyLogo` AS `CompanyLogo`, `r`.`ReviewID` AS `ReviewID`, `r`.`Rating` AS `Rating`, `r`.`Comment` AS `Comment`, `r`.`StudentID` AS `StudentID`, `r`.`created_at` AS `created_at`, concat(`s`.`FirstName`,' ',`s`.`LastName`) AS `StudentName` FROM ((`company` `c` join `review` `r` on(`c`.`CompanyID` = `r`.`CompanyID`)) join `student` `s` on(`r`.`StudentID` = `s`.`StudentID`)) ;
 
--- Alter table user to add VerifiedBy foreign key
-ALTER TABLE `user` 
-ADD CONSTRAINT `fk_verifiedby_user`
-    FOREIGN KEY (`VerifiedBy`) 
-    REFERENCES `user`(`UserID`) 
-    ON DELETE SET NULL 
-    ON UPDATE CASCADE;
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `messages_with_roles`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `messages_with_roles` AS SELECT `cm`.`id` AS `id`, `cm`.`name` AS `name`, `cm`.`email` AS `email`, `cm`.`topic` AS `topic`, `cm`.`message` AS `message`, `cm`.`created_at` AS `created_at`, `cm`.`read_status` AS `read_status`, `u`.`Role` AS `Role` FROM (`contact_messages` `cm` left join `user` `u` on(`cm`.`email` = `u`.`Email`)) ;
 
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `studentjobcomplaints`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `studentjobcomplaints` AS SELECT
+    `uniquest`.`jobs`.`Title` AS `JobTitle`,
+    `uniquest`.`user`.`UserID` AS `CompanyID`,
+    `uniquest`.`user`.`Email` AS `CompanyEmail`,
+    `uniquest`.`company`.`CompanyName` AS `CompanyName`,
+    `uniquest`.`complaint_jobs`.`ComplaintID` AS `ComplaintID`,
+    `uniquest`.`complaint_jobs`.`Description` AS `Complaint`,
+    CONCAT(
+        `uniquest`.`student`.`FirstName`,
+        ' ',
+        `uniquest`.`student`.`LastName`
+    ) AS `StudentName`,
+    `uniquest`.`complaint_jobs`.`ComplainedDate` AS `ComplainedDate`,
+    `uniquest`.`complaint_jobs`.`Status` AS `Status`
+FROM
+    (
+        (
+            (
+                (
+                    `uniquest`.`complaint_jobs`
+                JOIN `uniquest`.`jobs` ON
+                    (
+                        `uniquest`.`complaint_jobs`.`JobID` = `uniquest`.`jobs`.`JobID`
+                    )
+                )
+            JOIN `uniquest`.`company` ON
+                (
+                    `uniquest`.`jobs`.`CompanyID` = `uniquest`.`company`.`CompanyID`
+                )
+            )
+        JOIN `uniquest`.`user` ON
+            (
+                `uniquest`.`company`.`CompanyID` = `uniquest`.`user`.`UserID`
+            )
+        )
+    JOIN `uniquest`.`student` ON
+        (
+            `uniquest`.`complaint_jobs`.`StudentID` = `uniquest`.`student`.`StudentID`
+        )
+    ) ;
 
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_bookmarkedjobs`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_bookmarkedjobs` AS SELECT `bj`.`StudentID` AS `StudentID`, `j`.`JobID` AS `JobID`, `c`.`CompanyID` AS `CompanyID`, `j`.`Title` AS `Title`, `c`.`CompanyLogo` AS `CompanyLogo`, `c`.`CompanyName` AS `CompanyName`, `j`.`Description` AS `Description`, `j`.`Location` AS `Location`, `j`.`Category` AS `Category`, `j`.`JobBenefits` AS `JobBenefits`, `j`.`Status` AS `Status`, `j`.`RequiredQualifications` AS `RequiredQualifications`, `j`.`SalaryRange` AS `SalaryRange`, `u`.`Email` AS `Email`, `u`.`ContactNo` AS `ContactNo`, `j`.`create_at` AS `jobs_create_at`, `c`.`create_at` AS `company_create_at`, `bj`.`bookmark_create_at` AS `bookmark_create_at` FROM (((`bookmarkjobs` `bj` join `jobs` `j` on(`bj`.`JobID` = `j`.`JobID`)) join `company` `c` on(`j`.`CompanyID` = `c`.`CompanyID`)) join `user` `u` on(`c`.`CompanyID` = `u`.`UserID`)) ORDER BY `bj`.`bookmark_create_at` DESC ;
 
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_comlaintsforcompany`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_comlaintsforcompany` AS SELECT 
+    `u`.`UserID` AS `CompanyID`,
+    `u`.`Email` AS `CompanyEmail`,
+    `c`.`CompanyName` AS `CompanyName`,
+    COUNT(`cj`.`ComplaintID`) AS `ComplaintCount`,
+    MAX(`cj`.`ComplainedDate`) AS `LastComplainedDate`
+FROM `uniquest`.`complaint_jobs` `cj`
+JOIN `uniquest`.`jobs` `j` ON `cj`.`JobID` = `j`.`JobID`
+JOIN `uniquest`.`company` `c` ON `j`.`CompanyID` = `c`.`CompanyID`
+JOIN `uniquest`.`user` `u` ON `c`.`CompanyID` = `u`.`UserID`
+JOIN `uniquest`.`student` `s` ON `cj`.`StudentID` = `s`.`StudentID`
+GROUP BY `u`.`UserID`, `u`.`Email`, `c`.`CompanyName` ;
+
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_jobs`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_jobs` AS SELECT `jobs`.`JobID` AS `JobID`, `company`.`CompanyID` AS `CompanyID`, `jobs`.`Title` AS `Title`, `company`.`CompanyLogo` AS `CompanyLogo`, `company`.`CompanyName` AS `CompanyName`, `company`.`Industry` AS `Industry`, `company`.`Website` AS `Website`, `jobs`.`Description` AS `Description`, `jobs`.`Location` AS `Location`, trim(regexp_replace(concat_ws(', ',`company`.`StreetNo`,`company`.`AddressLine1`,`company`.`AddressLine2`,`company`.`City`),', ,+',',')) AS `Address`, `jobs`.`Category` AS `Category`, `jobs`.`Status` AS `Status`, `jobs`.`JobBenefits` AS `JobBenefits`, `jobs`.`RequiredQualifications` AS `RequiredQualifications`, `jobs`.`SalaryRange` AS `SalaryRange`, `user`.`Email` AS `Email`, `user`.`ContactNo` AS `ContactNo`, `jobs`.`create_at` AS `jobs_create_at`, `company`.`create_at` AS `company_create_at` FROM ((`jobs` join `company` on(`jobs`.`CompanyID` = `company`.`CompanyID`)) join `user` on(`company`.`CompanyID` = `user`.`UserID`)) ORDER BY `jobs`.`create_at` DESC ;
+
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_verifiedjobs`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_verifiedjobs` AS SELECT 
+    j.JobID,
+    j.Title,
+    j.Email,
+    j.Category,
+    j.Status,
+    v.ActionBy,
+    v.ActionDate
+FROM 
+    v_jobs j
+JOIN 
+    verificationlogs v
+ON 
+    j.JobID = v.EntityID
+WHERE 
+    v.EntityType = 'Job'
+    AND v.Action = 'Approve' ;
+
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `v_verifiedusers`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `v_verifiedusers` AS SELECT 
+    u.UserID,
+    u.Email,
+    u.Role,
+    u.Status,
+    v.ActionBy,
+    v.ActionDate
+FROM 
+    user u
+JOIN 
+    verificationlogs v
+ON 
+    u.UserID = v.EntityID
+WHERE 
+    v.EntityType = 'User'
+    AND v.Action = 'Approve' ;
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
