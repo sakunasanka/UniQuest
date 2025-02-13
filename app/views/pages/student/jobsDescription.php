@@ -186,7 +186,7 @@
 
 <script>
     function goToApplyPage(jobId) {
-        window.location.href = "/UniQuest/student/jobsApply/" + jobId;
+        window.location.href = "/UniQuest/student/jobsApplyform/" + jobId;
     }
 </script>
 

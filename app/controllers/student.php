@@ -536,7 +536,7 @@ class Student extends Controller
     }
 
 
-    public function jobsApply($jobId) {
+    public function jobsApplyform($jobId) {
         // Load model and get application fields
         $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
     
