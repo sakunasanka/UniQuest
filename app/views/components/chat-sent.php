@@ -28,10 +28,10 @@
                                 <?php 
                                 $timeDiff = time() - strtotime($message->created_at); 
                                 if ($timeDiff <= 600): ?>
-                                    <i class="fa fa-edit edit-message" data-message-id="<?php echo $message->id; ?>"></i>
+                                    <i class="fa fa-edit edit-message" data-message-id="<?php echo $message->id; ?>" title="Edit"></i>
                                 <?php endif; 
                                 if ($timeDiff <= 3600): ?>
-                                    <i class="fa fa-trash delete-message" data-message-id="<?php echo $message->id; ?>"></i>
+                                    <i class="fa fa-trash delete-message" data-message-id="<?php echo $message->id; ?>" title="Delete"></i>
                                 <?php endif; ?>
                             </span>
                         <?php endif; ?>

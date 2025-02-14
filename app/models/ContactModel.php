@@ -38,6 +38,23 @@ class ContactModel
         }
     }
 
+    public function getMessagesAll()
+    {
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT sender_id, MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE sender_role != 'Admin'
+                    GROUP BY sender_id
+                ) m2 ON m1.sender_id = m2.sender_id AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role != 'Admin'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
+    }
+
     public function getMessagesStu()
     {
         $sql = "SELECT m1.*
