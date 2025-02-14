@@ -3,7 +3,7 @@
 <div id="backgroundOverlay" class="background-overlay hidden"></div>
 <div id="chatPopup" class="popup hidden">
     <div class="popup-header">
-        <span>Chat</span>
+        <span>Chat with <?php echo htmlspecialchars($_SESSION['user_id']); ?></span>
         <button id="closePopupBtn" class="close-btn"><i class="fa fa-times"></i></button>
     </div>
     <div class="popup-content">
