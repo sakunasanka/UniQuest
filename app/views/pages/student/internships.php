@@ -48,7 +48,14 @@
                                 <div class="title-content">
                                     <h3 class="job-title"><?php echo $post->Title; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i> 4.8
+                                        <i class="fa fa-star"></i> 
+                                        <?php 
+                                            if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
+                                                echo round($data['displayRatings'][$post->CompanyID], 2);
+                                            } else {
+                                                echo 'N/A';
+                                            }
+                                        ?>
                                     </div>
                                 </div>
                                 <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
