@@ -311,6 +311,8 @@ CREATE TABLE messages (
     FOREIGN KEY (sender_id) REFERENCES User(UserID) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES User(UserID) ON DELETE CASCADE
 );
+ALTER TABLE messages
+ADD COLUMN user_email VARCHAR(255) AFTER id;
 
 -- -----------------------------------------------------
 -- View uniquest.StudentCompanyComplaints
@@ -453,6 +455,7 @@ ON
 CREATE VIEW messages_with_roles AS
 SELECT 
     m.id,
+    m.user_email,
     m.sender_id,
     u1.Role AS sender_role,
     u1.Email AS sender_email,

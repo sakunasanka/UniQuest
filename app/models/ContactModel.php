@@ -13,7 +13,7 @@ class ContactModel
     public function sendMessage($data)
     {
         // Validation
-        if (empty($data['name']) || empty($data['topic']) || empty($data['message'])) {
+        if (empty($data['email']) || empty($data['topic']) || empty($data['message'])) {
             return false;
         }
 
@@ -21,20 +21,33 @@ class ContactModel
             return false; // Return false if the email session is not set
         }
 
-        $this->db->query("INSERT INTO contact_messages (name, email, topic, message) 
-                          VALUES (:name, :email, :topic, :message)");
+        // Fetch all admin IDs from the Admin table
+        $this->db->query("SELECT AdminID FROM Admin");
+        $admins = $this->db->resultSet();
 
-        // Bind parameters
-        $this->db->bind(':name', $data['name']);
-        $this->db->bind(':email', $_SESSION['user_email']);
-        $this->db->bind(':topic', $data['topic']);
-        $this->db->bind(':message', $data['message']);
+        // Check if there are admins
+        if (empty($admins)) {
+            return false; // No admins found
+        }
 
-        // Execute query
-        if ($this->db->execute()) {
-            return true;
-        } else {
-            return false;
+        // Insert a message for each admin
+        foreach ($admins as $admin) {
+            $this->db->query("INSERT INTO messages (user_email, topic, message, sender_id, receiver_id) 
+                            VALUES (:email, :topic, :message, :sender_id, :receiver_id)");
+
+            // Bind parameters
+            $this->db->bind(':email', $data['email']);
+            $this->db->bind(':topic', $data['topic']);
+            $this->db->bind(':message', $data['message']);
+            $this->db->bind(':sender_id', $_SESSION['user_id']);
+            $this->db->bind(':receiver_id', $admin->AdminID); // Set receiver_id as admin's ID
+
+            // Execute query
+            if ($this->db->execute()) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

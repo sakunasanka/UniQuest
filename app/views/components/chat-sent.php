@@ -43,8 +43,9 @@
             <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id']; ?>" />
             <input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $data['user']['UserID']; ?>" />
             
-            <!-- Ensure topic is always set -->
+            <!-- Ensure topic and email is always set -->
             <input type="hidden" name="topic" id="topic" value="<?php echo htmlspecialchars($data['topic'] ?? 'General Information'); ?>" />
+            <input type="hidden" name="email" id="email" value="<?php echo htmlspecialchars($data['email'] ?? null); ?>" />
 
             <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo htmlspecialchars($data['message_details'] ?? ''); ?>" />
             <button type="submit" class="send-btn">Send</button>
