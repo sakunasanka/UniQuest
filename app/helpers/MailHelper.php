@@ -52,7 +52,7 @@ class MailHelper
     public static function sendEmailWithTokenCompany($toEmail, $token)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\verification_email_comp.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'verification_email_comp.html');
         //create link
         $link = URLROOT . '/register/verifyCompEmail?token=' . $token;
 
@@ -69,7 +69,7 @@ class MailHelper
     public static function sendEmailWithTokenStudent($toEmail, $token)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\verification_email_stu.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'verification_email_stu.html');
         //create link
         $link = URLROOT . '/register/verifyStuEmail?token=' . $token;
 
@@ -86,7 +86,7 @@ class MailHelper
     public static function sendEmailWithTokenResetPassword($toEmail, $token)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\reset_password.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'reset_password.html');
         //create link
         $link = URLROOT . '/user/reset_password?token=' . $token;
 
@@ -103,7 +103,7 @@ class MailHelper
     public static function sendEmailStuAccountApproved($toEmail, $toName)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\stu_account_approved.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'stu_account_approved.html');
         //create link
         $link = URLROOT . '/login';
 
@@ -121,7 +121,7 @@ class MailHelper
     public static function sendEmailCompAccountApproved($toEmail, $toName)
     {
         //load template
-        $template = file_get_contents(TEMPLATEROOT . '\emails\comp_account_approved.html');
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR .'emails' . DIRECTORY_SEPARATOR . 'comp_account_approved.html');
         //create link
         $link = URLROOT . '/login';
 
