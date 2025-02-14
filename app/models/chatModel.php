@@ -15,10 +15,11 @@ class ChatModel extends Model {
     }
 
     // Save a new message
-    public function sendMessage($sender_id, $receiver_id, $topic, $message) {
-        $sql = "INSERT INTO messages (sender_id, receiver_id, topic, message) 
-                VALUES (:sender_id, :receiver_id, :topic, :message)";
+    public function sendMessage($email, $sender_id, $receiver_id, $topic, $message) {
+        $sql = "INSERT INTO messages (user_email, sender_id, receiver_id, topic, message) 
+                VALUES (:email, :sender_id, :receiver_id, :topic, :message)";
         $this->db->query($sql);
+        $this->db->bind(':email', $email);
         $this->db->bind(':sender_id', $sender_id);
         $this->db->bind(':receiver_id', $receiver_id);
         $this->db->bind(':topic', $topic);
@@ -27,7 +28,7 @@ class ChatModel extends Model {
     }
 
     public function getLastMessageBetween($sender_id, $receiver_id) {
-        $sql = "SELECT topic FROM messages 
+        $sql = "SELECT topic, user_email FROM messages 
                 WHERE (sender_id = :sender_id AND receiver_id = :receiver_id)
                 OR (sender_id = :receiver_id AND receiver_id = :sender_id)
                 ORDER BY created_at DESC LIMIT 1";
