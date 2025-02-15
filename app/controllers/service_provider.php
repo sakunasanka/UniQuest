@@ -439,7 +439,7 @@ class Service_provider extends Controller
 
 
 
-                if ($this->model('M_jobpost')->delete($postId)) {
+                if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
                     redirect('service_provider/ongoing_jobs');
                 } else {

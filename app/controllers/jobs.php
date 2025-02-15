@@ -136,10 +136,15 @@ class Jobs extends Controller
         }
     }
 
-    public function jobs()
+    public function jobs($queryParam = [])
     {
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+
         // Fetch part-time job posts
-        $posts = $this->model('M_jobpost')->getPartTimeJobs();
+        $post_data = $this->model('M_jobpost')->getPartTimeJobs($page, $limit);
+        $posts = $post_data['data'];
         $displayRatings = [];
 
         // Loop through each job post to get the display rating for the associated company
@@ -166,77 +171,90 @@ class Jobs extends Controller
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
-            'displayRatings' => $displayRatings // Add display ratings to the data array
+            'displayRatings' => $displayRatings, // Add display ratings to the data array
+            'totalRows' => $post_data['totalRows'],
+            'rowsPerPage' => $post_data['limit']
         ];
 
         // Load the view with the data
         $this->view('pages/student/jobs', $data);
     }
 
-    public function internships()
-    { {
-            // Retrieve internship jobs
-            $posts = $this->model('M_jobpost')->getInternshipJobs();
-            $displayRatings = [];
+    public function internships($queryParam = [])
+    {
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+        // Retrieve internship jobs
+        $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit);
+        $posts = $post_data['data'];
+        $displayRatings = [];
 
-            // Loop through each job post to get the display rating for the associated company
-            foreach ($posts as $post) {
-                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
-                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
-            }
-
-            if (isset($_SESSION['user_id'])) {
-                $userId = $_SESSION['user_id']; // Get user ID from session
-
-                // Get bookmarked jobs for the user
-                $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
-                $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-            } else {
-                $userId = null;
-                $bookmarkedJobs = []; // No bookmarks if not logged in
-            }
-
-            $data = [
-                'posts' => $posts,
-                'bookmarkedJobs' => $bookmarkedJobs,
-                'bookmarkedJobIds' => $bookmarkedJobIds,
-                'displayRatings' => $displayRatings // Add display ratings to the data array
-            ];
-
-            $this->view('pages/student/jobs', $data); // Render internships view
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($posts as $post) {
+            $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+            $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
         }
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+
+            // Get bookmarked jobs for the user
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+        }
+
+        $data = [
+            'posts' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRatings' => $displayRatings, // Add display ratings to the data array
+            'totalRows' => $post_data['totalRows'],
+            'rowsPerPage' => $post_data['limit']
+        ];
+
+        $this->view('pages/student/jobs', $data); // Render internships view
     }
 
-    public function companies()
-    { {
-            $posts = $this->model('userModel')->getcompany();
-            $displayRatings = [];
 
-            // Loop through each job post to get the display rating for the associated company
-            foreach ($posts as $post) {
-                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
-                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
-            }
+    public function companies($queryParam = [])
+    {
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+        $post_data = $this->model('userModel')->getcompany($page, $limit);
+        $posts = $post_data['data'];
+        $displayRatings = [];
 
-            if (isset($_SESSION['user_id'])) {
-                $userId = $_SESSION['user_id']; // Get user ID from session
-
-                // Get bookmarked companies for the user
-                $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
-                $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
-            } else {
-                $userId = null;
-                $bookmarkedCompanies = []; // No bookmarks if not logged in
-            }
-
-            $data = [
-                'posts' => $posts,
-                'bookmarkedCompanies' => $bookmarkedCompanies,
-                'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
-                'displayRatings' => $displayRatings
-            ];
-
-            $this->view('pages/student/company', $data);
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($posts as $post) {
+            $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+            $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
         }
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+
+            // Get bookmarked companies for the user
+            $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
+            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        } else {
+            $userId = null;
+            $bookmarkedCompanies = []; // No bookmarks if not logged in
+        }
+
+        $data = [
+            'posts' => $posts,
+            'bookmarkedCompanies' => $bookmarkedCompanies,
+            'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
+            'displayRatings' => $displayRatings,
+            'totalRows' => $post_data['totalRows'],
+            'rowsPerPage' => $post_data['limit']
+        ];
+
+        $this->view('pages/student/company', $data);
     }
 }

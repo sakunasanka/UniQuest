@@ -29,9 +29,9 @@
                         <a href="/UniQuest/companies">Companies</a>
                     </div>
                 </li>
-                <li><a href="/uniquest/verification_team/user_ver_all" class="hov">Go to verify</a></li>
-                <!-- <li><a href="/uniquest/about" class="hov">About Us</a></li> -->
-                <li><a href="/uniquest/verification_team/contact_admin" class="hov">Contact Us</a></li>
+                <li><a href="/UniQuest/verification_team/user_ver_pending" class="hov">Go to verify</a></li>
+                <!-- <li><a href="/uniQuest/about" class="hov">About Us</a></li> -->
+                <li><a href="/uniQuest/verification_team/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>
             <div class="nav-icons">
