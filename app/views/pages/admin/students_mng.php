@@ -23,14 +23,18 @@
             </div>
             <table>
                 <thead>
-                <tr>
-                        <th onclick="sortTable(0)">User ID</th>
-                        <th onclick="sortTable(1)">Email</th>
-                        <th onclick="sortTable(2)">Mobile Number</th>
-                        <th onclick="sortTable(3)">Registered Date</th>
-                        <th onclick="sortTable(4)">Status</th>
-                        <th class="no-sort">Actions</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "UserID" => "UserID", 
+                        "Email" => "Email", 
+                        "ContactNo" => "Mobile Number", 
+                        "RegisterDate" => "Registered Date", 
+                        "Status" => "Status", 
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
                     <?php foreach ($data['students'] as $student) : ?>
@@ -49,7 +53,7 @@
                                         person_remove
                                     </span>
                                 </td>
-                            <?php elseif($student->Status == 'Deactive') : ?>
+                            <?php elseif ($student->Status == 'Deactive') : ?>
                                 <td><span class="status inactive">Deactive</span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
@@ -58,7 +62,7 @@
                                     <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $student->UserID; ?>, 'Student')">
                                         person_add
                                     </span>
-                            <?php endif; ?>
+                                <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -68,8 +72,8 @@
     </main>
 </div>
 
+
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

@@ -40,7 +40,7 @@
                     </div>
                     <div class="form-row">
                         <div class="input-container">
-                            <a class="forget-password" href="#">Forgot password?</a>
+                            <a class="forget-password" href="/UniQuest/recover">Forgot password?</a>
                         </div>
                     </div>
                     <div class="form-row">
@@ -51,7 +51,7 @@
                     <div class="form-row">
                         <div class="input-center">
                             <div class="reg">
-                                <span>Do not have an account?</span> <a href="/uniquest/register"> Register now</a>
+                                <span>Do not have an account?</span> <a href="/UniQuest/register"> Register now</a>
                             </div>
                         </div>
                     </div>

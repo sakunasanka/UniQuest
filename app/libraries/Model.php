@@ -157,6 +157,7 @@ class Model
         string $groupBy = '',    // Optional GROUP BY clause
         string $orderBy = '',    // Optional ORDER BY clause
         int $limit = 0,          // Optional LIMIT for the number of rows to fetch
+        int $pageNumber = 1,    // Optional page number for pagination
         bool $fetchAll = false   // Whether to fetch all rows or just a single row
     ) {
         // Start building the query
@@ -181,19 +182,43 @@ class Model
             $query .= " ORDER BY $orderBy";
         }
 
-        // Add LIMIT clause if specified
-        if ($limit > 0) {
-            $query .= " LIMIT $limit";
+        // Separate COUNT Query
+        $countQuery = "SELECT COUNT(*) as totalRows FROM $table";
+        if (!empty($where)) {
+            $countQuery .= ' WHERE ' . $this->buildWhereClause($where, $bindings, $logicalOperator);
+        }
+
+        // Execute COUNT Query
+        $this->db->query($countQuery);
+        $this->bindParams($bindings);
+        $totalRows = $this->db->single()->totalRows;
+
+        // Pagination
+        if ($fetchAll && $limit > 0) {
+            $offset = ($pageNumber - 1) * $limit;
+            $query .= " LIMIT $limit OFFSET $offset";
         }
 
         // Prepare the query
         $this->db->query($query);
-
         // Bind parameters to the query
         $this->bindParams($bindings);
+        $data = $this->db->resultSet();
 
         // Execute the query and return the result
-        return $fetchAll ? $this->db->resultSet() : $this->db->single();
+        if ($fetchAll) {
+            $data = [
+                'data' => $data,
+                'currentPage' => $pageNumber,
+                'limit' => $limit,
+                'totalRows' => $totalRows,
+                'totalPages' => ($limit > 0) ? ceil($totalRows / $limit) : 1,
+                'isLastPage' => ($limit > 0) ? ($pageNumber >= ceil($totalRows / $limit)) : true
+            ];  
+            return $data;
+        } else {
+            return $this->db->single();
+        }
     }
 
     // public function getCount(

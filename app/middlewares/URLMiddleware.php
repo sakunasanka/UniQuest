@@ -4,6 +4,7 @@ class URLMiddleware {
         $customRoutes = [
             'login' => 'user/login',
             'profile' => 'user/profile',
+            'recover' => 'user/forgot_password',
         ];
         
         // Join the URL parts for easier matching

@@ -175,7 +175,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="email">University Email<span class="req"> *</span></label>
-                            <input type="email" id="email" name="email" value="<?php echo $data['email']; ?>" placeholder="Enter University Email" required>
+                            <input type="email" id="email" name="email" value="<?php echo $_SESSION['verified_email'] ?>" placeholder="Enter University Email" required readonly>
                             <span class="error-msg"><?php echo !empty($data['email_err']) ? $data['email_err'] : ''; ?></span>
                         </div>
                         <div class="input-container"></div>
