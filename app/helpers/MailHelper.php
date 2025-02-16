@@ -1,8 +1,9 @@
 <?php
-// Manually include PHPMailer files
-require PHPMAILERROOT . '/PHPMailer.php';
-require PHPMAILERROOT . '/Exception.php';
-require PHPMAILERROOT . '/SMTP.php';
+
+// Use DIRECTORY_SEPARATOR to handle path separators
+require $basePath . DIRECTORY_SEPARATOR . 'PHPMailer.php';
+require $basePath . DIRECTORY_SEPARATOR . 'Exception.php';
+require $basePath . DIRECTORY_SEPARATOR . 'SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
