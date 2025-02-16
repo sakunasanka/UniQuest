@@ -1,0 +1,10 @@
+# ignore files not needed
+node_modules
+npm-debug.log
+Dockerfile
+docker-compose.yml
+.git
+.gitignore
+README.md
+.vscode
+```

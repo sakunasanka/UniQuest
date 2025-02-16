@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # PHP-Apache Service
+  app:
+    build: .
+    container_name: php-app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+      # - mailhog
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: your_database_name
+      MYSQL_USER: your_database_user
+      MYSQL_PASSWORD: your_database_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  # MailHog Service for testing emails
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   container_name: mailhog
+  #   ports:
+  #     - "8025:8025" # MailHog web UI
+  #     - "1025:1025" # SMTP server
+
+# Define a volume for MySQL data persistence
+volumes:
+  mysql-data:
