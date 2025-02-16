@@ -1,13 +1,4 @@
 <?php
-// Auto-detect the base path based on the operating system
-$basePath = '';
-if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-    // Windows
-    $basePath = 'C:\xampp\htdocs\UniQuest\PHPMailer';
-} else {
-    // macOS, Linux, or other Unix-based systems
-    $basePath = '/Applications/XAMPP/xamppfiles/htdocs/UniQuest/PHPMailer';
-}
 
 // Use DIRECTORY_SEPARATOR to handle path separators
 require $basePath . DIRECTORY_SEPARATOR . 'PHPMailer.php';
@@ -107,5 +98,41 @@ class MailHelper
         $subject = "Reset Your Password";
 
         return self::sendEmail($toEmail, '', $subject, $template);
+    }
+
+    //send email to notify student that their account has been approved with link to login
+    public static function sendEmailStuAccountApproved($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'stu_account_approved.html');
+        //create link
+        $link = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{login_link}}', $link, $template);
+        $template = str_replace('{{name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Approved";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
+
+    //send email to notify company that their account has been approved with link to login
+    public static function sendEmailCompAccountApproved($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR .'emails' . DIRECTORY_SEPARATOR . 'comp_account_approved.html');
+        //create link
+        $link = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{login_link}}', $link, $template);
+        $template = str_replace('{{company_name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Approved";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
     }
 }

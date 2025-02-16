@@ -154,6 +154,16 @@ class Verification_team extends Controller
     {
         try {
             $this->model->approveUser($userID);
+            // Send email to user
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailCompAccountApproved($email, $name);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailStuAccountApproved($email, $name);
+            }
             Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
