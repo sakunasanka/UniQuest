@@ -18,12 +18,20 @@ class userModel extends Model
             return false;
         }
     }
-    public function getcompany()
+    public function getcompany($pageNumber = 1, $rowsPerPage = 12)
     {
-        $this->db->query('SELECT * FROM company ');
-        $results = $this->db->resultSet();
-        return $results;
+        try {
+            $companies = $this->select('company', [], '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            return $companies;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
+    
     public function companyRegister(array $data)
     {
         try {
