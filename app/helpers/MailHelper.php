@@ -1,9 +1,9 @@
 <?php
 
 // Use DIRECTORY_SEPARATOR to handle path separators
-require $basePath . DIRECTORY_SEPARATOR . 'PHPMailer.php';
-require $basePath . DIRECTORY_SEPARATOR . 'Exception.php';
-require $basePath . DIRECTORY_SEPARATOR . 'SMTP.php';
+require PHPMAILERROOT . DIRECTORY_SEPARATOR . 'PHPMailer.php';
+require PHPMAILERROOT . DIRECTORY_SEPARATOR . 'Exception.php';
+require PHPMAILERROOT . DIRECTORY_SEPARATOR . 'SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
