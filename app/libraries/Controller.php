@@ -1,5 +1,5 @@
 <?php
-require_once APPROOT . '/app/models/ModelFactory.php'; // Ensure ModelFactory is included
+require_once APPROOT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'ModelFactory.php'; // Ensure ModelFactory is included
 
 class Controller
 {
