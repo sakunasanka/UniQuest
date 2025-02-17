@@ -245,6 +245,19 @@ public function createApplication($fields, $jobId, $userId) {
         ];
     }
 }
+public function getApplicationById($id, $userId) {
+    $this->db->query('
+        SELECT a.*, j.title, j.location, j.description, c.name as company_name, c.logo as company_logo
+        FROM applications a
+        JOIN jobs j ON a.job_id = j.id
+        JOIN companies c ON j.company_id = c.id
+        WHERE a.id = :id AND a.user_id = :user_id
+    ');
+    
+    $this->db->bind(':id', $id);
+    $this->db->bind(':user_id', $userId);
+    return $this->db->single();
+}
     // public function getFieldsByJobId($jobId) {
     //     $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
     //     $this->db->bind(':job_id', $jobId);
