@@ -832,31 +832,39 @@ class Admin extends Controller
 
     public function editMessage($messageId) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = json_decode(file_get_contents("php://input"), true);
-    
-            if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $newMessage = $data['message'] ?? '';
+            
+            if (!empty($newMessage)) {
+                $chatModel = $this->model('chatModel');
+                $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+                
+                if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
                 } else {
                     echo json_encode(['success' => false, 'error' => 'Failed to edit message.']);
                 }
             } else {
-                echo json_encode(['success' => false, 'error' => 'Edit time limit expired.']);
+                echo json_encode(['success' => false, 'error' => 'Message cannot be empty.']);
             }
+        } else {
+            http_response_code(405);
         }
     }
     
     public function deleteMessage($messageId) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->deleteMessage($messageId)) {
-                    echo json_encode(['success' => true]);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
-                }
+            $chatModel = $this->model('chatModel');
+            $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+            
+            if ($chatModel->deleteMessage($messageId, $senderId)) {
+                echo json_encode(['success' => true]);
             } else {
-                echo json_encode(['success' => false, 'error' => 'Delete time limit expired.']);
+                echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
             }
+        } else {
+            http_response_code(405);
         }
     }
+    
 }

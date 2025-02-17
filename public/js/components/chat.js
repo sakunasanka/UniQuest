@@ -5,46 +5,29 @@ document.addEventListener("DOMContentLoaded", function () {
     const backgroundOverlay = document.getElementById("backgroundOverlay");
 
     // Open popup
-    openPopupBtn.addEventListener("click", function () {
+    openPopupBtn?.addEventListener("click", function () {
         chatPopup.classList.remove("hidden");
         backgroundOverlay.classList.remove("hidden");
     });
 
     // Close popup
-    closePopupBtn.addEventListener("click", function () {
+    closePopupBtn?.addEventListener("click", function () {
         chatPopup.classList.add("hidden");
         backgroundOverlay.classList.add("hidden");
     });
 
-    // Close popup when clicking outside it (optional)
-    backgroundOverlay.addEventListener("click", function () {
+    // Close popup when clicking outside it
+    backgroundOverlay?.addEventListener("click", function () {
         chatPopup.classList.add("hidden");
         backgroundOverlay.classList.add("hidden");
     });
-});
 
-const backgroundOverlay = document.getElementById('backgroundOverlay');
-const chatPopup = document.getElementById('chatPopup');
-const openPopupBtn = document.getElementById('openPopupBtn');
-const closePopupBtn = document.getElementById('closePopupBtn');
-
-openPopupBtn.addEventListener('click', () => {
-    backgroundOverlay.classList.remove('hidden');
-    chatPopup.classList.remove('hidden');
-});
-
-closePopupBtn.addEventListener('click', () => {
-    backgroundOverlay.classList.add('hidden');
-    chatPopup.classList.add('hidden');
-});
-
-document.addEventListener("DOMContentLoaded", function () {
     // Add event listeners for edit buttons
-    document.querySelectorAll('.edit-message').forEach(button => {
-        button.addEventListener('click', function () {
+    document.querySelectorAll('.fa.fa-edit.edit-message').forEach(icon => {
+        icon.addEventListener('click', function () {
             const messageId = this.getAttribute('data-message-id');
-            const messageElement = this.closest('.message');
-            const messageTextElement = messageElement.querySelector('.message-text'); // Ensure this class exists in your HTML
+            const messageElement = this.closest('.message-container');
+            const messageTextElement = messageElement.querySelector('.message');
             const currentMessage = messageTextElement.innerText;
 
             // Prompt the user to edit the message
@@ -52,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (newMessage !== null && newMessage.trim() !== '') {
                 // Send an AJAX request to update the message
-                fetch(`/admin/editMessage/${messageId}`, {
+                fetch(`/admin/user_datail/${messageId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -75,14 +58,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Add event listeners for delete buttons
-    document.querySelectorAll('.delete-message').forEach(button => {
-        button.addEventListener('click', function () {
+    document.querySelectorAll('.fa.fa-trash.delete-message').forEach(icon => {
+        icon.addEventListener('click', function () {
             const messageId = this.getAttribute('data-message-id');
-            const messageContainer = this.closest('.message-container'); // Ensure this class exists in your HTML
+            const messageContainer = this.closest('.message-container');
 
             if (confirm('Are you sure you want to delete this message?')) {
                 // Send an AJAX request to delete the message
-                fetch(`/admin/deleteMessage/${messageId}`, {
+                fetch(`/admin/user_datail/${messageId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -103,4 +86,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-

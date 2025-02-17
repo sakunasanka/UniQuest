@@ -76,18 +76,20 @@ class ChatModel extends Model {
         return false;
     }
 
-    public function editMessage($messageId, $newMessage) {
-        $sql = "UPDATE messages SET message = :newMessage WHERE id = :messageId";
+    public function editMessage($messageId, $newMessage, $senderId) {
+        $sql = "UPDATE messages SET message = :newMessage WHERE id = :messageId AND sender_id = :senderId";
         $this->db->query($sql);
         $this->db->bind(':newMessage', $newMessage);
         $this->db->bind(':messageId', $messageId);
+        $this->db->bind(':senderId', $senderId);
         return $this->db->execute();
     }
 
-    public function deleteMessage($messageId) {
-        $sql = "DELETE FROM messages WHERE id = :messageId";
+    public function deleteMessage($messageId,$senderId) {
+        $sql = "DELETE FROM messages WHERE id = :messageId AND sender_id = :senderId";
         $this->db->query($sql);
         $this->db->bind(':messageId', $messageId);
+        $this->db->bind(':senderId', $senderId);
         return $this->db->execute();
     }
     
