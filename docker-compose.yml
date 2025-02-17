@@ -1,40 +1,31 @@
 version: '3.8'
-
 services:
-  # PHP-Apache Service
-  app:
+  uniquest:
     build: .
-    container_name: php-app
     ports:
       - "8080:80"
     volumes:
       - .:/var/www/html
-    depends_on:
-      - db
-      # - mailhog
-
-  # MySQL Service
-  db:
-    image: mysql:8.0
-    container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: your_database_name
-      MYSQL_USER: your_database_user
-      MYSQL_PASSWORD: your_database_password
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+    command: >
+      bash -c "a2ensite uniquest.conf && apache2-foreground"
+    depends_on:
+      - uniquest-db
+
+  uniquest-db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: uniquest
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user123
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - db_data:/var/lib/mysql
+      - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
 
-  # MailHog Service for testing emails
-  # mailhog:
-  #   image: mailhog/mailhog
-  #   container_name: mailhog
-  #   ports:
-  #     - "8025:8025" # MailHog web UI
-  #     - "1025:1025" # SMTP server
-
-# Define a volume for MySQL data persistence
 volumes:
-  mysql-data:
+  db_data:

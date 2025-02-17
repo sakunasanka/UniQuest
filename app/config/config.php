@@ -1,21 +1,24 @@
 <?php 
     //DB Params
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', 'uniquest-db');
     define('DB_USER', 'root');
-    define('DB_PASS', '');
+    define('DB_PASS', 'root');
     define('DB_NAME', 'uniquest');
+
+    //host
+    define('HOST', 'http://localhost:8080');
     
     //App Root
     define('APPROOT', dirname(dirname(__FILE__)));
 
     //URL Root
-    define('URLROOT', 'http://localhost/UniQuest');
+    define('URLROOT', HOST . '/UniQuest');
 
     //public Root
     define('PUBROOT', dirname(dirname(dirname(__FILE__))) . '/public');
 
     //uploads Root
-    define('UPLOADROOT', 'http://localhost/UniQuest/public/uploads');
+    define('UPLOADROOT', HOST . '/UniQuest/public/uploads');
 
     //template Root
     define('TEMPLATEROOT', dirname(dirname(dirname(__FILE__))) . '/templates');
