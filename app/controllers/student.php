@@ -342,9 +342,22 @@ class Student extends Controller
         $this->view('pages/student/rate_review_company');
     }
 
-    public function all_app()
-    {
-        $this->view('pages/student/all_applications');
+    public function all_app() {
+        // Debug: Check if user_id exists in session
+        // echo "User ID from session: " . $_SESSION['user_id'] . "<br>";
+        
+        // Get all applications for jobs posted by this company
+        $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id']);
+        
+        // Debug: Check what the model returns
+        // echo "Applications data:<br>";
+        
+        
+        $data = [
+            'applications' => $applications
+        ];
+        // print_r($data);
+        $this->view('pages/student/all_applications', $data);
     }
 
     public function accepted_app()
@@ -730,15 +743,15 @@ class Student extends Controller
            $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
             if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
                 flash('application_success', 'Your application has been submitted successfully');
-                redirect('student/my_applications');
+                redirect('student/all_app');
             } else {
                 flash('application_error', 'Something went wrong with your application', 'alert alert-danger');
                 
-                $this->view('pages/student/all_applications', $data);
+                $this->view('pages/student/jobsApply', $data);
             }
         } else {
             // Return to form with errors
-            $this->view('pages/student/all_applications', $data);
+            $this->view('pages/student/jobsApply', $data);
         }
     } else {
         // GET request - show the application form
@@ -754,7 +767,7 @@ class Student extends Controller
             'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
         ];
 
-        $this->view('pages/student/all_applications', $data);
+        $this->view('pages/student/jobsApply', $data);
     }
     }
     private function handleFileUpload($file, $fieldName) {

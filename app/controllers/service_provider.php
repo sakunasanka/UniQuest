@@ -393,7 +393,7 @@ class Service_provider extends Controller
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
 
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
-                    // redirect('service_provider/ongoing_jobs');
+                    redirect('service_provider/ongoing_jobs');
                 } else {
                     die('something went wrong');
                 }

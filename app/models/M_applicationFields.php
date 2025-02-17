@@ -245,19 +245,62 @@ public function createApplication($fields, $jobId, $userId) {
         ];
     }
 }
-public function getApplicationById($id, $userId) {
-    $this->db->query('
-        SELECT a.*, j.title, j.location, j.description, c.name as company_name, c.logo as company_logo
-        FROM applications a
-        JOIN jobs j ON a.job_id = j.id
-        JOIN companies c ON j.company_id = c.id
-        WHERE a.id = :id AND a.user_id = :user_id
-    ');
+// Add this to your model to debug the database structure
+// First, let's verify the view structure
+public function debugViewStructure() {
+    $this->db->query("DESCRIBE v_allapplications");
+    $columns = $this->db->resultSet();
+    echo "View columns:<br>";
+    print_r($columns);
     
-    $this->db->bind(':id', $id);
-    $this->db->bind(':user_id', $userId);
-    return $this->db->single();
+    // Check if there's any data in the view at all
+    $this->db->query("SELECT COUNT(*) as total FROM v_allapplications");
+    $total = $this->db->single();
+    echo "<br>Total records in view: " . $total->total;
+    
+    // Check a sample record
+    $this->db->query("SELECT * FROM v_allapplications LIMIT 1");
+    $sample = $this->db->single();
+    echo "<br>Sample record:<br>";
+    print_r($sample);
 }
+
+// Model: M_applicationFields.php
+public function getAllApplications($userId) {
+    // Using the exact field name from your view structure
+    $query = "SELECT * FROM v_allapplications WHERE StudentID = :user_id";
+    
+    try {
+        $this->db->query($query);
+        $this->db->bind(':user_id', $userId);
+        
+        // Debug information
+      
+        $results = $this->db->resultSet();
+        
+        // Add error checking
+        if ($this->db->rowCount() > 0) {
+            return $results;
+        } else {
+            // Debug: Check if the user exists
+            $this->db->query("SELECT StudentName FROM v_allapplications WHERE StudentID = :user_id LIMIT 1");
+            $this->db->bind(':user_id', $userId);
+            $user = $this->db->single();
+            
+            if ($user) {
+                echo "User exists but no applications found";
+            } else {
+                echo "No user found with ID: " . $userId;
+            }
+            return [];
+        }
+    } catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
+        return [];
+    }
+}
+
+
     // public function getFieldsByJobId($jobId) {
     //     $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
     //     $this->db->bind(':job_id', $jobId);

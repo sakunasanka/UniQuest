@@ -551,6 +551,45 @@ CREATE TABLE `applications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
+---------------------------------------------------
+CREATE VIEW v_allapplications AS
+SELECT
+    a.id AS ApplicationID,
+    a.job_id AS JobID,
+    j.Title AS JobTitle,
+    j.Location AS JobLocation,
+    j.Category AS JobCategory,
+    j.SalaryRange AS SalaryRange,
+    c.CompanyID AS CompanyID,
+    c.CompanyName AS CompanyName,
+    c.CompanyLogo AS CompanyLogo,
+    a.user_id AS StudentID,
+    CONCAT(s.FirstName, ' ', s.LastName) AS StudentName,
+    u.Email AS StudentEmail,
+    u.ContactNo AS StudentContact,
+    s.CV AS StudentResume,
+    s.ProfilePic AS StudentProfileImage,
+    a.status AS ApplicationStatus,
+    a.qualifications AS Qualifications,
+    a.experience AS Experience,
+    a.skills AS Skills,
+    a.created_at AS SubmissionDate,
+    a.updated_at AS LastUpdated,
+    j.create_at AS JobCreatedAt,
+    c.create_at AS company_create_at
+FROM
+    applications a
+INNER JOIN
+    jobs j ON a.job_id = j.JobID
+INNER JOIN
+    company c ON j.CompanyID = c.CompanyID
+INNER JOIN
+    student s ON a.user_id = s.StudentID
+INNER JOIN
+    user u ON s.StudentID = u.UserID
+ORDER BY
+    a.created_at DESC;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
