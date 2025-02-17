@@ -163,6 +163,87 @@ class M_applicationFields {
             return false;
         }
     }
+
+// Model: M_jobApplication.php
+
+
+public function createApplication($fields, $jobId, $userId) {
+    try {
+        $this->db->beginTransaction();
+        
+        // Debug logging
+        error_log("Creating application for JobID: $jobId, UserID: $userId");
+        error_log("Fields: " . print_r($fields, true));
+        
+        // Check if user has already applied
+        $this->db->query('SELECT id FROM applications WHERE job_id = :job_id AND user_id = :user_id');
+        $this->db->bind(':job_id', $jobId);
+        $this->db->bind(':user_id', $userId);
+        
+        if ($this->db->single()) {
+            throw new Exception('You have already applied for this job');
+        }
+        
+        // Define all possible fields
+        $possibleFields = [
+            'fullname', 'photo', 'email', 'contact', 'address', 'nic', 'nic_copy',
+            'gender', 'dob', 'qualifications', 'experience', 'skills', 'cv', 'linkedin'
+        ];
+        
+        // Build SQL query dynamically based on provided fields
+        $sqlFields = ['job_id', 'user_id', 'status'];
+        $sqlValues = [':job_id', ':user_id', '"Pending"'];
+        $params = [
+            ':job_id' => $jobId,
+            ':user_id' => $userId
+        ];
+        
+        // Add fields that exist in the input
+        foreach ($possibleFields as $field) {
+            $sqlFields[] = $field;
+            $sqlValues[] = ':' . $field;
+            $params[':' . $field] = isset($fields[$field]) && $fields[$field] !== '' ? $fields[$field] : null;
+        }
+        
+        // Create the SQL query
+        $fieldsStr = implode(', ', $sqlFields);
+        $valuesStr = implode(', ', $sqlValues);
+        $sql = "INSERT INTO applications ($fieldsStr) VALUES ($valuesStr)";
+        
+        // Prepare and execute query
+        $this->db->query($sql);
+        
+        // Log parameters for debugging
+        error_log("SQL Query: $sql");
+        error_log("Parameters: " . print_r($params, true));
+        
+        // Bind all parameters
+        foreach ($params as $key => $value) {
+            $this->db->bind($key, $value);
+        }
+        
+        $result = $this->db->execute();
+        error_log("Insert result: " . ($result ? 'true' : 'false'));
+        
+        if (!$result) {
+            // Log the exact SQL error if available
+            $errorInfo = $this->db->errorInfo();
+            error_log("SQL Error: " . print_r($errorInfo, true));
+            throw new Exception('Failed to save application: ' . ($errorInfo[2] ?? 'Unknown error'));
+        }
+        
+        $this->db->commit();
+        error_log("Application created successfully");
+        return true;
+        
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        error_log("Application Error: " . $e->getMessage());
+        return [
+            'status' => false,
+            'message' => $e->getMessage()
+        ];
+    }
 }
     // public function getFieldsByJobId($jobId) {
     //     $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
@@ -181,5 +262,5 @@ class M_applicationFields {
         
     //     return $fields;
     // }
-
+}
 ?>
