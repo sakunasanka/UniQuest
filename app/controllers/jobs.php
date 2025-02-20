@@ -353,6 +353,7 @@ class Jobs extends Controller
         else {
             $userId = null;
             $bookmarkedCompanies = []; // No bookmarks if not logged in
+            $bookmarkedCompanyIds = [];
         }
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
         $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
@@ -396,8 +397,8 @@ class Jobs extends Controller
         } else {
             $data = [
                 'post' => $posts,
-                'bookmarkedCompanies' => '',
-                'bookmarkedCompanyIds' => '',
+                'bookmarkedCompanies' => $bookmarkedCompanies,
+                'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
                 'rating' => '',
                 'comment' => '',
