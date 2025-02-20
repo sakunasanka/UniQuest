@@ -1,0 +1,250 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    background: #f8f9fa;
+}
+
+.content-area{
+    display: flex !important;
+    flex-direction: column;
+}
+
+/* View Card Container */
+.view-card {
+    margin: auto;
+    padding: 40px;
+    width: 90%;
+    max-width: 70vw;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-start; /* Align content to the start */
+    align-items: flex-start; /* Align items at the top */
+    gap: 50px; /* Add spacing between picture and content */
+}
+
+.view-card-2 {
+    margin: auto;
+    padding: 40px;
+    width: 90%;
+    max-width: 70vw;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
+    transition: transform 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.view-card-pic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Add spacing between image and options */
+}
+
+.view-card-pic img {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    background-color: #f2f2f2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    flex-shrink: 0; /* Prevent the image from shrinking */
+}
+
+.view-card-pic img:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.view-card-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.view-card-options li {
+    margin: 5px 0;
+}
+
+.view-card-options a {
+    text-decoration: none;
+    color: #0076cb;
+    font-size: 16px;
+}
+
+.view-card-options a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Card Content */
+.view-card-content {
+    flex-grow: 1; /* Allow the content to take up remaining space */
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+    justify-content: space-between;
+}
+
+.view-card-content span {
+    font-size: 16px;
+    color: #555;
+    text-align: justify;
+    padding: 0 0 5px 0;
+}
+
+.view-card h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.view-card h2 {
+    font-size: 20px;
+    color: #666;
+    margin: 5px 0 20px;
+    font-weight: 500;
+}
+
+.view-card h3 {
+    font-size: 18px;
+    color: #666;
+    margin: 5px 0 10px;
+    font-weight: 500;
+}
+
+.view-card ul {
+    list-style: disc;
+    padding-left: 40px;
+    margin: 0;
+}
+
+.view-card ul li {
+    margin: 5px 0;
+}
+
+.view-card p {
+    font-size: 16px;
+    color: #555;
+    text-align: justify;
+}
+
+/* Info Section */
+.view-card-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 100px;
+    margin-top: 15px;
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    align-items: flex-start;
+    justify-content: start;
+}
+
+.view-card-info div {
+    font-size: 16px;
+    color: #333;
+    max-width: 300px;
+    /* flex: 1; */
+
+}
+
+.description {
+    margin-top: 15px;
+    padding: 10px 0 0 0;
+    border-top: 1px solid #eee;
+    align-items: flex-start;
+    justify-content: start;
+    max-width: 100%;
+}
+
+.view-card-info div span {
+    display: block;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.btn-space-between{
+    width: 100vw;
+    margin-top: 10px !important;
+}
+
+.btn-row {
+    margin-top: 20px; /* Push the buttons to the bottom */
+    display: flex;
+    justify-content: end; /* Spread the buttons evenly */
+    align-items: center;
+    gap: 40px;
+    padding: 10px 0; /* Add some padding for better spacing */
+}
+
+.btn-row button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+button.approve-btn {
+    background-color: #32a852;
+    color: #ffffff;
+}
+
+button.reject-btn {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+button.approve-btn:hover {
+    background-color: #038a27;
+}
+
+button.reject-btn:hover {
+    background-color: #c82333;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .view-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .view-card img {
+        margin-bottom: 20px;
+    }
+    
+    .view-card-info {
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .view-card-button {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin-top: 20px;
+    }
+}

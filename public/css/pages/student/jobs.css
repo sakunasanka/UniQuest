@@ -26,13 +26,11 @@ body {
 .search-bar {
     display: flex;
     align-items: center;
-    background-color: #ffffff;
+    background-color: transparent;
     padding: 5px 20px;
     border-radius: 30px;
     width: 60%;
     height: 60px;
-    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease;
 }
 
 .search-icon i {
@@ -88,7 +86,6 @@ body {
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
 }
 
 .card-logo img {
@@ -97,30 +94,41 @@ body {
     margin-bottom: 10px;
 }
 
-.job-title {
+.job-title, .company-titile {
     font-size: 1.2em;
     color: #333;
     margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.job-location, .job-salary, .job-days-left {
+.job-location, .job-salary, .job-days-left, .company-name, .review-count{
     font-size: 1em;
     color: #555;
     margin-bottom: 5px;
 }
 
-.job-rating {
-    font-size: 1.2em;
-    color: #333;
-    position: absolute;
-    top: 150px;
-    right: 20px;
+.title-content {
     display: flex;
-    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.job-rating {
+    font-size: 1em;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+    margin-bottom: 10px;
 }
 
 .job-rating i {
     color: #fbc02d;
+    font-size: 1.2em;
 }
 
 .job-location-details {
@@ -190,13 +198,31 @@ body {
     color: black;
     font-size: 2.5em;
     margin-bottom: 20px;
+    align-self: center;
 }
 
 .H2{
     color: #999;
+    align-self: center;
 }
 
 .H3{
     color: #222;
     text-align: center;
+}
+
+.card-logo:hover{
+    cursor: pointer;
+}
+
+.content-hover-class:hover {
+    cursor: pointer;
+
+}
+
+.hidden-form {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    position: absolute; /* Ensures it doesn't affect the layout */
 }

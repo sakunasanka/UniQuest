@@ -103,6 +103,13 @@ body {
     display: block;
 }
 
+.input-container p {
+    font-size: 1.1rem;
+    padding: 10px;
+    display: block;
+    text-align: center;
+}
+
 .input-container input {
     font-size: 1.1rem;
     padding: 10px 20px;
@@ -219,4 +226,3 @@ button[type="submit"]:hover {
         border-radius: 10px 10px 0 0;
     }
 }
-

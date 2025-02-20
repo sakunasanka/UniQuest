@@ -36,6 +36,7 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 15px;
+    width:100%;
 }
 
 label {
@@ -83,4 +84,3 @@ textarea {
 input[readonly] {
     background-color: #e9ecef;
 }
-

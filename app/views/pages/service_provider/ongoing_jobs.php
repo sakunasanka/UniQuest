@@ -1,5 +1,6 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 
+<?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -8,13 +9,13 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/service_provider/ongoing_jobs">Ongoing Jobs</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/service_provider/ongoing_jobs">Active Jobs</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/service_provider/offered_jobs">Offered Jobs</button>
         </div>
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <button class="add-btn">
+                <button class="add-btn" onclick="goToPostJob()">
                     <span class="material-symbols-outlined">post_add</span>
                     <span class="add-btn-text">Post Job</span>
                 </button>
@@ -31,60 +32,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Delivery Rider</td>
-                        <td>Negombo</td>
-                        <td>2024/08/16</td>
-                        <td>35</td>
-                        <td>18</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sales Ref</td>
-                        <td>Matara</td>
-                        <td>2024/08/24</td>
-                        <td>40</td>
-                        <td>18</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sales Ref</td>
-                        <td>Galle</td>
-                        <td>2024/07/05</td>
-                        <td>50</td>
-                        <td>22</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn edit">
-                                edit_square
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['posts'] as $post): ?>
+                        <tr>
+                            <td><?php echo $post->Title; ?></td>
+                            <td><?php echo $post->Location; ?></td>
+                            <td><?php echo date('Y-m-d', strtotime($post->jobs_create_at)); ?></td>
+                            <td>35</td>
+                            <td>18</td>
+                            <td class="action">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_job/<?php echo $post->JobID; ?>'" >
+                                    preview
+                                </span>
+                                <span class="material-symbols-outlined action-btn edit"  onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $post->JobID; ?>'">
+                                    edit_square
+                                </span>
+                                <span  class="material-symbols-outlined action-btn deactivate"  onclick=showdeletereviewconfirm(<?=$post->JobID?>)>
+                                    block
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
@@ -96,3 +64,9 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToPostJob() {
+        window.location.href = "<?php echo URLROOT; ?>/service_provider/jobpost";
+    }
+</script>

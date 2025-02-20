@@ -1,91 +1,174 @@
 <?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
+<?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
-<div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+    <?php else: ?>       
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php endif; ?>
 
+<div class="main-container">
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php else: ?>    
+    <?php endif; ?>      
+    
     <div class="content-area">
         <div class="job-description">
-            <h2>Delivery Rider</h2>
-            <p>Negombo / Ja Ela / Kiribathgoda</p>
-
-            <h3>Qualifications:</h3>
+            <h2><?php echo $data['post']->Title; ?></h2>
+            <p><?php echo $data['post']->Location; ?></p>
+            <h3>Description:</h3>
+            <!-- <ul>
+                <li><?php echo $data['post']->Description; ?></li>
+            </ul> -->
             <ul>
-                <li>Age Between 18 - 40</li>
+            <?php
+                $description = $data['post']->Description;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $descriptionArray = explode("\n", $description);
+
+                // Generate the list items
+                foreach ($descriptionArray as $description) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($description))) {
+                        echo '<li>' . htmlspecialchars(trim($description)) . '</li>';
+                    }
+                }
+            ?>
+            </ul>
+            <h3>Qualifications:</h3>
+            <!-- <ul>
+                <li><?php echo $data['post']->RequiredQualifications; ?></li>
                 <li>With a valid driver's license</li>
                 <li>Should own a Motorbike</li>
+            </ul> -->
+            <ul>
+            <?php
+                $qualifications = $data['post']->RequiredQualifications;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $qualificationsArray = explode("\n", $qualifications);
+
+                // Generate the list items
+                foreach ($qualificationsArray as $qualification) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($qualification))) {
+                        echo '<li>' . htmlspecialchars(trim($qualification)) . '</li>';
+                    }
+                }
+            ?>
             </ul>
 
             <h3>Benefits:</h3>
-            <ul>
-                <li>Highest salary in the industry</li>
+            <!-- <ul>
+                <li><?php echo $data['post']->JobBenefits; ?></li>
                 <li>Special Extra Allowances</li>
                 <li>Meals during service hours</li>
                 <li>Accommodation is provided</li>
+            </ul> -->
+            <ul>
+            <?php
+                $jobBenefits = $data['post']->JobBenefits;
+
+                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
+                $benefitArray = explode("\n", $jobBenefits);
+
+                // Generate the list items
+                foreach ($benefitArray as $benefit) {
+                    // Trim any extra spaces and output the <li> tag
+                    if (!empty(trim($benefit))) {
+                        echo '<li>' . htmlspecialchars(trim($benefit)) . '</li>';
+                    }
+                }
+            ?>
             </ul>
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
+                <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
-            <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
-
-            
-            <div class="buttons">
-                    <button class="apply-btn">Apply</button>
-                    <button class="contact-btn">Contact</button>
-            </div>
-
-    <div class="reviews-section">
-        <h4>Reviews and Ratings about this company</h4>
-            
-            <div class="review">
-                <p class="review-text">"Great company to work for! The management is very supportive, and they offer a lot of benefits like meals and accommodation."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- John Doe</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                <div class="buttons">
+                    <button onclick="goToApplyPage(<?php echo $post->JobID; ?>)" class="apply-btn">Apply</button>
+                    <button onclick="goToContactPage()" class="contact-btn">Contact</button>
                 </div>
+            <?php else: ?>    
+            <?php endif;?>    
+
+            <div class="reviews-section">
+                <h3>Reviews and Ratings about this company</h3>
+
+                 <!-- Reviews on Main Page -->
+                 <?php for ($i = 0; $i < 3; $i++): ?>
+                    <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
+                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
+                        <div class="review-details">
+                            <span class="reviewer-name">- John Doe</span>
+                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                        </div>
+                        <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
+                            <div class="review-actions">
+                                <button class="like-btn" data-id="<?php echo $i; ?>">
+                                    <span class="material-symbols-outlined like-icon">thumb_up</span>
+                                </button>
+                                <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
+
+                                <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                    <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                                </button>
+                                <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                            </div>
+                            <?php else: ?>
+                            <?php endif; ?> 
+                    </div>
+                <?php endfor; ?>
             </div>
 
-            <div class="review">
-                <p class="review-text">"The salary is quite competitive compared to other companies, and they provide special allowances too."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- Sarah Smith</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 4.5</span>
-                </div>
+            <div class="buttons btn-space-between">
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
+                <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
+               
+                <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+            <?php else:?>
+                <div></div>
+                <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+        
+            <?php endif;?>    
             </div>
-
-            <div class="review">
-                <p class="review-text">"I had a good experience working here. Flexible working hours and a friendly environment."</p>
-                <div class="review-details">
-                    <span class="reviewer-name">- David Lee</span>
-                    <span class="review-rating"><i class="fa fa-star"></i> 4.3</span>
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
+                <div class="make-complain">
+                    <button class="make-complain-btn"><p onclick="goToMakeComplaint(<?php echo $post->JobID; ?>)">Click here to make a complain about this job</p></button>
                 </div>
-            </div>
+            <?php endif;?>    
         </div>
-
-        <div class="buttons">
-                    <button class="apply-btn">Add review</button>
-        </div>
-
-    </div>
 
         <div class="job-card">
+            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
+                <div class="card-icons">
+                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
+                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    
+                    <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                </div>
+            <?php endif;?> 
             <div class="job-logo">
-                <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
+                <img src="<?php echo empty($data['post']->CompanyLogo)
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['post']->CompanyLogo; ?>"
+                    alt="Burger King Logo">
             </div>
             <div class="job-details">
-                <h3>Delivery Rider</h3>
-                <p>Negombo / Ja Ela / Kiribathgoda</p>
-                <p>Rs. 2,000 (per day)</p>
-                <p>9 days left</p>
+                <h3><?php echo $data['post']->Title; ?></h3>
+                <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
+                <p><?php echo $data['post']->SalaryRange; ?></p>
+                <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                <p>Colombo, Western Province</p>
+                <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
-                    <tr><td>Education:</td><td>Ordinary Level</td></tr>
                     <tr><td>Experience:</td><td>No Experience</td></tr>
-                    <tr><td>Salary Range:</td><td>Any</td></tr>
+                    <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
-                <p>Job ID - 5674563879</p>
-                
+
                 <div class="social-media-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -93,8 +176,68 @@
                     <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-        </div>
+            <div class="buttons">
+                <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
+            </div>
+        </div>    
     </div>
-</div>    
+</div>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
+
+<script>
+    function goToMakeComplaint(jobId) {
+        window.location.href = "/uniquest/student/make_complain/" + jobId;
+    }
+</script>
+
+<script>
+    function goToApplyPage(jobId) {
+        window.location.href = "/UniQuest/student/jobsApply/" + jobId;
+    }
+</script>
+
+<script>
+    function toggleFavorite(icon) {
+    icon.classList.toggle("fa-regular");
+    icon.classList.toggle("fa-solid");
+    icon.classList.toggle("icon-active");
+}
+
+function toggleBookmark(icon, jobId) {
+icon.classList.toggle("fa-regular");
+icon.classList.toggle("fa-solid");
+icon.classList.toggle("icon-active");
+}
+
+// Function to bookmark a job
+function bookmarkJob(jobId, iconElement) {
+    // Create a new FormData object to send the jobId
+    const formData = new FormData();
+    formData.append('job_id', jobId); // Append the job ID to the request data
+
+    // Create a new XMLHttpRequest to send the data to the server
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
+
+    // Set up the callback for when the request completes
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+        } else {
+            alert('Failed to bookmark the job.');
+        }
+    };
+
+    // Send the request with the form data
+    xhr.send(formData);
+}
+
+function goToCompanyDescription($companyID) {
+    window.location.href = "/uniquest/student/companydescription/"+$companyID;
+}
+</script>

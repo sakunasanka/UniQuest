@@ -7,88 +7,98 @@
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
     <div class="content-area">
         <div class="header">
-            <h1>Apply for this job</h1>
+            <h1>Application Form for <?php echo $data['job']->Title; ?></h1>
         </div>
         <p>Please fill out the details below to submit your application</p>
         
         <div class="form-section">
             <!-- Form Container -->
             <div class="form-container">
-                <form action="submitApplication.php" method="POST">
-                    <div class="form-group">
-                        <label for="fullName">Full Name *</label>
-                        <input type="text" id="fullName" name="fullName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="mobileNumber">Mobile Number *</label>
-                        <input type="text" id="mobileNumber" name="mobileNumber" required>
-                        <span class="error-message"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required>
-                        <span class="error-message"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="nic">NIC *</label>
-                        <input type="text" id="nic" name="nic" required>
-                        <span class="error-message"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address">Address *</label>
-                        <input type="text" id="address" name="address" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="gender">Gender *</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="education">Education qualifications*</label>
-                        <textarea id="education" name="education" rows="2"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ageCheck">Are you 18+ years old? *</label>
-                        <select id="ageCheck" name="ageCheck" required>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
+        <form action="<?php echo URLROOT; ?>/student/submit_application/<?php echo $data['job']->JobID; ?>" 
+              method="POST" 
+              enctype="multipart/form-data"
+              class="application-form">
+            
+            <?php 
+            $fields = $data['fields'];
+            if ($fields): 
+                foreach ($fields as $fieldName => $fieldConfig): 
+            ?>
+                <div class="form-group">
+                    <label for="<?php echo $fieldName; ?>"><?php echo $fieldConfig['label']; ?> *</label>
                     
-                    <p>Please note that once you hit the submit button, the application will be directly sent to the recruiter.</p>
+                    <?php switch($fieldConfig['type']):
+                        case 'textarea': ?>
+                            <textarea 
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                rows="4"
+                                required
+                            ></textarea>
+                            <?php break;
+
+                        case 'select': ?>
+                            <select 
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                required
+                            >
+                                <option value="">Select <?php echo $fieldConfig['label']; ?></option>
+                                <?php foreach($fieldConfig['options'] as $option): ?>
+                                    <option value="<?php echo $option; ?>"><?php echo $option; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php break;
+
+                        case 'file': ?>
+                            <input 
+                                type="file"
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                accept="<?php echo $fieldConfig['accept']; ?>"
+                                required
+                            >
+                            <?php break;
+
+                        default: ?>
+                            <input 
+                                type="<?php echo $fieldConfig['type']; ?>"
+                                id="<?php echo $fieldName; ?>"
+                                name="<?php echo $fieldName; ?>"
+                                required
+                            >
+                    <?php endswitch; ?>
                     
-                    <button type="submit" class="submit-button">SUBMIT</button>
-                </form>
-            </div>
+                    <span class="error-message" id="<?php echo $fieldName; ?>-error"></span>
+                </div>
+            <?php 
+                endforeach;
+            endif; 
+            ?>
+
+            <p class="form-notice">Please note that once you submit, the application will be directly sent to the recruiter.</p>
+            
+            <button type="submit" class="submit-button">SUBMIT</button>
+        </form>
+    </div>
 
             <!-- Job Information Card -->
             <div class="job-card">
                 <div class="job-logo">
-                    <img src="<?php echo URLROOT; ?>/images/Burger-logo.png" alt="Burger King Logo">
+                    <img src="<?php echo URLROOT; ?>/images/upeka.jpg" alt="Burger King Logo">
                 </div>
                 <div class="job-details">
-                    <h3>Delivery Rider</h3>
-                    <p>Negombo / Ja Ela / Kiribathgoda</p>
-                    <p>Rs. 2,000 (per day)</p>
-                    <p>9 days left</p>
+                    <h3>Female Promotion Assistant</h3>
+                    <p>Piliyandala</p>
+                    <p>Rs. 2500 (per day)</p>
+                    <p>2 hours ago</p>
                     <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                    <p>Colombo, Western Province</p>
+                    <p>Piliyandala</p>
                     <table class="table">
                         <tr><td>Education:</td><td>Ordinary Level</td></tr>
-                        <tr><td>Experience:</td><td>No Experience</td></tr>
-                        <tr><td>Salary Range:</td><td>Any</td></tr>
+                        <!-- <tr><td>Experience:</td><td>No Experience</td></tr> -->
+                        <tr><td>Salary Range:</td><td>Rs. 2500 (per day)</td></tr>
                     </table>
-                    <p>Job ID - 5674563879</p>
                     
                     <div class="social-media-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>

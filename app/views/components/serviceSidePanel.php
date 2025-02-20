@@ -1,7 +1,7 @@
 <aside class="sidebar">
     <nav class="nav-menu">
         <!-- Dashboard -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/dashboard">
+        <button class="nav-btn" data-path="/UniQuest/service_provider/dashboard">
             <span class="material-symbols-outlined"> dashboard </span>
             Dashboard
         </button>
@@ -14,9 +14,9 @@
                 <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
             </button>
             <div class="dropdown-menu">
-                <button class="nav-btn" data-path="/uniquest/service_provider/ongoing_jobs">Ongoing Jobs</button>
-                <button class="nav-btn" data-path="/uniquest/service_provider/offered_jobs">Offered Jobs</button>
-                <button class="nav-btn" data-path="/uniquest/service_provider/publish_job">Publish a Job</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/ongoing_jobs">Ongoing Jobs</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/offered_jobs">Offered Jobs</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/jobpost">Publish a Job</button>
             </div>
         </div>
 
@@ -28,44 +28,51 @@
                 <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
             </button>
             <div class="dropdown-menu">
-                <button class="nav-btn" data-path="/uniquest/service_provider/new_applications">New Applications</button>
-                <button class="nav-btn" data-path="/uniquest/service_provider/offered_applications">Offered Applications</button>
-                <button class="nav-btn" data-path="/uniquest/service_provider/rejected_applications">Rejected Applications</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/new_applications">New Applications</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/offered_applications">Offered Applications</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/rejected_applications">Rejected Applications</button>
             </div>
         </div>
 
         <!-- Analytics -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/analytics">
+        <button class="nav-btn" data-path="/UniQuest/service_provider/analytics">
             <span class="material-symbols-outlined"> monitoring </span>
             Analytics
         </button>
 
         <!-- Reviews -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/reviews">
+        <button class="nav-btn" data-path="/UniQuest/service_provider/reviews">
             <span class="material-symbols-outlined"> rate_review </span>
             Reviews
         </button>
 
+        <!-- Trending companies -->
+        <button class="nav-btn" data-path="/uniquest/student/trendyCompany">
+            <span class="material-symbols-outlined"> trending_up </span>
+            Trending Companies
+        </button>
+
         <!-- Premium -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/premium">
+        <button class="nav-btn" data-path="/UniQuest/service_provider/premium">
         <span class="material-symbols-outlined">workspace_premium</span>
             Activate Premium
         </button>
 
         <!-- Company info -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/company">
+        <button class="nav-btn" data-path="/UniQuest/user/profile">
         <span class="material-symbols-outlined">info</span>
             Company Info
         </button>
 
         <!-- Help and Support -->
-        <button class="nav-btn" data-path="/uniquest/service_provider/support">
+        <!-- <button class="nav-btn" data-path="/UniQuest/service_provider/support">
             <span class="material-symbols-outlined"> help_outline </span>
             Help and Support
-        </button>
+        </button> -->
     </nav>
 
-    <button class="nav-btn logout-btn" data-path="/uniquest/admin/reports">
+    <!-- Logout -->
+    <button class="nav-btn logout-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/logout'">
     <span class="material-symbols-outlined"> logout </span>
         Logout
     </button>

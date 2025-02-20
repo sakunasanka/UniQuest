@@ -1,0 +1,61 @@
+<?php require APPROOT . '/views/components/ver_header.php'; ?>
+
+<!-- Sidebar and Content Layout -->
+<div class="main-container">
+    <!-- Sidebar -->
+    <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+
+    <!-- Content Area -->
+    <main class="content-area">
+        <div class="tabs-header">
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/user_verified">Users</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/verification_team/job_verified">Jobs</button>
+        </div>
+        <div class="table-block">
+            <div class="content-header">
+                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0, 'UserID')">User ID</th>
+                        <th onclick="sortTable(1, 'Email')">Email</th>
+                        <th onclick="sortTable(2, 'Role')">Account Type</th>
+                        <th onclick="sortTable(3, 'ActionDate')">Verified Date</th>
+                        <th onclick="sortTable(4, 'Status')">Status</th>
+                        <th class="no-sort">View</th>
+                    </tr>
+                </thead>
+                <?php foreach ($data['users'] as $user) : ?>
+                    <tr>
+                        <td><?php echo $user->UserID; ?></td>
+                        <td><?php echo $user->Email; ?></td>
+                        <td><?php echo $user->Role; ?></td>
+                        <td><?php echo substr($user->ActionDate, 0, 10); ?></td>
+                        <?php if ($user->Status == 'Active') : ?>
+                            <td><span class="status active">Active</span></td>
+                        <?php elseif ($user->Status == 'Deactive') : ?>
+                            <td><span class="status inactive">Deactive</span></td>
+                        <?php endif; ?>
+                        <td class="action">
+                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_detail/<?php echo $user->UserID; ?>'">
+                                preview
+                            </span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+            <?php require APPROOT . '/views/components/pagination.php'; ?>
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+
+<script>
+    const totalPages = <?php echo $data['totalPages']; ?>;
+</script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
+
+<?php require APPROOT . '/views/components/footer.php'; ?>

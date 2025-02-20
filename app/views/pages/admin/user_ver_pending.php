@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/adm_header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -8,9 +8,8 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/admin/user_ver_all">All</button>
-            <button class="tab" data-path="/uniquest/admin/user_ver_pending">Pending</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/admin/user_ver_not">Not Approved</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/user_ver_pending">Pending</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/user_ver_not">Not Approved</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -18,76 +17,34 @@
             </div>
             <table>
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">User Name</th>
-                        <th onclick="sortTable(1)">Email</th>
-                        <th onclick="sortTable(2)">Account Type</th>
-                        <th onclick="sortTable(3)">Requested Date</th>
-                        <th onclick="sortTable(4)">Status</th>
-                        <th class="no-sort">View</th>
-                    </tr>
+                    <?php
+                    $columns = [
+                        "UserID" => "UserID",
+                        "Email" => "Email",
+                        "Role" => "Account Type",
+                        "RegisterDate" => "Registered Date",
+                        "Status" => "Status",
+                        "Actions" => "Actions"
+                    ];
+                    $sorter = Sorter::getInstance($columns);
+                    echo $sorter->renderHeaders();
+                    ?>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Company</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 2</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Company</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>User 1</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>Student</td>
-                        <td>2024/05/16</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
+                    <?php foreach ($data['users'] as $user) : ?>
+                        <tr>
+                            <td><?php echo $user->UserID; ?></td>
+                            <td><?php echo $user->Email; ?></td>
+                            <td><?php echo $user->Role; ?></td>
+                            <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
+                            <td><span class="status pending">Pending</span></td>
+                            <td class="action">
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_detail/<?php echo $user->UserID; ?>'">
+                                    preview
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
@@ -95,8 +52,6 @@
     </main>
 </div>
 
-
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

@@ -1,0 +1,103 @@
+.reviews-section {
+    margin-top: 0 !important;
+}
+
+.review{
+    width: calc(90vw - 250px);
+}
+
+h2 {
+    font-size: 2em !important;
+    margin: 10px 0;
+    color: #333;
+}
+
+/* Review Header: Company Name and Date */
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.company-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    cursor: pointer;
+}
+
+.company-title:hover {
+    text-decoration: underline;
+}
+
+.review-date {
+    font-size: 0.9em;
+    color: #777;
+    font-style: italic;
+}
+
+/* Review Text */
+.review-text {
+    font-size: 1.1em;
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Review Actions */
+.review-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.like-btn, .dislike-btn {
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.like-btn:hover, .reply-btn:hover, .dislike-btn:hover {
+    background-color: #c0c0c0;
+}
+.like-count, .reply-count, .dislike-count {
+    font-size: 0.9em;
+    color: #777;
+}
+
+.post-control-btn-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.post-control-btn {
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.post-control-btn.edit {
+    background-color: #007bff;
+}
+
+.post-control-btn.delete {
+    background-color: #dc3545;
+}
+
+.post-control-btn.edit:hover {
+    background-color: #0056b3;
+}
+
+.post-control-btn.delete:hover {
+    background-color: #c82333;
+}

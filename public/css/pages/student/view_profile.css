@@ -61,6 +61,7 @@ body {
 
 .sidebr ul li a:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .profile-container {
@@ -74,16 +75,16 @@ body {
 }
 
 h3 {
-    font-size: 18px;
+    font-size: 20px;
     color: #333;
     font-weight: bold;
     margin-bottom: 15px;
     border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 5px;
+    padding: 5px;
 }
 
 .info-section {
-    margin-bottom: 20px;
+    margin: 20px 20px 30px 60px;
 }
 
 /* Info row styling with flexbox for alignment */
@@ -97,7 +98,7 @@ label {
     font-size: 16px;
     font-weight: bold;
     color: #333;
-    width: 150px; 
+    min-width: 160px; 
 }
 
 .colon {
@@ -121,7 +122,7 @@ label {
     cursor: pointer;
     font-size: 14px;
     display: block;
-    margin: 20px auto 0; 
+    margin: 0 0 0 auto; 
     transition: background-color 0.3s;
 }
 

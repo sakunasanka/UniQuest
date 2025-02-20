@@ -2,18 +2,33 @@
 class Register extends Controller
 {
     private $model;
+    private $universityEmailValidator;
 
     public function __construct()
     {
         // Load model
         $this->model = $this->model('userModel');
+
+        // Load UniversityEmailValidator
+        $this->universityEmailValidator = new UniversityEmailValidator();
+    }
+
+    private function validateEmail(&$data)
+    {
+        if (Validator::isEmpty($data['email'])) {
+            $data['email_err'] = 'Please enter your email address';
+        } elseif (!Validator::isValidEmail($data['email'])) {
+            $data['email_err'] = 'Please enter a valid email address';
+        } elseif ($this->model->findUserByEmail($data['email'])) {
+            $data['email_err'] = 'User found with that email address';
+        }
     }
 
     private function prepareDataCompany($post = [], $files = [])
     {
         return [
             'companyName' => ucfirst(trim($post['companyName'] ?? '')),
-            'email' => trim($post['email'] ?? ''),
+            'email' => strtolower(trim($post['email'] ?? '')),
             'password' => trim($post['password'] ?? ''),
             'confirm_password' => trim($post['confirm_password'] ?? ''),
             'contactNo' => trim($post['contactNo'] ?? ''),
@@ -24,7 +39,9 @@ class Register extends Controller
             'terms' => trim($post['terms'] ?? ''),
             'companyLogo' => $files['companyLogo'] ?? '',
             'companyLogoName' => '',
-            'description' => '',
+            'description' => ucfirst(trim($post['description'] ?? '')),
+            'website' => trim($post['website'] ?? ''),
+            'industry' => trim($post['industry'] ?? ''),
             'role' => 'Company',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Pending',
@@ -39,6 +56,8 @@ class Register extends Controller
             'addressLine2_err' => '',
             'city_err' => '',
             'description_err' => '',
+            'website_err' => '',
+            'industry_err' => '',
             'companyLogo_err' => '',
             'terms_err' => '',
             'role_err' => '',
@@ -51,7 +70,7 @@ class Register extends Controller
         return [
             'firstName' => ucfirst(trim($post['firstName'] ?? '')),
             'lastName' => ucfirst(trim($post['lastName'] ?? '')),
-            'email' => trim($post['email'] ?? ''),
+            'email' => strtolower(trim($post['email'] ?? '')),
             'password' => trim($post['password'] ?? ''),
             'confirm_password' => trim($post['confirm_password'] ?? ''),
             'contactNo' => trim($post['contactNo'] ?? ''),
@@ -103,9 +122,197 @@ class Register extends Controller
         $this->view('pages/register/register');
     }
 
+    //send verification email to company
+    public function sendCompVeriEmail()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            $_POST = filter_input_array(INPUT_POST);
+
+            // Init data
+            $data = [
+                'email' => strtolower(trim($_POST['email'])),
+                'email_err' => ''
+            ];
+
+            // Validate email
+            $this->validateEmail($data);
+
+            // Check if there are no errors
+            if (empty($data['email_err'])) {
+                //Generate the token
+                $token = TokenHelper::generateToken();
+                LogHelper::logDebug('Token generated: ' . $token);
+                //Generate the expiry date
+                $expiryDate = TokenHelper::generateExpiryDate();
+
+                // Save token to database
+                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                    LogHelper::logDebug('Token saved to database');
+                    // Send token to email
+                    MailHelper::sendEmailWithTokenCompany($data['email'], $token);
+                    // Redirect to verify email page
+                    $this->view('pages/register/email_sent', $data);
+                } else {
+                    LogHelper::logError('Token not saved to database');
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/register/send_verification_comp', $data);
+            }
+        } else {
+            // Init data
+            $data = [
+                'email' => '',
+                'email_err' => ''
+            ];
+
+            // Load view
+            $this->view('pages/register/send_verification_comp', $data);
+        }
+    }
+
+    //verify email using token
+    public function verifyCompEmail($queryparams = [])
+    {
+        //check if token is set
+        if (isset($queryparams['token'])) {
+            //get token from query params
+            $token = $queryparams['token'];
+
+            //get token details
+            $tokenDetails = $this->model->getTokenDetails($token);
+
+            //check if token is valid
+            if ($tokenDetails) {
+                //check if token is expired
+                if (TokenHelper::validateToken($tokenDetails->Expiration)) {
+                    //delete token
+                    $this->model->deleteToken($token);
+
+                    //store email as verified
+                    $this->model->verifyEmail($tokenDetails->Email);
+
+                    //store verified email in session
+                    $_SESSION['verified_email'] = $tokenDetails->Email;
+
+                    // Redirect to register page
+                    Redirect::to(URLROOT . '/register/company');
+                } else {
+                    //error message for expired token
+                    die('Token expired');
+                }
+            } else {
+                //error message for invalid token
+                die('Invalid token');
+            }
+        } else {
+            //TODO: Handle this
+            die('Token not found');
+        }
+    }
+
+    //send verification email to company
+    public function sendStuVeriEmail()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            $_POST = filter_input_array(INPUT_POST);
+
+            // Init data
+            $data = [
+                'email' => strtolower(trim($_POST['email'])),
+                'email_err' => ''
+            ];
+
+            // Validate email
+            $this->validateEmail($data);
+
+            //validate university email
+            if (!$this->universityEmailValidator->isUniversityEmail($data['email'])) {
+                $data['email_err'] = 'Please enter a valid university email address';
+            }
+
+            // Check if there are no errors
+            if (empty($data['email_err'])) {
+                //Generate the token
+                $token = TokenHelper::generateToken();
+                LogHelper::logDebug('Token generated: ' . $token);
+                //Generate the expiry date
+                $expiryDate = TokenHelper::generateExpiryDate();
+
+                // Save token to database
+                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                    LogHelper::logDebug('Token saved to database');
+                    // Send token to email
+                    MailHelper::sendEmailWithTokenStudent($data['email'], $token);
+                    // Redirect to verify email page
+                    $this->view('pages/register/email_sent', $data);
+                } else {
+                    LogHelper::logError('Token not saved to database');
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/register/send_verification_stu', $data);
+            }
+        } else {
+            // Init data
+            $data = [
+                'email' => '',
+                'email_err' => ''
+            ];
+
+            // Load view
+            $this->view('pages/register/send_verification_stu', $data);
+        }
+    }
+
+    //verify email using token
+    public function verifyStuEmail($queryparams = [])
+    {
+        //check if token is set
+        if (isset($queryparams['token'])) {
+            //get token from query params
+            $token = $queryparams['token'];
+
+            //get token details
+            $tokenDetails = $this->model->getTokenDetails($token);
+
+            //check if token is valid
+            if ($tokenDetails) {
+                //check if token is expired
+                if (TokenHelper::validateToken($tokenDetails->Expiration)) {
+                    //delete token
+                    $this->model->deleteToken($token);
+
+                    //store email as verified
+                    $this->model->verifyEmail($tokenDetails->Email);
+
+                    //store verified email in session
+                    $_SESSION['verified_email'] = $tokenDetails->Email;
+
+                    //store university name in session
+                    $_SESSION['university'] = $this->universityEmailValidator->getUniversityForEmail($tokenDetails->Email);
+
+                    // Redirect to register page
+                    Redirect::to(URLROOT . '/register/student');
+                } else {
+                    //error message for expired token
+                    die('Token expired');
+                }
+            } else {
+                //error message for invalid token
+                die('Invalid token');
+            }
+        } else {
+            //TODO: Handle this
+            die('Token not found');
+        }
+    }
+
     public function company()
     {
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Sanitize POST array
             $_POST = filter_input_array(INPUT_POST);
 
@@ -115,6 +322,8 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
+            } elseif (!$this->model->isEmailVerified($data['email'])) {
+                $data['email_err'] = 'Email is not verified';
             }
 
             $validationResponse = Validator::isValidRegistrationData($data);
@@ -135,7 +344,7 @@ class Register extends Controller
                 // Upload company logo
                 $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
                 if ($companyLogoResponse['success']) {
-                    $data['companyLogoName'] = $companyLogoResponse['fileName'];
+                    $data['companyLogoName'] = $companyLogoResponse['file_name'];
                 } else {
                     $data['companyLogo_err'] = $companyLogoResponse['error'];
                     $this->view('pages/register/company_register', $data);
@@ -144,25 +353,25 @@ class Register extends Controller
 
                 // Register user
                 if ($this->model->companyRegister($data)) {
-                    //clear data array
+                    //clear data array and session
+                    $_SESSION['verified_email'] = '';
                     $data = [];
                     // Redirect to login page
-                    Redirect::to(URLROOT . '/service_provider/login');
+                    Redirect::to(URLROOT . '/login');
                 } else {
-                    die('Something went wrong');//TODO: Handle this
+                    die('Something went wrong'); //TODO: Handle this
                 }
             } else {
                 // Load view with errors
                 $this->view('pages/register/company_register', $data);
             }
-
         } else {
             $data = $this->prepareDataCompany();
 
             // Load view
             $this->view('pages/register/company_register', $data);
         }
-    } 
+    }
 
     public function student()
     {
@@ -176,6 +385,8 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
+            } elseif (!$this->model->isEmailVerified($data['email'])) {
+                $data['email_err'] = 'Email is not verified';
             }
 
             //vallidate input data
@@ -186,10 +397,10 @@ class Register extends Controller
 
             //vallidate files
             $fileValidationResponse = FileUploadHelper::validateFiles([
-                'profilePic' => ['file' => $data['profilePic'],'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
-                'nicCopy' => ['file' => $data['nicCopy'],'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
-                'cv' => ['file' => $data['cv'],'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
-                'universityIDCopy' => ['file' => $data['universityIDCopy'],'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
+                'profilePic' => ['file' => $data['profilePic'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                'nicCopy' => ['file' => $data['nicCopy'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
+                'cv' => ['file' => $data['cv'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
+                'universityIDCopy' => ['file' => $data['universityIDCopy'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
             ]);
 
             if (!$fileValidationResponse['is_valid']) {
@@ -203,10 +414,10 @@ class Register extends Controller
 
                 //upload each file
                 $uploadedFilesResponse = FileUploadHelper::uploadFiles([
-                    'profilePic' => ['file' => $data['profilePic'],'path' => PUBROOT . '/uploads/profile_pictures/student'],
-                    'nicCopy' => ['file' => $data['nicCopy'],'path' => PUBROOT . '/uploads/nic_copies'],
-                    'cv' => ['file' => $data['cv'],'path' => PUBROOT . '/uploads/cvs'],
-                    'universityIDCopy' => ['file' => $data['universityIDCopy'],'path' => PUBROOT . '/uploads/university_id_copies']
+                    'profilePic' => ['file' => $data['profilePic'], 'path' => PUBROOT . '/uploads/profile_pictures/student'],
+                    'nicCopy' => ['file' => $data['nicCopy'], 'path' => PUBROOT . '/uploads/nic_copies'],
+                    'cv' => ['file' => $data['cv'], 'path' => PUBROOT . '/uploads/cvs'],
+                    'universityIDCopy' => ['file' => $data['universityIDCopy'], 'path' => PUBROOT . '/uploads/university_id_copies']
                 ]);
 
                 //check if all files are uploaded successfully
@@ -223,19 +434,18 @@ class Register extends Controller
 
                 //register student
                 if ($this->model->studentRegister($data)) {
-                    //clear data array
+                    //clear data array and session
+                    $_SESSION['verified_email'] = '';
                     $data = [];
                     // Redirect to login page
-                    Redirect::to(URLROOT . '/student/login');
+                    Redirect::to(URLROOT . '/login');
                 } else {
-                    die('Something went wrong');//TODO: Handle this
+                    die('Something went wrong'); //TODO: Handle this
                 }
-
             } else {
                 // Load view with errors
                 $this->view('pages/register/student_register', $data);
             }
-
         } else {
             // Init data
             $data = $this->prepareDataStudent();
@@ -244,7 +454,4 @@ class Register extends Controller
             $this->view('pages/register/student_register', $data);
         }
     }
-
 }
-
-?>
