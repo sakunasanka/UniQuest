@@ -52,8 +52,58 @@ class Service_provider extends Controller
 
     public function contact_admin()
     {
-        $this->view('pages/service_provider/contact_admin');
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Data for the contact form
+            $data = [
+                'name' => trim($_POST['name'] ?? ''),
+                'topic' => trim($_POST['topic'] ?? ''),
+                'message' => trim($_POST['message'] ?? ''),
+
+                'name_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+
+            // Validation checks
+            if (empty($data['name'])) {
+                $data['name_err'] = 'Please enter your name';
+            }
+
+            if (empty($data['topic'])) {
+                $data['topic_err'] = 'Please select a topic';
+            }
+
+            if (empty($data['message'])) {
+                $data['message_err'] = 'Please enter your message';
+            }
+
+            // Ensure no errors before submitting
+            if (empty($data['name_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+                if($this->model('ContactModel')->sendMessage($data)){
+                    flash('contact-msg', 'Your message has been sent successfully.');
+                    redirect('service_provider/contact_admin');
+                } else {
+                    die('Something went wrong. Please try again.');
+                }
+            } else {
+                $this->view('pages/service_provider/contact_admin', $data);
+            }
+        } else {
+            // Initialize default data for the view on GET request
+            $data = [
+                'name' => '',
+                'topic' => '',
+                'message' => '',
+                'name_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+    
+     $this->view('pages/service_provider/contact_admin', $data);
     }
+}
 
     public function dashboard()
     {
@@ -339,8 +389,11 @@ class Service_provider extends Controller
             //make sure no errors
             if (empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err'])  && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])) {
                 if ($this->model('M_jobpost')->create($data)) {
-                    flash('post-msg', 'post is published');
-                    redirect('service_provider/ongoing_jobs');
+                    
+                    $jobId = $this->model('M_jobpost')->getLatestJobId();
+
+                    $this->model('M_applicationFields')->saveFields($jobId, $_POST);
+                    // redirect('service_provider/ongoing_jobs');
                 } else {
                     die('something went wrong');
                 }
@@ -386,7 +439,7 @@ class Service_provider extends Controller
 
 
 
-                if ($this->model('M_jobpost')->delete($postId)) {
+                if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
                     redirect('service_provider/ongoing_jobs');
                 } else {

@@ -8,23 +8,24 @@
         <div class="container">
             <div class="contact-left">
                 <h1>Contact Us</h1>
-                <form>
+                <form id="contactForm" action="<?php echo URLROOT; ?>/service_provider/contact_admin" method="POST">
+                    
                     <label for="name">Name:</label>
-                    <input type="text" id="name" placeholder="Enter Your Name" required>
-
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" placeholder="Enter Your Email" required>
-                    <span class="error-message" id="emailError"></span>
+                    <input type="text" id="name" name="name" placeholder="Enter Your Name" value="<?php echo $data['name']; ?>" required>
+                    <span class="error-message"><?php echo $data['name_err']; ?></span>
 
                     <label for="topic">Topic:</label>
-                    <select id="topic" required>
-                        <option value="job">Job</option>
-                        <option value="internship">Internship</option>
-                        <option value="general">General Information</option>
+                    <select id="topic" name="topic" required>
+                        <option value="job" <?php echo ($data['topic'] == 'job') ? 'selected' : ''; ?>>Job</option>
+                        <option value="internship"<?php echo ($data['topic'] == 'internship') ? 'selected' : ''; ?>>Internship</option>
+                        <option value="general"<?php echo ($data['topic'] == 'general') ? 'selected' : ''; ?>>General Information</option>
                     </select>
+                    
+                    <span class="error-message"><?php echo $data['topic_err']; ?></span>
 
                     <label for="message">Message:</label>
-                    <textarea id="message" placeholder="Message" required></textarea>
+                    <textarea id="message" name="message" placeholder="Message" required><?php echo $data['message']; ?></textarea>
+                    <span class="error-message"><?php echo $data['message_err']; ?></span>
 
                     <button type="submit">Send</button>
                 </form>
@@ -44,16 +45,16 @@ document.getElementById("contactForm").addEventListener("submit", function(event
     let isValid = true;
 
     // Email validation
-    const email = document.getElementById("email").value;
-    const emailError = document.getElementById("emailError");
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
-    if (!emailPattern.test(email)) {
-        emailError.textContent = "Please enter a valid email address.";
-        emailError.style.display = "block";
-        isValid = false;
-    } else {
-        emailError.style.display = "none";
-    }
+    //const email = document.getElementById("email").value;
+    //const emailError = document.getElementById("emailError");
+    //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
+    //if (!emailPattern.test(email)) {
+    //  emailError.textContent = "Please enter a valid email address.";
+    //    emailError.style.display = "block";
+    //    isValid = false;
+    //} else {
+    //    emailError.style.display = "none";
+    //}
 
     // Submit the form if all fields are valid
     if (isValid) {

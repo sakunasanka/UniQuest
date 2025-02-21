@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_details.css">
 
@@ -23,80 +24,86 @@
             <div class="user-details">
                 <h2>User Details</h2>
                 <div class="profile-pic">
-                    <img src="<?php echo URLROOT . '/images/profile_pic_preview.png' ?>"
+                    <img
+                        src="<?php echo empty($data['user']['ProfilePic'])
+                                    ? URLROOT . '/images/profile_pic_preview.png'
+                                    : UPLOADROOT . '/profile_pictures/student/' . $data['user']['ProfilePic']; ?>"
                         alt="Profile Picture">
                 </div>
                 <div class="detail-row">
                     <strong>First Name </strong>
                     <span class="col">:</span>
-                    <span>Sunil</span>
+                    <span><?php echo $data['user']['FirstName'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Last Name </strong>
                     <span class="col">:</span>
-                    <span>Perera</span>
+                    <span><?php echo $data['user']['LastName'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>DOB </strong>
                     <span class="col">:</span>
-                    <span>2002-08-17</span>
+                    <span><?php echo $data['user']['DOB'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Gender </strong>
                     <span class="col">:</span>
-                    <span>Male</span>
+                    <span><?php echo $data['user']['Gender'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Email </strong>
                     <span class="col">:</span>
-                    <span>sunil@uoc.com</span>
+                    <span><?php echo $data['user']['Email'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Contact No </strong>
                     <span class="col">:</span>
-                    <span>0774585126</span>
+                    <span><?php echo $data['user']['ContactNo'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>NIC No </strong>
                     <span class="col">:</span>
-                    <span>200210122057</span>
+                    <span><?php echo $data['user']['NIC_No'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Address </strong>
                     <span class="col">:</span>
-                    <span>No. 12, Galle Road, Colombo 03</span>
+                    <span><?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['user']['City'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Role </strong>
                     <span class="col">:</span>
-                    <span>Student</span>
+                    <span><?php echo $data['user']['Role'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>University </strong>
                     <span class="col">:</span>
-                    <span>University of Colombo</span>
+                    <span><?php echo $data['user']['University'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>University ID </strong>
                     <span class="col">:</span>
-                    <span>2020/mtc/154</span>
+                    <span><?php echo $data['user']['UniversityID'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Register Date </strong>
                     <span class="col">:</span>
-                    <span>2024-10-25</span>
+                    <span><?php echo $data['user']['RegisterDate'] ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>CV </strong>
                     <span class="col">:</span>
                     <span>
-                        <a href="" target="_blank">View CV</a>
+                        <?php if ($data['user']['CV']): ?>
+                            <a href="<?php echo UPLOADROOT; ?>/cvs/<?php echo $data['user']['CV']; ?>" target="_blank">View CV</a>
+                        <?php else: ?>
+                            No uploaded CV
+                        <?php endif; ?>
                     </span>
                 </div>
                 <div class="btn-row">
                     <div></div>
-                    <!-- <button class="contact-btn" onclick="">Contact</button>-->
-                    <?php require APPROOT . '/views/components/chat-sent.php'; ?>
+                    <button id="openPopupBtn" class="open-btn">Contact</button>
                 </div>
             </div>
 
@@ -106,11 +113,11 @@
                 <div class="detail-row">
                     <strong>NIC Copy </strong>
                 </div>
-                <iframe src="" frameborder="0"></iframe>
+                <iframe src="<?php echo UPLOADROOT; ?>/nic_copies/<?php echo htmlspecialchars($data['user']['NIC_Copy']); ?>" frameborder="0"></iframe>
                 <div class="detail-row">
                     <strong>University ID Copy </strong>
                 </div>
-                <iframe src="" frameborder="0"></iframe>
+                <iframe src="<?php echo UPLOADROOT; ?>/university_id_copies/<?php echo htmlspecialchars($data['user']['UniversityID_Copy']); ?>" frameborder="0"></iframe>
             </div>
         </div>
     </main>

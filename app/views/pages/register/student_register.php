@@ -143,7 +143,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="university">University<span class="req"> *</span></label>
-                            <input type="text" id="university" name="university" value="<?php echo $data['university']; ?>" placeholder="Enter University" required>
+                            <input type="text" id="university" name="university" value="<?php echo $_SESSION['university'] ?>" placeholder="Enter University" required readonly>
                             <span class="error-msg"><?php echo !empty($data['university_err']) ? $data['university_err'] : ''; ?></span>
                         </div>
                         <div class="input-container">
@@ -175,7 +175,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="email">University Email<span class="req"> *</span></label>
-                            <input type="email" id="email" name="email" value="<?php echo $data['email']; ?>" placeholder="Enter University Email" required>
+                            <input type="email" id="email" name="email" value="<?php echo $_SESSION['verified_email'] ?>" placeholder="Enter University Email" required readonly>
                             <span class="error-msg"><?php echo !empty($data['email_err']) ? $data['email_err'] : ''; ?></span>
                         </div>
                         <div class="input-container"></div>
