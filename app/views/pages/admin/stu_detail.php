@@ -32,7 +32,6 @@
                 </div>
                 <div class="detail-row">
                     <strong>First Name </strong>
-                    <?php echo $data['email']?>
                     <span class="col">:</span>
                     <span><?php echo $data['user']['FirstName'] ?></span>
                 </div>
