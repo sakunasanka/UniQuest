@@ -39,7 +39,7 @@ h1 {
 
 /* Button Styles */
 .btn-primary {
-    background-color: #2ecc71;
+    background-color: #3cb56e;
     color: white;
     border: none;
     padding: 12px 20px;
@@ -50,7 +50,7 @@ h1 {
 }
 
 .btn-primary:hover {
-    background-color: #27ae60;
+    background-color: #3cb56e;
 }
 
 .btn-secondary {
@@ -92,7 +92,7 @@ h1 {
 .job-icon {
     grid-area: icon;
     background-color: rgba(46, 204, 113, 0.1);
-    color: #2ecc71;
+    color: #3cb56e;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -145,7 +145,7 @@ h1 {
 }
 
 .accepted-icon {
-    color: #38a169;
+    color: #3cb56e;
 }
 
 .rejected-icon {
@@ -168,7 +168,7 @@ h1 {
 }
 
 .view-link {
-    color: #38a169;
+    color: #3cb56e;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
