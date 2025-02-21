@@ -142,12 +142,58 @@ class Service_provider extends Controller
 
     public function new_applications()
     {
-        $this->view('pages/service_provider/new_applications');
+        
+            // Get user ID from session
+            $userId = $_SESSION['user_id'] ?? null;
+            
+            if (!$userId) {
+                redirect('users/login');
+            }
+            
+            // Load models
+            $applicationModel = $this->model('M_applications');
+            $fieldModel = $this->model('M_applicationFields');
+            $jobModel = $this->model('M_jobpost');
+            
+            // Get all applications for this student
+            $applications = $applicationModel->getApplicationsByStudentId($userId);
+            
+            // Prepare data for each application with job-specific fields
+            $applicationsData = [];
+            
+            foreach ($applications as $app) {
+                // Get job details
+                $job = $jobModel->getpostbyid($app->job_id);
+                
+                // Get application fields for this job
+                $fields = $fieldModel->getFieldsByJobId($app->job_id);
+                
+                // Get application responses for this application
+                $responses = $applicationModel->getApplicationResponses($app->id);
+                
+                $applicationsData[] = [
+                    'application' => $app,
+                    'job' => $job,
+                    'fields' => $fields,
+                    'responses' => $responses
+                ];
+            }
+            
+            $data = [
+                'applications' => $applicationsData
+            ];
+            
+            
+        $this->view('pages/service_provider/new_applications', $data);
     }
 
     public function rejected_applications()
     {
         $this->view('pages/service_provider/rejected_applications');
+    }
+    public function application_dashboard()
+    {
+        $this->view('pages/service_provider/application_dashboard');
     }
 
     public function premium()

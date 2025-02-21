@@ -545,8 +545,8 @@ CREATE TABLE `applications` (
   PRIMARY KEY (`id`),
   KEY `job_id` (`job_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `applications_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `applications_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `applications_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`jobID`) ON DELETE CASCADE,
+  CONSTRAINT `applications_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`userID`) ON DELETE CASCADE,
   CONSTRAINT `unique_application` UNIQUE (`job_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
