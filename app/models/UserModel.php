@@ -485,13 +485,14 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC", $search = '100', $searchBy = 'UserID')
     {
         try {
             // Conditions for the query
             $conditions = [
                 ['Status', 'IN', ['Active', 'Deactive']], // Use IN clause for Status
-                ['Role', '=', $role] // Use simple equality for Role
+                ['Role', '=', $role], // Use simple equality for Role
+                [$searchBy, 'LIKE', $search . '%'] // Use LIKE for search
             ];
 
             // Fetch users using the select method
