@@ -101,6 +101,13 @@ body {
     justify-content: space-between;
 }
 
+.view-card-content span {
+    font-size: 16px;
+    color: #555;
+    text-align: justify;
+    padding: 0 0 5px 0;
+}
+
 .view-card h1 {
     font-size: 30px;
     margin-bottom: 5px;
@@ -119,7 +126,7 @@ body {
 .view-card h3 {
     font-size: 18px;
     color: #666;
-    margin: 5px 0 20px;
+    margin: 5px 0 10px;
     font-weight: 500;
 }
 
@@ -157,6 +164,15 @@ body {
     max-width: 300px;
     /* flex: 1; */
 
+}
+
+.description {
+    margin-top: 15px;
+    padding: 10px 0 0 0;
+    border-top: 1px solid #eee;
+    align-items: flex-start;
+    justify-content: start;
+    max-width: 100%;
 }
 
 .view-card-info div span {

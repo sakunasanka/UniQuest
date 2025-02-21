@@ -46,7 +46,7 @@ class Student extends Controller
 
     public function index()
     {
-        $this->jobs();
+        // $this->jobs();
     }
 
     public function contact_sp()
@@ -56,7 +56,58 @@ class Student extends Controller
 
     public function contact_admin()
     {
-        $this->view('pages/student/contact_admin');
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+             // Data for the contact form
+             $data = [
+                'name' => trim($_POST['name'] ?? ''),
+                'topic' => trim($_POST['topic'] ?? ''),
+                'message' => trim($_POST['message'] ?? ''),
+
+                'name_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+
+            // Validation checks
+            if (empty($data['name'])) {
+                $data['name_err'] = 'Please enter your name';
+            }
+
+
+            if (empty($data['topic'])) {
+                $data['topic_err'] = 'Please select a topic';
+            }
+
+            if (empty($data['message'])) {
+                $data['message_err'] = 'Please enter your message';
+            }
+
+            // Ensure no errors before submitting
+            if (empty($data['name_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+                if($this->model('ContactModel')->sendMessage($data)){
+                    flash('contact-msg', 'Your message has been sent successfully.');
+                    redirect('student/contact_admin');
+                } else {
+                    die('Something went wrong. Please try again.');
+                }
+            } else {
+                $this->view('pages/student/contact_admin', $data);
+            }
+        } else {
+            // Initialize default data for the view on GET request
+            $data = [
+                'name' => '',
+                'topic' => '',
+                'message' => '',
+                'name_err' => '',
+                'topic_err' => '',
+                'message_err' => ''
+            ];
+    
+        $this->view('pages/student/contact_admin', $data);
+        }
     }
 
     public function students_mng()
@@ -293,58 +344,104 @@ class Student extends Controller
 
     public function all_app()
     {
-        $this->view('pages/student/all_applications');
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
+            $data = [
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/student/all_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function accepted_app()
     {
-        $this->view('pages/student/accepted_applications');
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
+            $data = [
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/student/accepted_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function rejected_app()
     {
-        $this->view('pages/student/rejected_applications');
-    }
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-    public function jobs()
-    {   
-        $posts = $this->model('M_jobpost')->getPosts();
-
-        if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; // Get user ID from session
-
-        // Get bookmarked jobs for the user
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        } 
-        else {
-            $userId = null;
-            $bookmarkedJobs = []; // No bookmarks if not logged in
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
+            $data = [
+                'users' => $users['data'],
+                'currentPage' => $users['currentPage'],
+                'rowsPerPage' => $users['limit'],
+                'totalRows' => $users['totalRows'],
+                'totalPages' => $users['totalPages'],
+                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
+            ];
+            $this->view('pages/student/rejected_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
         }
-
-        $data =[
-            'posts' => $posts,
-            'bookmarkedJobs' => $bookmarkedJobs,
-            'bookmarkedJobIds' => $bookmarkedJobIds
-        ];
-
-        $this->view('pages/student/jobs', $data);
-        
     }
+
     public function notifications()
     {
         $this->view('pages/student/notification_alerts');
     }
 
-    public function company()
-    {
-        
-        $this->view('pages/student/company');
-    }
-
     public function trendyCompany()
     {
-        $this->view('pages/student/trendyCompany');
+        $trendy_companies = $this->model('RateAndReviewModel')->getTrendyCompanies();
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+
+            // Get bookmarked companies for the user
+            $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
+            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        } 
+        else {
+            $userId = null;
+            $bookmarkedCompanies = []; // No bookmarks if not logged in
+        }
+
+        $data =[
+            'trendy_companies' => $trendy_companies,
+            'bookmarkedCompanies' => $bookmarkedCompanies,
+            'bookmarkedCompanyIds' => $bookmarkedCompanyIds
+        ];
+
+        $this->view('pages/student/trendyCompany', $data);
     }
 
     public function saveJobs()
@@ -355,6 +452,13 @@ class Student extends Controller
 
           // Get bookmarked jobs for the user
         $posts = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         } 
@@ -366,20 +470,77 @@ class Student extends Controller
            $data =[
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
-            'bookmarkedJobIds' => $bookmarkedJobIds
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRatings' => $displayRatings
         ];
 
         $this->view('pages/student/saveJobs', $data);
     }
 
-    public function saveCompanies()
-    {
-        $this->view('pages/student/saveCompanies');
-    }
-
     public function saveInternships()
     {
-        $this->view('pages/student/saveInternships');
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+
+          // Get bookmarked jobs for the user
+        $posts = $this->model('jobModel')->getBookmarkedInternships($userId);
+        $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
+
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } 
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+        }
+
+           $data =[
+            'posts' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRatings' => $displayRatings
+        ];
+
+        $this->view('pages/student/saveInternships', $data);
+    }
+
+    public function saveCompanies()
+    {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+
+          // Get bookmarked jobs for the user
+        $posts = $this->model('companyModel')->getBookmarkedCompanies($userId);
+        $displayRatings = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
+
+        $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
+        $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        } 
+        else {
+            $userId = null;
+            $bookmarkedCompanies = []; // No bookmarks if not logged in
+        }
+
+           $data =[
+            'posts' => $posts,
+            'bookmarkedCompanies' => $bookmarkedCompanies,
+            'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
+            'displayRatings' => $displayRatings
+        ];
+
+        $this->view('pages/student/saveCompanies', $data);
     }
 
     public function make_complain($id = null)
@@ -393,7 +554,7 @@ class Student extends Controller
                 'complaint' => trim($_POST['complaint']),
                 'posts' => $posts
             ];
-            $this->model('jobModel')->create_complaint($data);
+            $this->model('ComplaintModel')->createComplaint($data);
             
             Redirect::to(URLROOT . '/student/make_complain/'.$id);
               
@@ -411,15 +572,26 @@ class Student extends Controller
 
     public function companyDescription($id)
     {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+
+        $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
+        $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
         $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-
+        } 
+        else {
+            $userId = null;
+            $bookmarkedCompanies = []; // No bookmarks if not logged in
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             // Prepare data for the review
             $data = [
                 'post' => $posts,
+                'bookmarkedCompanies' => $bookmarkedCompanies,
+                'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
                 'rating' => $_POST['rating'] ?? '',
                 'comment' => trim($_POST['comment'] ?? ''),
@@ -451,6 +623,8 @@ class Student extends Controller
         } else {
             $data = [
                 'post' => $posts,
+                'bookmarkedCompanies' => $bookmarkedCompanies,
+                'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
                 'rating' => '',
                 'comment' => '',
@@ -468,6 +642,14 @@ class Student extends Controller
     {
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; 
+        }
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }    
     
         // Get bookmarked jobs for the user
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
@@ -475,11 +657,6 @@ class Student extends Controller
         $posts = $this->model('M_jobpost')->getpostbyid($id);
         $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
         $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-        } 
-        else {
-            $userId = null;
-            $bookmarkedJobs = []; // No bookmarks if not logged in
-        }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -526,7 +703,7 @@ class Student extends Controller
                 'rating' => '',
                 'comment' => '',
                 'user_id' => '',
-                'company_id' => $posts->CompanyID,
+                'company_id' => $_POST['company_id'] ?? '',
                 'rating_err' => '',
                 'comment_err' => ''
             ];
@@ -535,10 +712,27 @@ class Student extends Controller
         }    
     }
 
-    public function jobsApply()
-    {
-        $this->view('pages/student/jobsApply');
+
+    public function jobsApply($jobId) {
+        // Load model and get application fields
+        $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
+    
+        // Fetch job details
+        $job = $this->model('M_jobpost')->getpostbyid($jobId);
+    
+        $data = [
+            'fields' => $applicationFields,
+            'job' => $job, // Pass job data to the view
+        ];
+    
+        $this->view('pages/student/jobsApply', $data); 
     }
+    
+
+    // public function jobsApply()
+    // {
+    //     $this->view('pages/student/jobsApply');
+    // }
 
     public function pending()
     {
@@ -549,28 +743,34 @@ class Student extends Controller
     {
         $this->view('pages/login/deactivate_stu');
     }
-
-    public function internships()
-    {
-        $this->view('pages/student/internships');
-    }
   
     public function jobsDescription($id){
         
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; 
-    
-        // Get bookmarked jobs for the user
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        $posts = $this->model('M_jobpost')->getpostbyid($id);
-        $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-        } 
+        }
         else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
-        }
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }    
+    
+        // Get bookmarked jobs for the user
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        
+        if ($posts->Category == 'Internship') {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);         
+        } 
+        else {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        }    
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
+        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+         
+        
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -588,7 +788,6 @@ class Student extends Controller
                 'rating_err' => '',
                 'comment_err' => ''
             ];
-        
             if (empty($data['rating'])) {
                 $data['rating_err'] = 'Please provide a rating.';
             }

@@ -2,14 +2,27 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+<?php else: ?>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php endif; ?>
+
 <div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>
+        <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
+        <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+    <?php endif; ?>
 
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/jobs">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/internships">Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/company">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/internships">Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/companies">Companies</button>
         </div>
         <div class="container">
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
@@ -25,37 +38,50 @@
                     </div>
                 </div>
             </div> -->
-
             <div class="cards-container">
-                <?php for ($i = 0; $i < 6; $i++): ?>
+                <form id="bookmarkForm" method="POST" action="<?php echo URLROOT; ?>/student/addBookmarkJob" class="hidden-form"></form>
+                <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
-                        <div class="card-logo" onclick="goToInternshipDescription()">
-                            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="job">
+                        <div class="card-logo" onclick="goToInternshipDescription(<?php echo $post->JobID; ?>)">
+                            <img src="<?php echo empty($post->CompanyLogo)
+                                            ? URLROOT . '/images/profile_pic_preview.png'
+                                            : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                                alt="Burger King Logo">
                         </div>
-                        <div class="card-content" >
-                            <div class="content-hover-class" onclick="goToInternshipDescription()">
+                        <div class="card-content">
+                            <div class="content-hover-class" onclick="goToInternshipDescription(<?php echo $post->JobID; ?>)">
                                 <div class="title-content">
-                                    <h3 class="job-title">Software Engineering Internship</h3>
+                                    <h3 class="job-title"><?php echo $post->Title; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i> 4.8
+                                        <i class="fa fa-star"></i>
+                                        <?php
+                                        if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
+                                            echo round($data['displayRatings'][$post->CompanyID], 2);
+                                        } else {
+                                            echo 'N/A';
+                                        }
+                                        ?>
                                     </div>
                                 </div>
-                                <p class="company-name"><b>Begood solutions</b> </p>
-                                
-                            
-                                
+                                <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
+                                <p class="job-salary"><?php echo $post->SalaryRange; ?></p>
+                                <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+
                                 <div class="job-location-details">
-                                    Colombo, Western Province
+                                    <?php echo $post->Location; ?>
                                 </div>
                             </div>
-                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+
+                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
                                 <div class="card-icons">
                                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                     <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                    <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
+
+                                    <i class="<?php echo in_array($post->JobID, $data['bookmarkedInternshipIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkInternship(<?php echo $post->JobID; ?>, this);"></i>
                                 </div>
-                            <?php endif;?>    
+                            <?php endif; ?>
                         </div>
+
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-twitter"></i></a>
@@ -63,17 +89,29 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
-                <?php endfor; ?>
+                <?php endforeach; ?>
             </div>
-        </div>  
+        </div>
+        <?php require APPROOT . '/views/components/pagination.php'; ?>
     </div>
 </div>
 
 <style>
     .icon-active {
-        color: #e74c3c; /* Active color */
+        color: #e74c3c;
+        /* Active color */
     }
 </style>
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
+<?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToInternshipDescription(jobId) {
+        window.location.href = "/UniQuest/student/internshipdescription/" + jobId;
+    }
+</script>
 
 <script>
     function toggleFavorite(icon) {
@@ -82,18 +120,33 @@
         icon.classList.toggle("icon-active");
     }
 
-    function toggleBookmark(icon) {
+    function toggleBookmark(icon, jobId) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
         icon.classList.toggle("icon-active");
     }
-</script>
 
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<?php require APPROOT . '/views/components/footer.php'; ?>
+    // Function to bookmark a job
+    function bookmarkJob(jobId, iconElement) {
+        // Create a new FormData object to send the jobId
+        const formData = new FormData();
+        formData.append('job_id', jobId); // Append the job ID to the request data
 
-<script>
-    function goToInternshipDescription() {
-        window.location.href = "/UniQuest/student/internshipdescription/"+10;
+        // Create a new XMLHttpRequest to send the data to the server
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
+
+        // Set up the callback for when the request completes
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+            } else {
+                alert('Failed to bookmark the job.');
+            }
+        };
+
+        // Send the request with the form data
+        xhr.send(formData);
     }
 </script>
