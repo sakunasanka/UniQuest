@@ -160,26 +160,29 @@ class Service_provider extends Controller
         $jobCount = $this->model('M_jobpost')->getJobCountByCompany();
         $activeJobCount = $this->model('M_jobpost')->getActiveJobCountByCompany();
         $applicationCount = $this->model('M_applicationFields')->getApplicationCount();
+        $applicationsByGender = $this->model('M_applicationFields')->getApplicationsByGender();
+        $applicationsByWeek = $this->model('M_applicationFields')->getApplicationsByWeek();
 
         // Fetch data for charts
         $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
         $revenueData = $this->model('M_applicationFields')->getApplicationsByWeek();
 
         $Jobspermonth = [];
+        $Internshipspermonth = [];
 
             // Loop through each job post to get the display rating for the associated company
             foreach ($registrationsData['data'] as $registration) {
                 $job_count = $registration->part_time_jobs; 
                 $Jobspermonth[] = $job_count;
             }
-        
-        $Internshipsspermonth = [];
+            $Jobspermonth = array_reverse($Jobspermonth);
 
             // Loop through each job post to get the display rating for the associated company
             foreach ($registrationsData['data'] as $registration) {
                 $internship_count = $registration->internships; 
-                $Internshipsspermonth[] = $internship_count;
+                $Internshipspermonth[] = $internship_count;
             }
+            $Internshipspermonth = array_reverse($Internshipspermonth);
 
         // $userLoginsData = $this->model('M_user')->getUserLoginsByGender();
         
@@ -190,8 +193,10 @@ class Service_provider extends Controller
             'registrationsData' => $registrationsData,
             'revenueData' => $revenueData,
             'Jobspermonth' => $Jobspermonth,
-            'Internshipsspermonth' => $Internshipsspermonth,
+            'Internshipspermonth' => $Internshipspermonth,
             'month_names' => $registrationsData['month_names'],
+            'applicationsByGender' => $applicationsByGender,
+            'applicationsByWeek' => $applicationsByWeek,
             // 'userLoginsData' => $userLoginsData,
         ];
 

@@ -191,6 +191,7 @@ class M_jobpost extends Model {
             LEFT JOIN jobs j 
                 ON DATE_FORMAT(j.create_at, '%Y-%m') = DATE_FORMAT(months.month_start, '%Y-%m')
                 AND j.CompanyID = :user_id
+                AND j.verifiedBy IS NOT NULL
             GROUP BY months.month_start
             ORDER BY months.month_start DESC;
         ");
@@ -211,63 +212,5 @@ class M_jobpost extends Model {
             'data' => $result
         ];
     }
-
-    public function getJobCountsLast5Months()
-    {
-        // Query to get job counts for the last 5 months
-        $this->db->query("
-            WITH months AS (
-                SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL seq MONTH), '%Y-%m-01') AS month_start
-                FROM (
-                    SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-                ) AS seq_table
-            )
-            SELECT 
-                DATE_FORMAT(months.month_start, '%M') AS month_name,
-                COALESCE(SUM(CASE WHEN j.Category = 'Part-time' THEN 1 ELSE 0 END), 0) AS job_count
-            FROM months
-            LEFT JOIN jobs j 
-                ON DATE_FORMAT(j.create_at, '%Y-%m') = DATE_FORMAT(months.month_start, '%Y-%m')
-                AND j.CompanyID = :user_id
-            GROUP BY months.month_start
-            ORDER BY months.month_start DESC;
-        ");
-
-        // Bind the user ID
-        $this->db->bind(':user_id', $_SESSION['user_id']);
-
-        // Fetch and return the result set
-        return $this->db->resultSet();
-    }
-
-    // Function to get internship counts for the last 5 months
-    public function getInternshipCountsLast5Months()
-    {
-        // Query to get internship counts for the last 5 months
-        $this->db->query("
-            WITH months AS (
-                SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL seq MONTH), '%Y-%m-01') AS month_start
-                FROM (
-                    SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-                ) AS seq_table
-            )
-            SELECT 
-                DATE_FORMAT(months.month_start, '%M') AS month_name,
-                COALESCE(SUM(CASE WHEN j.Category = 'Internship' THEN 1 ELSE 0 END), 0) AS internship_count
-            FROM months
-            LEFT JOIN jobs j 
-                ON DATE_FORMAT(j.create_at, '%Y-%m') = DATE_FORMAT(months.month_start, '%Y-%m')
-                AND j.CompanyID = :user_id
-            GROUP BY months.month_start
-            ORDER BY months.month_start DESC;
-        ");
-
-        // Bind the user ID
-        $this->db->bind(':user_id', $_SESSION['user_id']);
-
-        // Fetch and return the result set
-        return $this->db->resultSet();
-    }
-    
 }
 ?>

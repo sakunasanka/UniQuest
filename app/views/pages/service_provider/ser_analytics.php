@@ -19,11 +19,7 @@
                 <div>
                     <h3>Total Jobs</h3>
                     <p><?php echo $data['job_count']; ?></p>
-                    <?php 
-                    print_r($data['registrationsData']);
-                    echo($_SESSION['user_id'])
-                    ?>
-                    <?php echo json_encode($data['Jobspermonth']); ?>
+                    <?php echo json_encode($data['applicationsByWeek']); ?>
 
                 </div>
                 <div class="icon_">
@@ -102,7 +98,11 @@
     var chartData = {
         registrations: <?php echo json_encode($data['registrationsData']); ?>,
         revenue: <?php echo json_encode($data['revenueData']); ?>,
-        monthNames: <?php echo json_encode($data['month_names']); ?>
+        monthNames: <?php echo json_encode($data['month_names']); ?>,
+        jobCount: <?php echo json_encode($data['Jobspermonth']); ?>,
+        internshipCount: <?php echo json_encode($data['Internshipspermonth']); ?>,
+        genderCountMale: <?php echo json_encode($data['applicationsByGender']['Male']); ?>,
+        genderCountFemale: <?php echo json_encode($data['applicationsByGender']['Female']); ?>
     };
 
 </script>
