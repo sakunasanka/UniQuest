@@ -140,50 +140,64 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/offered_applications');
     }
 
-    public function new_applications()
-    {
+    // public function new_applications($id)
+    // {
         
-            // Get user ID from session
-            $userId = $_SESSION['user_id'] ?? null;
+    //         // Get user ID from session
+    //         $userId = $_SESSION['user_id'] ?? null;
             
-            if (!$userId) {
-                redirect('users/login');
-            }
+    //         if (!$userId) {
+    //             redirect('users/login');
+    //         }
             
-            // Load models
-            $applicationModel = $this->model('M_applications');
-            $fieldModel = $this->model('M_applicationFields');
-            $jobModel = $this->model('M_jobpost');
+    //         // Load models
+    //         $applicationModel = $this->model('M_applications');
+    //         $fieldModel = $this->model('M_applicationFields');
+    //         $jobModel = $this->model('M_jobpost');
             
-            // Get all applications for this student
-            $applications = $applicationModel->getApplicationsByStudentId($userId);
+    //         // Get all applications for this student
+    //         $applications = $applicationModel->getApplicationsByStudentId($userId);
             
-            // Prepare data for each application with job-specific fields
-            $applicationsData = [];
+    //         // Prepare data for each application with job-specific fields
+    //         $applicationsData = [];
             
-            foreach ($applications as $app) {
-                // Get job details
-                $job = $jobModel->getpostbyid($app->job_id);
+    //         foreach ($applications as $app) {
+    //             // Get job details
+    //             $job = $jobModel->getpostbyid($app->job_id);
                 
-                // Get application fields for this job
-                $fields = $fieldModel->getFieldsByJobId($app->job_id);
+    //             // Get application fields for this job
+    //             $fields = $fieldModel->getFieldsByJobId($app->job_id);
                 
-                // Get application responses for this application
-                $responses = $applicationModel->getApplicationResponses($app->id);
+    //             // Get application responses for this application
+    //             $responses = $applicationModel->getApplicationResponses($app->id);
                 
-                $applicationsData[] = [
-                    'application' => $app,
-                    'job' => $job,
-                    'fields' => $fields,
-                    'responses' => $responses
-                ];
-            }
+    //             $applicationsData[] = [
+    //                 'application' => $app,
+    //                 'job' => $job,
+    //                 'fields' => $fields,
+    //                 'responses' => $responses
+    //             ];
+    //         }
             
-            $data = [
-                'applications' => $applicationsData
-            ];
+    //         $data = [
+    //             'applications' => $applicationsData
+    //         ];
             
             
+    //     $this->view('pages/service_provider/new_applications', $data);
+    // }
+    public function new_applications($jobID)
+    {
+        // Fetch applications for the given job ID
+        $applications = $this->model('M_applicationFields')->getApplicationsByJobID($jobID);
+
+        // Pass data to the view
+        $data = [
+            'applications' => $applications,
+            'jobID' => $jobID
+        ];
+
+        // Load the view
         $this->view('pages/service_provider/new_applications', $data);
     }
 
@@ -193,7 +207,60 @@ class Service_provider extends Controller
     }
     public function application_dashboard()
     {
-        $this->view('pages/service_provider/application_dashboard');
+        // Get the company ID from the session (assuming the company is logged in)
+        $companyId = $_SESSION['user_id'];
+
+        // Fetch all applications for the company's jobs
+        $applications = $this->model('M_applicationFields')->getAllApplicationsByCompanyId($companyId);
+
+        // Process the data to calculate stats for each job
+        $jobs = [];
+        foreach ($applications as $application) {
+            $jobId = $application->JobID;
+
+            // Initialize job stats if not already done
+            if (!isset($jobs[$jobId])) {
+                $jobs[$jobId] = [
+                    'title' => $application->JobTitle,
+                    'jobID' => $jobId,
+                    'location' => $application->JobLocation,
+                    'posted' => date('M d, Y', strtotime($application->JobCreatedAt)),
+                    'stats' => [
+                        'total' => 0,
+                        'accepted' => 0,
+                        'rejected' => 0,
+                        'pending' => 0
+                    ]
+                ];
+            }
+
+            // Update stats based on application status
+            $jobs[$jobId]['stats']['total']++;
+            switch ($application->ApplicationStatus) {
+                case 'Accepted':
+                    $jobs[$jobId]['stats']['accepted']++;
+                    break;
+                case 'Rejected':
+                    $jobs[$jobId]['stats']['rejected']++;
+                    break;
+                case 'Pending':
+                    $jobs[$jobId]['stats']['pending']++;
+                    break;
+            }
+        }
+
+        // Convert associative array to indexed array for the view
+        $jobs = array_values($jobs);
+
+        // Pass data to the view
+        $data = [
+            'jobs' => $jobs
+        ];
+
+        $this->view('pages/service_provider/application_dashboard', $data);
+    
+
+        
     }
 
     public function premium()

@@ -6,56 +6,52 @@
 
     <div class="content-area">
     <?php    
-        $jobs = [
-    [
-        'title' => 'Senior Frontend Developer',
-        'department' => 'Engineering',
-        'location' => 'San Francisco',
-        'posted' => 'Jan 15, 2025',
-        'stats' => [
-            'total' => 124,
-            'accepted' => 32,
-            'rejected' => 67,
-            'pending' => 25
-        ]
-    ],
-    [
-        'title' => 'Product Manager',
-        'department' => 'Product',
-        'location' => 'New York',
-        'posted' => 'Jan 22, 2025',
-        'stats' => [
-            'total' => 87,
-            'accepted' => 18,
-            'rejected' => 42,
-            'pending' => 27
-        ]
-    ],
-    [
-        'title' => 'UX Designer',
-        'department' => 'Design',
-        'location' => 'Remote',
-        'posted' => 'Feb 01, 2025',
-        'stats' => [
-            'total' => 56,
-            'accepted' => 12,
-            'rejected' => 31,
-            'pending' => 13
-        ]
-    ],
-    [
-        'title' => 'Data Scientist',
-        'department' => 'Data',
-        'location' => 'Boston',
-        'posted' => 'Feb 10, 2025',
-        'stats' => [
-            'total' => 93,
-            'accepted' => 22,
-            'rejected' => 45,
-            'pending' => 26
-        ]
-    ]
-];
+//         $jobs = [
+//     [
+//         'title' => 'Senior Frontend Developer',
+//         'location' => 'San Francisco',
+//         'posted' => 'Jan 15, 2025',
+//         'stats' => [
+//             'total' => 124,
+//             'accepted' => 32,
+//             'rejected' => 67,
+//             'pending' => 25
+//         ]
+//     ],
+//     [
+//         'title' => 'Product Manager',
+//         'location' => 'New York',
+//         'posted' => 'Jan 22, 2025',
+//         'stats' => [
+//             'total' => 87,
+//             'accepted' => 18,
+//             'rejected' => 42,
+//             'pending' => 27
+//         ]
+//     ],
+//     [
+//         'title' => 'UX Designer',
+//         'location' => 'Remote',
+//         'posted' => 'Feb 01, 2025',
+//         'stats' => [
+//             'total' => 56,
+//             'accepted' => 12,
+//             'rejected' => 31,
+//             'pending' => 13
+//         ]
+//     ],
+//     [
+//         'title' => 'Data Scientist',
+//         'location' => 'Boston',
+//         'posted' => 'Feb 10, 2025',
+//         'stats' => [
+//             'total' => 93,
+//             'accepted' => 22,
+//             'rejected' => 45,
+//             'pending' => 26
+//         ]
+//     ]
+// ];
 ?>
 
 
@@ -77,7 +73,7 @@
                     <div class="job-details">
                         <h2><?php echo $job['title']; ?></h2>
                         <p>
-                            <?php echo $job['department']; ?> • 
+                            
                             <?php echo $job['location']; ?> •
                             Posted: <?php echo $job['posted']; ?>
                         </p>
@@ -101,11 +97,18 @@
                         </div>
                     </div>
                     <div class="job-actions">
-                        <a href="#" class="view-link">View Applications <i class="fas fa-chevron-right"></i></a>
+                        <?php
+                        print_r($job);
+                        ?>
+                        <!-- Corrected onclick with proper quotes and PHP embedding -->
+                        <span class="view-link" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/new_applications/<?php echo $job['jobID']; ?>'">
+                            View Applications <i class="fas fa-chevron-right"></i>
+                        </span>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
     </div>
+    
     

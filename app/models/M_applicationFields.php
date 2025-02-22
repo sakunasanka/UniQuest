@@ -1,10 +1,5 @@
 <?php
-class M_applicationFields {
-    private $db;
-
-    public function __construct() {
-        $this->db = Database::getInstance();
-    }
+class M_applicationFields extends Model{
 
     public function saveFields($jobId, $fields) {
         try {
@@ -318,6 +313,38 @@ public function getAllApplications($userId) {
             return [];
         }
     }
+    public function getAllApplicationsByCompanyId($companyId)
+    {
+        try {
+            $query = "SELECT * FROM v_allapplications WHERE CompanyID = :company_id";
+            $this->db->query($query);
+            $this->db->bind(':company_id', $companyId);
+
+            return $this->db->resultSet();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        }
+    }
+    public function getApplicationsByJobID($jobID)
+    {
+        // try {
+            // Prepare the SQL query
+            $query ='SELECT * FROM v_allapplications WHERE jobID = :jobID';
+            $this->db->query($query);
+            // Bind the job ID parameter
+            $this->db->bind(':jobID', $jobID);
+
+            // Execute the query and return the results
+            return $this->db->resultSet();
+            
+        // } catch (PDOException $e) {
+        //     error_log("Database Error: " . $e->getMessage());
+        //     return [];
+        // }
+    
+    }
+    
 }
 
 
