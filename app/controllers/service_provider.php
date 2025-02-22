@@ -159,10 +159,40 @@ class Service_provider extends Controller
     {
         $jobCount = $this->model('M_jobpost')->getJobCountByCompany();
         $activeJobCount = $this->model('M_jobpost')->getActiveJobCountByCompany();
+        $applicationCount = $this->model('M_applicationFields')->getApplicationCount();
+
+        // Fetch data for charts
+        $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
+        $revenueData = $this->model('M_applicationFields')->getApplicationsByWeek();
+
+        $Jobspermonth = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($registrationsData['data'] as $registration) {
+                $job_count = $registration->part_time_jobs; 
+                $Jobspermonth[] = $job_count;
+            }
+        
+        $Internshipsspermonth = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($registrationsData['data'] as $registration) {
+                $internship_count = $registration->internships; 
+                $Internshipsspermonth[] = $internship_count;
+            }
+
+        // $userLoginsData = $this->model('M_user')->getUserLoginsByGender();
         
         $data = [
             'job_count' => $jobCount,
-            'activeJobCount' => $activeJobCount
+            'activeJobCount' => $activeJobCount,
+            'applicationCount' => $applicationCount,
+            'registrationsData' => $registrationsData,
+            'revenueData' => $revenueData,
+            'Jobspermonth' => $Jobspermonth,
+            'Internshipsspermonth' => $Internshipsspermonth,
+            'month_names' => $registrationsData['month_names'],
+            // 'userLoginsData' => $userLoginsData,
         ];
 
         $this->view('pages/service_provider/ser_analytics', $data);

@@ -34,12 +34,12 @@ var registrationsData = [
     {
         label: 'Part Time Jobs',
         backgroundColor: 'rgba(72, 207, 173, 0.6)',
-        data: [2, 4, 5, 6, 5],
+        data: [36, 4, 5, 6, 5],
     },
     {
         label: 'Internships',
         backgroundColor: 'rgba(45, 156, 128, 0.6)',
-        data: [0, 2, 1, 4, 2],
+        data: [21, 2, 12, 4, 2],
     }
 ];
 
@@ -82,7 +82,7 @@ if (registrationsCtx) {
     var registrationsChart = new Chart(registrationsCtx, {
         type: 'bar',
         data: {
-            labels: ['January', 'February', 'March', 'April', 'May'],
+            labels: chartData.monthNames,
             datasets: registrationsData
         },
         options: {
@@ -194,7 +194,7 @@ if (jobListingsCtx) {
     var jobListingsChart = new Chart(jobListingsCtx, {
         type: 'bar',
         data: {
-            labels: ['January', 'February', 'March', 'April', 'May'],
+            labels: chartData.monthNames,
             datasets: jobListingsData
         },
         options: {

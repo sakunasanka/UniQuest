@@ -671,4 +671,13 @@ class userModel extends Model
             return false;
         }
     }
+
+    public function getUserLoginsByGender() {
+        $this->db->query("SELECT 
+                gender, 
+                COUNT(*) AS logins
+            FROM user
+            GROUP BY gender");
+        return $this->db->resultSet();
+    }
 }

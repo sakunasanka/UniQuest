@@ -1,10 +1,5 @@
 <?php
-class M_applicationFields {
-    private $db;
-
-    public function __construct() {
-        $this->db = Database::getInstance();
-    }
+class M_applicationFields extends Model{
 
     public function saveFields($jobId, $fields) {
         try {
@@ -163,6 +158,25 @@ class M_applicationFields {
             return false;
         }
     }
+
+    public function getApplicationCount() {
+        $this->db->query('SELECT Count(*) as application_count FROM v_allapplications WHERE v_allapplications.CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single();
+        return $row->application_count;
+    }
+
+    public function getApplicationsByWeek() {
+        $this->db->query("SELECT 
+                WEEK(SubmissionDate) AS week, 
+                COUNT(*) AS applications
+            FROM v_allapplications
+            WHERE CompanyID = :user_id
+            GROUP BY WEEK(SubmissionDate)");
+        $this->db->bind(':user_id', $_SESSION['user_id']);    
+        return $this->db->resultSet();
+    }
+
 }
     // public function getFieldsByJobId($jobId) {
     //     $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
