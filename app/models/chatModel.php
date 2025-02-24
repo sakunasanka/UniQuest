@@ -77,20 +77,34 @@ class ChatModel extends Model {
     }
 
     public function editMessage($messageId, $newMessage, $senderId) {
-        $sql = "UPDATE messages SET message = :newMessage WHERE id = :messageId AND sender_id = :senderId";
-        $this->db->query($sql);
-        $this->db->bind(':newMessage', $newMessage);
-        $this->db->bind(':messageId', $messageId);
-        $this->db->bind(':senderId', $senderId);
-        return $this->db->execute();
+        try {
+            $this->db->query('UPDATE messages SET message = :newMessage WHERE id = :messageId AND sender_id = :senderId');
+            $this->db->bind(':newMessage', $newMessage);
+            $this->db->bind(':messageId', $messageId);
+            $this->db->bind(':senderId', $senderId);
+
+            return $this->db->execute() ;
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
     }
 
-    public function deleteMessage($messageId,$senderId) {
-        $sql = "DELETE FROM messages WHERE id = :messageId AND sender_id = :senderId";
-        $this->db->query($sql);
-        $this->db->bind(':messageId', $messageId);
-        $this->db->bind(':senderId', $senderId);
-        return $this->db->execute();
+    public function deleteMessage($messageId, $senderId) {
+        try {
+
+            $this->db->query('DELETE FROM messages WHERE id = :messageId AND sender_id = :senderId');
+            $this->db->bind(':messageId', $messageId);
+            $this->db->bind(':senderId', $senderId);
+
+            return $this->db->execute();
+               
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
     }
     
 }

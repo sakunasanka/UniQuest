@@ -855,16 +855,15 @@ class Admin extends Controller
     
     public function deleteMessage($messageId) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $chatModel = $this->model('chatModel');
             $senderId = $_SESSION['user_id']; // Get the sender's ID from session
             
-            if ($chatModel->deleteMessage($messageId, $senderId)) {
-                echo json_encode(['success' => true]);
+            if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
+                Redirect::to(URLROOT . '/admin/user_detail');
             } else {
-                echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
+                die('Something went wrong while deleting the message.');
             }
         } else {
-            http_response_code(405);
+            Redirect::to(URLROOT . '/admin/user_detail');
         }
     }
     
