@@ -512,8 +512,10 @@ class Admin extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
+            $rejectReasons = $this->model('AdminModel')->getUserRejectReasons();
             $data = [
-                'user' => $user
+                'user' => $user,
+                'rejectReasons' => $rejectReasons['data']
             ];
             if ($user['Role'] == 'Student') {
                 $this->view('pages/admin/stu_ver_detail', $data);
@@ -547,10 +549,21 @@ class Admin extends Controller
         }
     }
 
-    public function user_ver_reject($userID)
+    public function user_ver_reject($userID, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
             $this->model->rejectUser($userID);
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            $reason = $this->model('AdminModel')->getUserRejectReasonByID($reasonID)->Reason;
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            }
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this

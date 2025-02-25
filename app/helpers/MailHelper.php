@@ -135,4 +135,25 @@ class MailHelper
 
         return self::sendEmail($toEmail, $toName, $subject, $template);
     }
+
+    //send email to notify student that their account has been rejected with reason
+    public static function sendEmailAccountRejected($toEmail, $toName, $reason)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'account_rejected.html');
+        //create link
+        $contactLink = URLROOT . '/contact';//TODO: change to contact admin page
+        $regLink = URLROOT . '/register';//TODO: change to resubmit registration page
+
+        //replace placeholders
+        $template = str_replace('{{name}}', $toName, $template);
+        $template = str_replace('{{rejection_reason}}', $reason, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+        $template = str_replace('{{contact_admin_link}}', $contactLink, $template);
+        $template = str_replace('{{resubmit_link}}', $regLink, $template);
+
+        $subject = "Account Rejected";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
 }
