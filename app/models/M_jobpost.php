@@ -118,15 +118,16 @@ class M_jobpost extends Model {
         }
     }
 
-    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12)
+    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
     {
         try{
             $conditions = [
                 ['Status', '=', 'Active'],
-                ['Category', '=', 'Part-time']
+                ['Category', '=', 'Part-time'],
+                [$searchBy, 'LIKE', $search . '%']
             ];
 
-            $jobs = $this->select('v_jobs', $conditions, '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            $jobs = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $jobs;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -137,15 +138,16 @@ class M_jobpost extends Model {
         }
     }
 
-    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12)
+    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
     {
         try{
             $conditions = [
                 ['Status', '=', 'Active'],
-                ['Category', '=', 'Internship']
+                ['Category', '=', 'Internship'],             
+                [$searchBy, 'LIKE', $search . '%']
             ];
 
-            $interns = $this->select('v_jobs', $conditions, '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            $interns = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $interns;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());

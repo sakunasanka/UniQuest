@@ -18,10 +18,10 @@ class userModel extends Model
             return false;
         }
     }
-    public function getcompany($pageNumber = 1, $rowsPerPage = 12)
+    public function getcompany($pageNumber = 1, $rowsPerPage = 12, $sort = "CompanyID", $order = "DESC", $search = '', $searchBy = 'CompanyName')
     {
         try {
-            $companies = $this->select('company', [], '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            $companies = $this->select('company', [[$searchBy, 'LIKE', $search . '%']], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $companies;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());

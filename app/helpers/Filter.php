@@ -91,24 +91,33 @@ class Filter
     {
         $minSalaryEscaped = $this->minSalary ?: 0;
         $maxSalaryEscaped = $this->maxSalary ?: 500000;
+        $salaryFrequency = isset($_GET['salaryFrequency']) ? $_GET['salaryFrequency'] : 'monthly'; // Default to 'Per Month'
 
         $html = "<div class='salary-filter'>";
         $html .= "<label class='salary-label'>Salary Range:</label>";
         $html .= "<div class='salary-slider-container'>";
+
+        // Display dynamic values
         $html .= "<div class='salary-values'>";
         $html .= "<span id='minSalaryValue'>$minSalaryEscaped</span> - ";
         $html .= "<span id='maxSalaryValue'>$maxSalaryEscaped</span>";
+        $html .= "<select id='salaryFrequency' name='salaryFrequency' class='salary-frequency'>";
+        $html .= "<option value='monthly' " . ($salaryFrequency == 'monthly' ? "selected" : "") . ">Per Month</option>";
+        $html .= "<option value='weekly' " . ($salaryFrequency == 'weekly' ? "selected" : "") . ">Per Week</option>";
+        $html .= "<option value='daily' " . ($salaryFrequency == 'daily' ? "selected" : "") . ">Per Day</option>";
+        $html .= "</select>";
         $html .= "</div>";
 
-        // Two input range sliders for min & max salary
+        // Range slider with two handles
         $html .= "<div class='range-slider'>";
-        $html .= "<input type='range' id='minSalaryRange' min='0' max='500000' step='5000' value='$minSalaryEscaped'>";
-        $html .= "<input type='range' id='maxSalaryRange' min='0' max='500000' step='5000' value='$maxSalaryEscaped'>";
+        $html .= "<input type='range' id='minSalaryRange' min='0' max='500000' step='2500' value='$minSalaryEscaped'>";
+        $html .= "<input type='range' id='maxSalaryRange' min='0' max='500000' step='2500' value='$maxSalaryEscaped'>";
         $html .= "</div>";
 
-        // Hidden input fields for form submission
+        // Hidden inputs for form submission
         $html .= "<input type='hidden' name='minSalary' id='minSalary' value='$minSalaryEscaped'>";
         $html .= "<input type='hidden' name='maxSalary' id='maxSalary' value='$maxSalaryEscaped'>";
+        // $html .= "<input type='hidden' name='salaryFrequencyHidden' id='salaryFrequencyHidden' value='$salaryFrequency'>";
 
         $html .= "</div>";
         $html .= "</div>";

@@ -221,8 +221,22 @@
 }
 
 .salary-values {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
+}
+
+.salary-frequency {
+    padding: 5px;
+    font-size: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+.salary-frequency:focus {
+    border-color: #32a852;
 }
 
 .range-slider {

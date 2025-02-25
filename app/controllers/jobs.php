@@ -141,9 +141,13 @@ class Jobs extends Controller
         // Get the requested data from query params
         $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
         $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
         // Fetch part-time job posts
-        $post_data = $this->model('M_jobpost')->getPartTimeJobs($page, $limit);
+        $post_data = $this->model('M_jobpost')->getPartTimeJobs($page, $limit, $sort, $order, $search, $searchBy);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -185,8 +189,12 @@ class Jobs extends Controller
         // Get the requested data from query params
         $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
         $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
         // Retrieve internship jobs
-        $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit);
+        $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit, $sort, $order, $search, $searchBy);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -226,7 +234,12 @@ class Jobs extends Controller
         // Get the requested data from query params
         $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
         $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
-        $post_data = $this->model('userModel')->getcompany($page, $limit);
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyName';
+        // Retrieve companies
+        $post_data = $this->model('userModel')->getcompany($page, $limit, $sort, $order, $search, $searchBy);
         $posts = $post_data['data'];
         $displayRatings = [];
 
