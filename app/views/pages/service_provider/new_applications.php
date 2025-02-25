@@ -42,15 +42,15 @@
                                 <td><?php echo $application->StudentContact; ?></td>
                                 <td><?php echo $application->SubmissionDate; ?></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_application/<?php echo $application->id; ?>'">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_application/<?php echo $application->ApplicationID; ?>'">
                                         preview
                                     </span>
-                                    <span class="material-symbols-outlined action-btn activate">
+                                    <!-- <span class="material-symbols-outlined action-btn activate">
                                         check_circle
                                     </span>
                                     <span class="material-symbols-outlined action-btn deactivate">
                                         block
-                                    </span>
+                                    </span> -->
                                 </td>
                             </tr>
                         <?php endforeach; ?>

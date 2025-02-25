@@ -344,6 +344,24 @@ public function getAllApplications($userId) {
         // }
     
     }
+    public function getApplicationsByuserID($applicationID)
+    {
+        // try {
+            // Prepare the SQL query
+            $query ='SELECT * FROM v_allapplications WHERE applicationID = :applicationID';
+            $this->db->query($query);
+            // Bind the job ID parameter
+            $this->db->bind(':applicationID', $applicationID);
+
+            // Execute the query and return the results
+            return $this->db->resultSet();
+            
+        // } catch (PDOException $e) {
+        //     error_log("Database Error: " . $e->getMessage());
+        //     return [];
+        // }
+    
+    }
     
 }
 

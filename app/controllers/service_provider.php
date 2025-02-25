@@ -113,6 +113,7 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/jobPost');
     }
+    
 
     public function report()
     {
@@ -199,6 +200,46 @@ class Service_provider extends Controller
 
         // Load the view
         $this->view('pages/service_provider/new_applications', $data);
+    }
+    public function view_application($applicationID)
+    {
+    // Fetch application details
+    $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
+
+    if (!$application) {
+        // Handle the case where the application is not found
+        redirect('error/not_found');
+    }
+
+    // Access the first element of the $application array
+    $application = $application[0];
+
+    // Prepare the application data
+    $applicationData = [
+        'photo' => $application->StudentProfileImage ?? null,
+        'fullname' => $application->StudentName ?? null,
+        'id' => $application->ApplicationID ?? null,
+        'created_at' => $application->SubmissionDate ?? null,
+        'status' => $application->ApplicationStatus ?? null,
+        'email' => $application->StudentEmail ?? null,
+        'contact' => $application->StudentContact ?? null,
+        'address' => $application->address ?? null,
+        'gender' => $application->gender ?? null,
+        'dob' => $application->dob ?? null,
+        'qualifications' => $application->Qualifications ?? null,
+        'experience' => $application->Experience ?? null,
+        'skills' => $application->Skills ?? null
+    ];
+
+    
+
+    $data = [
+        'application' => $applicationData,
+        
+    ];
+
+    // Load the view
+    $this->view('pages/service_provider/view_application', $data);
     }
 
     public function rejected_applications()
