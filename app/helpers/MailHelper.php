@@ -156,4 +156,39 @@ class MailHelper
 
         return self::sendEmail($toEmail, $toName, $subject, $template);
     }
+
+    //send email to notify student that their account has been deactivated
+    public static function sendEmailAccountDeactivated($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'acc_deactivate.html');
+        //create link
+        $reactivateLink = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{name}}', $toName, $template);
+        $template = str_replace('{{login_link}}', $reactivateLink, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Deactivated";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
+
+    //send email to notify student that their account has been reactivated
+    public static function sendEmailAccountReactivated($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'acc_reactivation.html');
+        //create link
+        $loginLink = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Reactivated";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
 }

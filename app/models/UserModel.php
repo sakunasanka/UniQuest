@@ -376,6 +376,26 @@ class userModel extends Model
         }
     }
 
+    public function deactivateAccountByUser($userId)
+    {
+        try {
+            $userData = [
+                'Status' => 'Pending Deletion'
+            ];
+            if ($this->update('user', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
     {
         try {
@@ -482,7 +502,7 @@ class userModel extends Model
         try {
             // Conditions for the query
             $conditions = [
-                ['Status', 'IN', ['Active', 'Deactive']], // Use IN clause for Status
+                ['Status', 'NOT IN', ['Pending', 'Not Approved']], // Use IN clause for Status
                 ['Role', '=', $role] // Use simple equality for Role
             ];
 

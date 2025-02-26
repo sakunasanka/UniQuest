@@ -60,6 +60,13 @@ class User extends Controller
                 if ($loggedInUser && $loggedInUser->Status === 'Active') {
                     // Create session
                     $this->createSession($loggedInUser->UserID);
+                } else if ($loggedInUser && $loggedInUser->Status === 'Pending Deletion') {
+                    // Redirect to reactivate account page
+                    $_SESSION['logged_user_id'] = $loggedInUser->UserID;
+                    $_SESSION['logged_user_email'] = $loggedInUser->Email;
+                    $_SESSION['logged_user_name'] = $loggedInUser->FirstName . ' ' . $loggedInUser->LastName;
+                    Redirect::to(URLROOT . '/user/reactivate_acc');
+                    exit;
                 } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
                     //activate account again and logge in user
                     $this->model->activateAccount($loggedInUser->UserID);
@@ -98,6 +105,35 @@ class User extends Controller
 
             // Load view
             $this->view('pages/login/login', $data);
+        }
+    }
+
+    public function reactivate_acc()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (!isset($_SESSION['logged_user_id'])) {
+                Redirect::to(URLROOT . '/login');
+                exit;
+            }
+            $userID = $_SESSION['logged_user_id'];
+            unset($_SESSION['logged_user_id']);
+
+            // Check if user wants to reactivate account
+            if (isset($_POST['yes'])) {
+                $this->model->activateAccount($userID);
+                //send email to notify user that their account has been reactivated
+                MailHelper::sendEmailAccountReactivated($_SESSION['logged_user_email'], $_SESSION['logged_user_name']);
+                unset($_SESSION['logged_user_email']);
+                unset($_SESSION['logged_user_name']);
+                // Create session
+                $this->createSession($userID);
+            } else if (isset($_POST['no'])) {
+                // Redirect to home page
+                Redirect::to(URLROOT);
+            }
+        } else {
+            // Load view
+            $this->view('pages/login/reactivate_acc');
         }
     }
 
@@ -443,7 +479,9 @@ class User extends Controller
             // Check if there are no errors
             if (empty($data['confirm_err'])) {
                 // Deactivate account
-                $this->model->deactivateAccount($_SESSION['user_id']);
+                $this->model->deactivateAccountByUser($_SESSION['user_id']);
+                //send email to notify user that their account
+                MailHelper::sendEmailAccountDeactivated($_SESSION['user_email'], $_SESSION['user_name']);
                 // Logout
                 $this->logout();
             } else {

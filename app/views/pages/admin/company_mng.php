@@ -53,8 +53,8 @@
                                         person_remove
                                     </span>
                                 </td>
-                            <?php elseif ($company->Status == 'Deactive') : ?>
-                                <td><span class="status inactive">Deactive</span></td>
+                                <?php elseif (in_array($company->Status, ['Deactive', 'Pending Deletion', 'Deleted'])) : ?>
+                                    <td><span class="status inactive"><?php echo $company->Status; ?></span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
                                         account_box
