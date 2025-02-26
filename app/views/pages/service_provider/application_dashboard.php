@@ -97,9 +97,7 @@
                         </div>
                     </div>
                     <div class="job-actions">
-                        <?php
-                        print_r($job);
-                        ?>
+                        
                         <!-- Corrected onclick with proper quotes and PHP embedding -->
                         <span class="view-link" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/new_applications/<?php echo $job['jobID']; ?>'">
                             View Applications <i class="fas fa-chevron-right"></i>

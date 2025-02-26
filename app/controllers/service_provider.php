@@ -202,7 +202,7 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/new_applications', $data);
     }
     public function view_application($applicationID)
-    {
+{
     // Fetch application details
     $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
 
@@ -213,7 +213,7 @@ class Service_provider extends Controller
 
     // Access the first element of the $application array
     $application = $application[0];
-
+    
     // Prepare the application data
     $applicationData = [
         'photo' => $application->StudentProfileImage ?? null,
@@ -224,23 +224,27 @@ class Service_provider extends Controller
         'email' => $application->StudentEmail ?? null,
         'contact' => $application->StudentContact ?? null,
         'address' => $application->address ?? null,
+        'nic' => $application->nic ?? null,
         'gender' => $application->gender ?? null,
         'dob' => $application->dob ?? null,
         'qualifications' => $application->Qualifications ?? null,
         'experience' => $application->Experience ?? null,
-        'skills' => $application->Skills ?? null
+        'skills' => $application->Skills ?? null,
+        'cv' => $application->cv ?? null,
+        'nic_copy' => $application->nic_copy ?? null,
+        'linkedin' => $application->linkedin ?? null,
+        'other1' => $application->other1 ?? null,
+        'other2' => $application->other2 ?? null,
+        'other3' => $application->other3 ?? null
     ];
-
-    
 
     $data = [
         'application' => $applicationData,
-        
     ];
 
     // Load the view
     $this->view('pages/service_provider/view_application', $data);
-    }
+}
 
     public function rejected_applications()
     {

@@ -160,12 +160,33 @@ document.querySelector("form").addEventListener("submit", function(event) {
         }
     }
 
-    // Prevent submission only if invalid
-    if (!isValid) {
-        event.preventDefault();
-    }
-});
+    
 
+    // Date of Birth Validation
+    const dobInput = document.getElementById("dob");
+        if (dobInput && dobInput.value) {
+            const dobPattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
+            if (!dobPattern.test(dobInput.value)) {
+                showError(dobInput, "Please enter a valid date of birth in YYYY-MM-DD format.");
+                isValid = false;
+            } else {
+                const dob = new Date(dobInput.value);
+                const today = new Date();
+                const age = today.getFullYear() - dob.getFullYear();
+
+                // Check if the user is at least 18 years old
+                if (age < 18 || (age === 18 && today < new Date(today.setFullYear(dob.getFullYear() + 18)))) {
+                    showError(dobInput, "You must be at least 18 years old to apply.");
+                    isValid = false;
+                }
+            }
+        }
+
+        // Prevent submission only if invalid
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
 // Show error message
 function showError(input, message) {
     let errorElement = input.nextElementSibling;

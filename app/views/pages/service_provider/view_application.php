@@ -5,29 +5,36 @@ require APPROOT . '/views/components/stu_header.php';
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
     <div class="content-area">
-    <?php
-// Hard-coded data array
-// $data = [
-//     'application' => [
-//         'photo' => 'https://via.placeholder.com/150', // Replace with actual image path
-//         'fullname' => 'John Doe',
-//         'id' => 'APP12345',
-//         'created_at' => '2023-01-15 10:30:00',
-//         'status' => 'Approved',
-//         'email' => 'john.doe@example.com',
-//         'contact' => '+1 555-123-4567',
-//         'address' => '123 Main St, Cityville, ST 12345',
-//         'gender' => 'Male',
-//         'dob' => '1990-05-15',
-//         'qualifications' => "Bachelor's Degree in Computer Science\nCertified Project Manager",
-//         'experience' => "5 years web development experience\n2 years team leadership",
-//         'skills' => 'HTML, CSS, JavaScript, PHP',
-//     ]
-// ];
-?>
+        <?php
+        // Hard-coded data array
+        // $data = [
+        //     'application' => [
+        //         'photo' => 'https://via.placeholder.com/150', // Replace with actual image path
+        //         'fullname' => 'John Doe',
+        //         'id' => 'APP12345',
+        //         'created_at' => '2023-01-15 10:30:00',
+        //         'status' => 'Approved',
+        //         'email' => 'john.doe@example.com',
+        //         'contact' => '+1 555-123-4567',
+        //         'address' => '123 Main St, Cityville, ST 12345',
+        //         'nic' => '123456789V',
+        //         'gender' => 'Male',
+        //         'dob' => '1990-05-15',
+        //         'qualifications' => "Bachelor's Degree in Computer Science\nCertified Project Manager",
+        //         'experience' => "5 years web development experience\n2 years team leadership",
+        //         'skills' => 'HTML, CSS, JavaScript, PHP',
+        //         'cv' => 'path/to/cv.pdf',
+        //         'nic_copy' => 'path/to/nic_copy.pdf',
+        //         'linkedin' => 'https://linkedin.com/in/johndoe',
+        //         'other1' => 'path/to/other1.pdf',
+        //         'other2' => 'path/to/other2.pdf',
+        //         'other3' => 'path/to/other3.pdf'
+        //     ]
+        // ];
+        // ?>
         <div class="header">
             <h1>Application Details</h1>
         </div>
@@ -72,6 +79,12 @@ require APPROOT . '/views/components/stu_header.php';
                     <div class="info-group">
                         <label>Address:</label>
                         <span><?php echo $data['application']['address']; ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if (!empty($data['application']['nic'])): ?>
+                    <div class="info-group">
+                        <label>NIC:</label>
+                        <span><?php echo $data['application']['nic']; ?></span>
                     </div>
                 <?php endif; ?>
                 <?php if (!empty($data['application']['gender'])): ?>
@@ -122,15 +135,36 @@ require APPROOT . '/views/components/stu_header.php';
             <div class="documents-links">
                 <h3>Documents & Links</h3>
                 <div class="documents-grid">
-                    <button class="document-button">
-                        <i class="fas fa-file-alt"></i> View CV
-                    </button>
-                    <button class="document-button">
-                        <i class="fas fa-id-card"></i> View NIC Copy
-                    </button>
-                    <button class="document-button">
-                        <i class="fab fa-linkedin"></i> LinkedIn Profile
-                    </button>
+                    <?php if (!empty($data['application']['cv'])): ?>
+                        <button class="document-button" onclick="window.open('<?php echo $data['application']['cv']; ?>', '_blank')">
+                            <i class="fas fa-file-alt"></i> View CV
+                        </button>
+                    <?php endif; ?>
+                    <?php if (!empty($data['application']['nic_copy'])): ?>
+                        <button class="document-button" onclick="window.open('<?php echo $data['application']['nic_copy']; ?>', '_blank')">
+                            <i class="fas fa-id-card"></i> View NIC Copy
+                        </button>
+                    <?php endif; ?>
+                    <?php if (!empty($data['application']['linkedin'])): ?>
+                        <button class="document-button" onclick="window.open('<?php echo $data['application']['linkedin']; ?>', '_blank')">
+                            <i class="fab fa-linkedin"></i> LinkedIn Profile
+                        </button>
+                    <?php endif; ?>
+                    <?php if (!empty($data['application']['other1'])): ?>
+                        <button class="document-button" onclick="window.open('<?php echo $data['application']['other1']; ?>', '_blank')">
+                            <i class="fas fa-file"></i> Other Document 1
+                        </button>
+                    <?php endif; ?>
+                    <?php if (!empty($data['application']['other2'])): ?>
+                        <button class="document-button" onclick="window.open('<?php echo $data['application']['other2']; ?>', '_blank')">
+                            <i class="fas fa-file"></i> Other Document 2
+                        </button>
+                    <?php endif; ?>
+                    <?php if (!empty($data['application']['other3'])): ?>
+                        <button class="document-button" onclick="window.open('<?php echo $data['application']['other3']; ?>', '_blank')">
+                            <i class="fas fa-file"></i> Other Document 3
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
 
