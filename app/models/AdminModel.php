@@ -17,5 +17,19 @@ class AdminModel extends Model {
             return $e->getMessage();
         }
     }
+
+    public function addUserAccountLog($userID, $action, $reasonID) {
+        try {
+            $log = [
+                'UserID' => $userID,
+                'Action' => $action,
+                'ActionBy' => $_SESSION['user_id'],
+                'ReasonID' => $reasonID
+            ];
+            $this->insert('useraccountlog', $log);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
 ?>

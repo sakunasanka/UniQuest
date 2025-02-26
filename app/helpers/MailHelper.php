@@ -191,4 +191,37 @@ class MailHelper
 
         return self::sendEmail($toEmail, $toName, $subject, $template);
     }
+
+    //send email to notify student that their account has been deactivated by admin
+    public static function sendEmailAccountDeactivatedByAdmin($toEmail, $reason)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'acc_deactivate_admin.html');
+        //create link
+        $contactLink = URLROOT . '/contact';//TODO: change to contact admin page
+
+        //replace placeholders
+        $template = str_replace('{{deactivation_reason}}', $reason, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+        $template = str_replace('{{contact_admin_link}}', $contactLink, $template);
+
+        $subject = "Account Deactivated";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
+    }
+
+    //send email to notify student that their account has been reactivated by admin
+    public static function sendEmailAccountReactivatedByAdmin($toEmail, $reason)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'acc_reactivate_admin.html');
+
+        //replace placeholders
+        $template = str_replace('{{year}}', date('Y'), $template);
+        $template = str_replace('{{reactivation_reason}}', $reason, $template);
+
+        $subject = "Account Reactivated";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
+    }
 }

@@ -56,8 +56,12 @@ class Admin extends Controller
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
             $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
             $data = [
                 'students' => $students['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $students['currentPage'],
                 'rowsPerPage' => $students['limit'],
                 'totalRows' => $students['totalRows'],
@@ -89,8 +93,12 @@ class Admin extends Controller
             // $order = $_GET['order'] ?? 'ASC';
 
             $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
             $data = [
                 'companies' => $companies['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $companies['currentPage'],
                 'rowsPerPage' => $companies['limit'],
                 'totalRows' => $companies['totalRows'],
@@ -118,8 +126,12 @@ class Admin extends Controller
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
             $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
             $data = [
                 'vtMembers' => $vtMembers['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $vtMembers['currentPage'],
                 'rowsPerPage' => $vtMembers['limit'],
                 'totalRows' => $vtMembers['totalRows'],
@@ -570,10 +582,14 @@ class Admin extends Controller
         }
     }
 
-    public function user_activate($userID, $role)
+    public function user_activate($userID, $role, $email, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
             $this->model->activateAccount($userID);
+            $this->model('AdminModel')->addUserAccountLog($userID, 'Activate', $reasonID);
+            MailHelper::sendEmailAccountReactivatedByAdmin($email, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -586,10 +602,14 @@ class Admin extends Controller
         }
     }
 
-    public function user_deactivate($userID, $role)
+    public function user_deactivate($userID, $role, $email, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
             $this->model->deactivateAccount($userID);
+            $this->model('AdminModel')->addUserAccountLog($userID, 'Deactivate', $reasonID);
+            MailHelper::sendEmailAccountDeactivatedByAdmin($email, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {

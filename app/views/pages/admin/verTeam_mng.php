@@ -49,7 +49,7 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $user->UserID; ?>, "VT-Member", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($user->Email); ?>")'>
                                         person_remove
                                     </span>
                                 </td>
@@ -59,7 +59,7 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
+                                    <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $user->UserID; ?>, "VT-Member", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($user->Email); ?>")'>
                                         person_add
                                     </span>
                                 </td>
