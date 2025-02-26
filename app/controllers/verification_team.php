@@ -119,7 +119,7 @@ class Verification_team extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
-            $rejectReasons = $this->model('AdminModel')->getUserRejectReasons();
+            $rejectReasons = $this->model('AdminModel')->getReasonsByType('user_reject');
             $data = [
                 'user' => $user,
                 'rejectReasons' => $rejectReasons['data']
@@ -179,7 +179,7 @@ class Verification_team extends Controller
             $this->model->rejectUser($userID);
             $user = $this->model->getUserDetails($userID);
             $email = $user['Email'];
-            $reason = $this->model('AdminModel')->getUserRejectReasonByID($reasonID)->Reason;
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
