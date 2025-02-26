@@ -47,12 +47,12 @@ var registrationsData = [
     }
 ];
 
-var revenueData = [
+var applicationData = [
     {
         label: 'Applications',
         backgroundColor: 'rgba(45, 156, 128, 0.6)',
         borderColor: 'rgba(45, 156, 128, 0.8)',
-        data: [5, 10, 4, 8],
+        data: chartData.applicationsByWeek,
         fill: false,
         tension: 0.4,
         pointBackgroundColor: 'rgba(72, 207, 173, 1)',
@@ -77,7 +77,7 @@ var revenueData = [
 
 // Calculate max values after data is defined
 var registrationsMax = getRoundedMaxValue(getMaxValue(registrationsData));
-var revenueMax = getRoundedMaxValue(getMaxValue(revenueData));
+var applicationMax = getRoundedMaxValue(getMaxValue(applicationData));
 
 // Registration Chart
 var registrationsCtx = document.getElementById('registrationsChart')?.getContext('2d');
@@ -155,14 +155,14 @@ if (loginsCtx) {
     });
 }
 
-// Revenue Curve Chart
-var revenueCtx = document.getElementById('revenueChart')?.getContext('2d');
-if (revenueCtx) {
-    var revenueChart = new Chart(revenueCtx, {
+// Application Curve Chart
+var applicationCtx = document.getElementById('applicationChart')?.getContext('2d');
+if (applicationCtx) {
+    var applicationChart = new Chart(applicationCtx, {
         type: 'line',
         data: {
             labels: ['3 Weeks Ago', '2 Weeks Ago', '1 Week Ago', 'This Week'],
-            datasets: revenueData
+            datasets: applicationData
         },
         options: {
             responsive: true,
@@ -179,9 +179,9 @@ if (revenueCtx) {
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: revenueMax,
+                    max: applicationMax,
                     ticks: {
-                        stepSize: getStepSize(revenueMax), 
+                        stepSize: getStepSize(applicationMax), 
                     }
                 }
             }

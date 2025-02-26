@@ -225,15 +225,15 @@ class M_applicationFields extends Model{
 
     public function getApplicationsByWeek() {
         try {
-            // Query to fetch application counts grouped by week
+            // Query to fetch application counts grouped by week, starting from Monday
             $this->db->query("
                 WITH weeks AS (
                     SELECT 
-                        DATE_SUB(CURDATE(), INTERVAL seq WEEK) AS week_start,
+                        DATE_SUB(DATE(CURRENT_DATE - INTERVAL WEEKDAY(CURRENT_DATE) DAY), INTERVAL seq WEEK) AS week_start,
                         CONCAT(
-                            DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL seq WEEK), '%Y-%m-%d'), 
+                            DATE_FORMAT(DATE_SUB(DATE(CURRENT_DATE - INTERVAL WEEKDAY(CURRENT_DATE) DAY), INTERVAL seq WEEK), '%Y-%m-%d'), 
                             ' to ', 
-                            DATE_FORMAT(DATE_ADD(DATE_SUB(CURDATE(), INTERVAL seq WEEK), INTERVAL 6 DAY), '%Y-%m-%d')
+                            DATE_FORMAT(DATE_ADD(DATE_SUB(DATE(CURRENT_DATE - INTERVAL WEEKDAY(CURRENT_DATE) DAY), INTERVAL seq WEEK), INTERVAL 6 DAY), '%Y-%m-%d')
                         ) AS week_label
                     FROM (
                         SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
@@ -241,12 +241,12 @@ class M_applicationFields extends Model{
                 )
                 SELECT 
                     weeks.week_label AS week_label,
-                    COALESCE(COUNT(a.application_id), 0) AS application_count
+                    COALESCE(COUNT(a.id), 0) AS application_count
                 FROM weeks
                 LEFT JOIN applications a 
-                    ON DATE(a.application_date) BETWEEN weeks.week_start AND DATE_ADD(weeks.week_start, INTERVAL 6 DAY)
+                    ON DATE(a.created_at) BETWEEN weeks.week_start AND DATE_ADD(weeks.week_start, INTERVAL 6 DAY)
                     AND a.job_id IN (
-                        SELECT j.job_id 
+                        SELECT j.jobID 
                         FROM jobs j 
                         WHERE j.CompanyID = :user_id
                           AND j.verifiedBy IS NOT NULL
@@ -263,7 +263,9 @@ class M_applicationFields extends Model{
     
             // Extract week labels and application counts
             $weekLabels = array_column($result, 'week_label');
+            $weekLabels = array_reverse($weekLabels);
             $applicationCounts = array_column($result, 'application_count');
+            $applicationCounts = array_reverse($applicationCounts);
     
             return [
                 'week_labels' => $weekLabels,

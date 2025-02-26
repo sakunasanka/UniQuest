@@ -19,7 +19,6 @@
                 <div>
                     <h3>Total Jobs</h3>
                     <p><?php echo $data['job_count']; ?></p>
-                    <?php echo json_encode($data['applicationsByWeek']); ?>
 
                 </div>
                 <div class="icon_">
@@ -57,7 +56,7 @@
             </div>
             
             <div class="card chart-card">
-                <canvas id="revenueChart"></canvas>
+                <canvas id="applicationChart"></canvas>
             </div>
             <div class="card chart-card">
                 <div class="top-jobs-card">
@@ -97,14 +96,13 @@
 <script>
     var chartData = {
         registrations: <?php echo json_encode($data['registrationsData']); ?>,
-        revenue: <?php echo json_encode($data['revenueData']); ?>,
         monthNames: <?php echo json_encode($data['month_names']); ?>,
         jobCount: <?php echo json_encode($data['Jobspermonth']); ?>,
         internshipCount: <?php echo json_encode($data['Internshipspermonth']); ?>,
         genderCountMale: <?php echo json_encode($data['applicationsByGender']['Male']); ?>,
-        genderCountFemale: <?php echo json_encode($data['applicationsByGender']['Female']); ?>
+        genderCountFemale: <?php echo json_encode($data['applicationsByGender']['Female']); ?>,
+        applicationsByWeek: <?php echo json_encode($data['applicationsByWeek']['application_counts']); ?>
     };
-
 </script>
 
 <script src="<?php echo URLROOT; ?>/js/service_provider/ser_analytics.js"></script>

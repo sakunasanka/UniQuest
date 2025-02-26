@@ -165,7 +165,7 @@ class Service_provider extends Controller
 
         // Fetch data for charts
         $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
-        $revenueData = $this->model('M_applicationFields')->getApplicationsByWeek();
+        $applicationData = $this->model('M_applicationFields')->getApplicationsByWeek();
 
         $Jobspermonth = [];
         $Internshipspermonth = [];
@@ -191,7 +191,7 @@ class Service_provider extends Controller
             'activeJobCount' => $activeJobCount,
             'applicationCount' => $applicationCount,
             'registrationsData' => $registrationsData,
-            'revenueData' => $revenueData,
+            'applicationData' => $applicationData,
             'Jobspermonth' => $Jobspermonth,
             'Internshipspermonth' => $Internshipspermonth,
             'month_names' => $registrationsData['month_names'],
