@@ -162,6 +162,7 @@ class Service_provider extends Controller
         $applicationCount = $this->model('M_applicationFields')->getApplicationCount();
         $applicationsByGender = $this->model('M_applicationFields')->getApplicationsByGender();
         $applicationsByWeek = $this->model('M_applicationFields')->getApplicationsByWeek();
+        $topPerforming = $this->model('M_applicationFields')->getTopPerformingJobs();
 
         // Fetch data for charts
         $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
@@ -197,6 +198,7 @@ class Service_provider extends Controller
             'month_names' => $registrationsData['month_names'],
             'applicationsByGender' => $applicationsByGender,
             'applicationsByWeek' => $applicationsByWeek,
+            'topPerforming' => $topPerforming,
             // 'userLoginsData' => $userLoginsData,
         ];
 

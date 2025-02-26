@@ -68,23 +68,14 @@
                                 <th>Applications</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <tr>
-                                <td>Software Engineer</td>
-                                <td>280</td>
-                            </tr>
-                            <tr>
-                                <td>Marketing Manager</td>
-                                <td>252</td>
-                            </tr>
-                            <tr>
-                                <td>Sales Representative</td>
-                                <td>232</td>
-                            </tr>
-                            <tr>
-                                <td>Product Designer</td>
-                                <td>150</td>
-                            </tr>
+                            <?php foreach ($data['topPerforming'] as $post): ?>
+                                <tr>
+                                    <td><?php echo $post->job_title; ?></td>
+                                    <td><?php echo $post->application_count; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

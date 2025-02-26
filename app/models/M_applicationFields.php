@@ -281,6 +281,31 @@ class M_applicationFields extends Model{
         }
     }
 
+    public function getTopPerformingJobs($limit = 4) {
+        try {
+            $this->db->query("
+                SELECT 
+                    j.title AS job_title,
+                    COUNT(a.id) AS application_count
+                FROM jobs j
+                LEFT JOIN applications a ON j.jobID = a.job_id
+                WHERE j.CompanyID = :company_id
+                GROUP BY j.jobID, j.title
+                ORDER BY application_count DESC
+                LIMIT :limit
+            ");
+            
+            $this->db->bind(':company_id', $_SESSION['user_id']);
+            $this->db->bind(':limit', $limit, PDO::PARAM_INT);
+            
+            return $this->db->resultSet();
+            
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
 }
     // public function getFieldsByJobId($jobId) {
     //     $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
