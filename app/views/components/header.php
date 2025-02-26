@@ -17,6 +17,7 @@
             </div>
 
             <ul class="nav-links">
+                <li><a href="/uniquest/home" class="hov">Home</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
                     <div class="dropdown-content">

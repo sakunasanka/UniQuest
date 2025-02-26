@@ -384,13 +384,14 @@ class userModel extends Model
         }
     }
 
-    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             // Use grouped conditions for more complex queries
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
-                ['Status', '=', 'Pending']
+                ['Status', '=', 'Pending'],
+                [$searchBy, 'LIKE', $search . '%']
             ];
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
@@ -403,12 +404,13 @@ class userModel extends Model
         }
     }
 
-    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
-                ['Status', '=', 'Not Approved']
+                ['Status', '=', 'Not Approved'],
+                [$searchBy, 'LIKE', $search . '%']
             ];
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
@@ -485,13 +487,14 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             // Conditions for the query
             $conditions = [
                 ['Status', 'IN', ['Active', 'Deactive']], // Use IN clause for Status
-                ['Role', '=', $role] // Use simple equality for Role
+                ['Role', '=', $role], // Use simple equality for Role
+                [$searchBy, 'LIKE', $search . '%'] // Use LIKE for search
             ];
 
             // Fetch users using the select method
@@ -544,7 +547,7 @@ class userModel extends Model
     {
         try {
             // Get pending students and companies
-            $pendingUsers = $this->select('User', [['Status', '=', 'Pending']], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, 1, true);
+            $pendingUsers = $this->select('User', [['Status', '=', 'Pending'],], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, 1, true);
             return $pendingUsers['data'][0]->PendingUserCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -555,11 +558,11 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId], [$searchBy, 'LIKE', $search . '%']], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());

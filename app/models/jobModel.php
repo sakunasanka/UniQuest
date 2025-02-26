@@ -93,12 +93,13 @@ class jobModel extends Model
     //     }
     // }
 
-    public function getVerifiedJobsByCategory($category, $pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getVerifiedJobsByCategory($category, $pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '', $searchBy = 'JobID')
     {
         try {
             $conditions = [
                 ['Status', 'IN', ['Active', 'Deactive']],
-                ['Category', '=', $category]
+                ['Category', '=', $category],
+                [$searchBy, 'LIKE', $search . '%']
             ];
             $users = $this->select(
                 'v_jobs', 
@@ -122,11 +123,12 @@ class jobModel extends Model
     }
 
 
-    public function getPendingJobs($pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getPendingJobs($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '', $searchBy = 'JobID')
     {
         try {
             $conditions = [
-                ['Status', '=', 'Pending']
+                ['Status', '=', 'Pending'],
+                [$searchBy, 'LIKE', $search . '%']
             ];
             $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
@@ -139,11 +141,12 @@ class jobModel extends Model
         }
     }
 
-    public function getNotApprovedJobs($pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getNotApprovedJobs($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '', $searchBy = 'JobID')
     {
         try {
             $conditions = [
-                ['Status', '=', 'Not Approved']
+                ['Status', '=', 'Not Approved'],
+                [$searchBy, 'LIKE', $search . '%']
             ];
             $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
@@ -322,11 +325,11 @@ class jobModel extends Model
         }
     }
 
-    public function getVerifiedJobsByMe($userId, $pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getVerifiedJobsByMe($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '', $searchBy = 'JobID')
     {
         try {
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedJobs', [['ActionBy', '=', $userId]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $verifiedEntities = $this->select('v_verifiedJobs', [['ActionBy', '=', $userId], [$searchBy, 'LIKE', $search . '%']], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
