@@ -153,6 +153,22 @@
                     <p>No reviews available.</p>
                 <?php endif; ?>
             </div>
+            <div class="buttons btn-space-between">
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
+                    <!-- <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button> -->
+                    <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
+
+                    <button class="seemore">
+                        <p onclick="toggleMoreReviews()">See more reviews...</p>
+                    </button>
+                <?php else: ?>
+                    <div></div>
+                    <button class="seemore">
+                        <p onclick="toggleMoreReviews()">See more reviews...</p>
+                    </button>
+
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </div>
