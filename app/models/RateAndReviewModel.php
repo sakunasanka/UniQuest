@@ -222,6 +222,14 @@ class RateAndReviewModel
         return $trendyCompanies;
     }
 
+    public function getReviewByStudentAndCompany($studentId, $companyId)
+    {
+        $this->db->query('SELECT * FROM Review WHERE StudentID = :student_id AND CompanyID = :company_id');
+        $this->db->bind(':student_id', $studentId);
+        $this->db->bind(':company_id', $companyId);
+        return $this->db->single();
+    }
+
     public function getAnonymousName($reviewerId)
     {
         if (!isset($reviewerId)) {
