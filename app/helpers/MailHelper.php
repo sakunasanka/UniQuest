@@ -67,12 +67,12 @@ class MailHelper
     }
 
     //send email with token to verify student email
-    public static function sendEmailWithTokenStudent($toEmail, $token)
+    public static function sendEmailWithTokenStudent($toEmail, $token, $controller)
     {
         //load template
         $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'verification_email_stu.html');
         //create link
-        $link = URLROOT . '/register/verifyStuEmail?token=' . $token;
+        $link = URLROOT . '/' . $controller . '/verifyStuEmail?token=' . $token;
 
         //replace placeholders
         $template = str_replace('{{verification_link}}', $link, $template);

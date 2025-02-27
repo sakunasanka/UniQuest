@@ -245,7 +245,7 @@ class Register extends Controller
                 if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
-                    MailHelper::sendEmailWithTokenStudent($data['email'], $token);
+                    MailHelper::sendEmailWithTokenStudent($data['email'], $token, 'register');
                     // Redirect to verify email page
                     $this->view('pages/register/email_sent', $data);
                 } else {
