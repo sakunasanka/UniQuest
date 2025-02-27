@@ -147,7 +147,7 @@ class Register extends Controller
                 $expiryDate = TokenHelper::generateExpiryDate();
 
                 // Save token to database
-                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
                     MailHelper::sendEmailWithTokenCompany($data['email'], $token);
@@ -181,17 +181,17 @@ class Register extends Controller
             $token = $queryparams['token'];
 
             //get token details
-            $tokenDetails = $this->model->getTokenDetails($token);
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
 
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
                 if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
-                    $this->model->deleteToken($token);
+                    $this->model('AdminModel')->deleteToken($token);
 
                     //store email as verified
-                    $this->model->verifyEmail($tokenDetails->Email);
+                    $this->model('AdminModel')->verifyEmail($tokenDetails->Email);
 
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
@@ -242,7 +242,7 @@ class Register extends Controller
                 $expiryDate = TokenHelper::generateExpiryDate();
 
                 // Save token to database
-                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
                     MailHelper::sendEmailWithTokenStudent($data['email'], $token, 'register');
@@ -276,17 +276,17 @@ class Register extends Controller
             $token = $queryparams['token'];
 
             //get token details
-            $tokenDetails = $this->model->getTokenDetails($token);
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
 
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
                 if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
-                    $this->model->deleteToken($token);
+                    $this->model('AdminModel')->deleteToken($token);
 
                     //store email as verified
-                    $this->model->verifyEmail($tokenDetails->Email);
+                    $this->model('AdminModel')->verifyEmail($tokenDetails->Email);
 
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
@@ -322,7 +322,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model->isEmailVerified($data['email'])) {
+            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 
@@ -385,7 +385,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model->isEmailVerified($data['email'])) {
+            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 

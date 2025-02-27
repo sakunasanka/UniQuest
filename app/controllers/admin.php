@@ -555,6 +555,8 @@ class Admin extends Controller
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
             }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -576,6 +578,8 @@ class Admin extends Controller
                 $name = $user['FirstName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
             }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this

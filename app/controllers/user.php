@@ -59,7 +59,7 @@ class User extends Controller
             // Check if there are no errors
             if (empty($data['email_err']) && empty($data['password_err'])) {
                 // check is email is verified
-                if ($this->model->isEmailVerified($data['email'])) {
+                if ($this->model('AdminModel')->isEmailVerified($data['email'])) {
                     // Check for user
                     $loggedInUser = $this->model->login($data['email'], $data['password']);
 
@@ -146,7 +146,7 @@ class User extends Controller
                 $expiryDate = TokenHelper::generateExpiryDate();
 
                 // Save token to database
-                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
                     MailHelper::sendEmailWithTokenStudent($data['email'], $token, 'user');
@@ -179,14 +179,14 @@ class User extends Controller
             $token = $queryparams['token'];
 
             //get token details
-            $tokenDetails = $this->model->getTokenDetails($token);
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
 
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
                 if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
-                    $this->model->deleteToken($token);
+                    $this->model('AdminModel')->deleteToken($token);
 
                     //store email as verified
                     $this->model('AdminModel')->updateVerifyEmail($tokenDetails->Email);
@@ -424,7 +424,7 @@ class User extends Controller
                     LogHelper::logDebug('Password reset token generated for ' . $data['email']);
 
                     // Save token to database
-                    if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                    if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                         LogHelper::logDebug('Token saved to database');
                         // Send token to email
                         MailHelper::sendEmailWithTokenResetPassword($data['email'], $token);
@@ -472,7 +472,7 @@ class User extends Controller
                 //get token from query params
                 $token = $queryParams['token'];
                 //get token details
-                $tokenDetails = $this->model->getTokenDetails($token);
+                $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
                 // Check if token is valid
                 if (!$tokenDetails || empty($tokenDetails->Email)) {
                     //log the error
@@ -489,7 +489,7 @@ class User extends Controller
                     // Reset password
                     if ($this->resetPassword($data, $userDetails->UserID)) {
                         // Delete token
-                        $this->model->deleteToken($token);
+                        $this->model('AdminModel')->deleteToken($token);
                         // Redirect to login page
                         Redirect::to(URLROOT . '/login');
                         exit;
