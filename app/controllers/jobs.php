@@ -357,8 +357,12 @@ class Jobs extends Controller
             $bookmarkedCompanyIds = [];
         }
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
 
+        foreach ($reviews as $review) {
+            $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
+        }
+        
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
