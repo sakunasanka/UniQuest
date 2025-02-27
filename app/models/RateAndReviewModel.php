@@ -2,10 +2,20 @@
 class RateAndReviewModel
 {
     private $db;
+    private $anonymousNames;
 
     public function __construct()
     {
         $this->db = Database::getInstance();
+        // Load anonymous names from the JSON file
+        $anonymousNamesPath = 'anonymousNames.json'; 
+        if (!file_exists($anonymousNamesPath)) {
+            throw new Exception("Anonymous names file not found.");
+        }
+        $this->anonymousNames = json_decode(file_get_contents($anonymousNamesPath), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception("Failed to decode anonymous names JSON.");
+        }
     }
 
     public function addReview(array $data)
@@ -43,13 +53,10 @@ class RateAndReviewModel
         }
     }
 
-    public function getReviewsByCompanyId()
+    public function getReviewsByCompanyId($id)
     {
         $this->db->query('SELECT * FROM companyreviews WHERE CompanyID = :company_id ORDER BY created_at DESC');
-        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): 
-            $this->db->bind(':company_id', $_SESSION['user_id']);
-        else:
-        endif;        
+        $this->db->bind(':company_id', $id);       
         return $this->db->resultSet();
     }
 
@@ -214,5 +221,22 @@ class RateAndReviewModel
 
         return $trendyCompanies;
     }
+
+    public function getAnonymousName($reviewerId)
+    {
+        if (!isset($reviewerId)) {
+            throw new InvalidArgumentException('Reviewer ID cannot be null.');
+        }
+
+        if (empty($this->anonymousNames)) {
+            throw new RuntimeException('Anonymous names array is empty.');
+        }
+
+        $hash = crc32((string) $reviewerId);
+        $index = abs($hash) % count($this->anonymousNames);
+
+        return $this->anonymousNames[$index];
+    }
+
 }
 ?>
