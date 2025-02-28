@@ -10,9 +10,9 @@
                 <h1>Contact Us</h1>
                 <form id="contactForm" action="<?php echo URLROOT; ?>/service_provider/contact_admin" method="POST">
                     
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" placeholder="Enter Your Name" value="<?php echo $data['name']; ?>" required>
-                    <span class="error-message"><?php echo $data['name_err']; ?></span>
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" required>
+                    <span class="error-message"><?php echo $data['email_err']; ?></span>
 
                     <label for="topic">Topic:</label>
                     <select id="topic" name="topic" required>
