@@ -16,6 +16,7 @@
 ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
@@ -109,8 +110,8 @@
                 <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
                 <div class="buttons">
-                    <button onclick="goToApplyPage(<?php echo $post->JobID; ?>)" class="apply-btn">Apply</button>
-                    <button onclick="goToContactPage()" class="contact-btn">Contact</button>
+                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
+                    <button id="openPopupBtn" class="contact-btn">Contact</button>
                 </div>
             <?php else: ?>    
             <?php endif;?>    

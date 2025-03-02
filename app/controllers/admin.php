@@ -462,6 +462,7 @@ class Admin extends Controller
 
     public function user_detail($userID)
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -472,8 +473,22 @@ class Admin extends Controller
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
 
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
             $data = [
                 'userID' => $userID,
+                'email' => $email, 
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
@@ -490,7 +505,7 @@ class Admin extends Controller
 
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
-                if ($this->model('chatModel')->sendMessage($data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
                     redirect('admin/user_detail/' . $userID);
                 } else {
@@ -502,8 +517,10 @@ class Admin extends Controller
             }
         } else {
             // Load initial view without POST request
+            
             $data = [
                 'userID' => $userID,
+                'email' => '',
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
@@ -776,7 +793,7 @@ class Admin extends Controller
 
     public function notifications()
     {
-        $messages = $this->model('ContactModel')->getMessages();
+        $messages = $this->model('ContactModel')->getMessagesAll();
 
         // Load the view with the messages
         $data = [
@@ -864,35 +881,41 @@ class Admin extends Controller
         //correct this line
     }
 
-    public function editMessage($messageId)
-    {
+    public function editMessage($messageId) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = json_decode(file_get_contents("php://input"), true);
-
-            if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $newMessage = $data['message'] ?? '';
+            
+            if (!empty($newMessage)) {
+                $chatModel = $this->model('chatModel');
+                $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+                
+                if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
                 } else {
                     echo json_encode(['success' => false, 'error' => 'Failed to edit message.']);
                 }
             } else {
-                echo json_encode(['success' => false, 'error' => 'Edit time limit expired.']);
+                echo json_encode(['success' => false, 'error' => 'Message cannot be empty.']);
             }
+        } else {
+            http_response_code(405);
         }
     }
 
     public function deleteMessage($messageId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->deleteMessage($messageId)) {
-                    echo json_encode(['success' => true]);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
-                }
+            $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+            
+            if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
+                Redirect::to(URLROOT . '/admin/user_detail');
             } else {
-                echo json_encode(['success' => false, 'error' => 'Delete time limit expired.']);
+                die('Something went wrong while deleting the message.');
             }
+        } else {
+            Redirect::to(URLROOT . '/admin/user_detail');
         }
     }
+    
 }
