@@ -14,7 +14,14 @@ require_once 'helpers/Validator.php';
 require_once 'helpers/FileUploadHelper.php';
 require_once 'helpers/session_Helper.php';
 require_once 'helpers/TimeConvert_Helper.php';
+require_once 'helpers/Pager.php';
+require_once 'helpers/Sorter.php';
 require_once 'helpers/MailHelper.php';
+require_once 'helpers/LogHelper.php';
+require_once 'helpers/TokenHelper.php';
+require_once 'helpers/UniversityEmailValidator.php';
+require_once 'helpers/TableSearcher.php';
+
 
 //load middlewares
 require_once 'middlewares/AuthMiddleware.php';

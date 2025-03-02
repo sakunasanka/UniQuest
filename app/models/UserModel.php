@@ -18,11 +18,20 @@ class userModel extends Model
             return false;
         }
     }
-    public function getcompany(){
-        $this->db->query('SELECT * FROM company ');
-        $results = $this->db->resultSet();
-        return $results;
+    public function getcompany($pageNumber = 1, $rowsPerPage = 12)
+    {
+        try {
+            $companies = $this->select('company', [], '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            return $companies;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
+    
     public function companyRegister(array $data)
     {
         try {
@@ -375,13 +384,14 @@ class userModel extends Model
         }
     }
 
-    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             // Use grouped conditions for more complex queries
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
-                ['Status', '=', 'Pending']
+                ['Status', '=', 'Pending'],
+                [$searchBy, 'LIKE', $search . '%']
             ];
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
@@ -394,12 +404,13 @@ class userModel extends Model
         }
     }
 
-    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
-                ['Status', '=', 'Not Approved']
+                ['Status', '=', 'Not Approved'],
+                [$searchBy, 'LIKE', $search . '%']
             ];
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
@@ -476,13 +487,14 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             // Conditions for the query
             $conditions = [
                 ['Status', 'IN', ['Active', 'Deactive']], // Use IN clause for Status
-                ['Role', '=', $role] // Use simple equality for Role
+                ['Role', '=', $role], // Use simple equality for Role
+                [$searchBy, 'LIKE', $search . '%'] // Use LIKE for search
             ];
 
             // Fetch users using the select method
@@ -492,7 +504,7 @@ class userModel extends Model
                 'UserID, Email, ContactNo, RegisterDate, Status', // Columns to select
                 'AND', // Logical operator (AND between conditions)
                 '', // No GROUP BY
-                $sort . ' ' . $order,// ORDER BY
+                $sort . ' ' . $order, // ORDER BY
                 $rowsPerPage, // LIMIT
                 $pageNumber, // Page number
                 true // Fetch all results
@@ -535,7 +547,7 @@ class userModel extends Model
     {
         try {
             // Get pending students and companies
-            $pendingUsers = $this->select('User', [['Status', '=', 'Pending']], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, 1, true);
+            $pendingUsers = $this->select('User', [['Status', '=', 'Pending'],], 'COUNT(UserID) AS PendingUserCount', 'AND', '', '', 0, 1, true);
             return $pendingUsers['data'][0]->PendingUserCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -546,11 +558,11 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 2, $sort = "UserID", $order = "ASC")
+    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId], [$searchBy, 'LIKE', $search . '%']], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -561,30 +573,18 @@ class userModel extends Model
         }
     }
 
-    public function savePasswordResetToken($email)
+    public function storeToken($email, $token, $expiration)
     {
         try {
-            // Check if the user exists
-            $user = $this->findUserByEmail($email);
-            if (!$user) {
-                return false;
-            }
-
-            // Generate token
-            $token = bin2hex(random_bytes(50));
-
-            // Set token expiration time
-            $token_expiration = date('Y-m-d H:i:s', strtotime('+1 hour'));
-            
             // Save token to the database
             $tokenData = [
-                'UserID' => $user->UserID,
+                'Email' => $email,
                 'Token' => $token,
-                'Expiration' => $token_expiration
+                'Expiration' => $expiration
             ];
 
-            if ($this->insert('password_reset', $tokenData)) {
-                return $token;
+            if ($this->insert('token', $tokenData)) {
+                return true;
             } else {
                 return false;
             }
@@ -597,13 +597,72 @@ class userModel extends Model
         }
     }
 
-    public function getUserIDFromToken($token)
+    public function getTokenDetails($token)
     {
         try {
-            // Get the user ID from the token
-            $tokenData = $this->select('password_reset', [['Token', '=', $token]], 'UserID, Expiration', 'AND', '', '', 0, 1, false);
+            // Get the token details from the database
+            $tokenData = $this->select('token', [['Token', '=', $token]], 'Email, Expiration', 'AND', '', '', 0, 1, false);
             if ($tokenData) {
                 return $tokenData;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteToken($token)
+    {
+        try {
+            // Delete the token from the database
+            if ($this->delete('token', ['Token' => $token])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function verifyEmail($email)
+    {
+        try {
+            $emailData = [
+                'Email' => $email,
+                'VerifiedDate' => date('Y-m-d H:i:s'),
+                'isVerified' => 'Y'
+            ];
+
+            if ($this->insert('email_verification', $emailData)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function isEmailVerified($email)
+    {
+        try {
+            $emailData = $this->select('email_verification', [['Email', '=', $email]], 'isVerified', 'AND', '', '', 0, 1, false);
+            if ($emailData->isVerified === 'Y') {
+                return true;
             } else {
                 return false;
             }

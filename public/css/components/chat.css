@@ -24,11 +24,11 @@
 
 /* Header */
 .popup-header {
-    background: linear-gradient(135deg, #32a852, #1e7a3d); /* Gradient for a modern look */
+    background: linear-gradient(135deg, #e0e0e0, #e0e0e0(140, 3%, 64%, 0.771)); /* Gradient for a modern look */
     padding: 16px 20px;
     font-size: 1.3em;
     font-weight: bold;
-    color: #fff;
+    color: #666;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -57,7 +57,7 @@
     background: none;
     border: none;
     font-size: 1.5em;
-    color: #fff;
+    color: #666;
     cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s ease;
     padding: 8px;
@@ -93,6 +93,7 @@
     margin-right: 8px;
     font-size: 1.2em;
     vertical-align: middle;
+    color: #666;
 }
 
 /* Chat Content */
