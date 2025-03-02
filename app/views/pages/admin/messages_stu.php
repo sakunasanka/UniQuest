@@ -31,8 +31,8 @@
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php if ($data['messages']) : ?>
-                        <?php foreach ($data['messages'] as $message): ?>
+                    <?php if ($data['messages_stu']) : ?>
+                        <?php foreach ($data['messages_stu'] as $message): ?>
                             <tr>
                                 <td><?php echo $message->topic ?></td>
                                 <td><?php echo $message->user_email ?></td>
@@ -53,7 +53,9 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-            <?php require APPROOT . '/views/components/pagination.php'; ?>
+            <?php 
+            require APPROOT . '/views/components/pagination.php'; 
+            ?>
         </div>
     </main>
 </div>
