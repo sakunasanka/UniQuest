@@ -1,20 +1,15 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/chat.css">
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/contact_form.css">
 
-<div class="main-container">
-<?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-
-    <div class="content-area">
-        <div class="container">
-        <div class="contact-left">
-        <span>Chat with </span>
+<div id="backgroundOverlay" class="background-overlay hidden"></div>
+<div id="chatPopup" class="popup hidden">
+    <div class="popup-header">
+        <span>Chat with <?php echo $data['user']['FirstName'] ?></span>
         <button id="closePopupBtn" class="close-btn"><i class="fa fa-times"></i></button>
-        </div>      
+    </div>
     <div class="popup-content">
         <div class="messages">
-            <?php
-            $previousDate = null;
+        <?php
+        $previousDate = null;
             foreach ($data['messages'] as $message): 
                 $messageDate = date('d M Y', strtotime($message->created_at));
                 $messageTime = date('H:i', strtotime($message->created_at)); 
@@ -22,7 +17,7 @@
                 if ($messageDate !== $previousDate): ?>
                     <div class="date-header"> <?php echo $messageDate; ?> </div>
                     <?php $previousDate = $messageDate; 
-                endif; ?>
+                    endif; ?>
                 <div class="message-container">
                     <div class="message <?php echo $message->sender_id == $_SESSION['user_id'] ? 'sent' : 'received'; ?>">
                         <?php echo htmlspecialchars($message->message); ?>
@@ -43,25 +38,22 @@
                     </div>
                 </div>
             <?php endforeach; ?>
-            <form id="messageForm" class="message-form" method="post" action="<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['user']['UserID']; ?>">
+        </div>
+        <form id="messageForm" class="message-form" method="post" action="<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['user']['UserID']; ?>">
             <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id']; ?>" />
             <input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $data['user']['UserID']; ?>" />
             
-            <!-- Ensure topic is always set -->
+            <!-- Ensure topic and email is always set -->
             <input type="hidden" name="topic" id="topic" value="<?php echo htmlspecialchars($data['topic'] ?? 'General Information'); ?>" />
+            <input type="hidden" name="email" id="email" value="<?php echo htmlspecialchars($data['email'] ?? null); ?>" />
 
             <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo htmlspecialchars($data['message_details'] ?? ''); ?>" />
             <button type="submit" class="send-btn">Send</button>
         </form>
-        </div>
-        
     </div>
 </div>
 
-    </div>
-</div>
+<!-- Trigger Button -->
+
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/chat.js"></script>
-
-
-<?php require APPROOT . '/views/components/footer.php'; ?>
