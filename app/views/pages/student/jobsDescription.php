@@ -1,19 +1,39 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php 
+    if (!isset($_SESSION['user_role'])) {
+        require APPROOT . '/views/components/header.php';
+    }
+    else if ($_SESSION['user_role'] == 'Student') {
+        require APPROOT . '/views/components/stu_header.php';
+    } else if ($_SESSION['user_role'] == 'Company') {
+        require APPROOT . '/views/components/ser_header.php';
+    } 
+    else if ($_SESSION['user_role'] == 'Admin') {
+        require APPROOT . '/views/components/adm_header.php';
+    }
+    else if ($_SESSION['user_role'] == 'VT-Member') {
+        require APPROOT . '/views/components/ver_header.php';
+    }
+?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
-<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
-    <?php else: ?>       
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php if (isset($_SESSION['user_role'])): ?>
+<?php else: ?>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
 <?php endif; ?>
 
 <div class="main-container">
     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
         <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-    <?php else: ?>    
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>
+        <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
+        <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
     <?php endif; ?>      
     
     <div class="content-area">
@@ -196,6 +216,12 @@
 </script>
 
 <script>
+    function goToApplyPage(jobId) {
+        window.location.href = "/UniQuest/student/jobsApply/" + jobId;
+    }
+</script>
+
+<script>
     function toggleFavorite(icon) {
     icon.classList.toggle("fa-regular");
     icon.classList.toggle("fa-solid");
@@ -233,6 +259,6 @@ function bookmarkJob(jobId, iconElement) {
 }
 
 function goToCompanyDescription($companyID) {
-    window.location.href = "/uniquest/student/companydescription/"+$companyID;
+    window.location.href = "/uniquest/jobs/companydescription/"+$companyID;
 }
 </script>

@@ -1,22 +1,48 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php 
+    if (!isset($_SESSION['user_role'])) {
+        require APPROOT . '/views/components/header.php';
+    }
+    else if ($_SESSION['user_role'] == 'Student') {
+        require APPROOT . '/views/components/stu_header.php';
+    } else if ($_SESSION['user_role'] == 'Company') {
+        require APPROOT . '/views/components/ser_header.php';
+    } 
+    else if ($_SESSION['user_role'] == 'Admin') {
+        require APPROOT . '/views/components/adm_header.php';
+    }
+    else if ($_SESSION['user_role'] == 'VT-Member') {
+        require APPROOT . '/views/components/ver_header.php';
+    }
+?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
-<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
-    <?php else: ?>       
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php if (isset($_SESSION['user_role'])): ?>
+<?php else: ?>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
 <?php endif; ?>
 
 <div class="main-container">
     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
         <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-    <?php endif; ?>    
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>
+        <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
+        <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+    <?php endif; ?>   
 
     <div class="content-area">
         <div class="view-card">
-            <img src="<?php echo URLROOT; ?>/images/begoodsolutions.jpeg" alt="Logo not available">
+            <div class="job-logo2">
+                <img src="<?php echo empty($data['post']->CompanyLogo)
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['post']->CompanyLogo; ?>"
+                    alt="Burger King Logo">
+            </div>
 
             <div class="view-card-content">
                 <div class="title-with-bookmark">
@@ -29,10 +55,9 @@
                     <?php endif; ?>
                 </div>
 
-
-                <h2><?php echo $data['post']->Industry;?></h2>
-                <p><?php echo $data['post']->Description;?></p>
-
+                <h2><?php echo $data['post']->Industry; ?></h2>
+                <p><?php echo $data['post']->Description; ?></p>
+              
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
@@ -150,7 +175,7 @@
 
 <script>
     function goToJobDescription() {
-        window.location.href = "/uniquest/student/jobsdescription/" + 23;
+        window.location.href = "/uniquest/jobs/jobsdescription/" + 23;
     }
 </script>
 

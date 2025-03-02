@@ -1,10 +1,13 @@
 <?php
 
+// Use DIRECTORY_SEPARATOR to handle path separators
+require PHPMAILERROOT . DIRECTORY_SEPARATOR . 'PHPMailer.php';
+require PHPMAILERROOT . DIRECTORY_SEPARATOR . 'Exception.php';
+require PHPMAILERROOT . DIRECTORY_SEPARATOR . 'SMTP.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// Ensure PHPMailer is loaded
-require_once __DIR__ . '/../../vendor/autoload.php';
+use PHPMailer\PHPMailer\SMTP;
 
 class MailHelper
 {
@@ -44,5 +47,92 @@ class MailHelper
         } catch (Exception $e) {
             return "Exception: " . $e->getMessage(); // Show exception message
         }
+    }
+
+    //send email with token to verify company email
+    public static function sendEmailWithTokenCompany($toEmail, $token)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'verification_email_comp.html');
+        //create link
+        $link = URLROOT . '/register/verifyCompEmail?token=' . $token;
+
+        //replace placeholders
+        $template = str_replace('{{verification_link}}', $link, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Verify Your Email";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
+    }
+
+    //send email with token to verify student email
+    public static function sendEmailWithTokenStudent($toEmail, $token)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'verification_email_stu.html');
+        //create link
+        $link = URLROOT . '/register/verifyStuEmail?token=' . $token;
+
+        //replace placeholders
+        $template = str_replace('{{verification_link}}', $link, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Verify Your Email";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
+    }
+
+    //send email with token to reset password
+    public static function sendEmailWithTokenResetPassword($toEmail, $token)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'reset_password.html');
+        //create link
+        $link = URLROOT . '/user/reset_password?token=' . $token;
+
+        //replace placeholders
+        $template = str_replace('{{reset_link}}', $link, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Reset Your Password";
+
+        return self::sendEmail($toEmail, '', $subject, $template);
+    }
+
+    //send email to notify student that their account has been approved with link to login
+    public static function sendEmailStuAccountApproved($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'stu_account_approved.html');
+        //create link
+        $link = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{login_link}}', $link, $template);
+        $template = str_replace('{{name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Approved";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
+
+    //send email to notify company that their account has been approved with link to login
+    public static function sendEmailCompAccountApproved($toEmail, $toName)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR .'emails' . DIRECTORY_SEPARATOR . 'comp_account_approved.html');
+        //create link
+        $link = URLROOT . '/login';
+
+        //replace placeholders
+        $template = str_replace('{{login_link}}', $link, $template);
+        $template = str_replace('{{company_name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+
+        $subject = "Account Approved";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
     }
 }

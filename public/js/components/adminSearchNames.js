@@ -11,7 +11,8 @@ function populateDropdown() {
     for (i = 0; i < tableHeaders.length - 1; i++) { // -1 to skip the last column
         option = document.createElement("option");
         option.value = i; // Use the index of the header as the value
-        option.textContent = tableHeaders[i].textContent; // Set the option text to the header's text
+        // Set the option text to the header's text without " ▲, ▼"
+        option.text = tableHeaders[i].textContent.replace(" ▲", "").replace(" ▼", "");
         columnSelect.appendChild(option); // Add the option to the dropdown
     }
 }

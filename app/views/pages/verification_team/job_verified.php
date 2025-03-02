@@ -7,6 +7,16 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php
+        $columns = [
+            "JobID" => "JobID",
+            "Title" => "Title",
+            "Email" => "Company Email",
+            "Category" => "Job Type",
+            "ActionDate" => "Verified Date",
+            "Status" => "Status"
+        ];
+        ?>
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/user_verified">Users</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/verification_team/job_verified">Jobs</button>
@@ -16,34 +26,33 @@
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
             <table>
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'Title')">Title</th>
-                        <th onclick="sortTable(1, 'Email')">Company Email</th>
-                        <th onclick="sortTable(2, 'Category')">Job Type</th>
-                        <th onclick="sortTable(3, 'ActionDate')">Verified Date</th>
-                        <th onclick="sortTable(4, 'Status')">Status</th>
-                        <th class="no-sort">View</th>
-                    </tr>
-                </thead>
-                <?php foreach ($data['jobs'] as $job) : ?>
-                    <tr>
-                        <td><?php echo $job->Title; ?></td>
-                        <td><?php echo $job->Email; ?></td>
-                        <td><?php echo $job->Category; ?></td>
-                        <td><?php echo substr($job->ActionDate, 0, 10); ?></td>
-                        <?php if ($job->Status == 'Active') : ?>
-                            <td><span class="status active">Active</span></td>
-                        <?php elseif ($job->Status == 'Deactive') : ?>
-                            <td><span class="status inactive">Deactive</span></td>
-                        <?php endif; ?>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_detail/<?php echo $job->JobID; ?>'">
-                                preview
-                            </span>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
+                <tbody>
+                    <?php if ($data['jobs']) : ?>
+                        <?php foreach ($data['jobs'] as $job) : ?>
+                            <tr>
+                                <td><?php echo $job->Title; ?></td>
+                                <td><?php echo $job->Email; ?></td>
+                                <td><?php echo $job->Category; ?></td>
+                                <td><?php echo substr($job->ActionDate, 0, 10); ?></td>
+                                <?php if ($job->Status == 'Active') : ?>
+                                    <td><span class="status active">Active</span></td>
+                                <?php elseif ($job->Status == 'Deactive') : ?>
+                                    <td><span class="status inactive">Deactive</span></td>
+                                <?php endif; ?>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_detail/<?php echo $job->JobID; ?>'">
+                                        preview
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td class="no-data" colspan="6">No data available</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>

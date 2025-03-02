@@ -15,13 +15,13 @@
         <button class="back" onclick="window.history.back()">
             <span class="material-symbols-outlined">arrow_back</span>
         </button>
-        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/student';">
+        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/sendStuVeriEmail';">
             <div class="image-section">
                 <img src="<?php echo URLROOT; ?>/images/college students-amico.png" alt="Student Registration">
                 <h1>Student</h1>
             </div>
         </button>
-        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/company';">
+        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/sendCompVeriEmail';">
             <div class="image-section">
                 <img src="<?php echo URLROOT; ?>/images/service.png" alt="Student Registration">
                 <h1>Company</h1>

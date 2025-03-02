@@ -24,11 +24,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id'], $page, $limit, $sort, $order);
+            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -48,11 +50,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id'], $page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -72,11 +76,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -96,11 +102,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order);
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -154,6 +162,16 @@ class Verification_team extends Controller
     {
         try {
             $this->model->approveUser($userID);
+            // Send email to user
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailCompAccountApproved($email, $name);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailStuAccountApproved($email, $name);
+            }
             Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -175,11 +193,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -225,11 +245,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
