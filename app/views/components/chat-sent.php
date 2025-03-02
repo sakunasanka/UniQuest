@@ -3,7 +3,20 @@
 <div id="backgroundOverlay" class="background-overlay hidden"></div>
 <div id="chatPopup" class="popup hidden">
     <div class="popup-header">
-        <span>Chat with <?php echo $data['user']['FirstName'] ?></span>
+        <span>Chat with 
+            <?php 
+            if ($_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'VT-Member' || $_SESSION['user_role'] == 'Student') {
+                if ($data['user']['Role'] == 'Company') {
+                    echo $data['user']['CompanyName'];
+                } else {
+                    echo $data['user']['FirstName'];
+                }
+            }
+            else {
+                echo $data['user']['FirstName'];
+            }
+            ?>
+        </span>
         <button id="closePopupBtn" class="close-btn"><i class="fa fa-times"></i></button>
     </div>
     <div class="popup-content">
@@ -39,7 +52,15 @@
                 </div>
             <?php endforeach; ?>
         </div>
-        <form id="messageForm" class="message-form" method="post" action="<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['user']['UserID']; ?>">
+        <form id="messageForm" class="message-form" method="post" action="
+            <?php
+            if ($_SESSION['user_role'] == 'Admin') {
+                echo URLROOT . '/admin/sendMessage/' . $data['user']['UserID'];
+            } elseif ($_SESSION['user_role'] == 'Student') {
+                echo URLROOT . '/jobs/sendMessage/' . $data['post']->JobID;
+            }
+            ?>
+        ">
             <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id']; ?>" />
             <input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $data['user']['UserID']; ?>" />
             
