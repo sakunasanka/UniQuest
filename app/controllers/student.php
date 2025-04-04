@@ -203,21 +203,38 @@ class Student extends Controller
 
     public function addReview($id = null)
     {
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             // Prepare data for the review
             $data = [
                 'reviews' => $reviews,
-                'rating' => $_POST['rating'] ?? '',
+                'rating' => trim($_POST['rating'] ?? ''),
                 'comment' => trim($_POST['comment'] ?? ''),
-                'user_id' => $_POST['user_id'] ?? '',
-                'company_id' => $_POST['company_id'] ?? '',
+                'user_id' => trim($_POST['user_id'] ?? ''),
+                'company_id' => trim($_POST['company_id'] ?? ''),
+                'existingReview' => $_POST['existingReview'] ?? 'false',
                 'rating_err' => '',
                 'comment_err' => ''
             ];
+
+            // Check if this is an existing review update
+            if ($data['existingReview'] === 'true') {
+                // Get the review ID from the model
+                $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany(
+                    $data['user_id'],
+                    $data['company_id']
+                );
+                
+                if ($existingReview) {
+                    $data['review_id'] = $existingReview->ReviewID;
+                } else {
+                    $data['existingReview'] = 'false'; 
+                }
+            }
 
             // Validate rating and comment
             if (empty($data['rating'])) {
@@ -229,11 +246,22 @@ class Student extends Controller
 
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
-                if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
+
+                // Check if the user has already reviewed this company
+                if ($data['existingReview'] == 'true') {
+                    if ($this->model('RateAndReviewModel')->updateReview($data)) {
+                        Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
+                    } else {
+                        die('Something went wrong'); 
+                    }
                 } else {
-                    die('Something went wrong'); // Improved error handling suggested
+                    if ($this->model('RateAndReviewModel')->addReview($data)) {
+                        Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
+                    } else {
+                        die('Something went wrong'); 
+                    }
                 }
+
             } else {
                 // Load view with errors
                 $this->view('pages/student/rate_review_company', $data);
@@ -245,6 +273,7 @@ class Student extends Controller
                 'comment' => '',
                 'user_id' => '',
                 'company_id' => $id,
+                'existingReview' => 'false',
                 'rating_err' => '',
                 'comment_err' => ''
             ];
@@ -252,7 +281,6 @@ class Student extends Controller
             $this->view('pages/student/rate_review_company', $data);
         }
     }
-
    
     public function updateReview($id)
     {

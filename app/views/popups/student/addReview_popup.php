@@ -11,7 +11,7 @@
                     <!-- Rating Input -->
                     <div class="rating-stars">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i-1; ?>" <?php echo ($data['rating'] == $i-1) ? 'checked' : ''; ?>>
+                            <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($data['rating'] == $i) ? 'checked' : ''; ?>>
                             <label for="star<?php echo $i; ?>">★</label>
                         <?php endfor; ?>
 
@@ -23,6 +23,7 @@
 
                     <input type="hidden" name="company_id" value="<?php echo htmlspecialchars($data['company_id']); ?>">
                     <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($data['user_id']); ?>">
+                    <input type="hidden" name="existingReview" value="<?php echo $data['existingReview'] ? 'true' : 'false'; ?>">
 
                     <button type="submit"><?php echo $data['existingReview'] ? 'Update Review' : 'Submit Review'; ?></button>
                 </form>

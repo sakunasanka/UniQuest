@@ -73,10 +73,10 @@ class RateAndReviewModel
         return $this->db->single();
     }
     
-    public function updateReview($data)
+    public function updateReview(array $data)
     {
         try {
-            $this->db->query('UPDATE review SET Rating = :rating, Comment = :comment WHERE ReviewID = :id');
+            $this->db->query('UPDATE Review SET Rating = :rating, Comment = :comment WHERE ReviewID = :id');
             $this->db->bind(':rating', $data['rating']);
             $this->db->bind(':comment', $data['comment']);
             $this->db->bind(':id', $data['review_id']);

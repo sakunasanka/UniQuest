@@ -5,9 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize stars based on PHP value
     stars.forEach((star, i) => {
-        if (i < selectedRating) {
-            star.style.color = '#f5b301';
-        }
+        star.style.color = (i < selectedRating) ? '#f5b301' : '#ccc';
     });
 
     stars.forEach(star => {
