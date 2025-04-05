@@ -171,7 +171,7 @@ class Jobs extends Controller
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
-            'displayRatings' => $displayRatings, // Add display ratings to the data array
+            'displayRatings' => $displayRatings, 
             'totalRows' => $post_data['totalRows'],
             'rowsPerPage' => $post_data['limit']
         ];
@@ -275,6 +275,7 @@ class Jobs extends Controller
         // Get bookmarked jobs for the user
         $posts = $this->model('M_jobpost')->getpostbyid($id);
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
+        $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
 
         if ($posts->Category == 'Internship') {
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
@@ -300,6 +301,7 @@ class Jobs extends Controller
                 'post_com' => $posts_com_id,
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
+                'displayRating' => $displayRating,
                 'reviews' => $reviews,
                 'rating' => $_POST['rating'] ?? '',
                 'comment' => trim($_POST['comment'] ?? ''),
@@ -323,14 +325,14 @@ class Jobs extends Controller
                     // Update existing review
                     $data['review_id'] = $existingReview->ReviewID;
                     if ($this->model('RateAndReviewModel')->updateReview($data)) {
-                        Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']);
+                        Redirect::to(URLROOT . '/student/myreviews'); 
                     } else {
                         die('Something went wrong');
                     }
                 } else {
                     // Add new review
                     if ($this->model('RateAndReviewModel')->addReview($data)) {
-                        Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']);
+                        Redirect::to(URLROOT . '/student/myreviews'); 
                     } else {
                         die('Something went wrong');
                     }
@@ -345,7 +347,8 @@ class Jobs extends Controller
                 'post_com' => $posts_com_id,
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
-                'reviews' => $reviews,
+                'displayRating' => $displayRating,
+                'reviews' => $reviews,  
                 'rating' => $existingReview ? $existingReview->Rating : '',
                 'comment' => $existingReview ? $existingReview->Comment : '',
                 'user_id' => $userId,
@@ -407,9 +410,9 @@ class Jobs extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']); //To be corrected
+                    Redirect::to(URLROOT . '/student/myreviews'); 
                 } else {
-                    die('Something went wrong'); // Improved error handling suggested
+                    die('Something went wrong'); 
                 }
             } else {
                 // Load view with errors
@@ -480,9 +483,9 @@ class Jobs extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);  //To be corrected
+                    Redirect::to(URLROOT . '/student/myreviews');  
                 } else {
-                    die('Something went wrong'); // Improved error handling suggested
+                    die('Something went wrong'); 
                 }
             } else {
                 // Load view with errors

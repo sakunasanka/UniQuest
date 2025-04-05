@@ -250,13 +250,13 @@ class Student extends Controller
                 // Check if the user has already reviewed this company
                 if ($data['existingReview'] == 'true') {
                     if ($this->model('RateAndReviewModel')->updateReview($data)) {
-                        Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
+                        Redirect::to(URLROOT . '/student/myreviews');
                     } else {
                         die('Something went wrong'); 
                     }
                 } else {
                     if ($this->model('RateAndReviewModel')->addReview($data)) {
-                        Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
+                        Redirect::to(URLROOT . '/student/myreviews');
                     } else {
                         die('Something went wrong'); 
                     }
@@ -289,8 +289,8 @@ class Student extends Controller
 
             $data = [
                 'review_id' => $id,
-                'rating' => $_POST['Rating'] ?? '',
-                'comment' => trim($_POST['Comment'] ?? ''),
+                'rating' => $_POST['rating'] ?? '',
+                'comment' => trim($_POST['comment'] ?? ''),
                 'rating_err' => '',
                 'comment_err' => ''
             ];
@@ -329,8 +329,8 @@ class Student extends Controller
             $data = [
             'review_id' => $id,
             'review' => $review,
-            'rating' => $review->Rating,
-            'comment' => $review->Comment,
+            'rating' => $review->rating,
+            'comment' => $review->comment,
             'rating_err' => '',
             'comment_err' => ''
             ];
@@ -367,7 +367,20 @@ class Student extends Controller
     
     public function rate_review_company()
     {
-        $this->view('pages/student/rate_review_company');
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId();
+
+        $data = [
+            'reviews' => $reviews,
+            'rating' => '',
+            'comment' => '',
+            'user_id' => $_SESSION['user_id'],
+            'company_id' => '',
+            'existingReview' => 'false',
+            'rating_err' => '',
+            'comment_err' => ''
+        ];
+        
+        $this->view('pages/student/rate_review_company', $data);
     }
 
     public function all_app()
@@ -716,7 +729,10 @@ class Student extends Controller
         $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
 
         $data = [
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'rating' => '',
+            'comment' => '',
+            'company_id' => '',
         ];
 
         $this->view('pages/student/myreviews', $data);
