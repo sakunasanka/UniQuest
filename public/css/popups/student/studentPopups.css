@@ -93,7 +93,7 @@
 
 .close-btn-container {
     position: sticky;
-    top: 0; /* Keeps it at the top of the popup */
+    top: -5px; 
     z-index: 103;
     background-color: #fff; /* Background color to cover content behind */
     padding: 5px;

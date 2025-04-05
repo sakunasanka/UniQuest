@@ -1,9 +1,9 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/studentPopups.css">
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/delete_account.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/delete_review_popup.css">
 <div class="popup-container">
     <div class="popup" id="popup-deactivate">
         <div class="overlay"></div>
-        <div class="content">
+        <div class="del_content">
         <div class="close-btn-container"><button class="close-btn" onclick="closedeletereviewconfirm()"><i class="fa fa-times"></i></button></div>
             <h2>Delete review</h2>
             <input type="hidden" id="reviewID">

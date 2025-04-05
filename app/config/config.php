@@ -20,6 +20,9 @@
     //template Root
     define('TEMPLATEROOT', dirname(dirname(dirname(__FILE__))) . '/templates');
 
+    //PHPMailer Root
+    define('PHPMAILERROOT', dirname(dirname(dirname(__FILE__))) . '/PHPMailer');
+
     //Site Name
     define('SITENAME', 'UniQuest');
 
