@@ -41,68 +41,58 @@
             <h2><?php echo $data['post']->Title; ?></h2>
             <p><?php echo $data['post']->Location; ?></p>
             <h3>Description:</h3>
-            <!-- <ul>
-                <li><?php echo $data['post']->Description; ?></li>
-            </ul> -->
             <ul>
             <?php
-                $description = $data['post']->Description;
+                $description = $data['post']->Description ?? ''; 
 
-                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
-                $descriptionArray = explode("\n", $description);
+                if (!empty(trim($description))) {
+                    $descriptionArray = explode("\n", $description);
 
-                // Generate the list items
-                foreach ($descriptionArray as $description) {
-                    // Trim any extra spaces and output the <li> tag
-                    if (!empty(trim($description))) {
-                        echo '<li>' . htmlspecialchars(trim($description)) . '</li>';
+                    foreach ($descriptionArray as $desc) {
+                        if (!empty(trim($desc))) {
+                            echo '<li>' . htmlspecialchars(trim($desc)) . '</li>';
+                        }
                     }
+                } else {
+                    echo '<li>No description availaible</li>';
                 }
             ?>
             </ul>
+
             <h3>Qualifications:</h3>
-            <!-- <ul>
-                <li><?php echo $data['post']->RequiredQualifications; ?></li>
-                <li>With a valid driver's license</li>
-                <li>Should own a Motorbike</li>
-            </ul> -->
             <ul>
             <?php
-                $qualifications = $data['post']->RequiredQualifications;
+                $qualifications = $data['post']->RequiredQualifications ?? '';
 
-                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
-                $qualificationsArray = explode("\n", $qualifications);
+                if (!empty(trim($qualifications))) {
+                    $qualificationsArray = explode("\n", $qualifications);
 
-                // Generate the list items
-                foreach ($qualificationsArray as $qualification) {
-                    // Trim any extra spaces and output the <li> tag
-                    if (!empty(trim($qualification))) {
-                        echo '<li>' . htmlspecialchars(trim($qualification)) . '</li>';
+                    foreach ($qualificationsArray as $qualification) {
+                        if (!empty(trim($qualification))) {
+                            echo '<li>' . htmlspecialchars(trim($qualification)) . '</li>';
+                        }
                     }
+                } else {
+                    echo '<li>No qualifications to display</li>';
                 }
             ?>
             </ul>
 
             <h3>Benefits:</h3>
-            <!-- <ul>
-                <li><?php echo $data['post']->JobBenefits; ?></li>
-                <li>Special Extra Allowances</li>
-                <li>Meals during service hours</li>
-                <li>Accommodation is provided</li>
-            </ul> -->
             <ul>
             <?php
-                $jobBenefits = $data['post']->JobBenefits;
+                $jobBenefits = $data['post']->JobBenefits ?? '';
 
-                // Split the string into an array. Change the delimiter as needed (e.g., ',' or ';').
-                $benefitArray = explode("\n", $jobBenefits);
+                if (!empty(trim($jobBenefits))) {
+                    $benefitArray = explode("\n", $jobBenefits);
 
-                // Generate the list items
-                foreach ($benefitArray as $benefit) {
-                    // Trim any extra spaces and output the <li> tag
-                    if (!empty(trim($benefit))) {
-                        echo '<li>' . htmlspecialchars(trim($benefit)) . '</li>';
+                    foreach ($benefitArray as $benefit) {
+                        if (!empty(trim($benefit))) {
+                            echo '<li>' . htmlspecialchars(trim($benefit)) . '</li>';
+                        }
                     }
+                } else {
+                    echo '<li>No benefits to display</li>';
                 }
             ?>
             </ul>
@@ -114,47 +104,56 @@
                     <button id="openPopupBtn" class="contact-btn">Contact</button>
                 </div>
             <?php else: ?>    
-            <?php endif;?>    
+            <?php endif;?>   
 
             <div class="reviews-section">
                 <h3>Reviews and Ratings about this company</h3>
+                <?php if (!empty($data['reviews'])): ?>
+                    <?php foreach ($data['reviews'] as $index => $review): ?>
+                        <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
+                            <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
+                                <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                <div class="review-details">
+                                    <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
+                                    <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
+                                </div>
+                                <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
+                                    <div class="review-actions">
+                                        <button class="like-btn" data-id="<?php echo $index; ?>">
+                                            <span class="material-symbols-outlined like-icon">thumb_up</span>
+                                        </button>
+                                        <span class="like-count" data-id="<?php echo $index; ?>">0 likes</span>
 
-                 <!-- Reviews on Main Page -->
-                 <?php for ($i = 0; $i < 3; $i++): ?>
-                    <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
-                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
-                        <div class="review-details">
-                            <span class="reviewer-name">- John Doe</span>
-                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                        </div>
-                        <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
-                            <div class="review-actions">
-                                <button class="like-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined like-icon">thumb_up</span>
-                                </button>
-                                <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
-
-                                <button class="dislike-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined dislike-icon">thumb_down</span>
-                                </button>
-                                <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                                        <button class="dislike-btn" data-id="<?php echo $index; ?>">
+                                            <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                                        </button>
+                                        <span class="dislike-count" data-id="<?php echo $index; ?>">0 dislikes</span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                            <?php else: ?>
-                            <?php endif; ?> 
-                    </div>
-                <?php endfor; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No reviews available.</p>
+                <?php endif; ?>
             </div>
 
             <div class="buttons btn-space-between">
-            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
-                <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
-               
-                <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
-            <?php else:?>
-                <div></div>
-                <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
-        
-            <?php endif;?>    
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
+                    <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
+                    
+                    <?php if (count($data['reviews']) >= 3): ?> 
+                        <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                    <?php endif; ?>
+                    
+                <?php else: ?>
+                    <div></div>
+
+                    <?php if (count($data['reviews']) >= 3): ?> 
+                        <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                    <?php endif; ?>
+                    
+                <?php endif; ?>
             </div>
             <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="make-complain">
@@ -183,7 +182,7 @@
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                 <p><?php echo $data['post']->SalaryRange; ?></p>
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
-                <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
+                <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
@@ -207,7 +206,6 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
 
 <script>
     function goToMakeComplaint(jobId) {
