@@ -103,6 +103,13 @@ body {
     display: block;
 }
 
+.input-container p {
+    font-size: 1.1rem;
+    padding: 10px;
+    display: block;
+    text-align: center;
+}
+
 .input-container input {
     font-size: 1.1rem;
     padding: 10px 20px;
@@ -139,6 +146,23 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
     background: #038a27;
+}
+
+button[type="submit"].no {
+    width: 30%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button[type="submit"].no:hover {
+    background: #c82333;
 }
 
 .back {

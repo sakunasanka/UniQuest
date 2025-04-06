@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_details.css">
 
@@ -102,8 +103,7 @@
                 </div>
                 <div class="btn-row">
                     <div></div>
-                    <!-- <button class="contact-btn" onclick="">Contact</button>-->
-                    <?php require APPROOT . '/views/components/chat-sent.php'; ?>
+                    <button id="openPopupBtn" class="open-btn">Contact</button>
                 </div>
             </div>
 

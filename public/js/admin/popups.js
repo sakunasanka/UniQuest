@@ -1,10 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
-    function showPopup(popupId, ID, category) {
+    function showPopup(popupId, ID, category, reasons = [], email) {
         const popup = document.getElementById(popupId);
         popup.classList.add("active");
         popup.setAttribute("aria-hidden", "false");
         document.getElementById("ID").value = ID;
         document.getElementById("category").value = category;
+        document.getElementById("email").innerText = email;
+    
+        const reasonsSelect = document.getElementById(popupId + "-reasons");
+        reasonsSelect.innerHTML = `<option value="" disabled selected>Select Reason</option>`;
+        // Populate the select element
+        reasons.forEach((reason) => {
+            const option = document.createElement("option");
+            option.value = reason.ReasonID;
+            option.text = reason.ReasonName;
+            reasonsSelect.appendChild(option);
+        });
     }
 
     function closePopup(popupId) {
@@ -17,12 +28,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const popup = document.getElementById(popupId);
         const ID = document.getElementById("ID").value;
         const role = document.getElementById("category").value;
+        const email = document.getElementById("email").innerText;
+        const reasonID = document.getElementById(popupId + "-reasons").value;
         const urlRoot = popup.getAttribute("data-urlroot");
 
-        if (ID) {
-            window.location.href = `${urlRoot}/admin/user_${actionType}/${ID}/${role}`;
+        if (ID && role && reasonID) {
+            window.location.href = `${urlRoot}/admin/user_${actionType}/${ID}/${role}/${email}?reason=${reasonID}`;
         } else {
-            alert("Invalid user ID. Please try again.");
+            alert("Invalid user ID or reason. Please try again.");
         }
     }
 
@@ -40,8 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Expose globally
-    window.deactivateUser = (id, category) => showPopup("deact-popup", id, category);
-    window.activateUser = (id, category) => showPopup("act-popup", id, category);
+    window.deactivateUser = (id, category, reasons, email) => showPopup("deact-popup", id, category, reasons, email);
+    window.activateUser = (id, category, reasons, email) => showPopup("act-popup", id, category, reasons, email);
     window.deactivateJob = (id, category) => showPopup("deact-popup", id, category);
     window.activateJob = (id, category) => showPopup("act-popup", id, category);
     window.closePopup = (popupId) => closePopup(popupId);

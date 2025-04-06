@@ -57,18 +57,18 @@ class Service_provider extends Controller
 
             // Data for the contact form
             $data = [
-                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
 
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
 
             // Validation checks
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Please enter your name';
+            if (empty($data['email'])) {
+                $data['email_err'] = 'Please enter your email';
             }
 
             if (empty($data['topic'])) {
@@ -80,7 +80,7 @@ class Service_provider extends Controller
             }
 
             // Ensure no errors before submitting
-            if (empty($data['name_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('service_provider/contact_admin');
@@ -93,10 +93,10 @@ class Service_provider extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'name' => '',
+                'email' => '',
                 'topic' => '',
                 'message' => '',
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
@@ -389,8 +389,11 @@ class Service_provider extends Controller
             //make sure no errors
             if (empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err'])  && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])) {
                 if ($this->model('M_jobpost')->create($data)) {
-                    flash('post-msg', 'post is published');
-                    redirect('service_provider/ongoing_jobs');
+                    
+                    $jobId = $this->model('M_jobpost')->getLatestJobId();
+
+                    $this->model('M_applicationFields')->saveFields($jobId, $_POST);
+                    // redirect('service_provider/ongoing_jobs');
                 } else {
                     die('something went wrong');
                 }
@@ -436,7 +439,7 @@ class Service_provider extends Controller
 
 
 
-                if ($this->model('M_jobpost')->delete($postId)) {
+                if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
                     redirect('service_provider/ongoing_jobs');
                 } else {
