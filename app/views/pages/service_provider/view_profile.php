@@ -1,5 +1,6 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
+<?php require APPROOT . '/views/popups/student/deactivate_account.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
