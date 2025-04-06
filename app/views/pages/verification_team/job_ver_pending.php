@@ -7,6 +7,17 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php
+        $columns = [
+            "JobID" => "JobID",
+            "Title" => "Title",
+            "Email" => "Company Email",
+            "Category" => "Job Type",
+            "jobs_create_at" => "Requested Date",
+            "Status" => "Status",
+            "Actions" => "Actions"
+        ];
+        ?>
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/job_ver_pending">Pending</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/verification_team/job_ver_not">Not Approved</button>
@@ -16,33 +27,29 @@
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
             <table>
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'JobID')">Job ID</th>
-                        <th onclick="sortTable(1, 'Title')">Title</th>
-                        <th onclick="sortTable(2, 'Email')">Company Email</th>
-                        <th onclick="sortTable(3, 'Category')">Job Type</th>
-                        <th onclick="sortTable(4, 'jobs_create_at')">Requested Date</th>
-                        <th onclick="sortTable(5, 'Status')">Status</th>
-                        <th class="no-sort">View</th>
-                    </tr>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php foreach ($data['jobs'] as $job) : ?>
+                    <?php if ($data['jobs']) : ?>
+                        <?php foreach ($data['jobs'] as $job) : ?>
+                            <tr>
+                                <td><?php echo $job->JobID; ?></td>
+                                <td><?php echo $job->Title; ?></td>
+                                <td><?php echo $job->Email; ?></td>
+                                <td><?php echo $job->Category; ?></td>
+                                <td><?php echo substr($job->jobs_create_at, 0, 10); ?></td>
+                                <td><span class="status pending">Pending</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_ver_detail/<?php echo $job->JobID; ?>'">
+                                        preview
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
                         <tr>
-                            <td><?php echo $job->JobID; ?></td>
-                            <td><?php echo $job->Title; ?></td>
-                            <td><?php echo $job->Email; ?></td>
-                            <td><?php echo $job->Category; ?></td>
-                            <td><?php echo substr($job->jobs_create_at, 0, 10); ?></td>
-                            <td><span class="status pending">Pending</span></td>
-                            <td class="action">
-                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_ver_detail/<?php echo $job->JobID; ?>'">
-                                    preview
-                                </span>
-                            </td>
+                            <td class="no-data" colspan="6">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

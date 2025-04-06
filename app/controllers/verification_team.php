@@ -24,11 +24,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id'], $page, $limit, $sort, $order);
+            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -48,11 +50,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id'], $page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -72,11 +76,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -96,11 +102,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order);
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -119,8 +127,10 @@ class Verification_team extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
+            $rejectReasons = $this->model('AdminModel')->getReasonsByType('user_reject');
             $data = [
-                'user' => $user
+                'user' => $user,
+                'rejectReasons' => $rejectReasons['data']
             ];
             if ($user['Role'] == 'Student') {
                 $this->view('pages/verification_team/stu_ver_detail', $data);
@@ -154,16 +164,41 @@ class Verification_team extends Controller
     {
         try {
             $this->model->approveUser($userID);
+            // Send email to user
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailCompAccountApproved($email, $name);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailStuAccountApproved($email, $name);
+            }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
             Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_ver_reject($userID)
+    public function user_ver_reject($userID, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
             $this->model->rejectUser($userID);
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -175,11 +210,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -225,11 +262,13 @@ class Verification_team extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -277,18 +316,18 @@ class Verification_team extends Controller
 
             // Data for the contact form
             $data = [
-                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
 
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
 
             // Validation checks
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Please enter your name';
+            if (empty($data['email'])) {
+                $data['name_err'] = 'Please enter your email';
             }
 
             if (empty($data['topic'])) {
@@ -300,7 +339,7 @@ class Verification_team extends Controller
             }
 
             // Ensure no errors before submitting
-            if (empty($data['name_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('verification_team/contact_admin');
@@ -313,10 +352,10 @@ class Verification_team extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'name' => '',
+                'email' => '',
                 'topic' => '',
                 'message' => '',
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
