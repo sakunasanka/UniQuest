@@ -2,7 +2,7 @@
 class ChatModel extends Model {
 
     // Fetch chat messages between two users
-    public function getMessagesForAdmin($sender_id, $receiver_id) {
+    public function getMessages($sender_id, $receiver_id) {
         $sql = "SELECT * FROM messages_with_roles WHERE 
             (sender_id = :sender_id AND receiver_id = :receiver_id)
             OR 
