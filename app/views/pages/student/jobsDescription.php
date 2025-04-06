@@ -181,7 +181,7 @@
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                 <p><?php echo $data['post']->SalaryRange; ?></p>
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
-                <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
+                <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
                     <tr><td>Experience:</td><td>No Experience</td></tr>
@@ -205,7 +205,6 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/student/jobBookmark.js"></script>
 
 <script>
     function goToMakeComplaint(jobId) {

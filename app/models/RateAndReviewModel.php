@@ -73,10 +73,10 @@ class RateAndReviewModel
         return $this->db->single();
     }
     
-    public function updateReview($data)
+    public function updateReview(array $data)
     {
         try {
-            $this->db->query('UPDATE review SET Rating = :rating, Comment = :comment WHERE ReviewID = :id');
+            $this->db->query('UPDATE Review SET Rating = :rating, Comment = :comment WHERE ReviewID = :id');
             $this->db->bind(':rating', $data['rating']);
             $this->db->bind(':comment', $data['comment']);
             $this->db->bind(':id', $data['review_id']);
@@ -220,6 +220,14 @@ class RateAndReviewModel
         $trendyCompanies = array_slice($trendyCompanies, 0, 20);
 
         return $trendyCompanies;
+    }
+
+    public function getReviewByStudentAndCompany($studentId, $companyId)
+    {
+        $this->db->query('SELECT * FROM Review WHERE StudentID = :student_id AND CompanyID = :company_id');
+        $this->db->bind(':student_id', $studentId);
+        $this->db->bind(':company_id', $companyId);
+        return $this->db->single();
     }
 
     public function getAnonymousName($reviewerId)
