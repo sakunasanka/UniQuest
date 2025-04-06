@@ -142,30 +142,36 @@ CREATE TABLE IF NOT EXISTS uniquest.Jobs (
     ON UPDATE CASCADE
 )
 ENGINE = InnoDB;
+
+ALTER TABLE Jobs
+ADD COLUMN PublishDate DATE AFTER create_at,
+ADD COLUMN SalaryType ENUM('Per Hour', 'Per Day', 'Per Week', 'Per Month') NOT NULL DEFAULT 'Per Month' AFTER SalaryRange;
 -- ---------------------------------------------------
 
-CREATE VIEW v_jobs AS 
-    SELECT 
-        jobs.JobID AS JobID,
-        company.CompanyID AS CompanyID,
-        jobs.Title AS Title,
-        company.CompanyLogo AS CompanyLogo,
-        company.CompanyName AS CompanyName,
-        jobs.Description AS Description,
-        jobs.Location AS Location,
-        jobs.Category AS Category,
-        jobs.Status AS Status,
-        jobs.JobBenefits AS JobBenefits,
-        jobs.RequiredQualifications AS RequiredQualifications,
-        jobs.SalaryRange AS SalaryRange,
-        user.Email AS Email,
-        user.ContactNo AS ContactNo,
-        jobs.Create_at AS jobs_create_at,         -- Use correct capitalization
-        company.Create_at AS company_create_at    -- Use correct capitalization
-    FROM jobs 
-    INNER JOIN company ON jobs.CompanyID = company.CompanyID
-    INNER JOIN user ON company.CompanyID = user.UserID
-    ORDER BY jobs.Create_at DESC;
+CREATE OR REPLACE VIEW v_jobs AS 
+SELECT 
+    jobs.JobID AS JobID,
+    company.CompanyID AS CompanyID,
+    jobs.Title AS Title,
+    company.CompanyLogo AS CompanyLogo,
+    company.CompanyName AS CompanyName,
+    jobs.Description AS Description,
+    jobs.Location AS Location,
+    jobs.Category AS Category,
+    jobs.Status AS Status,
+    jobs.JobBenefits AS JobBenefits,
+    jobs.RequiredQualifications AS RequiredQualifications,
+    jobs.SalaryRange AS SalaryRange,
+    jobs.SalaryType AS SalaryType,
+    jobs.PublishDate AS PublishDate,
+    user.Email AS Email,
+    user.ContactNo AS ContactNo,
+    jobs.Create_at AS jobs_create_at,
+    company.Create_at AS company_create_at
+FROM jobs 
+INNER JOIN company ON jobs.CompanyID = company.CompanyID
+INNER JOIN user ON company.CompanyID = user.UserID
+ORDER BY jobs.Create_at DESC;
 
 CREATE VIEW v_companies AS
 SELECT 

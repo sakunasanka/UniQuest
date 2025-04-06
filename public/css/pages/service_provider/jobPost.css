@@ -215,6 +215,30 @@ input:focus, textarea:focus, select:focus {
     font-size: 1em;
 }
 
+input[type="date"] {
+    width: 100%; 
+    max-width: 400px;
+    padding: 15px; 
+    font-size: 16px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out; 
+}
+
+input[type="date"]:focus {
+    border-color: #4bd681; 
+    background-color: #e6f9e4; 
+    outline: none; 
+}
+
+label[for="jobPostDate"] {
+    font-size: 1.2em; 
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px; 
+}
+
 .form-step {
     display: none;
 }
@@ -235,4 +259,28 @@ input:focus, textarea:focus, select:focus {
 
 .next-btn:hover, .prev-btn:hover {
     background-color: #038a27;
+}
+
+.salary-container {
+    display: flex;
+    gap: 10px;
+}
+
+.salary-container input {
+    flex: 2;
+}
+
+.salary-container select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Add a star symbol next to required fields */
+.required::after {
+    content: " *";
+    color: red;
+    font-size: 16px;
+    margin-left: 2px;
 }

@@ -17,7 +17,7 @@
                             <p>Fill in the details of the job you want to post</p>
                         </div>
                         <div class="form-left">
-                            <label for="jobName">Job Name:</label>
+                            <label for="jobName" class="required">Job Name:</label>
                             <input type="text" id="jobName" name="jobName" placeholder="Job Name" value="<?php $data['job_name']; ?>">
 
                             <span class="form-invalid"><?php echo $data['job_name_err']; ?></span>
@@ -30,26 +30,39 @@
                             <textarea id="jobBenefits" name="jobBenefits" placeholder="Job Benefits" value="<?php $data['job_benifits']; ?>"></textarea>
                             <span class="form-invalid"><?php echo $data['job_benifits_err']; ?></span>
 
-                            <label for="jobType">Job Type:</label>
-                            <div class="employment-types">
-                                <label><input type="radio" name="jobType" value="Part-time" required> Part-time</label>
-                                <label><input type="radio" name="jobType" value="Internship" required> Internship</label>
-                            </div>
+                            <label for="jobPostDate" class="required">Job Post Date:</label>
+                            <input type="date" id="jobPostDate" name="publishDate" 
+                                value="<?php echo $data['publish_date']; ?>">
+                            <span class="form-invalid"><?php echo $data['publish_date_err']; ?></span>
+
                         </div>
 
                         <div class="form-right">
-                            <label for="salaryRange">Salary Range:</label>
-                            <input type="text" id="salaryRange" name="salaryRange" placeholder="Salary Range" value="<?php $data['salary_range']; ?>">
+                            <label for="salaryRange" class="required">Salary (Rs.):</label>
+                            <div class="salary-container">
+                                <input type="text" id="salaryRange" name="salaryRange" placeholder="Salary in Rs." value="<?php $data['salary_range']; ?>">
+                                <select name="salaryType" id="salaryType">
+                                    <option value="Per Hour" <?php echo ($data['salary_type'] === 'Per Hour') ? 'selected' : ''; ?>>Per Hour</option>
+                                    <option value="Per Day" <?php echo ($data['salary_type'] === 'Per Day') ? 'selected' : ''; ?>>Per Day</option>
+                                    <option value="Per Week" <?php echo ($data['salary_type'] === 'Per Week') ? 'selected' : ''; ?>>Per Week</option>
+                                    <option value="Per Month" <?php echo ($data['salary_type'] === 'Per Month' || empty($data['salary_type'])) ? 'selected' : ''; ?>>Per Month</option>
+                                </select>
+                            </div>
                             <span class="form-invalid"><?php echo $data['salary_range_err']; ?></span>
 
                             <label for="qualifications">Required Qualifications:</label>
                             <textarea id="qualifications" name="qualifications" placeholder="Required Qualifications" value="<?php $data['required_skills']; ?>"></textarea>
                             <span class="form-invalid"><?php echo $data['required_skills_err']; ?></span>
 
-
-                            <label for="jobLocation">Job Location:</label>
+                            <label for="jobLocation" class="required">Job Location:</label>
                             <input type="text" id="jobLocation" name="jobLocation" placeholder="Job Location" value="<?php $data['job_location']; ?>">
                             <span class="form-invalid"><?php echo $data['job_location_err']; ?></span>
+
+                            <label for="jobType" class="required">Job Type:</label>
+                            <div class="employment-types">
+                                <label><input type="radio" name="jobType" value="Part-time" required> Part-time</label>
+                                <label><input type="radio" name="jobType" value="Internship" required> Internship</label>
+                            </div>
 
                         </div>
                     </div>
@@ -152,5 +165,7 @@
 </div>
 
 <script src="<?php echo URLROOT; ?>/js/components/formPagination.js"></script>
+<script src="<?php echo URLROOT; ?>/js/service_provider/date_time_validate.js"></script>
+<script src="<?php echo URLROOT; ?>/js/service_provider/jobPostValidation.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
