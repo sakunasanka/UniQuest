@@ -1,8 +1,9 @@
 .search-bar { 
     position: relative;
-    flex-grow: 1; 
     display: flex;
     align-items: center;
+    gap: 10px; /* Space between elements */
+    width: 100%; /* Full width */
 }
 
 .icon {
@@ -16,23 +17,52 @@
 .search {
     font-size: 16px;
     padding: 12px 20px 12px 40px; 
-    border: 2px solid #ddd;
-    border-radius: 10px;
     border: 2px solid #e0e0e0;
-    width: 100%; /* Adjusted to fit dropdown */
-    margin-right: 10px;
+    border-radius: 10px;
+    flex-grow: 1; /* Take the remaining width */
+    min-width: 150px; /* Prevent it from becoming too small */
 }
 
 .column-select {
-    position: absolute;
-    right: 11px; /* Align to the right corner of the input container */
     background-color: #e0e0e0;
     border: none;
     font-size: 16px;
-    padding: 12px 5px 11px 10px;
-    border-radius: 0px 8px 8px 0px;
+    padding: 12px 10px;
+    border-radius: 10px;
     cursor: pointer;
     color: #333;
+}
+
+.search-button, .clear-button {
+    font-size: 16px;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.search-button {
+    background-color: #32a852;
+    color: white;
+}
+
+.clear-button {
+    background-color: #d9534f;
+    color: white;
+    padding: 12px 20px;
+}
+
+.search-button:hover {
+    background-color: #289043;
+}
+
+.clear-button:hover {
+    background-color: #c9302c;
 }
 
 .search:focus {
@@ -45,7 +75,7 @@
 }
 
 .column-select:hover {
-    background-color: #f0f0f0; /* Change background on hover */
+    background-color: #f0f0f0;
 }
 
 .column-select option {
@@ -56,6 +86,6 @@
 }
 
 .column-select option:hover {
-    background-color: #32a852; /* Green hover background */
-    color: #fff; /* White text on hover */
+    background-color: #32a852;
+    color: #fff;
 }

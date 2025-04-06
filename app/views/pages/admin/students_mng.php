@@ -8,6 +8,15 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php $columns = [
+            "UserID" => "UserID",
+            "Email" => "Email",
+            "ContactNo" => "Mobile Number",
+            "RegisterDate" => "Registered Date",
+            "Status" => "Status",
+            "Actions" => "Actions"
+        ];
+        ?>
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/students_mng">Students</button>
             <button class="tab" data-path="/UniQuest/admin/company_mng">Companies</button>
@@ -22,23 +31,11 @@
                 </button> -->
             </div>
             <table>
-                <thead>
-                    <?php
-                    $columns = [
-                        "UserID" => "UserID", 
-                        "Email" => "Email", 
-                        "ContactNo" => "Mobile Number", 
-                        "RegisterDate" => "Registered Date", 
-                        "Status" => "Status", 
-                        "Actions" => "Actions"
-                    ];
-                    $sorter = Sorter::getInstance($columns);
-                    echo $sorter->renderHeaders();
-                    ?>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php foreach ($data['students'] as $student) : ?>
-                        <tr>
+                    <?php if ($data['students']) : ?>
+                        <?php foreach ($data['students'] as $student) : ?>
+                            <tr>
                             <td><?php echo $student->UserID; ?></td>
                             <td><?php echo $student->Email; ?></td>
                             <td><?php echo $student->ContactNo; ?></td>
@@ -63,8 +60,13 @@
                                         person_add
                                     </span>
                                 <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td class="no-data" colspan="6">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

@@ -51,13 +51,16 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order);
+            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search, $searchBy);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+
             $data = [
                 'students' => $students['data'],
                 'deactReasons' => $deactReasons['data'],
@@ -84,17 +87,20 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
             // $page = $_GET['page'] ?? 1;
             // $limit = $_GET['limit'] ?? 2;
             // $sort = $_GET['sort'] ?? 'UserID';
             // $order = $_GET['order'] ?? 'ASC';
 
-            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order);
+            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search, $searchBy);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+          
             $data = [
                 'companies' => $companies['data'],
                 'deactReasons' => $deactReasons['data'],
@@ -121,13 +127,16 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order);
+            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search, $searchBy);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+          
             $data = [
                 'vtMembers' => $vtMembers['data'],
                 'deactReasons' => $deactReasons['data'],
@@ -205,11 +214,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'ComplaintID';
 
-            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order);
+            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order, $search, $searchBy);
 
             $data = [
                 'complaints_job' => $complaints_job['data'],
@@ -231,11 +242,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyID';
 
-            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order);
+            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order, $search, $searchBy);
 
             $data = [
                 'complaints_com' => $complaints_com['data'],
@@ -268,11 +281,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'ComplaintID';
 
-            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order);
+            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order, $search, $searchBy);
 
             $data = [
                 'complaints' => $complaints['data'],
@@ -314,11 +329,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order);
+            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'ptjobs' => $ptjobs['data'],
                 'currentPage' => $ptjobs['currentPage'],
@@ -338,11 +355,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order);
+            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'interns' => $interns['data'],
                 'currentPage' => $interns['currentPage'],
@@ -409,11 +428,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -433,11 +454,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order);
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -454,6 +477,7 @@ class Admin extends Controller
 
     public function user_detail($userID)
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -464,8 +488,22 @@ class Admin extends Controller
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
 
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
             $data = [
                 'userID' => $userID,
+                'email' => $email, 
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
@@ -482,7 +520,7 @@ class Admin extends Controller
 
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
-                if ($this->model('chatModel')->sendMessage($data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
                     redirect('admin/user_detail/' . $userID);
                 } else {
@@ -494,8 +532,10 @@ class Admin extends Controller
             }
         } else {
             // Load initial view without POST request
+            
             $data = [
                 'userID' => $userID,
+                'email' => '',
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
@@ -649,11 +689,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -686,11 +728,13 @@ class Admin extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order);
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search, $searchBy);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -789,7 +833,7 @@ class Admin extends Controller
 
     public function notifications()
     {
-        $messages = $this->model('ContactModel')->getMessages();
+        $messages = $this->model('ContactModel')->getMessagesAll();
 
         // Load the view with the messages
         $data = [
@@ -877,35 +921,41 @@ class Admin extends Controller
         //correct this line
     }
 
-    public function editMessage($messageId)
-    {
+    public function editMessage($messageId) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = json_decode(file_get_contents("php://input"), true);
-
-            if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $newMessage = $data['message'] ?? '';
+            
+            if (!empty($newMessage)) {
+                $chatModel = $this->model('chatModel');
+                $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+                
+                if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
                 } else {
                     echo json_encode(['success' => false, 'error' => 'Failed to edit message.']);
                 }
             } else {
-                echo json_encode(['success' => false, 'error' => 'Edit time limit expired.']);
+                echo json_encode(['success' => false, 'error' => 'Message cannot be empty.']);
             }
+        } else {
+            http_response_code(405);
         }
     }
 
     public function deleteMessage($messageId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->deleteMessage($messageId)) {
-                    echo json_encode(['success' => true]);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
-                }
+            $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+            
+            if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
+                Redirect::to(URLROOT . '/admin/user_detail');
             } else {
-                echo json_encode(['success' => false, 'error' => 'Delete time limit expired.']);
+                die('Something went wrong while deleting the message.');
             }
+        } else {
+            Redirect::to(URLROOT . '/admin/user_detail');
         }
     }
+    
 }

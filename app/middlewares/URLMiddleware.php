@@ -5,6 +5,9 @@ class URLMiddleware {
             'login' => 'user/login',
             'profile' => 'user/profile',
             'recover' => 'user/forgot_password',
+            'jobs' => 'jobs/jobs',
+            'internships' => 'jobs/internships',
+            'companies' => 'jobs/companies',
         ];
         
         // Join the URL parts for easier matching

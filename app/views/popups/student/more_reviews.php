@@ -6,14 +6,15 @@
         <div class="content">
             <div class="close-btn-container"><button class="close-btn" onclick="toggleMoreReviews()"><i class="fa fa-times"></i></button></div>
             <div class="reviews-section-popup">
-                <h4>Reviews and Ratings about this company</h4>
+                <h3>Reviews and Ratings about this company</h3>
 
-                <?php for ($i = 0; $i < 6; $i++): ?>
-                    <div class="review" id="popup-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
-                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
+                <?php if (!empty($data['reviews'])): ?>
+                <?php foreach ($data['reviews'] as $review): ?>
+                    <div class="review">
+                        <p class="review-text"><?php echo htmlspecialchars($review->Comment ?? ''); ?></p>
                         <div class="review-details">
-                            <span class="reviewer-name">- John Doe</span>
-                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                            <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName ?? 'Anonymous'); ?></span>
+                            <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? '0'); ?></span>
                         </div>
                         <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
                             <div class="review-actions">
@@ -29,7 +30,10 @@
                             </div>
                         <?php endif;?>
                     </div>
-                <?php endfor; ?>
+                <?php endforeach; ?>
+                <?php else:?>
+                    <p>No reviews available.</p>
+                <?php endif;?>
             </div>
         </div>
     </div>

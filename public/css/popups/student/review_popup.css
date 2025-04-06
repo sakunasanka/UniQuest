@@ -46,7 +46,7 @@
 
 .rating-stars label {
     font-size: 25px;
-    color: #ddd;
+    color: #ffbf00;
     cursor: pointer;
     transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
 }
@@ -54,7 +54,7 @@
 .rating-stars input:checked ~ label,
 .rating-stars label:hover,
 .rating-stars label:hover ~ label {
-    color: #ffbf00; /* Gold color on hover and selection */
+    color: #ccc; /* Gold color on hover and selection */
     font-weight: bold;
 }
 
