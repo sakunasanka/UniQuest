@@ -147,7 +147,7 @@ class AdminModel extends Model {
             $log = [
                 'UserID' => $userID,
                 'Action' => $action,
-                'ActionBy' => $_SESSION['user_id'],
+                'ActionBy' => $_SESSION['user_id'] ?? $userID,
                 'ReasonID' => $reasonID
             ];
             $this->insert('useraccountlog', $log);

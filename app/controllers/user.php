@@ -225,6 +225,8 @@ class User extends Controller
                 $this->model->activateAccount($userID);
                 //send email to notify user that their account has been reactivated
                 MailHelper::sendEmailAccountReactivated($_SESSION['logged_user_email'], $_SESSION['logged_user_name']);
+                //add user account log
+                $this->model('AdminModel')->addUserAccountLog($userID, 'Reactivate', 15);
                 unset($_SESSION['logged_user_email']);
                 unset($_SESSION['logged_user_name']);
                 // Create session
@@ -584,6 +586,8 @@ class User extends Controller
                 $this->model->deactivateAccountByUser($_SESSION['user_id']);
                 //send email to notify user that their account
                 MailHelper::sendEmailAccountDeactivated($_SESSION['user_email'], $_SESSION['user_name']);
+                //add user account log
+                $this->model('AdminModel')->addUserAccountLog($_SESSION['user_id'], 'PendingDelete', 11);
                 // Logout
                 $this->logout();
             } else {

@@ -167,7 +167,7 @@ class MailHelper
 
         //replace placeholders
         $template = str_replace('{{name}}', $toName, $template);
-        $template = str_replace('{{login_link}}', $reactivateLink, $template);
+        $template = str_replace('{{reactivate_link}}', $reactivateLink, $template);
         $template = str_replace('{{year}}', date('Y'), $template);
 
         $subject = "Account Deactivated";
