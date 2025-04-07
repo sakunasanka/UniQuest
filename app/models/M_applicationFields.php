@@ -159,12 +159,17 @@ class M_applicationFields extends Model{
     
     public function getFieldsByJobId($jobId) {
         try {
+            // Get the fields configuration
             $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
             $this->db->bind(':job_id', $jobId);
-            
             $fields = $this->db->single();
             
-            // Convert database results into a structured array for easier form generation
+            // Get required fields configuration
+            $this->db->query('SELECT * FROM application_fields_req WHERE job_id = :job_id');
+            $this->db->bind(':job_id', $jobId);
+            $requiredFields = $this->db->single();
+    
+            // Convert database results into a structured array
             if ($fields) {
                 $formFields = [];
                 
@@ -185,26 +190,37 @@ class M_applicationFields extends Model{
                     'cv' => ['type' => 'file', 'label' => 'CV/Resume', 'accept' => '.pdf,.doc,.docx'],
                     'linkedin' => ['type' => 'url', 'label' => 'LinkedIn Profile']
                 ];
-
+    
                 // Add only the fields that are set to true
                 foreach ($fieldMapping as $field => $config) {
                     if ($fields->$field === true || $fields->$field === 1) {
+                        // Add required flag if the field is required
+                        $reqField = $field . '_req';
+                        if ($requiredFields && ($requiredFields->$reqField === true || $requiredFields->$reqField === 1)) {
+                            $config['required'] = true;
+                        }
                         $formFields[$field] = $config;
                     }
                 }
-
+    
                 // Add custom fields if they exist
                 for ($i = 1; $i <= 3; $i++) {
                     $otherField = 'other' . $i;
                     if (!empty($fields->$otherField)) {
-                        $formFields[$otherField] = [
+                        $config = [
                             'type' => $fields->{'other' . $i . '_type'} ?? 'text',
                             'label' => $fields->$otherField,
                             'accept' => $fields->{'other' . $i . '_type'} === 'file' ? '.pdf,.jpg,.jpeg,.png' : null
                         ];
+                        // Add required flag if the custom field is required
+                        $reqField = 'other' . $i . '_req';
+                        if ($requiredFields && ($requiredFields->$reqField === true || $requiredFields->$reqField === 1)) {
+                            $config['required'] = true;
+                        }
+                        $formFields[$otherField] = $config;
                     }
                 }
-
+    
                 return $formFields;
             }
             
