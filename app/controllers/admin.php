@@ -361,50 +361,77 @@ class Admin extends Controller
         }
     }
 
-    public function sendMessage()
+    public function sendMessage($userID)
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize input
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            // Data for the chat message
-            $data = [
-                'sender_id' => $_SESSION['user_id'], // Admin ID from session
-                'receiver_id' => trim($_POST['receiver_id'] ?? ''), // Student ID
-                'message' => trim($_POST['message'] ?? ''),
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
 
-                // Error handling
-                'receiver_id_err' => '',
-                'message_err' => ''
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
+            $data = [
+                'userID' => $userID,
+                'email' => $email, 
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
             ];
 
-            // Validation checks
-            if (empty($data['receiver_id'])) {
-                $data['receiver_id_err'] = 'Receiver ID is required.';
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
             }
 
-            if (empty($data['message'])) {
-                $data['message_err'] = 'Message cannot be empty.';
-            }
-
-            // Ensure no errors before submitting
-            if (empty($data['receiver_id_err']) && empty($data['message_err'])) {
-                $chatModel = $this->model('ChatModel');
-
-                // Attempt to send the message
-                if ($chatModel->sendMessage($data['sender_id'], $data['receiver_id'], $data['message'], 'Admin')) {
-                    flash('chat-msg', 'Message sent successfully.');
-                    redirect('admin/stu_detail' . $data['receiver_id']);
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('admin/user_detail/' . $userID);
                 } else {
                     die('Something went wrong while sending the message.');
                 }
             } else {
-                // Reload view with validation errors
-                $this->view('pages/admin/stu_detail', $data);
+                // Reload view with errors
+                $this->loadUserDetailView($data);
             }
         } else {
-            // For a GET request, redirect back
-            redirect('admin/students');
+            // Load initial view without POST request
+            
+            $data = [
+                'userID' => $userID,
+                'email' => '',
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
         }
     }
 
@@ -462,59 +489,17 @@ class Admin extends Controller
 
     public function user_detail($userID)
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $data = [
+            'userID' => $userID,
+            'user' => $this->model->getUserDetails($userID),
+            'sender_id' => $_SESSION['user_id'],
+            'receiver_id' => $userID,
+            'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+            'messageInput' => '',
+            'messageInput_err' => '',
+        ];
 
-            // Fetch previous messages to determine the last topic if not provided
-            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
-            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
-
-            // Use the submitted topic if provided, otherwise use the last topic
-            $submittedTopic = trim($_POST['topic'] ?? '');
-
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
-                'messageInput' => trim($_POST['messageInput'] ?? ''),
-                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
-                'messageInput_err' => '',
-            ];
-
-            // Validation
-            if (empty($data['messageInput'])) {
-                $data['messageInput_err'] = 'Message cannot be empty';
-            }
-
-            // Ensure no errors before proceeding
-            if (empty($data['messageInput_err'])) {
-                if ($this->model('chatModel')->sendMessage($data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'])) {
-                    // flash('message_sent', 'Message sent successfully');
-                    redirect('admin/user_detail/' . $userID);
-                } else {
-                    die('Something went wrong while sending the message.');
-                }
-            } else {
-                // Reload view with errors
-                $this->loadUserDetailView($data);
-            }
-        } else {
-            // Load initial view without POST request
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-                'topic' => '', // Default to empty until a message is sent
-            ];
-
-            $this->loadUserDetailView($data);
-        }
+        $this->loadUserDetailView($data);
     }
 
     private function loadUserDetailView($data)
@@ -776,7 +761,7 @@ class Admin extends Controller
 
     public function notifications()
     {
-        $messages = $this->model('ContactModel')->getMessages();
+        $messages = $this->model('ContactModel')->getMessagesAll();
 
         // Load the view with the messages
         $data = [
@@ -801,42 +786,103 @@ class Admin extends Controller
         }
     }
 
-    public function messages_stu()
+    public function messages_stu($userID = null)
     {
-        $messages = $this->model('ContactModel')->getMessagesStu();
+        // Fetch all student messages
+        $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
-        // Load the view with the messages
-        $data = [
-            'messages' => $messages
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_stu' => $messages_stu,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_stu' => $messages_stu,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_stu', $data);
     }
 
-    public function messages_com()
+    public function messages_com($userID = null)
     {
-        $messages = $this->model('ContactModel')->getMessagesCom();
+        // Fetch all company messages
+        $messages_com = $this->model('ContactModel')->getMessagesCom();
 
-        // Load the view with the messages
-        $data = [
-            'messages' => $messages
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_com' => $messages_com,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_com' => $messages_com,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_com', $data);
     }
+    
 
-    public function messages_ver()
+    public function messages_ver($userID = null)
     {
-        $messages = $this->model('ContactModel')->getMessagesVer();
+        // Fetch all verification team messages
+        $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
-        // Load the view with the messages
-        $data = [
-            'messages' => $messages
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_ver' => $messages_ver,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_ver' => $messages_ver,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_ver', $data);
     }
-
+   
     // In AdminController.php
     public function fetchMessageDetails($id)
     {
@@ -864,35 +910,41 @@ class Admin extends Controller
         //correct this line
     }
 
-    public function editMessage($messageId)
-    {
+    public function editMessage($messageId) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = json_decode(file_get_contents("php://input"), true);
-
-            if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $newMessage = $data['message'] ?? '';
+            
+            if (!empty($newMessage)) {
+                $chatModel = $this->model('chatModel');
+                $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+                
+                if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
                 } else {
                     echo json_encode(['success' => false, 'error' => 'Failed to edit message.']);
                 }
             } else {
-                echo json_encode(['success' => false, 'error' => 'Edit time limit expired.']);
+                echo json_encode(['success' => false, 'error' => 'Message cannot be empty.']);
             }
+        } else {
+            http_response_code(405);
         }
     }
 
     public function deleteMessage($messageId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->deleteMessage($messageId)) {
-                    echo json_encode(['success' => true]);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
-                }
+            $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+            
+            if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
+                Redirect::to(URLROOT . '/admin/user_detail');
             } else {
-                echo json_encode(['success' => false, 'error' => 'Delete time limit expired.']);
+                die('Something went wrong while deleting the message.');
             }
+        } else {
+            Redirect::to(URLROOT . '/admin/user_detail');
         }
     }
+    
 }

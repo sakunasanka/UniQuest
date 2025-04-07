@@ -31,11 +31,11 @@
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php if ($data['messages']) : ?>
-                        <?php foreach ($data['messages'] as $message): ?>
+                    <?php if ($data['messages_com']) : ?>
+                        <?php foreach ($data['messages_com'] as $message): ?>
                             <tr>
                                 <td><?php echo $message->topic ?></td>
-                                <td><?php echo $message->receiver_email ?></td>
+                                <td><?php echo $message->user_email ?></td>
                                 <td><?php echo $message->message ?></td>
                                 <td><?php echo $message->created_at ?></td>
                                 <td><span class="status active"><?php echo $message->read_status ?></span></td>

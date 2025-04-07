@@ -299,18 +299,18 @@ class Verification_team extends Controller
 
             // Data for the contact form
             $data = [
-                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
 
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
 
             // Validation checks
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Please enter your name';
+            if (empty($data['email'])) {
+                $data['name_err'] = 'Please enter your email';
             }
 
             if (empty($data['topic'])) {
@@ -322,7 +322,7 @@ class Verification_team extends Controller
             }
 
             // Ensure no errors before submitting
-            if (empty($data['name_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('verification_team/contact_admin');
@@ -335,10 +335,10 @@ class Verification_team extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'name' => '',
+                'email' => '',
                 'topic' => '',
                 'message' => '',
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
