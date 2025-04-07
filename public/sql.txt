@@ -539,9 +539,9 @@ CREATE TABLE application_fields_req (
         ON DELETE CASCADE
 );
 ALTER TABLE application_fields
-ADD COLUMN other1_type ENUM('Text', 'File Upload', 'Date') DEFAULT NULL,
-ADD COLUMN other2_type ENUM('Text', 'File Upload', 'Date') DEFAULT NULL,
-ADD COLUMN other3_type ENUM('Text', 'File Upload', 'Date') DEFAULT NULL;
+ADD COLUMN other1_type ENUM('text', 'file', 'date') DEFAULT NULL,
+ADD COLUMN other2_type ENUM('text', 'file', 'date') DEFAULT NULL,
+ADD COLUMN other3_type ENUM('text', 'file', 'date') DEFAULT NULL;
 
 -- -----------------------------------------------------
 -- View uniquest.messages_with_roles

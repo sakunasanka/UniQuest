@@ -395,11 +395,11 @@ class Student extends Controller
             $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id']);
             $data = [
                 'applications' => $applications,
-                'currentPage' => $users['currentPage'],
-                'rowsPerPage' => $users['limit'],
-                'totalRows' => $users['totalRows'],
-                'totalPages' => $users['totalPages'],
-                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
+                // 'currentPage' => $applications['currentPage'],
+                // 'rowsPerPage' => $applications['limit'],
+                // 'totalRows' => $applications['totalRows'],
+                // 'totalPages' => $applications['totalPages'],
+                // 'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/student/all_applications', $data);
         } catch (Exception $e) {
@@ -866,7 +866,7 @@ class Student extends Controller
         $filename = uniqid() . '_' . time() . '.' . $extension;
         
         // Set upload directory based on field type
-        $uploadDir = APPROOT . '/public/uploads/' . $fieldName . '/';
+        $uploadDir = PUBROOT . '/uploads/' . $fieldName . '/';
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }

@@ -290,9 +290,9 @@
                                     <label for="other1">Custom Field 1</label>
                                     <input type="text" id="other1_name" name="app_other1_name" placeholder="Field Name *">
                                     <select name="app_other1_type" id="other1_type" class="field-type-select">
-                                        <option value="Text">Text</option>
-                                        <option value="File Upload">File Upload</option>
-                                        <option value="Date">Date</option>
+                                        <option value="text">Text</option>
+                                        <option value="file">File Upload</option>
+                                        <option value="date">Date</option>
                                     </select>
                                 </div>
                                 <div class="field-col field-col-required">

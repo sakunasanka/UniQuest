@@ -14,10 +14,10 @@
         <div class="form-section">
             <!-- Form Container -->
             <div class="form-container">
-        <form action="<?php echo URLROOT; ?>/student/jobsApply/<?php echo $data['job']->JobID; ?>" 
-              method="POST" 
-              enctype="multipart/form-data"
-              class="application-form">
+                <form action="<?php echo URLROOT; ?>/student/jobsApply/<?php echo $data['job']->JobID; ?>" 
+                method="POST" 
+                enctype="multipart/form-data"
+                class="application-form">
             
             <?php 
             $fields = $data['fields'];
@@ -33,15 +33,14 @@
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
                                 rows="4"
-                                required
+                                
                             ></textarea>
                             <?php break;
 
                         case 'select': ?>
                             <select 
                                 id="<?php echo $fieldName; ?>"
-                                name="<?php echo $fieldName; ?>"
-                                required
+                                name="<?php echo $fieldName; ?>"                  
                             >
                                 <option value="">Select <?php echo $fieldConfig['label']; ?></option>
                                 <?php foreach($fieldConfig['options'] as $option): ?>
@@ -56,7 +55,6 @@
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
                                 accept="<?php echo $fieldConfig['accept']; ?>"
-                                required
                             >
                             <?php break;
 

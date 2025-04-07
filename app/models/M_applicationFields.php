@@ -198,8 +198,9 @@ class M_applicationFields extends Model{
                     $otherField = 'other' . $i;
                     if (!empty($fields->$otherField)) {
                         $formFields[$otherField] = [
-                            'type' => 'text',
-                            'label' => $fields->$otherField
+                            'type' => $fields->{'other' . $i . '_type'} ?? 'text',
+                            'label' => $fields->$otherField,
+                            'accept' => $fields->{'other' . $i . '_type'} === 'file' ? '.pdf,.jpg,.jpeg,.png' : null
                         ];
                     }
                 }
@@ -213,9 +214,6 @@ class M_applicationFields extends Model{
             return false;
         }
     }
-
-// Model: M_jobApplication.php
-
 
 public function createApplication($fields, $jobId, $userId) {
     try {
