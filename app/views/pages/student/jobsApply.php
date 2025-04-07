@@ -36,7 +36,7 @@
                             <textarea 
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
-                                rows="4"
+                                rows="5"
                                 <?php if ($isRequired) echo 'required'; ?>
                             ></textarea>
                             <?php break;

@@ -539,9 +539,9 @@ CREATE TABLE application_fields_req (
         ON DELETE CASCADE
 );
 ALTER TABLE application_fields
-ADD COLUMN other1_type ENUM('text', 'file', 'date') DEFAULT NULL,
-ADD COLUMN other2_type ENUM('text', 'file', 'date') DEFAULT NULL,
-ADD COLUMN other3_type ENUM('text', 'file', 'date') DEFAULT NULL;
+ADD COLUMN other1_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL,
+ADD COLUMN other2_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL,
+ADD COLUMN other3_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL;
 
 -- -----------------------------------------------------
 -- View uniquest.messages_with_roles
@@ -597,6 +597,10 @@ CREATE TABLE `applications` (
   CONSTRAINT `unique_application` UNIQUE (`job_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE applications
+ADD COLUMN other1 TEXT AFTER linkedin,
+ADD COLUMN other2 TEXT AFTER other1,
+ADD COLUMN other3 TEXT AFTER other2;
 
 ---------------------------------------------------
 CREATE VIEW v_allapplications AS

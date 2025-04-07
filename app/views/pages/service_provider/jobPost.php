@@ -293,6 +293,7 @@
                                         <option value="text">Text</option>
                                         <option value="file">File Upload</option>
                                         <option value="date">Date</option>
+                                        <option value="textarea">Text Area</option>
                                     </select>
                                 </div>
                                 <div class="field-col field-col-required">
@@ -313,6 +314,7 @@
                                         <option value="text">Text</option>
                                         <option value="file">File Upload</option>
                                         <option value="date">Date</option>
+                                        <option value="textarea">Text Area</option>
                                     </select>
                                 </div>
                                 <div class="field-col field-col-required">
@@ -333,6 +335,7 @@
                                         <option value="text">Text</option>
                                         <option value="file">File Upload</option>
                                         <option value="date">Date</option>
+                                        <option value="textarea">Text Area</option>
                                     </select>
                                 </div>
                                 <div class="field-col field-col-required">
