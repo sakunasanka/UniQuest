@@ -40,9 +40,17 @@
                                 <td><?php echo $message->created_at ?></td>
                                 <td><span class="status active"><?php echo $message->read_status ?></span></td>
                                 <td class="action">
-                                    <button id="openPopupBtn" class="open-btn-2 material-symbols-outlined action-btn view">
+                                <?php if ($message->sender_role == 'VT-Member') : ?>
+                                    <button id="openPopupBtn" class="open-btn-2 material-symbols-outlined action-btn view" 
+                                        onclick="window.location.href='<?php echo URLROOT; ?>/admin/messages_ver/<?php echo $message->sender_id; ?>'">
                                         preview
                                     </button>
+                                    <?php elseif ($message->receiver_role == 'VT-Member'):?>
+                                        <button id="openPopupBtn" class="open-btn-2 material-symbols-outlined action-btn view" 
+                                        onclick="window.location.href='<?php echo URLROOT; ?>/admin/messages_ver/<?php echo $message->receiver_id; ?>'">
+                                        preview
+                                    </button>
+                                <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -53,7 +61,7 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-            <?php require APPROOT . '/views/components/pagination.php'; ?>
+            <?php //require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>
