@@ -17,7 +17,7 @@
                     <select id="topic" name="topic" required>
                         <option value="job" <?php echo ($data['topic'] == 'job') ? 'selected' : ''; ?>>Job</option>
                         <option value="internship" <?php echo ($data['topic'] == 'internship') ? 'selected' : ''; ?>>Internship</option>
-                        <option value="general" <?php echo ($data['topic'] == 'general') ? 'selected' : ''; ?>>General Information</option>
+                        <option value="general information" <?php echo ($data['topic'] == 'general information') ? 'selected' : ''; ?>>General Information</option>
                     </select>
 
                     <span class="error-message"><?php echo $data['topic_err']; ?></span>

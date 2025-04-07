@@ -101,7 +101,15 @@
                 </div>
 
                 <div class="btn-row">
-                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_reject/<?php echo $data['user']['UserID']; ?>'">Reject</button>
+                    <form action="<?php echo URLROOT; ?>/verification_team/user_ver_reject/<?php echo $data['user']['UserID']; ?>" method="GET">
+                        <select class="reason" name="reason" required>
+                            <option value="" disabled selected>Select Reason</option>
+                            <?php foreach ($data['rejectReasons'] as $reason) : ?>
+                                <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="submit" class="reject-btn">Reject</button>
+                    </form>
                     <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_approve/<?php echo $data['user']['UserID']; ?>'">Approve</button>
                 </div>
             </div>

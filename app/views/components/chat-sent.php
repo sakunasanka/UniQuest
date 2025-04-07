@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/chat.css">
 
 <div id="backgroundOverlay" class="background-overlay hidden"></div>
-<div id="chatPopup" class="popup hidden">
+<div id="chatPopup" class="chatPopup hidden">
     <div class="popup-header">
         <span>Chat with 
             <?php 
@@ -17,7 +17,7 @@
             }
             ?>
         </span>
-        <button id="closePopupBtn" class="close-btn"><i class="fa fa-times"></i></button>
+        <button id="closePopupBtn" class="chat-close-btn"><i class="fa fa-times"></i></button>
     </div>
     <div class="popup-content">
         <div class="messages">

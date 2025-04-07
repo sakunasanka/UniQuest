@@ -5,7 +5,7 @@
         <div class="overlay"></div>
         <div class="content">
         <div class="close-btn-container"><button class="close-btn" onclick="closedeleteaccountconfirm()"><i class="fa fa-times"></i></button></div>
-            <h2>Delete Account</h2>
+            <h2>Deactivate Account</h2>
             <form action="<?php echo URLROOT ?>/user/deactivate" method="POST">
                 <div class="warning">
                     <p>Are you sure you want to delete your account?<br>
