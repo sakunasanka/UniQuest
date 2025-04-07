@@ -1,5 +1,5 @@
 /* Popup Container */
-.popup {
+.chatPopup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -53,7 +53,7 @@
 }
 
 /* Close Button */
-.close-btn {
+.chat-close-btn {
     background: none;
     border: none;
     font-size: 1.5em;
@@ -70,13 +70,14 @@
     background-color: rgba(255, 255, 255, 0.1); /* Subtle background for the button */
 }
 
-.close-btn:hover {
+.chat-close-btn:hover {
     transform: scale(1.2);
     background-color: rgba(255, 255, 255, 0.2); /* Slightly brighter on hover */
     opacity: 0.9;
+    color: #ff5e5e; 
 }
 
-.close-btn:active {
+.chat-close-btn:active {
     transform: scale(0.9);
 }
 
