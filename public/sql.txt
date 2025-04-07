@@ -565,6 +565,85 @@ FROM messages m
 JOIN User u1 ON m.sender_id = u1.UserID
 JOIN User u2 ON m.receiver_id = u2.UserID;
 
+--------------------------create application table----------------------------------------------
+
+
+CREATE TABLE `applications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(50) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `nic` varchar(50) DEFAULT NULL,
+  `nic_copy` varchar(255) DEFAULT NULL,
+  `gender` enum('Male','Female','Other') DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `qualifications` text DEFAULT NULL,
+  `experience` text DEFAULT NULL,
+  `skills` text DEFAULT NULL,
+  `cv` varchar(255) DEFAULT NULL,
+  `linkedin` varchar(255) DEFAULT NULL,
+  `status` enum('Pending','Shortlisted','Rejected','Hired') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `job_id` (`job_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `applications_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`jobID`) ON DELETE CASCADE,
+  CONSTRAINT `applications_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`userID`) ON DELETE CASCADE,
+  CONSTRAINT `unique_application` UNIQUE (`job_id`, `user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+---------------------------------------------------
+CREATE VIEW v_allapplications AS
+SELECT
+    a.id AS ApplicationID,
+    a.job_id AS JobID,
+    j.Title AS JobTitle,
+    j.Location AS JobLocation,
+    j.Category AS JobCategory,
+    j.SalaryRange AS SalaryRange,
+    c.CompanyID AS CompanyID,
+    c.CompanyName AS CompanyName,
+    c.CompanyLogo AS CompanyLogo,
+    a.user_id AS StudentID,
+    CONCAT(s.FirstName, ' ', s.LastName) AS StudentName,
+    u.Email AS StudentEmail,
+    u.ContactNo AS StudentContact,
+    s.CV AS StudentResume,
+    s.ProfilePic AS StudentProfileImage,
+    a.status AS ApplicationStatus,
+    a.qualifications AS Qualifications,
+    a.experience AS Experience,
+    a.skills AS Skills,
+    a.address AS address,
+    a.gender AS gender,
+    a.dob AS dob,
+    a.nic AS nic,
+    a.nic_copy AS nic_copy,
+    a.linkedin AS linkedin,
+    a.created_at AS SubmissionDate,
+    a.updated_at AS LastUpdated,
+    j.create_at AS JobCreatedAt,
+    c.create_at AS company_create_at
+FROM
+    applications a
+INNER JOIN
+    jobs j ON a.job_id = j.JobID
+INNER JOIN
+    company c ON j.CompanyID = c.CompanyID
+INNER JOIN
+    student s ON a.user_id = s.StudentID
+INNER JOIN
+    user u ON s.StudentID = u.UserID
+ORDER BY
+    a.created_at DESC;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

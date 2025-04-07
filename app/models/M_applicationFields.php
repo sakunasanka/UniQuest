@@ -1,10 +1,5 @@
 <?php
-class M_applicationFields {
-    private $db;
-
-    public function __construct() {
-        $this->db = Database::getInstance();
-    }
+class M_applicationFields extends Model{
 
     public function saveFields($jobId, $fields) {
         try {
@@ -161,22 +156,7 @@ class M_applicationFields {
         }
     }
 
-    // private function saveCustomFieldName($jobId, $fieldNumber, $fieldName) {
-    //     try {
-    //         $sql = "INSERT INTO custom_field_names (job_id, field_number, field_name) 
-    //                VALUES (:job_id, :field_number, :field_name)";
-            
-    //         $this->db->query($sql);
-    //         $this->db->bind(':job_id', $jobId);
-    //         $this->db->bind(':field_number', $fieldNumber);
-    //         $this->db->bind(':field_name', $fieldName);
-            
-    //         return $this->db->execute();
-    //     } catch (PDOException $e) {
-    //         error_log("Database Error: " . $e->getMessage());
-    //         return false;
-    //     }
-    // }
+    
     public function getFieldsByJobId($jobId) {
         try {
             $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
@@ -233,23 +213,229 @@ class M_applicationFields {
             return false;
         }
     }
+
+// Model: M_jobApplication.php
+
+
+public function createApplication($fields, $jobId, $userId) {
+    try {
+        $this->db->beginTransaction();
+        
+        // Debug logging
+        error_log("Creating application for JobID: $jobId, UserID: $userId");
+        error_log("Fields: " . print_r($fields, true));
+        
+        // Check if user has already applied
+        $this->db->query('SELECT id FROM applications WHERE job_id = :job_id AND user_id = :user_id');
+        $this->db->bind(':job_id', $jobId);
+        $this->db->bind(':user_id', $userId);
+        
+        if ($this->db->single()) {
+            throw new Exception('You have already applied for this job');
+        }
+        
+        // Define all possible fields
+        $possibleFields = [
+            'fullname', 'photo', 'email', 'contact', 'address', 'nic', 'nic_copy',
+            'gender', 'dob', 'qualifications', 'experience', 'skills', 'cv', 'linkedin'
+        ];
+        
+        // Build SQL query dynamically based on provided fields
+        $sqlFields = ['job_id', 'user_id', 'status'];
+        $sqlValues = [':job_id', ':user_id', '"Pending"'];
+        $params = [
+            ':job_id' => $jobId,
+            ':user_id' => $userId
+        ];
+        
+        // Add fields that exist in the input
+        foreach ($possibleFields as $field) {
+            $sqlFields[] = $field;
+            $sqlValues[] = ':' . $field;
+            $params[':' . $field] = isset($fields[$field]) && $fields[$field] !== '' ? $fields[$field] : null;
+        }
+        
+        // Create the SQL query
+        $fieldsStr = implode(', ', $sqlFields);
+        $valuesStr = implode(', ', $sqlValues);
+        $sql = "INSERT INTO applications ($fieldsStr) VALUES ($valuesStr)";
+        
+        // Prepare and execute query
+        $this->db->query($sql);
+        
+        // Log parameters for debugging
+        error_log("SQL Query: $sql");
+        error_log("Parameters: " . print_r($params, true));
+        
+        // Bind all parameters
+        foreach ($params as $key => $value) {
+            $this->db->bind($key, $value);
+        }
+        
+        $result = $this->db->execute();
+        error_log("Insert result: " . ($result ? 'true' : 'false'));
+        
+        if (!$result) {
+            // Log the exact SQL error if available
+            $errorInfo = $this->db->errorInfo();
+            error_log("SQL Error: " . print_r($errorInfo, true));
+            throw new Exception('Failed to save application: ' . ($errorInfo[2] ?? 'Unknown error'));
+        }
+        
+        $this->db->commit();
+        error_log("Application created successfully");
+        return true;
+        
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        error_log("Application Error: " . $e->getMessage());
+        return [
+            'status' => false,
+            'message' => $e->getMessage()
+        ];
+    }
 }
-    // public function getFieldsByJobId($jobId) {
-    //     $this->db->query('SELECT * FROM application_fields WHERE job_id = :job_id');
-    //     $this->db->bind(':job_id', $jobId);
+// Add this to your model to debug the database structure
+// First, let's verify the view structure
+// public function debugViewStructure() {
+//     $this->db->query("DESCRIBE v_allapplications");
+//     $columns = $this->db->resultSet();
+//     echo "View columns:<br>";
+//     print_r($columns);
+    
+//     // Check if there's any data in the view at all
+//     $this->db->query("SELECT COUNT(*) as total FROM v_allapplications");
+//     $total = $this->db->single();
+//     echo "<br>Total records in view: " . $total->total;
+    
+//     // Check a sample record
+//     $this->db->query("SELECT * FROM v_allapplications LIMIT 1");
+//     $sample = $this->db->single();
+//     echo "<br>Sample record:<br>";
+//     print_r($sample);
+// }
+
+// Model: M_applicationFields.php
+public function getAllApplications($userId) {
+    // Using the exact field name from your view structure
+    $query = "SELECT * FROM v_allapplications WHERE StudentID = :user_id";
+    
+    try {
+        $this->db->query($query);
+        $this->db->bind(':user_id', $userId);
         
-    //     $fields = $this->db->single();
+        // Debug information
+      
+        $results = $this->db->resultSet();
         
-    //     // Get custom field names if they exist
-    //     if ($fields) {
-    //         $this->db->query('SELECT * FROM custom_field_names WHERE job_id = :job_id');
-    //         $this->db->bind(':job_id', $jobId);
-    //         $customFields = $this->db->resultSet();
+        // Add error checking
+        if ($this->db->rowCount() > 0) {
+            return $results;
+        } else {
+            // Debug: Check if the user exists
+            $this->db->query("SELECT StudentName FROM v_allapplications WHERE StudentID = :user_id LIMIT 1");
+            $this->db->bind(':user_id', $userId);
+            $user = $this->db->single();
             
-    //         $fields->custom_fields = $customFields;
-    //     }
+            if ($user) {
+                echo "User exists but no applications found";
+            } else {
+                echo "No user found with ID: " . $userId;
+            }
+            return [];
+        }
+    } catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
+        return [];
+    }
+
+}
+    public function getApplicationResponses($applicationId) {
+        // Using the exact field name from your view structure
+        $query = "SELECT * FROM v_allapplications WHERE ApplicationID = :application_id";
         
-    //     return $fields;
-    // }
+        try {
+            $this->db->query($query);
+            $this->db->bind(':application_id', $applicationId);
+            
+            // Debug information
+          
+            $results = $this->db->resultSet();
+            
+            // Add error checking
+            if ($this->db->rowCount() > 0) {
+                return $results;
+            } else {
+                // Debug: Check if the user exists
+                $this->db->query("SELECT StudentName FROM v_allapplications WHERE ApplicationID = :application_id LIMIT 1");
+                $this->db->bind(':user_id', $applicationId);
+                $user = $this->db->single();
+                
+                if ($user) {
+                    echo "User exists but no applications found";
+                } else {
+                    echo "No user found with ID: " . $applicationId;
+                }
+                return [];
+            }
+        } catch (PDOException $e) {
+            echo "Database error: " . $e->getMessage();
+            return [];
+        }
+    }
+    public function getAllApplicationsByCompanyId($companyId)
+    {
+        try {
+            $query = "SELECT * FROM v_allapplications WHERE CompanyID = :company_id";
+            $this->db->query($query);
+            $this->db->bind(':company_id', $companyId);
+
+            return $this->db->resultSet();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        }
+    }
+    public function getApplicationsByJobID($jobID)
+    {
+        // try {
+            // Prepare the SQL query
+            $query ='SELECT * FROM v_allapplications WHERE jobID = :jobID';
+            $this->db->query($query);
+            // Bind the job ID parameter
+            $this->db->bind(':jobID', $jobID);
+
+            // Execute the query and return the results
+            return $this->db->resultSet();
+            
+        // } catch (PDOException $e) {
+        //     error_log("Database Error: " . $e->getMessage());
+        //     return [];
+        // }
+    
+    }
+    public function getApplicationsByuserID($applicationID)
+    {
+        // try {
+            // Prepare the SQL query
+            $query ='SELECT * FROM v_allapplications WHERE applicationID = :applicationID';
+            $this->db->query($query);
+            // Bind the job ID parameter
+            $this->db->bind(':applicationID', $applicationID);
+
+            // Execute the query and return the results
+            return $this->db->resultSet();
+            
+        // } catch (PDOException $e) {
+        //     error_log("Database Error: " . $e->getMessage());
+        //     return [];
+        // }
+    
+    }
+    
+}
+
+
+   
 
 ?>
