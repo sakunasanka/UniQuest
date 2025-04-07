@@ -818,30 +818,71 @@ class Admin extends Controller
         $this->view('pages/admin/messages_stu', $data);
     }
 
-    public function messages_com()
+    public function messages_com($userID = null)
     {
+        // Fetch all company messages
         $messages_com = $this->model('ContactModel')->getMessagesCom();
 
-        // Load the view with the messages
-        $data = [
-            'messages_com' => $messages_com
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_com' => $messages_com,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_com' => $messages_com,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_com', $data);
     }
+    
 
-    public function messages_ver()
+    public function messages_ver($userID = null)
     {
+        // Fetch all verification team messages
         $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
-        // Load the view with the messages
-        $data = [
-            'messages_ver' => $messages_ver
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_ver' => $messages_ver,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_ver' => $messages_ver,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_ver', $data);
     }
-
+   
     // In AdminController.php
     public function fetchMessageDetails($id)
     {
