@@ -537,6 +537,7 @@ class Admin extends Controller
                 'userID' => $userID,
                 'email' => '',
                 'user' => $this->model->getUserDetails($userID),
+                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID, 'Deactivate'),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
                 'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),

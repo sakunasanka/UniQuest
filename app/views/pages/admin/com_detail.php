@@ -49,6 +49,19 @@
                     </div>
                 </div>
                 <div class="btn-row">
+                    <?php if($data['user']['Status'] == 'Deactive' || $data['user']['Status'] == 'Pendind Deletion'): ?>
+                    <div class="status-deact">
+                        <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                        <span>Reason: <?php echo $data['acc_log']->Reason?></span><br>
+                        <span>Deactivated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10);?></span><br>
+                    </div>
+                    <?php elseif($data['user']['Status'] == 'Active'): ?>
+                    <div class="status-act">
+                        <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                        <span>Reason: <?php echo $data['acc_log']->Reason?></span><br>
+                        <span>Activated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10);?></span><br>
+                    </div>
+                    <?php endif; ?>
                     <!-- <button class="contact-btn" onclick="">Contact</button> -->
                     <?php require APPROOT . '/views/components/chat-sent.php'; ?>
                 </div>

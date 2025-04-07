@@ -144,6 +144,22 @@ body {
     min-width: 110px;
 }
 
+.detail-row .status-deact{
+    color: #ff4d4d;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ff4d4d50;
+}
+
+.detail-row .status-act{
+    color: #32a852;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #32a85250;
+}
+
 .user-details .btn-row {
     margin-top: auto; /* Push the buttons to the bottom */
     display: flex;
