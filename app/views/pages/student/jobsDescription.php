@@ -180,12 +180,12 @@
             <div class="job-details">
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
-                <p><?php echo $data['post']->SalaryRange; ?></p>
+                
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
-                    <tr><td>Experience:</td><td>No Experience</td></tr>
+                    <tr><td>Salary:</td><td>Rs. <?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
 
