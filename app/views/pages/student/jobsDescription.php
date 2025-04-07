@@ -100,7 +100,7 @@
                 <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
                 <div class="buttons">
-                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
+                    <button onclick="goToApplyPage(<?php echo $post->JobID; ?>)" class="apply-btn">Apply</button>
                     <button id="openPopupBtn" class="contact-btn">Contact</button>
                 </div>
             <?php else: ?>    
@@ -215,7 +215,7 @@
 
 <script>
     function goToApplyPage(jobId) {
-        window.location.href = "/UniQuest/student/jobsApplyform/" + jobId;
+        window.location.href = "/UniQuest/jobs/jobsApplyform/" + jobId;
     }
 </script>
 

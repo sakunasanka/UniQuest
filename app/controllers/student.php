@@ -752,21 +752,6 @@ class Student extends Controller
             $this->view('pages/student/internshipDescription', $data);
         }    
     }
-
-    public function jobsApplyform($jobId) {
-        // Load model and get application fields
-        $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
-
-        // Fetch job details
-        $job = $this->model('M_jobpost')->getpostbyid($jobId);
-
-        $data = [
-            'fields' => $applicationFields,
-            'job' => $job, // Pass job data to the view
-        ];
-
-        $this->view('pages/student/jobsApply', $data); 
-    }
     
 
     // public function jobsApply()
