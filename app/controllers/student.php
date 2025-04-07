@@ -852,7 +852,10 @@ class Student extends Controller
         $allowedTypes = [
             'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             'photo' => ['image/jpeg', 'image/png'],
-            'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png']
+            'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png'],
+            'other1' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
+            'other2' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
+            'other3' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
         ];
     
         // Validate file type

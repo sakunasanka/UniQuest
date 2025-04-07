@@ -251,7 +251,7 @@ public function createApplication($fields, $jobId, $userId) {
         // Define all possible fields
         $possibleFields = [
             'fullname', 'photo', 'email', 'contact', 'address', 'nic', 'nic_copy',
-            'gender', 'dob', 'qualifications', 'experience', 'skills', 'cv', 'linkedin'
+            'gender', 'dob', 'qualifications', 'experience', 'skills', 'cv', 'linkedin', 'other1', 'other2', 'other3'
         ];
         
         // Build SQL query dynamically based on provided fields
