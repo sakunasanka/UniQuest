@@ -2,11 +2,15 @@
 class Register extends Controller
 {
     private $model;
+    private $universityEmailValidator;
 
     public function __construct()
     {
         // Load model
         $this->model = $this->model('userModel');
+
+        // Load UniversityEmailValidator
+        $this->universityEmailValidator = new UniversityEmailValidator();
     }
 
     private function validateEmail(&$data)
@@ -224,6 +228,11 @@ class Register extends Controller
             // Validate email
             $this->validateEmail($data);
 
+            //validate university email
+            if (!$this->universityEmailValidator->isUniversityEmail($data['email'])) {
+                $data['email_err'] = 'Please enter a valid university email address';
+            }
+
             // Check if there are no errors
             if (empty($data['email_err'])) {
                 //Generate the token
@@ -281,6 +290,9 @@ class Register extends Controller
 
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
+
+                    //store university name in session
+                    $_SESSION['university'] = $this->universityEmailValidator->getUniversityForEmail($tokenDetails->Email);
 
                     // Redirect to register page
                     Redirect::to(URLROOT . '/register/student');

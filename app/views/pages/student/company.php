@@ -1,23 +1,43 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php 
+    if (!isset($_SESSION['user_role'])) {
+        require APPROOT . '/views/components/header.php';
+    }
+    else if ($_SESSION['user_role'] == 'Student') {
+        require APPROOT . '/views/components/stu_header.php';
+    } else if ($_SESSION['user_role'] == 'Company') {
+        require APPROOT . '/views/components/ser_header.php';
+    } 
+    else if ($_SESSION['user_role'] == 'Admin') {
+        require APPROOT . '/views/components/adm_header.php';
+    }
+    else if ($_SESSION['user_role'] == 'VT-Member') {
+        require APPROOT . '/views/components/ver_header.php';
+    }
+?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
-    <?php else: ?>       
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php if (isset($_SESSION['user_role'])): ?>
+<?php else: ?>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
 <?php endif; ?>
 
 <div class="main-container">
     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
         <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-        <?php else: ?>    
-    <?php endif; ?>    
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>
+        <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
+        <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+    <?php endif; ?>
 
     <div class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/student/jobs">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/student/internships">Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/company">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/jobs">Part Time Jobs</button>
+            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/internships">Internships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/companies">Companies</button>
         </div>
         <div class="container">
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
@@ -33,41 +53,48 @@
                     </div>
                 </div>
             </div> -->
-            
-            <div class="cards-container">    
-                <?php foreach($data['posts'] as $post): ?>
+
+            <div class="cards-container">
+                <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)">
-                        <img
-                            src="<?php echo empty($post->CompanyLogo)
-                                        ? URLROOT . '/images/profile_pic_preview.png'
-                                        : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
-                            alt="Profile Picture">
+                            <img
+                                src="<?php echo empty($post->CompanyLogo)
+                                            ? URLROOT . '/images/profile_pic_preview.png'
+                                            : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                                alt="Profile Picture">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)">
                                 <div class="title-content">
                                     <h3 class="company-title"><?php echo $post->CompanyName; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i> 4.8
+                                        <i class="fa fa-star"></i>
+                                        <?php
+                                        if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
+                                            echo round($data['displayRatings'][$post->CompanyID], 2);
+                                        } else {
+                                            echo 'N/A';
+                                        }
+                                        ?>
                                     </div>
                                 </div>
-                                
-                                
+
+
                                 <div class="job-location-details">
-                                        <?php echo $post->City; ?>
+                                    <?php echo $post->City; ?>
                                 </div>
                             </div>
 
-                            
-                            <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
+
+                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
                                 <div class="card-icons">
                                     <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                     <i class="fa fa-share-alt" aria-hidden="true"></i>
                                     <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
-                                    
+
                                 </div>
-                            <?php endif;?>
+                            <?php endif; ?>
                         </div>
                         <div class="social-media-icons">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -76,16 +103,17 @@
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
-                    <?php endforeach; ?>
+                <?php endforeach; ?>
             </div>
-            
         </div>
+        <?php require APPROOT . '/views/components/pagination.php'; ?>
     </div>
 </div>
 
 <style>
     .icon-active {
-        color: #e74c3c; /* Active color */
+        color: #e74c3c;
+        /* Active color */
     }
 </style>
 
@@ -94,7 +122,7 @@
 
 <script>
     function goToCompanyDescription(companyId) {
-        window.location.href = "/UniQuest/student/companydescription/" +companyId;
+        window.location.href = "/UniQuest/jobs/companydescription/" + companyId;
     }
 </script>
 

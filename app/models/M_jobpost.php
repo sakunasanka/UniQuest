@@ -1,12 +1,12 @@
 <?php
 
-class M_jobpost {
-    private $db;
+class M_jobpost extends Model {
+    // private $db;
 
-    public function __construct() {
-        // Assuming Database class uses a singleton pattern with getInstance()
-        $this->db = Database::getInstance();
-    }
+    // public function __construct() {
+    //     // Assuming Database class uses a singleton pattern with getInstance()
+    //     $this->db = Database::getInstance();
+    // }
 
     public function getLatestJobId() {
         $this->db->query('SELECT * FROM jobs ORDER BY create_at DESC LIMIT 1');
@@ -52,9 +52,9 @@ class M_jobpost {
     public function create($data) {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, CompanyID, Status) 
+            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
             VALUES 
-            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :company_id, :status)
+            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
         ');
 
         // Bind the values from $data array
@@ -65,7 +65,9 @@ class M_jobpost {
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
+        $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':company_id', $_SESSION['user_id']);
+        $this->db->bind(':publish_date', $data['publish_date']); 
         $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
@@ -105,7 +107,7 @@ class M_jobpost {
         return $this->db->execute();
     }
 
-    public function delete($postId){
+    public function deletePost($postId){
         $this->db->query('DELETE FROM jobs WHERE JobID=:id');
         $this->db->bind(':id',$postId );
         
@@ -118,19 +120,42 @@ class M_jobpost {
         }
     }
 
-    public function getPartTimeJobs()
+    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12)
     {
-        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Part-time' ");
-        return $this->db->resultSet();
+        try{
+            $conditions = [
+                ['Status', '=', 'Active'],
+                ['Category', '=', 'Part-time']
+            ];
+
+            $jobs = $this->select('v_jobs', $conditions, '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            return $jobs;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
 
-    public function getInternshipJobs()
+    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12)
     {
-        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Internship' ");
-        return $this->db->resultSet();
+        try{
+            $conditions = [
+                ['Status', '=', 'Active'],
+                ['Category', '=', 'Internship']
+            ];
+
+            $interns = $this->select('v_jobs', $conditions, '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            return $interns;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
-
-    
-
 }
 ?>

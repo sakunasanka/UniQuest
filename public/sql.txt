@@ -142,30 +142,36 @@ CREATE TABLE IF NOT EXISTS uniquest.Jobs (
     ON UPDATE CASCADE
 )
 ENGINE = InnoDB;
+
+ALTER TABLE Jobs
+ADD COLUMN PublishDate DATE AFTER create_at,
+ADD COLUMN SalaryType ENUM('Per Hour', 'Per Day', 'Per Week', 'Per Month') NOT NULL DEFAULT 'Per Month' AFTER SalaryRange;
 -- ---------------------------------------------------
 
-CREATE VIEW v_jobs AS 
-    SELECT 
-        jobs.JobID AS JobID,
-        company.CompanyID AS CompanyID,
-        jobs.Title AS Title,
-        company.CompanyLogo AS CompanyLogo,
-        company.CompanyName AS CompanyName,
-        jobs.Description AS Description,
-        jobs.Location AS Location,
-        jobs.Category AS Category,
-        jobs.Status AS Status,
-        jobs.JobBenefits AS JobBenefits,
-        jobs.RequiredQualifications AS RequiredQualifications,
-        jobs.SalaryRange AS SalaryRange,
-        user.Email AS Email,
-        user.ContactNo AS ContactNo,
-        jobs.Create_at AS jobs_create_at,         -- Use correct capitalization
-        company.Create_at AS company_create_at    -- Use correct capitalization
-    FROM jobs 
-    INNER JOIN company ON jobs.CompanyID = company.CompanyID
-    INNER JOIN user ON company.CompanyID = user.UserID
-    ORDER BY jobs.Create_at DESC;
+CREATE OR REPLACE VIEW v_jobs AS 
+SELECT 
+    jobs.JobID AS JobID,
+    company.CompanyID AS CompanyID,
+    jobs.Title AS Title,
+    company.CompanyLogo AS CompanyLogo,
+    company.CompanyName AS CompanyName,
+    jobs.Description AS Description,
+    jobs.Location AS Location,
+    jobs.Category AS Category,
+    jobs.Status AS Status,
+    jobs.JobBenefits AS JobBenefits,
+    jobs.RequiredQualifications AS RequiredQualifications,
+    jobs.SalaryRange AS SalaryRange,
+    jobs.SalaryType AS SalaryType,
+    jobs.PublishDate AS PublishDate,
+    user.Email AS Email,
+    user.ContactNo AS ContactNo,
+    jobs.Create_at AS jobs_create_at,
+    company.Create_at AS company_create_at
+FROM jobs 
+INNER JOIN company ON jobs.CompanyID = company.CompanyID
+INNER JOIN user ON company.CompanyID = user.UserID
+ORDER BY jobs.Create_at DESC;
 
 CREATE VIEW v_companies AS
 SELECT 
@@ -311,6 +317,8 @@ CREATE TABLE messages (
     FOREIGN KEY (sender_id) REFERENCES User(UserID) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES User(UserID) ON DELETE CASCADE
 );
+ALTER TABLE messages
+ADD COLUMN user_email VARCHAR(255) AFTER id;
 
 -- -----------------------------------------------------
 -- View uniquest.StudentCompanyComplaints
@@ -427,6 +435,10 @@ SELECT
     c.CompanyName,
     c.Description AS CompanyDescription,
     c.CompanyLogo,
+    c.StreetNo AS StreetNo,
+    c.AddressLine1 AS AddressLine1,
+    c.AddressLine2 AS AddressLine2,
+    c.City AS City,
     r.ReviewID,
     r.Rating,
     r.Comment,
@@ -497,6 +509,40 @@ ALTER TABLE application_fields
   ADD CONSTRAINT application_fields_ibfk_1 FOREIGN KEY (job_id) REFERENCES jobs (JobID) ON DELETE CASCADE;
 COMMIT;
 
+--
+-- Table structure for table application_fields_req
+--
+
+CREATE TABLE application_fields_req (
+    id INT PRIMARY KEY,
+	job_id INT,
+    fullname_req BOOLEAN DEFAULT FALSE,
+    photo_req BOOLEAN DEFAULT FALSE,
+    email_req BOOLEAN DEFAULT FALSE,
+    contact_req BOOLEAN DEFAULT FALSE,
+    address_req BOOLEAN DEFAULT FALSE,
+    nic_req BOOLEAN DEFAULT FALSE,
+    nic_copy_req BOOLEAN DEFAULT FALSE,
+    gender_req BOOLEAN DEFAULT FALSE,
+    dob_req BOOLEAN DEFAULT FALSE,
+    qualifications_req BOOLEAN DEFAULT FALSE,
+    experience_req BOOLEAN DEFAULT FALSE,
+    skills_req BOOLEAN DEFAULT FALSE,
+    cv_req BOOLEAN DEFAULT FALSE,
+    linkedin_req BOOLEAN DEFAULT FALSE,
+    other1_req BOOLEAN DEFAULT FALSE,
+    other2_req BOOLEAN DEFAULT FALSE,
+    other3_req BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT fk_application_fields_req_job
+        FOREIGN KEY (job_id) REFERENCES Jobs(jobID)
+        ON DELETE CASCADE
+);
+ALTER TABLE application_fields
+ADD COLUMN other1_type ENUM('Text', 'File Upload', 'Date') DEFAULT NULL,
+ADD COLUMN other2_type ENUM('Text', 'File Upload', 'Date') DEFAULT NULL,
+ADD COLUMN other3_type ENUM('Text', 'File Upload', 'Date') DEFAULT NULL;
+
 -- -----------------------------------------------------
 -- View uniquest.messages_with_roles
 -- -----------------------------------------------------
@@ -504,6 +550,7 @@ COMMIT;
 CREATE VIEW messages_with_roles AS
 SELECT 
     m.id,
+    m.user_email,
     m.sender_id,
     u1.Role AS sender_role,
     u1.Email AS sender_email,

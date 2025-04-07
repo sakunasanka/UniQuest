@@ -57,18 +57,18 @@ class Service_provider extends Controller
 
             // Data for the contact form
             $data = [
-                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
 
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
 
             // Validation checks
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Please enter your name';
+            if (empty($data['email'])) {
+                $data['email_err'] = 'Please enter your email';
             }
 
             if (empty($data['topic'])) {
@@ -80,7 +80,7 @@ class Service_provider extends Controller
             }
 
             // Ensure no errors before submitting
-            if (empty($data['name_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('service_provider/contact_admin');
@@ -93,10 +93,10 @@ class Service_provider extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'name' => '',
+                'email' => '',
                 'topic' => '',
                 'message' => '',
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
@@ -495,20 +495,22 @@ class Service_provider extends Controller
 
     public function jobPost()
     {
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            $data = [
+            $publishDate = date('Y-m-d', strtotime('+2 days'));
 
+            $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
                 'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
                 'job_location' => trim($_POST['jobLocation'] ?? ''),
                 'job_category' => trim($_POST['jobType'] ?? ''),
+                'publish_date' => !empty($_POST['jobPostDate']) ? trim($_POST['publishDate']) : $publishDate,
                 'required_skills' => trim($_POST['qualifications'] ?? ''),
                 'salary_range' => trim($_POST['salaryRange'] ?? ''),
+                'salary_type' => trim($_POST['salaryType'] ?? ''),
                 'Description' => trim($_POST['jobDescription'] ?? ''),
-                'status' => 'Active',
+                'status' => 'Pending',
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -516,16 +518,27 @@ class Service_provider extends Controller
                 'job_category_err' => '',
                 'required_skills_err' => '',
                 'salary_range_err' => '',
-                'Description_err' => ''
+                'salary_type_err' => '',
+                'Description_err' => '',
+                'publish_date_err' => ''
             ];
 
-            //validation
+            // Validate date - not in the past and not more than 7 days in the future
+            if (!empty($_POST['jobPostDate'])) {
+                $selectedDate = strtotime($data['publish_date']);
+                $today = strtotime($publishDate);
+                $maxDate = strtotime('+30 days', $today);
 
+                if ($selectedDate < $today) {
+                    $data['publish_date_err'] = 'Date cannot be earlier than 2 days from today (For verification purposes)';
+                } elseif ($selectedDate > $maxDate) {
+                    $data['publish_date_err'] = 'Date cannot be more than 30 days in the future';
+                }
+            }
+
+            // validation for other fields
             if (empty($data['job_name'])) {
                 $data['job_name_err'] = 'Please enter job name';
-            }
-            if (empty($data['job_benifits'])) {
-                $data['job_benifits_err'] = 'Please enter job benifits';
             }
             if (empty($data['job_location'])) {
                 $data['job_location_err'] = 'Please enter job location';
@@ -533,33 +546,32 @@ class Service_provider extends Controller
             if (empty($data['job_category'])) {
                 $data['job_category_err'] = 'Please enter job category';
             }
-            if (empty($data['required_skills'])) {
-                $data['required_skills_err'] = 'Please enter required skills';
-            }
-            if (empty($data['salary_range'])) {
-                $data['salary_range_err'] = 'Please enter salary range';
-            }
 
-            if (empty($data['Description'])) {
-                $data['Description_err'] = 'Please enter Description';
-            }
-
-            //make sure no errors
-            if (empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err'])  && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])) {
+            if (
+                empty($data['job_name_err']) &&
+                empty($data['job_benifits_err']) &&
+                empty($data['job_location_err']) &&
+                empty($data['job_category_err']) &&
+                empty($data['required_skills_err']) &&
+                empty($data['salary_range_err']) &&
+                empty($data['salary_type_err']) &&
+                empty($data['Description_err']) &&
+                empty($data['publish_date_err'])
+            ) {
                 if ($this->model('M_jobpost')->create($data)) {
-                    
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
-
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
                     redirect('service_provider/ongoing_jobs');
                 } else {
                     die('something went wrong');
                 }
             } else {
-                //loading view with errors
                 $this->view('pages/service_provider/jobPost', $data);
             }
         } else {
+            // Default values for GET request
+            $publishDate = date('Y-m-d', strtotime('+2 days'));
+
             $data = [
                 'job_name' => '',
                 'job_benifits' => '',
@@ -568,7 +580,9 @@ class Service_provider extends Controller
                 'adress' => '',
                 'required_skills' => '',
                 'salary_range' => '',
+                'salary_type' => '',
                 'Description' => '',
+                'publish_date' => $publishDate,
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -577,13 +591,13 @@ class Service_provider extends Controller
                 'adress_err' => '',
                 'required_skills_err' => '',
                 'salary_range_err' => '',
-                'Description_err' => ''
+                'salary_type_err' => '',
+                'Description_err' => '',
+                'publish_date_err' => ''
             ];
             $this->view('pages/service_provider/jobPost', $data);
         }
     }
-
-
 
     public function delete($postId)
     {
@@ -597,7 +611,7 @@ class Service_provider extends Controller
 
 
 
-                if ($this->model('M_jobpost')->delete($postId)) {
+                if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
                     redirect('service_provider/ongoing_jobs');
                 } else {

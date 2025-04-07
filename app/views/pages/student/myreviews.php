@@ -1,5 +1,6 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
 <?php require APPROOT . '/views/popups/student/deletereview_popup.php'; ?>
+<?php require APPROOT . '/views/popups/student/edit_review_popup.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/myReviews.css">
 <div class="main-container">
@@ -23,7 +24,7 @@
                             <!-- Review Comment -->
                             <div class="review-details">
                                 <p class="review-text"><?php echo $review->Comment; ?></p>
-                                <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
+                                <span class="review-rating"><i class="fa fa-star"></i> <?php echo $review->Rating; ?></span>
                             </div>
                             <div class="review-details">
                                 <?php if (($_SESSION['user_role'] == 'Student') || ($_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
@@ -39,8 +40,8 @@
                                         <span class="dislike-count" data-id="<?php echo $review->ReviewID; ?>">0 dislikes</span>
                                     </div>
                                     <div class="post-control-btn-row">
-                                    <a href="<?php echo URLROOT; ?>/student/updateReview/<?php echo $review->ReviewID; ?>"><button class="post-control-btn edit">EDIT</button></a>
-                                     <button class="post-control-btn delete" onclick=showdeletereviewconfirm(<?=$review->ReviewID?>)>DELETE</button>
+                                    <button class="post-control-btn edit" onclick="showEditReviewPopup(<?= $review->ReviewID ?>, <?= $review->Rating ?>, '<?= addslashes($review->Comment) ?>', <?= $review->CompanyID ?>)">EDIT</button> 
+                                    <button class="post-control-btn delete" onclick="showdeletereviewconfirm(<?=$review->ReviewID?>)">DELETE</button>
                                     </div>
                                 <?php endif; ?>
                             </div>
