@@ -30,7 +30,32 @@ class M_applicationFields {
                 'linkedin' => false,
                 'other1' => false,
                 'other2' => false,
-                'other3' => false
+                'other3' => false,
+                'other1_type' => null,
+                'other2_type' => null,
+                'other3_type' => null
+            ];
+
+            // Initialize all required fields as false
+            $requiredValues = [
+                'job_id' => $jobId,
+                'fullname_req' => false,
+                'photo_req' => false,
+                'email_req' => false,
+                'contact_req' => false,
+                'address_req' => false,
+                'nic_req' => false,
+                'nic_copy_req' => false,
+                'gender_req' => false,
+                'dob_req' => false,
+                'qualifications_req' => false,
+                'experience_req' => false,
+                'skills_req' => false,
+                'cv_req' => false,
+                'linkedin_req' => false,
+                'other1_req' => false,
+                'other2_req' => false,
+                'other3_req' => false
             ];
 
             // Set true for selected standard fields
@@ -41,48 +66,93 @@ class M_applicationFields {
             ];
 
             foreach ($standardFields as $field) {
-                if (isset($fields['app_' . strtolower($field)])) {
+                $fieldKey = 'app_' . $field;
+                $reqKey = 'app_' . $field . '_req';
+                
+                if (isset($fields[$fieldKey])) {
                     $fieldValues[strtolower($field)] = true;
+                    
+                    if (isset($fields[$reqKey]) && $fields[$reqKey] === 'yes') {
+                        $requiredValues[strtolower($field) . '_req'] = true;
+                    }
                 }
             }
 
             // Handle custom fields (other1, other2, other3)
             for ($i = 1; $i <= 3; $i++) {
-                if (isset($fields['app_other' . $i]) && !empty($fields['app_other' . $i . '_name'])) {
-                    $fieldValues['other' . $i] = $fields['app_other' . $i . '_name'];
-                    // Store the custom field name in a separate table if needed
-                    // $this->saveCustomFieldName($jobId, $i, $fields['app_other' . $i . '_name']);
+                $fieldKey = 'app_other' . $i;
+                $reqKey = 'app_other' . $i . '_req';
+                $typeKey = 'app_other' . $i . '_type';
+                
+                if (isset($fields[$fieldKey]) && !empty($fields[$fieldKey . '_name'])) {
+                    $fieldValues['other' . $i] = $fields[$fieldKey . '_name'];
+                    
+                    // Save the custom field type
+                    if (isset($fields[$typeKey])) {
+                        $fieldValues['other' . $i . '_type'] = $fields[$typeKey];
+                    }
+                    
+                    if (isset($fields[$reqKey]) && $fields[$reqKey] === 'yes') {
+                        $requiredValues['other' . $i . '_req'] = true;
+                    }
                 }
             }
 
-            // Insert into application_fields table
+            // Insert into application_fields table (now with type columns)
             $sql = "INSERT INTO application_fields (
                 job_id, fullname, photo, email, contact, address, 
                 nic, nic_copy, gender, dob, qualifications, 
                 experience, skills, cv, linkedin, 
-                other1, other2, other3
+                other1, other2, other3,
+                other1_type, other2_type, other3_type
             ) VALUES (
                 :job_id, :fullname, :photo, :email, :contact, :address,
                 :nic, :nic_copy, :gender, :dob, :qualifications,
                 :experience, :skills, :cv, :linkedin,
-                :other1, :other2, :other3
+                :other1, :other2, :other3,
+                :other1_type, :other2_type, :other3_type
             )";
 
             $this->db->query($sql);
-
-            // Bind all parameters
             foreach ($fieldValues as $field => $value) {
                 $this->db->bind(':' . $field, $value);
             }
 
-            // Execute the query
-            if ($this->db->execute()) {
-                $this->db->commit();
-                return true;
-            } else {
-                $this->db->rollBack();
-                return false;
+            // Bind custom field types if they exist
+            if (isset($fields['app_other1_type'])) {
+                $this->db->bind(':other1_type', $fields['app_other1_type']);
             }
+            if (isset($fields['app_other2_type'])) {
+                $this->db->bind(':other2_type', $fields['app_other2_type']);
+            }
+            if (isset($fields['app_other3_type'])) {
+                $this->db->bind(':other3_type', $fields['app_other3_type']);
+            }
+            
+            $this->db->execute();
+
+            // Insert into application_fields_req table
+            $sqlReq = "INSERT INTO application_fields_req (
+                job_id, fullname_req, photo_req, email_req, contact_req, address_req, 
+                nic_req, nic_copy_req, gender_req, dob_req, qualifications_req, 
+                experience_req, skills_req, cv_req, linkedin_req, 
+                other1_req, other2_req, other3_req
+            ) VALUES (
+                :job_id, :fullname_req, :photo_req, :email_req, :contact_req, :address_req,
+                :nic_req, :nic_copy_req, :gender_req, :dob_req, :qualifications_req,
+                :experience_req, :skills_req, :cv_req, :linkedin_req,
+                :other1_req, :other2_req, :other3_req
+            )";
+
+            $this->db->query($sqlReq);
+            foreach ($requiredValues as $field => $value) {
+                $this->db->bind(':' . $field, $value);
+            }
+
+            $this->db->execute();
+
+            $this->db->commit();
+            return true;
 
         } catch (PDOException $e) {
             $this->db->rollBack();
