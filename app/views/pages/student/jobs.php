@@ -14,6 +14,25 @@
         require APPROOT . '/views/components/ver_header.php';
     }
 ?>
+
+<?php if (isset($_GET['pending'])): ?>
+    <div id="pendingVerificationPopup" class="popup-overlay" style="display: none;">
+        <?php require APPROOT . '/views/popups/wait_to_verify_popup.php'; ?>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the popup element
+            const popup = document.getElementById('pendingVerificationPopup');
+            
+            // Show the popup
+            if (popup) {
+                popup.style.display = 'block';
+            }
+        });
+    </script>
+<?php endif; ?>
+
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 

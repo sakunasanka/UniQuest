@@ -66,7 +66,7 @@ class User extends Controller
                     $this->createSession($loggedInUser->UserID);
                 } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
                     if ($loggedInUser->Role === 'Student') {
-                        $this->view('pages/login/wait_to_verify_stu');
+                        Redirect::to(URLROOT . '/jobs?pending=1');
                     } else if ($loggedInUser->Role === 'Company') {
                         $this->view('pages/login/wait_to_verify_ser');
                     }
