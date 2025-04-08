@@ -84,11 +84,19 @@ function openChatPopup(userId) {
     document.getElementById('chatForm').submit();
 }
 
+function scrollToBottom() {
+    const messagesContainer = document.querySelector('.messages');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     // Only open the popup if a userID exists AND it came from a form submission
     <?php if (isset($data['userID']) && isset($_POST['selectedUserID'])): ?>
         document.getElementById('chatPopup').classList.remove('hidden');
         document.getElementById('backgroundOverlay').classList.remove('hidden');
+        scrollToBottom();
     <?php endif; ?>
 });
 </script>
