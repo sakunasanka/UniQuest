@@ -156,6 +156,21 @@ class AdminModel extends Model {
         }
     }
 
+    //retrieve reason for last account log by userID for a specific action order by date desc
+    public function getLastAccountLogReason($userID) {
+        try {
+            $log = $this->select('v_account_logs', [['UserID', '=', $userID], ['Action', 'NOT IN', ['ChangePass', 'ResetPass']]], 'Reason, ActionDate, ActionByID', 'AND', '', 'ActionDate DESC', 0, 1, false);
+            if ($log) {
+                $log->ActionDate = date('Y-m-d H:i:s', strtotime($log->ActionDate));
+                return $log;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     //add verificationlogs 
     public function addVerificationLog($entityID, $entityType, $action, $reasonID = 10) {
         try {
@@ -171,5 +186,21 @@ class AdminModel extends Model {
             return $e->getMessage();
         }
     }
+
+    //retrieve log for last verification log by entityID order by date desc
+    public function getLastVerificationLog($entityID) {
+        try {
+            $log = $this->select('v_verification_logs', [['EntityID', '=', $entityID]], 'Action, ActionDate, ActionByID, ActionByName, Reason', 'AND', '', 'ActionDate DESC', 0, 1, false);
+            if ($log) {
+                $log->ActionDate = date('Y-m-d H:i:s', strtotime($log->ActionDate));
+                return $log;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 }
 ?>
