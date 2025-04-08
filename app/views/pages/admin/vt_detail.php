@@ -44,13 +44,13 @@
                     <span class="kk"><?php echo $data['user']['ContactNo'] ?></span>
                 </div>
                 <div class="btn-row">
-                    <?php if ($data['user']['Status'] == 'Deactive' || $data['user']['Status'] == 'Pendind Deletion'): ?>
+                    <?php if ($data['user']['Status'] == 'Deactive' || $data['user']['Status'] == 'Pendind Deletion' && $data['acc_log'] != NULL): ?>
                         <div class="status-deact">
                             <span>Status: <?php echo $data['user']['Status'] ?></span><br>
                             <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>
                             <span>Deactivated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
                         </div>
-                    <?php elseif ($data['user']['Status'] == 'Active'): ?>
+                    <?php elseif ($data['user']['Status'] == 'Active' && $data['acc_log'] != NULL): ?>
                         <div class="status-act">
                             <span>Status: <?php echo $data['user']['Status'] ?></span><br>
                             <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>

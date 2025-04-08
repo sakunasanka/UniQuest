@@ -128,9 +128,11 @@ class Verification_team extends Controller
         try {
             $user = $this->model->getUserDetails($userID);
             $rejectReasons = $this->model('AdminModel')->getReasonsByType('user_reject');
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($userID);
             $data = [
                 'user' => $user,
-                'rejectReasons' => $rejectReasons['data']
+                'rejectReasons' => $rejectReasons['data'],
+                'verifyDetails' => $verifyDetails,
             ];
             if ($user['Role'] == 'Student') {
                 $this->view('pages/verification_team/stu_ver_detail', $data);
@@ -340,7 +342,7 @@ class Verification_team extends Controller
 
             // Ensure no errors before submitting
             if (empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
-                if($this->model('ContactModel')->sendMessage($data)){
+                if ($this->model('ContactModel')->sendMessage($data)) {
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('verification_team/contact_admin');
                 } else {
@@ -360,7 +362,7 @@ class Verification_team extends Controller
                 'message_err' => ''
             ];
 
-        $this->view('pages/verification_team/contact_admin', $data);
+            $this->view('pages/verification_team/contact_admin', $data);
         }
     }
 }

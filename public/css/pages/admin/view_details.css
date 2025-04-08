@@ -145,19 +145,28 @@ body {
 }
 
 .detail-row .status-deact{
+    width: 100%;
     color: #ff4d4d;
     font-weight: 600;
     border-radius: 5px;
     padding: 10px;
     background-color: #ff4d4d50;
+    line-height: 1.3;
 }
 
 .detail-row .status-act{
+    width: 100%;
     color: #32a852;
     font-weight: 600;
     border-radius: 5px;
     padding: 10px;
     background-color: #32a85250;
+    line-height: 1.3;
+}
+
+.actionby-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .user-details .btn-row {
@@ -192,8 +201,13 @@ button.approve-btn:hover {
     background-color: #038a27;
 }
 
-button.reject-btn:hover {
+button.reject-btn:hover:not(:disabled) {
     background-color: #c82333;
+}
+
+button.reject-btn:disabled, .btn-row select:disabled {
+    cursor: not-allowed;
+    opacity: 0.8; /* Optional: make it look disabled */
 }
 
 button.contact-btn {

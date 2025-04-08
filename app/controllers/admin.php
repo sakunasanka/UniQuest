@@ -100,7 +100,7 @@ class Admin extends Controller
             $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search, $searchBy);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
-          
+
             $data = [
                 'companies' => $companies['data'],
                 'deactReasons' => $deactReasons['data'],
@@ -136,7 +136,7 @@ class Admin extends Controller
             $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search, $searchBy);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
-          
+
             $data = [
                 'vtMembers' => $vtMembers['data'],
                 'deactReasons' => $deactReasons['data'],
@@ -503,8 +503,10 @@ class Admin extends Controller
 
             $data = [
                 'userID' => $userID,
-                'email' => $email, 
+                'email' => $email,
                 'user' => $this->model->getUserDetails($userID),
+                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID, 'Deactivate'),
+                'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
                 'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
@@ -532,12 +534,13 @@ class Admin extends Controller
             }
         } else {
             // Load initial view without POST request
-            
+
             $data = [
                 'userID' => $userID,
                 'email' => '',
                 'user' => $this->model->getUserDetails($userID),
-                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID, 'Deactivate'),
+                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID),
+                'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
                 'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
@@ -566,9 +569,11 @@ class Admin extends Controller
         try {
             $user = $this->model->getUserDetails($userID);
             $rejectReasons = $this->model('AdminModel')->getReasonsByType('user_reject');
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($userID);
             $data = [
                 'user' => $user,
-                'rejectReasons' => $rejectReasons['data']
+                'rejectReasons' => $rejectReasons['data'],
+                'verifyDetails' => $verifyDetails,
             ];
             if ($user['Role'] == 'Student') {
                 $this->view('pages/admin/stu_ver_detail', $data);
@@ -922,15 +927,16 @@ class Admin extends Controller
         //correct this line
     }
 
-    public function editMessage($messageId) {
+    public function editMessage($messageId)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = json_decode(file_get_contents("php://input"), true);
             $newMessage = $data['message'] ?? '';
-            
+
             if (!empty($newMessage)) {
                 $chatModel = $this->model('chatModel');
                 $senderId = $_SESSION['user_id']; // Get the sender's ID from session
-                
+
                 if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
                 } else {
@@ -948,7 +954,7 @@ class Admin extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $senderId = $_SESSION['user_id']; // Get the sender's ID from session
-            
+
             if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
                 Redirect::to(URLROOT . '/admin/user_detail');
             } else {
@@ -958,5 +964,4 @@ class Admin extends Controller
             Redirect::to(URLROOT . '/admin/user_detail');
         }
     }
-    
 }
