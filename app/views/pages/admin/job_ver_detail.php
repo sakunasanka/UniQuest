@@ -17,7 +17,7 @@
             </button>
         </div>
         <div class="view-card">
-        <div class="view-card-pic">
+            <div class="view-card-pic">
                 <img
                     src="<?php echo empty($data['job']->CompanyLogo)
                                 ? URLROOT . '/images/profile_pic_preview.png'
@@ -27,11 +27,11 @@
             </div>
 
             <div class="view-card-content">
-            <h1><?php echo $data['job']->Title ?></h1>
-                <span><?php echo $data['job']->Location ?></span>
-                <span><?php echo $data['job']->SalaryRange ?></span>
+                <h1><?php echo $data['job']->Title ?></h1>
+                <span><?php echo $data['job']->District ?>, <?php echo $data['job']->City ?></span>
+                <span>Rs.<?php echo $data['job']->SalaryRange ?></span>
                 <div class="description">
-                        <p><?php echo $data['job']->Description ?></p>
+                    <p><?php echo $data['job']->Description ?></p>
                 </div>
                 <div class="view-card-info">
                     <div>
@@ -55,7 +55,15 @@
                     </div>
                 </div>
                 <div class="btn-row">
-                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_reject/<?php echo $data['job']->JobID; ?>'">Reject</button>
+                    <form action="<?php echo URLROOT; ?>/admin/job_ver_reject/<?php echo $data['job']->JobID ?>" method="GET">
+                        <select class="reason" name="reason" required>
+                            <option value="" disabled selected>Select Reason</option>
+                            <?php foreach ($data['rejectReasons'] as $reason) : ?>
+                                <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="submit" class="reject-btn">Reject</button>
+                    </form>
                     <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_approve/<?php echo $data['job']->JobID; ?>'">Approve</button>
                 </div>
             </div>

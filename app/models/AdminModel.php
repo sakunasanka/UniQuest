@@ -157,7 +157,7 @@ class AdminModel extends Model {
     }
 
     //add verificationlogs 
-    public function addVerificationLog($entityID, $entityType, $action, $reasonID = 10) {
+    public function addVerificationLog($entityID, $entityType, $action, $reasonID) {
         try {
             $log = [
                 'EntityID' => $entityID,

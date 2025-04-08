@@ -223,6 +223,42 @@ button.reject-btn:hover {
     background-color: #c82333;
 }
 
+.btn-row select {
+    width: 150px; /* Adjust width as needed */
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #ffffff;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* When the dropdown is focused */
+.btn-row select:focus {
+    border-color: #dc3545;
+    /* box-shadow: 0 0 5px rgba(50, 168, 82, 0.5); */
+}
+
+/* Style dropdown arrow */
+.btn-row select::-ms-expand {
+    display: none;
+}
+
+.btn-row select {
+    margin-right: auto; /* Push buttons to the right */
+}
+
+/* Style options */
+.btn-row select option {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
+}
+
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

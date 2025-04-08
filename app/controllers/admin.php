@@ -564,7 +564,7 @@ class Admin extends Controller
                 MailHelper::sendEmailStuAccountApproved($email, $name);
             }
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', 10);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -682,8 +682,10 @@ class Admin extends Controller
     {
         try {
             $job = $this->model('jobModel')->getJobDetails($jobID);
+            $rejectReasons = $this->model('AdminModel')->getReasonsByType('job_reject');
             $data = [
-                'job' => $job
+                'job' => $job,
+                'rejectReasons' => $rejectReasons['data']
             ];
             $this->view('pages/admin/job_ver_detail', $data);
         } catch (Exception $e) {
@@ -721,16 +723,22 @@ class Admin extends Controller
     {
         try {
             $this->model('jobModel')->approveJob($jobID);
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function job_ver_reject($jobID)
+    public function job_ver_reject($jobID, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
             $this->model('jobModel')->rejectJob($jobID);
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($jobID, 'User', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
