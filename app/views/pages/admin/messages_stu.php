@@ -41,17 +41,12 @@
                                 <td><span class="status active"><?php echo $message->read_status ?></span></td>
                                 <td class="action">
                                 <?php if ($message->sender_role == 'Student') : ?>
-                                    <button id="openPopupBtn" class="open-btn-2 material-symbols-outlined action-btn view" 
-                                        onclick="window.location.href='<?php echo URLROOT; ?>/admin/messages_stu/<?php echo $message->sender_id; ?>'">
-                                        preview
-                                    </button>
-                                    <?php elseif ($message->receiver_role == 'Student'):?>
-                                        <button id="openPopupBtn" class="open-btn-2 material-symbols-outlined action-btn view" 
-                                        onclick="window.location.href='<?php echo URLROOT; ?>/admin/messages_stu/<?php echo $message->receiver_id; ?>'">
-                                        preview
-                                    </button>
+                                    <button class="open-btn-2 material-symbols-outlined action-btn view" 
+                                            onclick="openChatPopup('<?php echo $message->sender_id; ?>')">preview</button>
+                                <?php elseif ($message->receiver_role == 'Student'):?>
+                                    <button class="open-btn-2 material-symbols-outlined action-btn view" 
+                                            onclick="openChatPopup('<?php echo $message->receiver_id; ?>')">preview</button>
                                 <?php endif; ?>
-                                    
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -69,10 +64,51 @@
     </main>
 </div>
 
+<!-- Create a hidden form to submit the user ID -->
+<form id="chatForm" action="<?php echo URLROOT; ?>/admin/messages_stu" method="post" style="display: none;">
+    <input type="hidden" name="selectedUserID" id="selectedUserID" value="">
+</form>
+
 <script src="<?php echo URLROOT; ?>/public/js/admin/popups.js"></script>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
+
+<!-- Add simple script for opening the chat popup -->
+<script>
+function openChatPopup(userId) {
+    // Set the user ID in the hidden form
+    document.getElementById('selectedUserID').value = userId;
+    // Submit the form
+    document.getElementById('chatForm').submit();
+}
+
+function scrollToBottom() {
+    const messagesContainer = document.querySelector('.messages');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Only open the popup if a userID exists AND it came from a form submission
+    <?php if (isset($data['userID']) && isset($_POST['selectedUserID'])): ?>
+        document.getElementById('chatPopup').classList.remove('hidden');
+        document.getElementById('backgroundOverlay').classList.remove('hidden');
+        scrollToBottom();
+    <?php endif; ?>
+});
+
+//Refresh the page when the popup is closed
+closePopupBtn?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/admin/messages_stu";
+});
+
+backgroundOverlay?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/admin/messages_stu";
+});
+
+</script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

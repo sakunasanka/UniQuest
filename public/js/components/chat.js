@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     openPopupBtn?.addEventListener("click", function () {
         chatPopup.classList.remove("hidden");
         backgroundOverlay.classList.remove("hidden");
+        scrollToBottom();
     });
 
     // Close popup
@@ -15,6 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
         chatPopup.classList.add("hidden");
         backgroundOverlay.classList.add("hidden");
     });
+
+    function scrollToBottom() {
+        const messagesContainer = document.querySelector('.messages');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    }
 
     // Close popup when clicking outside it
     backgroundOverlay?.addEventListener("click", function () {
