@@ -722,7 +722,14 @@ class Admin extends Controller
     public function job_ver_approve($jobID)
     {
         try {
+            $job = $this->model('jobModel')->getJobDetails($jobID);
+            $email = $job->Email;
+            $name = $job->CompanyName;
+            $title = $job->Title;
+            $publishDate = $job->PublishDate;
             $this->model('jobModel')->approveJob($jobID);
+            // Send email to user
+            MailHelper::sendEmailJobApproved($email, $name, $title, $publishDate);
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
@@ -737,8 +744,14 @@ class Admin extends Controller
             $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
             $this->model('jobModel')->rejectJob($jobID);
             $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
+            // Send email to user
+            $job = $this->model('jobModel')->getJobDetails($jobID);
+            $email = $job->Email;
+            $name = $job->CompanyName;
+            $title = $job->Title;
+            MailHelper::sendEmailJobRejected($email, $name, $title, $reason);
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($jobID, 'User', 'Reject', $reasonID);
+            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this

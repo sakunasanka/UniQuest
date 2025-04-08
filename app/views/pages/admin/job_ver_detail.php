@@ -64,7 +64,7 @@
                         </select>
                         <button type="submit" class="reject-btn">Reject</button>
                     </form>
-                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_approve/<?php echo $data['job']->JobID; ?>'">Approve</button>
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_approve/<?php echo $data['job']->JobID ?>'">Approve</button>
                 </div>
             </div>
         </div>
