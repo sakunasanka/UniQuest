@@ -418,12 +418,46 @@ class Service_provider extends Controller
 
     public function view_job($id)
     {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+        } else {
+            $userId = null;
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }
+
+        // Get bookmarked jobs for the user
         $posts = $this->model('M_jobpost')->getpostbyid($id);
-        $data = [
-            'post' => $posts
-        ];
-        // echo json_encode($data);
-        $this->view('pages/service_provider/view_job', $data);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
+        $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
+        $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
+
+        // Replace reviewer names with anonymous names
+        foreach ($reviews as $review) {
+            $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'post' => $posts,
+                'post_com' => $posts_com_id,
+                'displayRating' => $displayRating,
+                'reviews' => $reviews,
+            ];
+
+        } else {
+            $data = [
+                'post' => $posts,
+                'post_com' => $posts_com_id,
+                'displayRating' => $displayRating,
+                'reviews' => $reviews,  
+            ];
+
+            $this->view('pages/service_provider/view_job', $data);
+        }
     }
 
     public function edit_profile()

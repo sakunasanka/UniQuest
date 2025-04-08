@@ -362,6 +362,7 @@ SELECT
     j.Status,
     j.RequiredQualifications,       -- Job qualifications
     j.SalaryRange,                  -- Salary range
+    j.SalaryType,                  -- Salary type
     u.Email,        -- Company's email from User table
     u.ContactNo,  -- Company's contact number from User table
     j.create_at AS jobs_create_at,    -- Job creation timestamp

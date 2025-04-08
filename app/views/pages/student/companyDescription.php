@@ -110,9 +110,6 @@
             <?php else:?>
 
                 <?php foreach ($data['jobs'] as $index => $job): ?>
-                    <?php 
-                    // if ($index < 3): 
-                    ?> 
                         <div class="job-item" onclick="goToJobDescription(<?php echo ($job->JobID); ?>)">
                             <div class="job-header">
                                 <div>
@@ -129,14 +126,14 @@
                             <div>
                                 <p>Salary: Rs.<?php echo ($job->SalaryRange); ?> <?php echo ($job->SalaryType); ?></p>
                             </div>
+                            <div>
+                                <p>Posted: <?php echo converttimetoreadableformat($job->jobs_create_at); ?></p>
+                            </div>
                             </br>
                             <div class="job-actions">
                                 <button class="details-btn">View Details</button>
                             </div>
                         </div>
-                    <?php 
-                    // endif; 
-                    ?>
                 <?php endforeach; ?>
             <?php endif;?>
             </div>
