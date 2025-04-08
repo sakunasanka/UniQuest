@@ -99,6 +99,16 @@ document.addEventListener("DOMContentLoaded", function() {
         scrollToBottom();
     <?php endif; ?>
 });
+
+//Refresh the page when the popup is closed
+closePopupBtn?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/admin/messages_stu";
+});
+
+backgroundOverlay?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/admin/messages_stu";
+});
+
 </script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
