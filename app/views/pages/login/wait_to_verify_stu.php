@@ -44,7 +44,6 @@
                                 Colombo, Western Province
                             </div>
                             <div class="card-icons">
-                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
                                 <i class="fa-regular fa-bookmark" onclick="toggleBookmark(this)"></i>
                             </div>

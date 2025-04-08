@@ -86,13 +86,14 @@
                                 </div>
                             </div>
 
-
                             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
-                                <div class="card-icons">
-                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                <div class="card-icons">                 
                                     <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
-
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                </div>
+                            <?php else:?>
+                                <div class="card-icons">
+                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -127,12 +128,6 @@
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
-
     function toggleBookmark(icon, companyId) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");

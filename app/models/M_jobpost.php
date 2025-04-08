@@ -20,6 +20,12 @@ class M_jobpost extends Model {
         return false;
     }
 
+    public function getJobsByCompanyId($id){
+        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY jobs_create_at DESC');
+        $this->db->bind(':company_id', $id);       
+        return $this->db->resultSet();
+    }
+
     public function getpostbyid($jobpostId){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.JobID = :id');
         $this->db->bind(':id', $jobpostId);

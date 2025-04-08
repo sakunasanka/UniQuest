@@ -130,7 +130,7 @@
                 <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
-                    <tr><td>Experience:</td><td>No Experience</td></tr>
+                    <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
 

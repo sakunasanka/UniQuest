@@ -16,7 +16,7 @@
 ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
-<?php require APPROOT . '/views/components/chat-sent.php'; ?>
+
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
@@ -143,7 +143,7 @@
                     <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
                     
                     <?php if (count($data['reviews']) >= 3): ?> 
-                        <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                        <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                     <?php endif; ?>
                     
                 <?php else: ?>
@@ -165,10 +165,12 @@
         <div class="job-card">
             <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="card-icons">
-                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                    <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                    
+                    <i class="fa fa-share-alt" aria-hidden="true"></i>                         
                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                </div>
+            <?php else:?>
+                <div class="card-icons">
+                    <i class="fa fa-share-alt" aria-hidden="true"></i>
                 </div>
             <?php endif;?> 
             <div class="job-logo">
@@ -185,7 +187,7 @@
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
-                    <tr><td>Salary:</td><td>Rs. <?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
+                    <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
 
@@ -220,12 +222,6 @@
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-    icon.classList.toggle("fa-regular");
-    icon.classList.toggle("fa-solid");
-    icon.classList.toggle("icon-active");
-}
-
 function toggleBookmark(icon, jobId) {
 icon.classList.toggle("fa-regular");
 icon.classList.toggle("fa-solid");

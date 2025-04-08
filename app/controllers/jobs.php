@@ -376,6 +376,7 @@ class Jobs extends Controller
             $bookmarkedCompanyIds = [];
         }
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
+        $jobs = $this->model('M_jobpost')->getJobsByCompanyId($id);
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
 
         foreach ($reviews as $review) {
@@ -388,6 +389,7 @@ class Jobs extends Controller
             // Prepare data for the review
             $data = [
                 'post' => $posts,
+                'jobs' => $jobs,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
@@ -421,6 +423,7 @@ class Jobs extends Controller
         } else {
             $data = [
                 'post' => $posts,
+                'jobs' => $jobs,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,

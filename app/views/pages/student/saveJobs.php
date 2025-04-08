@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
                                 <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
-                                <p class="job-salary"><?php echo $post->SalaryRange; ?></p>
+                                <p class="job-salary"><?php echo 'Rs.'?><?php echo $post->SalaryRange; ?> <?php echo $post->SalaryType; ?></p>
                                 <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
 
                                 <div class="job-location-details">
@@ -58,7 +58,6 @@
                                 </div>
                             </div>
                             <div class="card-icons">
-                                <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
                                 <i class="fa fa-share-alt" aria-hidden="true"></i>
 
                                 <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this); // window.location.reload();"></i>
@@ -95,12 +94,6 @@
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
-
     function toggleBookmark(icon, jobId) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
