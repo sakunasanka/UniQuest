@@ -165,12 +165,12 @@
         <div class="job-card">
             <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="card-icons">
-                    <i class="fa fa-share-alt" aria-hidden="true"></i>                         
+                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>                     
                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                 </div>
             <?php else:?>
                 <div class="card-icons">
-                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
                 </div>
             <?php endif;?> 
             <div class="job-logo">
@@ -188,6 +188,7 @@
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
                     <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
+                    <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
 
@@ -250,6 +251,22 @@ function bookmarkJob(jobId, iconElement) {
 
     // Send the request with the form data
     xhr.send(formData);
+}
+
+function shareJob(jobId, jobType) {
+    const jobURL = `${window.location.origin}/UniQuest/jobs/jobsdescription/${jobId}`;
+    
+    navigator.clipboard.writeText(jobURL).then(() => {
+        if (jobType === 'Part-time') {
+            Flash.show('Job link copied to clipboard!', 'success');
+        } else if (jobType === 'Internship') {
+            Flash.show('Internship link copied to clipboard!', 'success');
+        } else {
+            Flash.show('Link copied to clipboard!', 'success');
+        }
+    }).catch(err => {
+        Flash.show('Failed to copy link', 'error');
+    });
 }
 
 function goToCompanyDescription($companyID) {

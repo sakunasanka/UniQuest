@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="card-icons">
-                                <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>)"></i>
 
                                 <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkInternship(<?php echo $post->JobID; ?>, this); // window.location.reload();"></i>
                             </div>
@@ -89,7 +89,7 @@
 
 <script>
     function goToJobDescription(jobId) {
-        window.location.href = "/UniQuest/student/jobsdescription/" + jobId;
+        window.location.href = "/UniQuest/jobs/jobsdescription/" + jobId;
     }
 </script>
 
@@ -122,5 +122,15 @@
 
         // Send the request with the form data
         xhr.send(formData);
+    }
+
+    function shareJob(jobId) {
+        const jobURL = `${window.location.origin}/UniQuest/jobs/jobsdescription/${jobId}`;
+        
+        navigator.clipboard.writeText(jobURL).then(() => {
+            Flash.show('Internship link copied to clipboard!', 'success');
+        }).catch(err => {
+            Flash.show('Failed to copy link', 'error');
+        });
     }
 </script>

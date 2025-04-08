@@ -58,7 +58,7 @@
                             
                             <?php  if ($_SESSION['user_role'] == 'Student'):?>
                                 <div class="card-icons">
-                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>  
                                     <i class="<?php echo in_array($post['CompanyID'], $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post['CompanyID']; ?>, this);"></i>  
                                 </div>
                             <?php endif;?>    
@@ -120,5 +120,15 @@
 
         // Send the request with the form data
         xhr.send(formData);
+    }
+
+    function shareJob(companyId) {
+        const jobURL = `${window.location.origin}/UniQuest/jobs/companydescription/${companyId}`;
+        
+        navigator.clipboard.writeText(jobURL).then(() => {
+            Flash.show('Company link copied to clipboard!', 'success');
+        }).catch(err => {
+            Flash.show('Failed to copy link', 'error');
+        });
     }
 </script>
