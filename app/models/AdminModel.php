@@ -190,7 +190,7 @@ class AdminModel extends Model {
     //retrieve log for last verification log by entityID order by date desc
     public function getLastVerificationLog($entityID) {
         try {
-            $log = $this->select('v_verification_logs', [['EntityID', '=', $entityID]], 'Action, ActionDate, ActionByID, ActionByName, Reason', 'AND', '', 'ActionDate DESC', 0, 1, false);
+            $log = $this->select('v_verification_logs', [['EntityID', '=', $entityID]], 'Action, ActionDate, ActionByID, ActionByName, ActionByRole, Reason', 'AND', '', 'ActionDate DESC', 0, 1, false);
             if ($log) {
                 $log->ActionDate = date('Y-m-d H:i:s', strtotime($log->ActionDate));
                 return $log;

@@ -717,8 +717,12 @@ class Admin extends Controller
     {
         try {
             $job = $this->model('jobModel')->getJobDetails($jobID);
+            $rejectReasons = $this->model('AdminModel')->getReasonsByType('job_reject');
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($jobID);
             $data = [
-                'job' => $job
+                'job' => $job,
+                'rejectReasons' => $rejectReasons['data'],
+                'verifyDetails' => $verifyDetails,
             ];
             $this->view('pages/admin/job_detail', $data);
         } catch (Exception $e) {
@@ -757,9 +761,11 @@ class Admin extends Controller
         try {
             $job = $this->model('jobModel')->getJobDetails($jobID);
             $rejectReasons = $this->model('AdminModel')->getReasonsByType('job_reject');
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($jobID);
             $data = [
                 'job' => $job,
-                'rejectReasons' => $rejectReasons['data']
+                'rejectReasons' => $rejectReasons['data'],
+                'verifyDetails' => $verifyDetails,
             ];
             $this->view('pages/admin/job_ver_detail', $data);
         } catch (Exception $e) {

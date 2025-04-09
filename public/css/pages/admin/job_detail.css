@@ -190,10 +190,43 @@ body {
 .btn-row {
     margin-top: 20px; /* Push the buttons to the bottom */
     display: flex;
-    justify-content: end; /* Spread the buttons evenly */
+    justify-content: space-between; /* Spread the buttons evenly */
     align-items: center;
     gap: 40px;
     padding: 10px 0; /* Add some padding for better spacing */
+}
+
+.btn-row .status-deact{
+    color: #ff4d4d;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ff4d4d50;
+    line-height: 1.3;
+}
+
+.btn-row .status-deact span{
+    font-weight: 600;
+    color: #ff4d4d;
+}
+
+.btn-row .status-act{
+    color: #32a852;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #32a85250;
+    line-height: 1.3;
+}
+
+.btn-row .status-act span{
+    font-weight: 600;
+    color: #32a852;
+}
+
+.actionby-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .btn-row button {
@@ -219,8 +252,13 @@ button.approve-btn:hover {
     background-color: #038a27;
 }
 
-button.reject-btn:hover {
+button.reject-btn:hover:not(:disabled) {
     background-color: #c82333;
+}
+
+button.reject-btn:disabled, .btn-row select:disabled {
+    cursor: not-allowed;
+    opacity: 0.8; /* Optional: make it look disabled */
 }
 
 .btn-row select {
