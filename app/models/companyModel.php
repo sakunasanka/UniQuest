@@ -62,5 +62,28 @@ class companyModel extends Model
         $this->db->bind(':companyId', $companyId);
         return $this->db->execute();
     }
+    
+public function updateSubscription($user_id, $plan, $start_date, $end_date, $status)
+{
+    try {
+        $this->db->query('UPDATE company 
+                         SET subscription_plan = :plan, 
+                             subscription_start_date = :start_date, 
+                             subscription_end_date = :end_date, 
+                             subscription_status = :status 
+                         WHERE user_id = :user_id');
+        
+        $this->db->bind(':user_id', $user_id);
+        $this->db->bind(':plan', $plan);
+        $this->db->bind(':start_date', $start_date);
+        $this->db->bind(':end_date', $end_date);
+        $this->db->bind(':status', $status);
+        
+        return $this->db->execute();
+    } catch (Exception $e) {
+        error_log("Database error: " . $e->getMessage());
+        return false;
+    }
 
+}
 }

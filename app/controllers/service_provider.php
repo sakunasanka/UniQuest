@@ -307,12 +307,213 @@ class Service_provider extends Controller
 
         
     }
-
-    public function premium()
+    public function premium() 
     {
+        
+        
+        // Load view with subscription data
         $this->view('pages/service_provider/premiumFeatures');
+            
+    }
+    public function subscription() 
+    {
+    // Check if user is logged in
+    function isLoggedIn() {
+        return isset($_SESSION['user_id']);
+    }
+    
+    // Get user ID from session
+    $user_id = $_SESSION['user_id'];
+    
+    // Get subscription details
+    $subscription = $this->model('companyModel')->getCompanySubscription($user_id);
+    $is_active = $this->model('companyModel')->isSubscriptionActive($user_id);
+    
+    // Load view with subscription data
+    $this->view('service_provider/subscription', [
+        'subscription' => $subscription,
+        'is_active' => $is_active
+    ]);
     }
 
+/**
+ * Check subscription status
+ * Used for AJAX requests to validate if user can access premium features
+ */
+    public function check_subscription() 
+    {
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'User not logged in']);
+            exit;
+        }
+        
+        // Get user ID from session
+        $user_id = $_SESSION['user_id'];
+        
+        // Check if subscription is active
+        $is_active = $this->model('companyModel')->isSubscriptionActive($user_id);
+        $subscription = $this->model('companyModel')->getCompanySubscription($user_id);
+        
+        // Return subscription status
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'is_active' => $is_active,
+            'plan' => $subscription->subscription_plan ?? 'free',
+            'status' => $subscription->subscription_status ?? null,
+            'expiry' => $subscription->subscription_end_date ?? null
+        ]);
+        exit;
+    }
+    // public function premium()
+    // {
+        
+        
+    //     $this->view('pages/service_provider/premiumFeatures');
+    // }
+    public function premium_pro()
+    {
+        // This is the notify_url endpoint that PayHere will call after payment
+        
+        // Check if it's a POST request from PayHere
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Verify the payment using PayHere's notification
+            $merchant_id = $_POST['merchant_id'];
+            $order_id = $_POST['order_id'];
+            $payment_id = $_POST['payment_id'];
+            $payhere_amount = $_POST['payhere_amount'];
+            $payhere_currency = $_POST['payhere_currency'];
+            $status_code = $_POST['status_code'];
+            $md5sig = $_POST['md5sig'];
+            
+            // Your PayHere merchant secret
+            $merchant_secret = "NDEyMTM4MDkxMzEwNDM3Njc5NTYzNzA0OTE1MDEzNzYwNDM2OTgw";
+            
+            // Generate the hash to validate the notification
+            $local_md5sig = strtoupper(
+                md5(
+                    $merchant_id . 
+                    $order_id . 
+                    $payhere_amount . 
+                    $payhere_currency . 
+                    $status_code . 
+                    strtoupper(md5($merchant_secret))
+                )
+            );
+            
+            // Verify the signature and status code
+            if (($local_md5sig === $md5sig) && ($status_code == 2)) {
+                // Payment successful
+                
+                // Extract user_id from the order_id
+                // Format: ORDER_timestamp_user_id
+                $parts = explode('_', $order_id);
+                $user_id = $parts[2]; // Get the user_id part
+                
+                // Determine subscription plan based on amount
+                $plan = '';
+                $duration = 30; // 30 days for monthly subscription
+                
+                if ($payhere_amount == 3000) {
+                    $plan = 'professional';
+                } elseif ($payhere_amount == 5000) {
+                    $plan = 'enterprise';
+                } else {
+                    // Unknown plan
+                    error_log("Unknown plan amount: " . $payhere_amount);
+                    http_response_code(400);
+                    exit;
+                }
+                
+                // Calculate subscription dates
+                $start_date = date('Y-m-d H:i:s');
+                $end_date = date('Y-m-d H:i:s', strtotime("+{$duration} days"));
+                
+                // Update the company table
+                $result = $this->model('companyModel')->updateSubscription($user_id, $plan, $start_date, $end_date, 'active');
+                
+                if ($result) {
+                    // Store payment success info in the database for this user
+                    // This will be checked when the user returns to the application
+                    $this->model('companyModel')->storePaymentSuccess($user_id, $order_id, $payment_id);
+                    
+                    // Log successful subscription update
+                    error_log("Subscription updated for user: " . $user_id . " to plan: " . $plan);
+                    
+                    // Return success response to PayHere
+                    http_response_code(200);
+                    exit;
+                } else {
+                    // Log error
+                    error_log("Failed to update subscription for user: " . $user_id);
+                    http_response_code(500);
+                    exit;
+                }
+            } else {
+                // Invalid notification or payment failed
+                error_log("Invalid notification or payment failed. Status code: " . $status_code);
+                http_response_code(400);
+                exit;
+            }
+        } else {
+            // If it's a GET request, redirect to the premium features page
+            redirect('pages/serviceprovider/premiumFeatures');
+        }
+    }
+    
+    public function payhereprocess()
+{
+    // Get user data from session
+    $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+    
+    // Get plan from query parameter
+    $plan = isset($_GET['plan']) ? $_GET['plan'] : 'professional';
+    
+    // Plan details
+    $amount = 3000; // Default to Professional plan price
+    if ($plan === 'enterprise') {
+        $amount = 5000;
+    }
+    
+    $merchant_id = '1230028';
+    $order_id = 'ORDER_' . time() . '_' . $user_id;
+    $merchant_secret = "NDEyMTM4MDkxMzEwNDM3Njc5NTYzNzA0OTE1MDEzNzYwNDM2OTgw";
+    $currency = 'LKR';
+    
+    // Generate hash
+    $hash = strtoupper(
+        md5(
+            $merchant_id . 
+            $order_id .
+            number_format($amount, 2, '.', '') .
+            $currency .
+            strtoupper(md5($merchant_secret))
+        )
+    );
+    
+    // Create response array
+    $array = [
+        'merchant_id' => $merchant_id,
+        'order_id' => $order_id,
+        'amount' => $amount,
+        'currency' => $currency,
+        'hash' => $hash,
+        'plan' => $plan
+    ];
+    
+    // Store order_id in session for verification later
+    $_SESSION['pending_order_id'] = $order_id;
+    $_SESSION['pending_plan'] = $plan;
+    
+    // Return JSON response
+    header('Content-Type: application/json');
+    echo json_encode($array);
+    exit;
+}
+    
+    
     public function analytics()
     {
         $this->view('pages/service_provider/ser_analytics');
