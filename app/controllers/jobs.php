@@ -383,6 +383,8 @@ class Jobs extends Controller
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
         }
         
+        $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->CompanyID);
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
@@ -398,7 +400,8 @@ class Jobs extends Controller
                 'user_id' => $_POST['user_id'] ?? '',
                 'company_id' => $_POST['company_id'] ?? '',
                 'rating_err' => '',
-                'comment_err' => ''
+                'comment_err' => '',
+                'existingReview' => $existingReview
             ];
 
             // Validate rating and comment
@@ -411,10 +414,21 @@ class Jobs extends Controller
 
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
-                if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/myreviews'); 
+                if ($existingReview) {
+                    // Update existing review
+                    $data['review_id'] = $existingReview->ReviewID;
+                    if ($this->model('RateAndReviewModel')->updateReview($data)) {
+                        Redirect::to(URLROOT . '/student/myreviews'); 
+                    } else {
+                        die('Something went wrong');
+                    }
                 } else {
-                    die('Something went wrong'); 
+                    // Add new review
+                    if ($this->model('RateAndReviewModel')->addReview($data)) {
+                        Redirect::to(URLROOT . '/student/myreviews'); 
+                    } else {
+                        die('Something went wrong');
+                    }
                 }
             } else {
                 // Load view with errors
@@ -427,12 +441,13 @@ class Jobs extends Controller
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
-                'rating' => '',
-                'comment' => '',
+                'rating' => $existingReview ? $existingReview->Rating : '',
+                'comment' => $existingReview ? $existingReview->Comment : '',
                 'user_id' => '',
                 'company_id' => $id,
                 'rating_err' => '',
-                'comment_err' => ''
+                'comment_err' => '',
+                'existingReview' => $existingReview
             ];
 
             $this->view('pages/student/companyDescription', $data);
