@@ -631,6 +631,10 @@ SELECT
     a.nic AS nic,
     a.nic_copy AS nic_copy,
     a.linkedin AS linkedin,
+    a.other1 AS other1,
+    a.other2 AS other2,
+    a.other3 AS other3,
+    a.status AS status,
     a.created_at AS SubmissionDate,
     a.updated_at AS LastUpdated,
     j.create_at AS JobCreatedAt,
@@ -647,7 +651,6 @@ INNER JOIN
     user u ON s.StudentID = u.UserID
 ORDER BY
     a.created_at DESC;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
