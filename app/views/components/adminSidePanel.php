@@ -5,6 +5,11 @@
             Dashboard
         </button>
 
+        <button class="nav-btn" data-path="/UniQuest/admin/reason_mng">
+            <span class="material-symbols-outlined"> table_rows </span>
+            Reasons Management
+        </button>
+
         <button class="nav-btn" data-paths="/UniQuest/admin/students_mng,/UniQuest/admin/company_mng,/UniQuest/admin/verTeam_mng,/UniQuest/admin/add_member,/UniQuest/admin/add_student,/UniQuest/admin/add_company">
             <span class="material-symbols-outlined"> manage_accounts</span>
             User Management

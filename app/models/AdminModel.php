@@ -126,7 +126,7 @@ class AdminModel extends Model {
 
     public function getReasonsByType($reasonType) {
         try {
-            $reasonNames = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName', 'AND', '', '', 0, 1, true);
+            $reasonNames = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName, Reason', 'AND', '', '', 0, 1, true);
             return $reasonNames;
         } catch (Exception $e) {
             return $e->getMessage();

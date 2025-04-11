@@ -1010,4 +1010,20 @@ class Admin extends Controller
             Redirect::to(URLROOT . '/admin/user_detail');
         }
     }
+
+    //retrieve reasons
+    public function reason_mng()
+    {
+        try {
+            $data = [
+                'user_activate' => $this->model('AdminModel')->getReasonsByType('user_activate')['data'],
+                'user_deactivate' => $this->model('AdminModel')->getReasonsByType('user_deactivate')['data'],
+                'user_reject' => $this->model('AdminModel')->getReasonsByType('user_reject')['data'],
+                'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data']
+            ];
+            $this->view('pages/admin/reason_mng', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
 }
