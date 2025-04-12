@@ -315,7 +315,52 @@ class Service_provider extends Controller
 
     public function analytics()
     {
-        $this->view('pages/service_provider/ser_analytics');
+        $jobCount = $this->model('M_jobpost')->getJobCountByCompany();
+        $activeJobCount = $this->model('M_jobpost')->getActiveJobCountByCompany();
+        $applicationCount = $this->model('M_applicationFields')->getApplicationCount();
+        $applicationsByGender = $this->model('M_applicationFields')->getApplicationsByGender();
+        $applicationsByWeek = $this->model('M_applicationFields')->getApplicationsByWeek();
+        $topPerforming = $this->model('M_applicationFields')->getTopPerformingJobs();
+
+        // Fetch data for charts
+        $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
+        $applicationData = $this->model('M_applicationFields')->getApplicationsByWeek();
+
+        $Jobspermonth = [];
+        $Internshipspermonth = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($registrationsData['data'] as $registration) {
+                $job_count = $registration->part_time_jobs; 
+                $Jobspermonth[] = $job_count;
+            }
+            $Jobspermonth = array_reverse($Jobspermonth);
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($registrationsData['data'] as $registration) {
+                $internship_count = $registration->internships; 
+                $Internshipspermonth[] = $internship_count;
+            }
+            $Internshipspermonth = array_reverse($Internshipspermonth);
+
+        // $userLoginsData = $this->model('M_user')->getUserLoginsByGender();
+        
+        $data = [
+            'job_count' => $jobCount,
+            'activeJobCount' => $activeJobCount,
+            'applicationCount' => $applicationCount,
+            'registrationsData' => $registrationsData,
+            'applicationData' => $applicationData,
+            'Jobspermonth' => $Jobspermonth,
+            'Internshipspermonth' => $Internshipspermonth,
+            'month_names' => $registrationsData['month_names'],
+            'applicationsByGender' => $applicationsByGender,
+            'applicationsByWeek' => $applicationsByWeek,
+            'topPerforming' => $topPerforming,
+            // 'userLoginsData' => $userLoginsData,
+        ];
+
+        $this->view('pages/service_provider/ser_analytics', $data);
     }
 
     public function notifications()
