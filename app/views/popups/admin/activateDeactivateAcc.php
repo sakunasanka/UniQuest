@@ -7,6 +7,12 @@
             <p id="popup-desc" class="popup-text red-text">Are you sure you want to deactivate this account?</p>
             <input type="hidden" id="ID" value="">
             <input type="hidden" id="category" value="">
+            <input type="hidden" id="email" value="">
+            <div class="btn-row">
+                <select id="deact-popup-reasons" class="deactreason" name="reason" required>
+                    <option value="" disabled selected>Select Reason</option>
+                </select>
+            </div>
             <div class="btn-container">
                 <button class="no-btn" onclick="closePopup('deact-popup')">No</button>
                 <button class="yes-btn-red" onclick="confirmDeactivationAcc()">Yes</button>
@@ -23,6 +29,12 @@
             <p id="popup-desc" class="popup-text">Are you sure you want to activate this account?</p>
             <input type="hidden" id="ID" value="">
             <input type="hidden" id="category" value="">
+            <input type="hidden" id="email" value="">
+            <div class="btn-row">
+                <select id="act-popup-reasons" class="actreason" name="reason" required>
+                    <option value="" disabled selected>Select Reason</option>
+                </select>
+            </div>
             <div class="btn-container">
                 <button class="no-btn" onclick="closePopup('act-popup')">No</button>
                 <button class="yes-btn" onclick="confirmActivationAcc()">Yes</button>

@@ -136,6 +136,45 @@ class Jobs extends Controller
         }
     }
 
+    // public function updateLikeStatus()
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         // Validate session user ID
+    //         if (isset($_SESSION['user_id'])) {
+    //             $userId = $_SESSION['user_id']; // Get user ID from session
+    //         } else {
+    //             http_response_code(403); // Return 403 forbidden status
+    //             echo json_encode("User not logged in!"); 
+    //             return;
+    //         }
+
+    //         $reviewId = $_POST['review_id'] ?? null; 
+
+    //         if (!empty($reviewId)) { 
+    //             // Check if the review is already liked
+    //             if ($this->model->isLiked($reviewId)) {
+    //                 // If liked, remove the like
+    //                 if ($this->model->removeLike($reviewId)) {
+    //                     echo json_encode("Like removed successfully!"); 
+    //                 } else {
+    //                     echo json_encode("Failed to remove like. Please check the database."); 
+    //                 }
+    //             } else {
+    //                 // If not liked, add a like
+    //                 if ($this->model->addUserLike($reviewId)) {
+    //                     echo json_encode("Like added successfully!");  
+    //                 } else {
+    //                     echo json_encode("Failed to add like. Please check the database."); 
+    //                 }
+    //             }
+    //         } else {
+    //             echo json_encode("Review ID is missing!"); 
+    //         }
+    //     } else {
+    //         echo json_encode("Invalid request method."); 
+    //     }
+    // }
+
     public function jobs($queryParam = [])
     {
         // Get the requested data from query params
@@ -288,6 +327,8 @@ class Jobs extends Controller
         // Replace reviewer names with anonymous names
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
+            $review->LikeCount = $this->model('jobModel')->getLikesByReviewID($review->ReviewID);
+            $review->DislikeCount = $this->model('jobModel')->getDislikesByReviewID($review->ReviewID);
         }
 
         // Check if the user has already reviewed the company
@@ -448,18 +489,22 @@ class Jobs extends Controller
             $bookmarkedCompanyIds = [];
         }
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
+        $jobs = $this->model('M_jobpost')->getJobsByCompanyId($id);
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
 
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
         }
         
+        $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->CompanyID);
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             // Prepare data for the review
             $data = [
                 'post' => $posts,
+                'jobs' => $jobs,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
@@ -468,7 +513,8 @@ class Jobs extends Controller
                 'user_id' => $_POST['user_id'] ?? '',
                 'company_id' => $_POST['company_id'] ?? '',
                 'rating_err' => '',
-                'comment_err' => ''
+                'comment_err' => '',
+                'existingReview' => $existingReview
             ];
 
             // Validate rating and comment
@@ -481,10 +527,21 @@ class Jobs extends Controller
 
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
-                if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/myreviews'); 
+                if ($existingReview) {
+                    // Update existing review
+                    $data['review_id'] = $existingReview->ReviewID;
+                    if ($this->model('RateAndReviewModel')->updateReview($data)) {
+                        Redirect::to(URLROOT . '/student/myreviews'); 
+                    } else {
+                        die('Something went wrong');
+                    }
                 } else {
-                    die('Something went wrong'); 
+                    // Add new review
+                    if ($this->model('RateAndReviewModel')->addReview($data)) {
+                        Redirect::to(URLROOT . '/student/myreviews'); 
+                    } else {
+                        die('Something went wrong');
+                    }
                 }
             } else {
                 // Load view with errors
@@ -493,15 +550,17 @@ class Jobs extends Controller
         } else {
             $data = [
                 'post' => $posts,
+                'jobs' => $jobs,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
-                'rating' => '',
-                'comment' => '',
+                'rating' => $existingReview ? $existingReview->Rating : '',
+                'comment' => $existingReview ? $existingReview->Comment : '',
                 'user_id' => '',
                 'company_id' => $id,
                 'rating_err' => '',
-                'comment_err' => ''
+                'comment_err' => '',
+                'existingReview' => $existingReview
             ];
 
             $this->view('pages/student/companyDescription', $data);

@@ -36,31 +36,31 @@
                     <?php if ($data['companies']) : ?>
                         <?php foreach ($data['companies'] as $company) : ?>
                             <tr>
-                                <td><?php echo $company->UserID; ?></td>
-                                <td><?php echo $company->Email; ?></td>
-                                <td><?php echo $company->ContactNo; ?></td>
-                                <td><?php echo substr($company->RegisterDate, 0, 10); ?></td>
-                                <?php if ($company->Status == 'Active') : ?>
-                                    <td><span class="status active">Active</span></td>
-                                    <td class="action">
-                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
-                                            account_box
-                                        </span>
-                                        <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $company->UserID; ?>, 'Company')">
-                                            person_remove
-                                        </span>
-                                    </td>
-                                <?php elseif ($company->Status == 'Deactive') : ?>
-                                    <td><span class="status inactive">Deactive</span></td>
-                                    <td class="action">
-                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
-                                            account_box
-                                        </span>
-                                        <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $company->UserID; ?>, 'Company')">
-                                            person_add
-                                        </span>
-                                    </td>
-                                <?php endif; ?>
+                            <td><?php echo $company->UserID; ?></td>
+                            <td><?php echo $company->Email; ?></td>
+                            <td><?php echo $company->ContactNo; ?></td>
+                            <td><?php echo substr($company->RegisterDate, 0, 10); ?></td>
+                            <?php if ($company->Status == 'Active') : ?>
+                                <td><span class="status active">Active</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $company->UserID; ?>, "Company", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($company->Email); ?>")'>  
+                                        person_remove
+                                    </span>
+                                </td>
+                                <?php elseif (in_array($company->Status, ['Deactive', 'Pending Deletion', 'Deleted'])) : ?>
+                                    <td><span class="status inactive"><?php echo $company->Status; ?></span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $company->UserID; ?>, "Company", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($company->Email); ?>")'>
+                                        person_add
+                                    </span>
+                                </td>
+                            <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>

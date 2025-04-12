@@ -113,6 +113,7 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/jobPost');
     }
+    
 
     public function report()
     {
@@ -140,14 +141,171 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/offered_applications');
     }
 
-    public function new_applications()
+    // public function new_applications($id)
+    // {
+        
+    //         // Get user ID from session
+    //         $userId = $_SESSION['user_id'] ?? null;
+            
+    //         if (!$userId) {
+    //             redirect('users/login');
+    //         }
+            
+    //         // Load models
+    //         $applicationModel = $this->model('M_applications');
+    //         $fieldModel = $this->model('M_applicationFields');
+    //         $jobModel = $this->model('M_jobpost');
+            
+    //         // Get all applications for this student
+    //         $applications = $applicationModel->getApplicationsByStudentId($userId);
+            
+    //         // Prepare data for each application with job-specific fields
+    //         $applicationsData = [];
+            
+    //         foreach ($applications as $app) {
+    //             // Get job details
+    //             $job = $jobModel->getpostbyid($app->job_id);
+                
+    //             // Get application fields for this job
+    //             $fields = $fieldModel->getFieldsByJobId($app->job_id);
+                
+    //             // Get application responses for this application
+    //             $responses = $applicationModel->getApplicationResponses($app->id);
+                
+    //             $applicationsData[] = [
+    //                 'application' => $app,
+    //                 'job' => $job,
+    //                 'fields' => $fields,
+    //                 'responses' => $responses
+    //             ];
+    //         }
+            
+    //         $data = [
+    //             'applications' => $applicationsData
+    //         ];
+            
+            
+    //     $this->view('pages/service_provider/new_applications', $data);
+    // }
+    public function new_applications($jobID)
     {
-        $this->view('pages/service_provider/new_applications');
+        // Fetch applications for the given job ID
+        $applications = $this->model('M_applicationFields')->getApplicationsByJobID($jobID);
+
+        // Pass data to the view
+        $data = [
+            'applications' => $applications,
+            'jobID' => $jobID
+        ];
+
+        // Load the view
+        $this->view('pages/service_provider/new_applications', $data);
     }
+    public function view_application($applicationID)
+{
+    // Fetch application details
+    $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
+
+    if (!$application) {
+        // Handle the case where the application is not found
+        redirect('error/not_found');
+    }
+
+    // Access the first element of the $application array
+    $application = $application[0];
+    
+    // Prepare the application data
+    $applicationData = [
+        'photo' => $application->StudentProfileImage ?? null,
+        'fullname' => $application->StudentName ?? null,
+        'id' => $application->ApplicationID ?? null,
+        'created_at' => $application->SubmissionDate ?? null,
+        'status' => $application->ApplicationStatus ?? null,
+        'email' => $application->StudentEmail ?? null,
+        'contact' => $application->StudentContact ?? null,
+        'address' => $application->address ?? null,
+        'nic' => $application->nic ?? null,
+        'gender' => $application->gender ?? null,
+        'dob' => $application->dob ?? null,
+        'qualifications' => $application->Qualifications ?? null,
+        'experience' => $application->Experience ?? null,
+        'skills' => $application->Skills ?? null,
+        'cv' => $application->cv ?? null,
+        'nic_copy' => $application->nic_copy ?? null,
+        'linkedin' => $application->linkedin ?? null,
+        'other1' => $application->other1 ?? null,
+        'other2' => $application->other2 ?? null,
+        'other3' => $application->other3 ?? null
+    ];
+
+    $data = [
+        'application' => $applicationData,
+    ];
+
+    // Load the view
+    $this->view('pages/service_provider/view_application', $data);
+}
 
     public function rejected_applications()
     {
         $this->view('pages/service_provider/rejected_applications');
+    }
+    public function application_dashboard()
+    {
+        // Get the company ID from the session (assuming the company is logged in)
+        $companyId = $_SESSION['user_id'];
+
+        // Fetch all applications for the company's jobs
+        $applications = $this->model('M_applicationFields')->getAllApplicationsByCompanyId($companyId);
+
+        // Process the data to calculate stats for each job
+        $jobs = [];
+        foreach ($applications as $application) {
+            $jobId = $application->JobID;
+
+            // Initialize job stats if not already done
+            if (!isset($jobs[$jobId])) {
+                $jobs[$jobId] = [
+                    'title' => $application->JobTitle,
+                    'jobID' => $jobId,
+                    'location' => $application->JobLocation,
+                    'posted' => date('M d, Y', strtotime($application->JobCreatedAt)),
+                    'stats' => [
+                        'total' => 0,
+                        'accepted' => 0,
+                        'rejected' => 0,
+                        'pending' => 0
+                    ]
+                ];
+            }
+
+            // Update stats based on application status
+            $jobs[$jobId]['stats']['total']++;
+            switch ($application->ApplicationStatus) {
+                case 'Accepted':
+                    $jobs[$jobId]['stats']['accepted']++;
+                    break;
+                case 'Rejected':
+                    $jobs[$jobId]['stats']['rejected']++;
+                    break;
+                case 'Pending':
+                    $jobs[$jobId]['stats']['pending']++;
+                    break;
+            }
+        }
+
+        // Convert associative array to indexed array for the view
+        $jobs = array_values($jobs);
+
+        // Pass data to the view
+        $data = [
+            'jobs' => $jobs
+        ];
+
+        $this->view('pages/service_provider/application_dashboard', $data);
+    
+
+        
     }
 
     public function premium()
@@ -157,7 +315,52 @@ class Service_provider extends Controller
 
     public function analytics()
     {
-        $this->view('pages/service_provider/ser_analytics');
+        $jobCount = $this->model('M_jobpost')->getJobCountByCompany();
+        $activeJobCount = $this->model('M_jobpost')->getActiveJobCountByCompany();
+        $applicationCount = $this->model('M_applicationFields')->getApplicationCount();
+        $applicationsByGender = $this->model('M_applicationFields')->getApplicationsByGender();
+        $applicationsByWeek = $this->model('M_applicationFields')->getApplicationsByWeek();
+        $topPerforming = $this->model('M_applicationFields')->getTopPerformingJobs();
+
+        // Fetch data for charts
+        $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
+        $applicationData = $this->model('M_applicationFields')->getApplicationsByWeek();
+
+        $Jobspermonth = [];
+        $Internshipspermonth = [];
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($registrationsData['data'] as $registration) {
+                $job_count = $registration->part_time_jobs; 
+                $Jobspermonth[] = $job_count;
+            }
+            $Jobspermonth = array_reverse($Jobspermonth);
+
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($registrationsData['data'] as $registration) {
+                $internship_count = $registration->internships; 
+                $Internshipspermonth[] = $internship_count;
+            }
+            $Internshipspermonth = array_reverse($Internshipspermonth);
+
+        // $userLoginsData = $this->model('M_user')->getUserLoginsByGender();
+        
+        $data = [
+            'job_count' => $jobCount,
+            'activeJobCount' => $activeJobCount,
+            'applicationCount' => $applicationCount,
+            'registrationsData' => $registrationsData,
+            'applicationData' => $applicationData,
+            'Jobspermonth' => $Jobspermonth,
+            'Internshipspermonth' => $Internshipspermonth,
+            'month_names' => $registrationsData['month_names'],
+            'applicationsByGender' => $applicationsByGender,
+            'applicationsByWeek' => $applicationsByWeek,
+            'topPerforming' => $topPerforming,
+            // 'userLoginsData' => $userLoginsData,
+        ];
+
+        $this->view('pages/service_provider/ser_analytics', $data);
     }
 
     public function notifications()
@@ -258,16 +461,6 @@ class Service_provider extends Controller
         }
     }
 
-    public function view_job($id)
-    {
-        $posts = $this->model('M_jobpost')->getpostbyid($id);
-        $data = [
-            'post' => $posts
-        ];
-        // echo json_encode($data);
-        $this->view('pages/service_provider/view_job', $data);
-    }
-
     public function edit_profile()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -337,20 +530,22 @@ class Service_provider extends Controller
 
     public function jobPost()
     {
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            $data = [
+            $publishDate = date('Y-m-d', strtotime('+2 days'));
 
+            $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
                 'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
                 'job_location' => trim($_POST['jobLocation'] ?? ''),
                 'job_category' => trim($_POST['jobType'] ?? ''),
+                'publish_date' => !empty($_POST['jobPostDate']) ? trim($_POST['publishDate']) : $publishDate,
                 'required_skills' => trim($_POST['qualifications'] ?? ''),
                 'salary_range' => trim($_POST['salaryRange'] ?? ''),
+                'salary_type' => trim($_POST['salaryType'] ?? ''),
                 'Description' => trim($_POST['jobDescription'] ?? ''),
-                'status' => 'Active',
+                'status' => 'Pending',
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -358,16 +553,27 @@ class Service_provider extends Controller
                 'job_category_err' => '',
                 'required_skills_err' => '',
                 'salary_range_err' => '',
-                'Description_err' => ''
+                'salary_type_err' => '',
+                'Description_err' => '',
+                'publish_date_err' => ''
             ];
 
-            //validation
+            // Validate date - not in the past and not more than 7 days in the future
+            if (!empty($_POST['jobPostDate'])) {
+                $selectedDate = strtotime($data['publish_date']);
+                $today = strtotime($publishDate);
+                $maxDate = strtotime('+30 days', $today);
 
+                if ($selectedDate < $today) {
+                    $data['publish_date_err'] = 'Date cannot be earlier than 2 days from today (For verification purposes)';
+                } elseif ($selectedDate > $maxDate) {
+                    $data['publish_date_err'] = 'Date cannot be more than 30 days in the future';
+                }
+            }
+
+            // validation for other fields
             if (empty($data['job_name'])) {
                 $data['job_name_err'] = 'Please enter job name';
-            }
-            if (empty($data['job_benifits'])) {
-                $data['job_benifits_err'] = 'Please enter job benifits';
             }
             if (empty($data['job_location'])) {
                 $data['job_location_err'] = 'Please enter job location';
@@ -375,33 +581,32 @@ class Service_provider extends Controller
             if (empty($data['job_category'])) {
                 $data['job_category_err'] = 'Please enter job category';
             }
-            if (empty($data['required_skills'])) {
-                $data['required_skills_err'] = 'Please enter required skills';
-            }
-            if (empty($data['salary_range'])) {
-                $data['salary_range_err'] = 'Please enter salary range';
-            }
 
-            if (empty($data['Description'])) {
-                $data['Description_err'] = 'Please enter Description';
-            }
-
-            //make sure no errors
-            if (empty($data['job_name_err']) && empty($data['job_benifits_err']) && empty($data['job_location_err']) && empty($data['job_category_err'])  && empty($data['required_skills_err']) && empty($data['salary_range_err']) && empty($data['Description_err'])) {
+            if (
+                empty($data['job_name_err']) &&
+                empty($data['job_benifits_err']) &&
+                empty($data['job_location_err']) &&
+                empty($data['job_category_err']) &&
+                empty($data['required_skills_err']) &&
+                empty($data['salary_range_err']) &&
+                empty($data['salary_type_err']) &&
+                empty($data['Description_err']) &&
+                empty($data['publish_date_err'])
+            ) {
                 if ($this->model('M_jobpost')->create($data)) {
-                    
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
-
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
-                    // redirect('service_provider/ongoing_jobs');
+                    redirect('service_provider/ongoing_jobs');
                 } else {
                     die('something went wrong');
                 }
             } else {
-                //loading view with errors
                 $this->view('pages/service_provider/jobPost', $data);
             }
         } else {
+            // Default values for GET request
+            $publishDate = date('Y-m-d', strtotime('+2 days'));
+
             $data = [
                 'job_name' => '',
                 'job_benifits' => '',
@@ -410,7 +615,9 @@ class Service_provider extends Controller
                 'adress' => '',
                 'required_skills' => '',
                 'salary_range' => '',
+                'salary_type' => '',
                 'Description' => '',
+                'publish_date' => $publishDate,
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -419,13 +626,13 @@ class Service_provider extends Controller
                 'adress_err' => '',
                 'required_skills_err' => '',
                 'salary_range_err' => '',
-                'Description_err' => ''
+                'salary_type_err' => '',
+                'Description_err' => '',
+                'publish_date_err' => ''
             ];
             $this->view('pages/service_provider/jobPost', $data);
         }
     }
-
-
 
     public function delete($postId)
     {

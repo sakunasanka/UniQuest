@@ -14,26 +14,30 @@
         <div class="form-section">
             <!-- Form Container -->
             <div class="form-container">
-        <form action="<?php echo URLROOT; ?>/student/submit_application/<?php echo $data['job']->JobID; ?>" 
-              method="POST" 
-              enctype="multipart/form-data"
-              class="application-form">
-            
+                <form action="<?php echo URLROOT; ?>/student/jobsApply/<?php echo $data['job']->JobID; ?>" 
+            method="POST" 
+            enctype="multipart/form-data"
+            class="application-form">
+
             <?php 
             $fields = $data['fields'];
             if ($fields): 
                 foreach ($fields as $fieldName => $fieldConfig): 
+                    $isRequired = isset($fieldConfig['required']) && $fieldConfig['required'];
             ?>
                 <div class="form-group">
-                    <label for="<?php echo $fieldName; ?>"><?php echo $fieldConfig['label']; ?> *</label>
+                    <label for="<?php echo $fieldName; ?>">
+                        <?php echo $fieldConfig['label']; ?>
+                        <span class="required-asterik" <?php if ($isRequired) echo 'style="display:inline;"'; ?>>*</span>
+                    </label>
                     
                     <?php switch($fieldConfig['type']):
                         case 'textarea': ?>
                             <textarea 
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
-                                rows="4"
-                                required
+                                rows="5"
+                                <?php if ($isRequired) echo 'required'; ?>
                             ></textarea>
                             <?php break;
 
@@ -41,7 +45,7 @@
                             <select 
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
-                                required
+                                <?php if ($isRequired) echo 'required'; ?>                  
                             >
                                 <option value="">Select <?php echo $fieldConfig['label']; ?></option>
                                 <?php foreach($fieldConfig['options'] as $option): ?>
@@ -56,7 +60,7 @@
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
                                 accept="<?php echo $fieldConfig['accept']; ?>"
-                                required
+                                <?php if ($isRequired) echo 'required'; ?>
                             >
                             <?php break;
 
@@ -65,7 +69,7 @@
                                 type="<?php echo $fieldConfig['type']; ?>"
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
-                                required
+                                <?php if ($isRequired) echo 'required'; ?>
                             >
                     <?php endswitch; ?>
                     
@@ -115,47 +119,78 @@
 
 <script>
 document.querySelector("form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
-
     let isValid = true;
+    const formElements = this.elements;
 
-    // Validate Mobile Number
-    const mobileInput = document.getElementById("mobileNumber");
-    const mobilePattern = /^[0-9]{10}$/; // 10-digit number
-    if (!mobilePattern.test(mobileInput.value)) {
-        showError(mobileInput, "Please enter a valid 10-digit mobile number.");
-        isValid = false;
-    } else {
-        hideError(mobileInput);
+    // Clear all previous errors
+    document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // Validate all required fields
+    for (let i = 0; i < formElements.length; i++) {
+        const field = formElements[i];
+        if (field.hasAttribute('required') && !field.value.trim()) {
+            showError(field, "This field is required");
+            isValid = false;
+        }
     }
 
-    // Validate Email
+    // Special validation for specific fields if they exist
+    const mobileInput = document.getElementById("contact");
+    if (mobileInput && mobileInput.value) {
+        const mobilePattern = /^[0-9]{10}$/;
+        if (!mobilePattern.test(mobileInput.value)) {
+            showError(mobileInput, "Please enter a valid 10-digit mobile number.");
+            isValid = false;
+        }
+    }
+
     const emailInput = document.getElementById("email");
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(emailInput.value)) {
-        showError(emailInput, "Please enter a valid email address.");
-        isValid = false;
-    } else {
-        hideError(emailInput);
+    if (emailInput && emailInput.value) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(emailInput.value)) {
+            showError(emailInput, "Please enter a valid email address.");
+            isValid = false;
+        }
     }
 
-    // Validate NIC
     const nicInput = document.getElementById("nic");
-    const nicPattern = /^[0-9]{9}[vV]$|^[0-9]{12}$/;
-    if (!nicPattern.test(nicInput.value)) {
-        showError(nicInput, "Please enter a valid NIC number.");
-        isValid = false;
-    } else {
-        hideError(nicInput);
+    if (nicInput && nicInput.value) {
+        const nicPattern = /^[0-9]{9}[vV]$|^[0-9]{12}$/;
+        if (!nicPattern.test(nicInput.value)) {
+            showError(nicInput, "Please enter a valid NIC number.");
+            isValid = false;
+        }
     }
 
-    // Submit form if valid
-    if (isValid) {
-        alert("Application submitted successfully!");
-        this.submit();
-    }
-});
+    
 
+    // Date of Birth Validation
+    const dobInput = document.getElementById("dob");
+        if (dobInput && dobInput.value) {
+            const dobPattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
+            if (!dobPattern.test(dobInput.value)) {
+                showError(dobInput, "Please enter a valid date of birth in YYYY-MM-DD format.");
+                isValid = false;
+            } else {
+                const dob = new Date(dobInput.value);
+                const today = new Date();
+                const age = today.getFullYear() - dob.getFullYear();
+
+                // Check if the user is at least 18 years old
+                if (age < 18 || (age === 18 && today < new Date(today.setFullYear(dob.getFullYear() + 18)))) {
+                    showError(dobInput, "You must be at least 18 years old to apply.");
+                    isValid = false;
+                }
+            }
+        }
+
+        // Prevent submission only if invalid
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
 // Show error message
 function showError(input, message) {
     let errorElement = input.nextElementSibling;
@@ -169,13 +204,17 @@ function showError(input, message) {
     input.style.borderColor = "red";
 }
 
-// Hide error message
-function hideError(input) {
-    const errorElement = input.nextElementSibling;
-    if (errorElement) {
-        errorElement.style.display = "none";
+function showError(input, message) {
+    let errorElement = document.getElementById(input.name + '-error') || input.nextElementSibling;
+    if (!errorElement || !errorElement.classList.contains('error-message')) {
+        errorElement = document.createElement("span");
+        errorElement.classList.add("error-message");
+        errorElement.id = input.name + '-error';
+        input.parentNode.appendChild(errorElement);
     }
-    input.style.borderColor = "#ddd"; // Reset border color
+    errorElement.textContent = message;
+    errorElement.style.display = "block";
+    input.style.borderColor = "red";
 }
 </script>  
 

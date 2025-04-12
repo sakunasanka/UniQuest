@@ -1,32 +1,36 @@
-// Function to get the maximum value from the datasets
 function getMaxValue(datasets) {
-    let max = 0;  // Initialize max value to 0
-    datasets.forEach(dataset => {
-        dataset.data.forEach(value => {
-            if (value > max) {
-                max = value;
-            }
-        });
-    });
-    return max;
-}
-
-// Function to round the max value to a rounded number (nearest 10, 50, etc.)
-function getRoundedMaxValue(maxValue) {
-    let stepSize = getStepSize(maxValue);
+    if (!datasets?.length) return 0;
     
-    if (maxValue < 10) {
-        return maxValue + stepSize; 
-    } else if (maxValue % 10 === 0) {
-        return (Math.ceil(maxValue / 10) * 10) + stepSize - 1; 
-    } else {
-        return Math.ceil(maxValue / 10) * 10; 
-    }
+    return Math.max(
+        ...datasets.flatMap(dataset => 
+            dataset.data?.length ? dataset.data : [0]
+        )
+    );
 }
 
-// Function to set step size based on the max value
-function getStepSize(maxValue) {
-    return Math.ceil(maxValue / 4); 
+function getRoundedMaxValue(maxValue, tickCount = 5) {
+    if (maxValue <= 0) return 0;
+    
+    const orderOfMagnitude = Math.pow(10, Math.floor(Math.log10(maxValue)));
+    const scaledValue = maxValue / orderOfMagnitude;
+    
+    // Find appropriate scaling factor
+    const scaleFactors = [1, 2, 5, 10];
+    const factor = scaleFactors.find(f => f * orderOfMagnitude * tickCount >= maxValue) || 10;
+    
+    return Math.ceil(scaledValue / factor) * factor * orderOfMagnitude;
+}
+
+function getStepSize(maxValue, desiredTicks = 5) {
+    if (maxValue <= 0 || desiredTicks <= 0) return 0;
+    
+    const rawStep = maxValue / desiredTicks;
+    const power = Math.pow(10, Math.floor(Math.log10(rawStep)));
+    const roundedStep = Math.ceil(rawStep / power) * power;
+    
+    // Round to nearest "nice" number (1, 2, 5 multiples)
+    const niceSteps = [1, 2, 5, 10].map(n => n * power);
+    return niceSteps.find(n => n >= roundedStep) || roundedStep;
 }
 
 // Data for the charts
@@ -34,21 +38,21 @@ var registrationsData = [
     {
         label: 'Part Time Jobs',
         backgroundColor: 'rgba(72, 207, 173, 0.6)',
-        data: [2, 4, 5, 6, 5],
+        data: chartData.jobCount,
     },
     {
         label: 'Internships',
         backgroundColor: 'rgba(45, 156, 128, 0.6)',
-        data: [0, 2, 1, 4, 2],
+        data: chartData.internshipCount,
     }
 ];
 
-var revenueData = [
+var applicationData = [
     {
         label: 'Applications',
         backgroundColor: 'rgba(45, 156, 128, 0.6)',
         borderColor: 'rgba(45, 156, 128, 0.8)',
-        data: [5, 10, 4, 8],
+        data: chartData.applicationsByWeek,
         fill: false,
         tension: 0.4,
         pointBackgroundColor: 'rgba(72, 207, 173, 1)',
@@ -58,23 +62,22 @@ var revenueData = [
     }
 ];
 
-var jobListingsData = [
-    {
-        label: 'Part Time Jobs',
-        backgroundColor: 'rgba(72, 207, 173, 0.6)',
-        data: [30, 50, 60, 80, 90],
-    },
-    {
-        label: 'Internships',
-        backgroundColor: 'rgba(45, 156, 128, 0.6)',
-        data: [20, 40, 50, 70, 65],
-    }
-];
+// var jobListingsData = [
+//     {
+//         label: 'Part Time Jobs',
+//         backgroundColor: 'rgba(72, 207, 173, 0.6)',
+//         data: [30, 50, 60, 80, 90],
+//     },
+//     {
+//         label: 'Internships',
+//         backgroundColor: 'rgba(45, 156, 128, 0.6)',
+//         data: [20, 40, 50, 70, 65],
+//     }
+// ];
 
 // Calculate max values after data is defined
 var registrationsMax = getRoundedMaxValue(getMaxValue(registrationsData));
-var revenueMax = getRoundedMaxValue(getMaxValue(revenueData));
-var jobListingsMax = getRoundedMaxValue(getMaxValue(jobListingsData));
+var applicationMax = getRoundedMaxValue(getMaxValue(applicationData));
 
 // Registration Chart
 var registrationsCtx = document.getElementById('registrationsChart')?.getContext('2d');
@@ -82,7 +85,7 @@ if (registrationsCtx) {
     var registrationsChart = new Chart(registrationsCtx, {
         type: 'bar',
         data: {
-            labels: ['January', 'February', 'March', 'April', 'May'],
+            labels: chartData.monthNames,
             datasets: registrationsData
         },
         options: {
@@ -119,9 +122,9 @@ if (loginsCtx) {
             labels: ['Male', 'Female'],
             datasets: [
                 {
-                    label: 'User Logins',
+                    label: 'User Applications',
                     backgroundColor: ['rgba(72, 207, 173, 0.6)', 'rgba(45, 156, 128, 0.6)'],
-                    data: [10, 6], 
+                    data: [chartData.genderCountMale, chartData.genderCountFemale], 
                 }
             ]
         },
@@ -131,7 +134,7 @@ if (loginsCtx) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'User Logins Breakdown',
+                    text: 'User Applications Breakdown',
                     font: {
                         size: 22
                     }
@@ -139,13 +142,11 @@ if (loginsCtx) {
                 tooltip: {
                     callbacks: {
                         label: function(tooltipItem) {
-                            let total = 0;
-                            tooltipItem.dataset.data.forEach(value => {
-                                total += value;
-                            });
-                            let value = tooltipItem.raw;
-                            let percentage = (value / total * 100).toFixed(2);
-                            return tooltipItem.label + ': ' + percentage + '%';
+                            const label = tooltipItem.label || '';
+                            const value = tooltipItem.raw || 0;
+                            const total = tooltipItem.dataset.data.reduce((acc, val) => acc + val, 0);
+                            const percentage = ((value / total) * 100).toFixed(2);
+                            return `${label}: ${value} (${percentage}%)`;
                         }
                     }
                 }
@@ -154,14 +155,14 @@ if (loginsCtx) {
     });
 }
 
-// Revenue Curve Chart
-var revenueCtx = document.getElementById('revenueChart')?.getContext('2d');
-if (revenueCtx) {
-    var revenueChart = new Chart(revenueCtx, {
+// Application Curve Chart
+var applicationCtx = document.getElementById('applicationChart')?.getContext('2d');
+if (applicationCtx) {
+    var applicationChart = new Chart(applicationCtx, {
         type: 'line',
         data: {
-            labels: ['Week1', 'Week2', 'Week3', 'Week4'],
-            datasets: revenueData
+            labels: ['3 Weeks Ago', '2 Weeks Ago', '1 Week Ago', 'This Week'],
+            datasets: applicationData
         },
         options: {
             responsive: true,
@@ -178,9 +179,9 @@ if (revenueCtx) {
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: revenueMax,
+                    max: applicationMax,
                     ticks: {
-                        stepSize: getStepSize(revenueMax), 
+                        stepSize: getStepSize(applicationMax), 
                     }
                 }
             }
@@ -188,36 +189,36 @@ if (revenueCtx) {
     });
 }
 
-// Job Listings Chart
-var jobListingsCtx = document.getElementById('jobListingsChart')?.getContext('2d');
-if (jobListingsCtx) {
-    var jobListingsChart = new Chart(jobListingsCtx, {
-        type: 'bar',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May'],
-            datasets: jobListingsData
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Job Listings by Type',
-                    font: {
-                        size: 22
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: jobListingsMax,
-                    ticks: {
-                        stepSize: getStepSize(jobListingsMax), 
-                    }
-                }
-            }
-        }
-    });
-}
+// // Job Listings Chart
+// var jobListingsCtx = document.getElementById('jobListingsChart')?.getContext('2d');
+// if (jobListingsCtx) {
+//     var jobListingsChart = new Chart(jobListingsCtx, {
+//         type: 'bar',
+//         data: {
+//             labels: chartData.monthNames,
+//             datasets: jobListingsData
+//         },
+//         options: {
+//             responsive: true,
+//             maintainAspectRatio: false,
+//             plugins: {
+//                 title: {
+//                     display: true,
+//                     text: 'Job Listings by Type',
+//                     font: {
+//                         size: 22
+//                     }
+//                 }
+//             },
+//             scales: {
+//                 y: {
+//                     beginAtZero: true,
+//                     max: jobListingsMax,
+//                     ticks: {
+//                         stepSize: getStepSize(jobListingsMax), 
+//                     }
+//                 }
+//             }
+//         }
+//     });
+// }

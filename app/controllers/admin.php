@@ -58,8 +58,13 @@ class Admin extends Controller
             $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
             $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search, $searchBy);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+
             $data = [
                 'students' => $students['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $students['currentPage'],
                 'rowsPerPage' => $students['limit'],
                 'totalRows' => $students['totalRows'],
@@ -93,8 +98,13 @@ class Admin extends Controller
             // $order = $_GET['order'] ?? 'ASC';
 
             $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search, $searchBy);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+
             $data = [
                 'companies' => $companies['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $companies['currentPage'],
                 'rowsPerPage' => $companies['limit'],
                 'totalRows' => $companies['totalRows'],
@@ -124,8 +134,13 @@ class Admin extends Controller
             $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
             $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search, $searchBy);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+
             $data = [
                 'vtMembers' => $vtMembers['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $vtMembers['currentPage'],
                 'rowsPerPage' => $vtMembers['limit'],
                 'totalRows' => $vtMembers['totalRows'],
@@ -499,7 +514,79 @@ class Admin extends Controller
             'messageInput_err' => '',
         ];
 
-        $this->loadUserDetailView($data);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
+            $data = [
+                'userID' => $userID,
+                'email' => $email,
+                'user' => $this->model->getUserDetails($userID),
+                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID, 'Deactivate'),
+                'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
+            ];
+
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
+            }
+
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('admin/user_detail/' . $userID);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with errors
+                $this->loadUserDetailView($data);
+            }
+        } else {
+            // Load initial view without POST request
+
+            $data = [
+                'userID' => $userID,
+                'email' => '',
+                'user' => $this->model->getUserDetails($userID),
+                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID),
+                'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
+        }
     }
 
     private function loadUserDetailView($data)
@@ -517,8 +604,12 @@ class Admin extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
+            $rejectReasons = $this->model('AdminModel')->getReasonsByType('user_reject');
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($userID);
             $data = [
-                'user' => $user
+                'user' => $user,
+                'rejectReasons' => $rejectReasons['data'],
+                'verifyDetails' => $verifyDetails,
             ];
             if ($user['Role'] == 'Student') {
                 $this->view('pages/admin/stu_ver_detail', $data);
@@ -546,26 +637,45 @@ class Admin extends Controller
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
             }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_ver_reject($userID)
+    public function user_ver_reject($userID, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
             $this->model->rejectUser($userID);
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_activate($userID, $role)
+    public function user_activate($userID, $role, $email, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
             $this->model->activateAccount($userID);
+            $this->model('AdminModel')->addUserAccountLog($userID, 'Activate', $reasonID);
+            MailHelper::sendEmailAccountReactivatedByAdmin($email, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -578,10 +688,14 @@ class Admin extends Controller
         }
     }
 
-    public function user_deactivate($userID, $role)
+    public function user_deactivate($userID, $role, $email, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
             $this->model->deactivateAccount($userID);
+            $this->model('AdminModel')->addUserAccountLog($userID, 'Deactivate', $reasonID);
+            MailHelper::sendEmailAccountDeactivatedByAdmin($email, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -910,15 +1024,16 @@ class Admin extends Controller
         //correct this line
     }
 
-    public function editMessage($messageId) {
+    public function editMessage($messageId)
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = json_decode(file_get_contents("php://input"), true);
             $newMessage = $data['message'] ?? '';
-            
+
             if (!empty($newMessage)) {
                 $chatModel = $this->model('chatModel');
                 $senderId = $_SESSION['user_id']; // Get the sender's ID from session
-                
+
                 if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
                 } else {
@@ -936,7 +1051,7 @@ class Admin extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $senderId = $_SESSION['user_id']; // Get the sender's ID from session
-            
+
             if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
                 Redirect::to(URLROOT . '/admin/user_detail');
             } else {
@@ -946,5 +1061,4 @@ class Admin extends Controller
             Redirect::to(URLROOT . '/admin/user_detail');
         }
     }
-    
 }

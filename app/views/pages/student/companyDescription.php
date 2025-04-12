@@ -49,8 +49,12 @@
                     <h1><?php echo $data['post']->CompanyName;?></h1>
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                         <div class="card-icons">
-                            <i class="fa fa-share-alt" aria-hidden="true"></i>
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>  
                             <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
+                        </div>
+                    <?php else:?>
+                        <div class="card-icons">
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>  
                         </div>
                     <?php endif; ?>
                 </div>
@@ -95,29 +99,43 @@
             </div>
         </div>
 
-
         <div class="view-card">
             <div class="job-list">
-                <?php for ($i = 0; $i < 3; $i++): ?>
-                    <div class="job-item" onclick="goToJobDescription()">
-                        <div class="job-header">
+            <?php if(empty($data['jobs'])):?>
+                <div class="job-header">
+                    <div>
+                        <h5><?php echo ("No available jobs to show."); ?></h5>
+                    </div>
+                </div>
+            <?php else:?>
+
+                <?php foreach ($data['jobs'] as $index => $job): ?>
+                        <div class="job-item" onclick="goToJobDescription(<?php echo ($job->JobID); ?>)">
+                            <div class="job-header">
+                                <div>
+                                    <h5><?php echo ($job->Title); ?></h5>
+                                </div>
+                            </div>
+                            <div class="job-tags">
+                                <span class="tag"><?php echo ($job->Category); ?></span>
+                                <!-- <span class="tag">Design</span> -->
+                            </div>
                             <div>
-                                <h5>Senior UX Designer</h5>
+                                <p>Location: <?php echo ($job->Location); ?></p>
+                            </div>
+                            <div>
+                                <p>Salary: Rs.<?php echo ($job->SalaryRange); ?> <?php echo ($job->SalaryType); ?></p>
+                            </div>
+                            <div>
+                                <p>Posted: <?php echo converttimetoreadableformat($job->jobs_create_at); ?></p>
+                            </div>
+                            </br>
+                            <div class="job-actions">
+                                <button class="details-btn">View Details</button>
                             </div>
                         </div>
-                        <div class="job-tags">
-                            <span class="tag">On-Site</span>
-                            <span class="tag">Full-Time</span>
-                            <span class="tag">Design</span>
-                        </div>
-                        <p class="job-description">
-                            Acme Inc. seeks a Senior UX Designer to create user-centric designs, collaborating with teams to deliver innovative, intuitive software solutions for exceptional user experiences.
-                        </p>
-                        <div class="job-actions">
-                            <button class="details-btn">View Details</button>
-                        </div>
-                    </div>
-                <?php endfor; ?>
+                <?php endforeach; ?>
+            <?php endif;?>
             </div>
         </div>
 
@@ -155,19 +173,20 @@
             </div>
             <div class="buttons btn-space-between">
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
-                    <!-- <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button> -->
-                    <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
+                        <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
+                        
+                        <?php if (count($data['reviews']) >= 3): ?> 
+                            <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                        <?php endif; ?>
+                        
+                    <?php else: ?>
+                        <div></div>
 
-                    <button class="seemore">
-                        <p onclick="toggleMoreReviews()">See more reviews...</p>
-                    </button>
-                <?php else: ?>
-                    <div></div>
-                    <button class="seemore">
-                        <p onclick="toggleMoreReviews()">See more reviews...</p>
-                    </button>
-
-                <?php endif; ?>
+                        <?php if (count($data['reviews']) >= 3): ?> 
+                            <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                        <?php endif; ?>
+                        
+                    <?php endif; ?>
             </div>
         </div>
     </div>
@@ -178,18 +197,12 @@
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
 
 <script>
-    function goToJobDescription() {
-        window.location.href = "/uniquest/jobs/jobsdescription/" + 23;
+    function goToJobDescription(jobId) {
+        window.location.href = "/uniquest/jobs/jobsdescription/" + jobId;
     }
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
-
     function toggleBookmark(icon, companyId) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
@@ -217,5 +230,15 @@
 
         // Send the request with the form data
         xhr.send(formData);
+    }
+
+    function shareJob(companyId) {
+        const jobURL = `${window.location.origin}/UniQuest/jobs/companydescription/${companyId}`;
+        
+        navigator.clipboard.writeText(jobURL).then(() => {
+            Flash.show('Company link copied to clipboard!', 'success');
+        }).catch(err => {
+            Flash.show('Failed to copy link', 'error');
+        });
     }
 </script>

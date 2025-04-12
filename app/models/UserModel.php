@@ -384,6 +384,26 @@ class userModel extends Model
         }
     }
 
+    public function deactivateAccountByUser($userId)
+    {
+        try {
+            $userData = [
+                'Status' => 'Pending Deletion'
+            ];
+            if ($this->update('user', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
@@ -673,5 +693,14 @@ class userModel extends Model
             error_log("General Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function getUserLoginsByGender() {
+        $this->db->query("SELECT 
+                gender, 
+                COUNT(*) AS logins
+            FROM user
+            GROUP BY gender");
+        return $this->db->resultSet();
     }
 }
