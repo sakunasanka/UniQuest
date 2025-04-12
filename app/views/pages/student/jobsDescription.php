@@ -100,7 +100,7 @@
                 <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
                 <div class="buttons">
-                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
+                    <button onclick="goToApplyPage(<?php echo $post->JobID; ?>)" class="apply-btn">Apply</button>
                     <button id="openPopupBtn" class="contact-btn">Contact</button>
                 </div>
             <?php else: ?>    
@@ -119,15 +119,15 @@
                                 </div>
                                 <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                                     <div class="review-actions">
-                                        <button class="like-btn" data-id="<?php echo $index; ?>">
+                                        <button class="like-btn" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined like-icon">thumb_up</span>
                                         </button>
-                                        <span class="like-count" data-id="<?php echo $index; ?>">0 likes</span>
+                                        <span class="like-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                                        <button class="dislike-btn" data-id="<?php echo $index; ?>">
+                                        <button class="dislike-btn" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                         </button>
-                                        <span class="dislike-count" data-id="<?php echo $index; ?>">0 dislikes</span>
+                                        <span class="dislike-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -143,7 +143,7 @@
                     <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
                     
                     <?php if (count($data['reviews']) >= 3): ?> 
-                        <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                        <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                     <?php endif; ?>
                     
                 <?php else: ?>
@@ -165,10 +165,12 @@
         <div class="job-card">
             <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="card-icons">
-                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                    <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                    
+                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>                     
                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                </div>
+            <?php else:?>
+                <div class="card-icons">
+                <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
                 </div>
             <?php endif;?> 
             <div class="job-logo">
@@ -180,12 +182,13 @@
             <div class="job-details">
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
-                <p><?php echo $data['post']->SalaryRange; ?></p>
+                
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
                 <p><?php echo $data['post']->Location; ?></p>
                 <table class="table">
-                    <tr><td>Experience:</td><td>No Experience</td></tr>
+                    <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
+                    <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
 
@@ -220,12 +223,6 @@
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-    icon.classList.toggle("fa-regular");
-    icon.classList.toggle("fa-solid");
-    icon.classList.toggle("icon-active");
-}
-
 function toggleBookmark(icon, jobId) {
 icon.classList.toggle("fa-regular");
 icon.classList.toggle("fa-solid");
@@ -254,6 +251,22 @@ function bookmarkJob(jobId, iconElement) {
 
     // Send the request with the form data
     xhr.send(formData);
+}
+
+function shareJob(jobId, jobType) {
+    const jobURL = `${window.location.origin}/UniQuest/jobs/jobsdescription/${jobId}`;
+    
+    navigator.clipboard.writeText(jobURL).then(() => {
+        if (jobType === 'Part-time') {
+            Flash.show('Job link copied to clipboard!', 'success');
+        } else if (jobType === 'Internship') {
+            Flash.show('Internship link copied to clipboard!', 'success');
+        } else {
+            Flash.show('Link copied to clipboard!', 'success');
+        }
+    }).catch(err => {
+        Flash.show('Failed to copy link', 'error');
+    });
 }
 
 function goToCompanyDescription($companyID) {

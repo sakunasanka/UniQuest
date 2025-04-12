@@ -20,6 +20,12 @@ class M_jobpost extends Model {
         return false;
     }
 
+    public function getJobsByCompanyId($id){
+        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY jobs_create_at DESC');
+        $this->db->bind(':company_id', $id);       
+        return $this->db->resultSet();
+    }
+
     public function getpostbyid($jobpostId){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.JobID = :id');
         $this->db->bind(':id', $jobpostId);
@@ -52,9 +58,9 @@ class M_jobpost extends Model {
     public function create($data) {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, CompanyID, Status) 
+            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
             VALUES 
-            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :company_id, :status)
+            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
         ');
 
         // Bind the values from $data array
@@ -65,7 +71,9 @@ class M_jobpost extends Model {
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
+        $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':company_id', $_SESSION['user_id']);
+        $this->db->bind(':publish_date', $data['publish_date']); 
         $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
