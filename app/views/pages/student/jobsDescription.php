@@ -16,7 +16,7 @@
 ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
-
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
@@ -119,15 +119,15 @@
                                 </div>
                                 <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                                     <div class="review-actions">
-                                        <button class="like-btn" data-id="<?php echo $index; ?>">
+                                        <button class="like-btn" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined like-icon">thumb_up</span>
                                         </button>
-                                        <span class="like-count" data-id="<?php echo $index; ?>">0 likes</span>
+                                        <span class="like-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                                        <button class="dislike-btn" data-id="<?php echo $index; ?>">
+                                        <button class="dislike-btn" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                         </button>
-                                        <span class="dislike-count" data-id="<?php echo $index; ?>">0 dislikes</span>
+                                        <span class="dislike-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
                                     </div>
                                 <?php endif; ?>
                             </div>

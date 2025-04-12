@@ -655,3 +655,33 @@ ORDER BY
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Table uniquest.review_likes
+-- -----------------------------------------------------
+
+CREATE TABLE review_likes (
+    ReviewID INT NOT NULL,
+    likeCount INT DEFAULT 0,
+    dislikeCount INT DEFAULT 0,
+    PRIMARY KEY (ReviewID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE
+);
+
+-- Create is_liked table
+CREATE TABLE uniquest.is_liked (
+    ReviewID INT NOT NULL,
+    UserID INT NOT NULL,
+    CONSTRAINT pk_is_liked PRIMARY KEY (ReviewID, UserID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);
+
+-- Create is_disliked table
+CREATE TABLE uniquest.is_disliked (
+    ReviewID INT NOT NULL,
+    UserID INT NOT NULL,
+    CONSTRAINT pk_is_disliked PRIMARY KEY (ReviewID, UserID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);

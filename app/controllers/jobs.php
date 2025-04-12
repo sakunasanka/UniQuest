@@ -136,6 +136,45 @@ class Jobs extends Controller
         }
     }
 
+    // public function updateLikeStatus()
+    // {
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         // Validate session user ID
+    //         if (isset($_SESSION['user_id'])) {
+    //             $userId = $_SESSION['user_id']; // Get user ID from session
+    //         } else {
+    //             http_response_code(403); // Return 403 forbidden status
+    //             echo json_encode("User not logged in!"); 
+    //             return;
+    //         }
+
+    //         $reviewId = $_POST['review_id'] ?? null; 
+
+    //         if (!empty($reviewId)) { 
+    //             // Check if the review is already liked
+    //             if ($this->model->isLiked($reviewId)) {
+    //                 // If liked, remove the like
+    //                 if ($this->model->removeLike($reviewId)) {
+    //                     echo json_encode("Like removed successfully!"); 
+    //                 } else {
+    //                     echo json_encode("Failed to remove like. Please check the database."); 
+    //                 }
+    //             } else {
+    //                 // If not liked, add a like
+    //                 if ($this->model->addUserLike($reviewId)) {
+    //                     echo json_encode("Like added successfully!");  
+    //                 } else {
+    //                     echo json_encode("Failed to add like. Please check the database."); 
+    //                 }
+    //             }
+    //         } else {
+    //             echo json_encode("Review ID is missing!"); 
+    //         }
+    //     } else {
+    //         echo json_encode("Invalid request method."); 
+    //     }
+    // }
+
     public function jobs($queryParam = [])
     {
         // Get the requested data from query params
@@ -288,6 +327,8 @@ class Jobs extends Controller
         // Replace reviewer names with anonymous names
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
+            $review->LikeCount = $this->model('jobModel')->getLikesByReviewID($review->ReviewID);
+            $review->DislikeCount = $this->model('jobModel')->getDislikesByReviewID($review->ReviewID);
         }
 
         // Check if the user has already reviewed the company

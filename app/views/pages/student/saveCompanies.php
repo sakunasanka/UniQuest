@@ -91,7 +91,7 @@
 
 <script>
     function goToCompanyDescription(companyId) {
-        window.location.href = "/UniQuest/student/companydescription/" +companyId;
+        window.location.href = "/UniQuest/jobs/companydescription/" +companyId;
     }
 </script>
 
