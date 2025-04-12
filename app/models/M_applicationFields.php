@@ -437,9 +437,9 @@ public function createApplication($fields, $jobId, $userId) {
         error_log("Insert result: " . ($result ? 'true' : 'false'));
         
         if (!$result) {
-            // Log the exact SQL error if available
-            $errorInfo = $this->db->errorInfo();
-            error_log("SQL Error: " . print_r($errorInfo, true));
+            // // Log the exact SQL error if available
+            // $errorInfo = $this->db->errorInfo();
+            // error_log("SQL Error: " . print_r($errorInfo, true));
             throw new Exception('Failed to save application: ' . ($errorInfo[2] ?? 'Unknown error'));
         }
         
