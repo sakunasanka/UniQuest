@@ -215,6 +215,30 @@ input:focus, textarea:focus, select:focus {
     font-size: 1em;
 }
 
+input[type="date"] {
+    width: 100%; 
+    max-width: 400px;
+    padding: 15px; 
+    font-size: 16px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out; 
+}
+
+input[type="date"]:focus {
+    border-color: #4bd681; 
+    background-color: #e6f9e4; 
+    outline: none; 
+}
+
+label[for="jobPostDate"] {
+    font-size: 1.2em; 
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px; 
+}
+
 .form-step {
     display: none;
 }
@@ -235,4 +259,156 @@ input:focus, textarea:focus, select:focus {
 
 .next-btn:hover, .prev-btn:hover {
     background-color: #038a27;
+}
+
+.salary-container {
+    display: flex;
+    gap: 10px;
+}
+
+.salary-container input {
+    flex: 2;
+}
+
+.salary-container select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Add a star symbol next to required fields */
+.required::after {
+    content: " *";
+    color: red;
+    font-size: 16px;
+    margin-left: 2px;
+}
+
+/* Field table structure (From Part 2) */
+.field-table {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.field-header {
+    display: flex;
+    background-color: #f5f5f5;
+    padding: 12px 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+.field-row {
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.field-row:last-child {
+    border-bottom: none;
+}
+
+.field-row:hover {
+    background-color: #f9f9f9;
+}
+
+/* Column layout */
+.field-col {
+    padding: 0 5px;
+}
+
+.field-col-include {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.field-col-name {
+    width: 60%;
+}
+
+.field-col-required {
+    width: 30%;
+    display: flex;
+    align-items: center;
+}
+
+/* Custom field styling */
+.field-col-custom {
+    display: flex;
+    flex-direction: column;
+}
+
+.field-col-custom input[type="text"] {
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 90%;
+}
+
+.field-type-select {
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 90%;
+    background-color: white;
+}
+
+/* Checkbox styling - modified to match the green theme */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #32a852; 
+}
+
+.field-col-required label {
+    margin-left: 8px;
+    color: #555;
+    cursor: pointer;
+}
+
+.field-col-required input[type="checkbox"]:checked + label {
+    color: #32a852; /* Matching the color theme */
+    font-weight: bold;
+}
+
+.field-col-required input[type="checkbox"]:disabled + label {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.custom-field {
+    background-color: #f9f9f9;
+}
+
+/* Responsive design from part 2 */
+@media (max-width: 768px) {
+    .field-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 10px;
+    }
+    
+    .field-col {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    
+    .field-col-include, .field-col-required {
+        justify-content: flex-start;
+    }
+    
+    .field-header {
+        display: none;
+    }
 }

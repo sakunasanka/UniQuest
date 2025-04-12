@@ -1,40 +1,37 @@
 document.addEventListener('DOMContentLoaded', function() {
     const stars = document.querySelectorAll('.rating-stars label');
-    let selectedRating = 0; // To store the selected rating
+    const radioInputs = document.querySelectorAll('.rating-stars input[type="radio"]');
+    let selectedRating = document.querySelector('.rating-stars input[type="radio"]:checked')?.value || 0;
+
+    // Initialize stars based on PHP value
+    stars.forEach((star, i) => {
+        star.style.color = (i < selectedRating) ? '#f5b301' : '#ccc';
+    });
 
     stars.forEach(star => {
         star.addEventListener('mouseover', function() {
             const index = Array.from(stars).indexOf(star);
-            // Color stars from left to right on hover
             stars.forEach((s, i) => {
-                if (i <= index) {
-                    s.style.color = '#f5b301';  // Gold color
-                } else {
-                    s.style.color = '#ccc';  // Default gray color
-                }
+                s.style.color = i <= index ? '#f5b301' : '#ccc';
             });
         });
 
-        // Reset color on mouse out, maintaining selected rating if any
         star.addEventListener('mouseout', function() {
             stars.forEach((s, i) => {
-                if (i < selectedRating) {
-                    s.style.color = '#f5b301';  // Gold color for selected stars
-                } else {
-                    s.style.color = '#ccc';  // Default gray color for unselected stars
-                }
+                s.style.color = i < selectedRating ? '#f5b301' : '#ccc';
             });
         });
 
-        // Handle click event to select rating
         star.addEventListener('click', function() {
-            selectedRating = Array.from(stars).indexOf(star) + 1; // Update selected rating
+            const clickedIndex = Array.from(stars).indexOf(star);
+            selectedRating = clickedIndex + 1;
+            
+            // Update the corresponding radio input
+            radioInputs[clickedIndex].checked = true;
+            
+            // Update star colors
             stars.forEach((s, i) => {
-                if (i < selectedRating) {
-                    s.style.color = '#f5b301';  // Gold color for selected stars
-                } else {
-                    s.style.color = '#ccc';  // Default gray color for unselected stars
-                }
+                s.style.color = i < selectedRating ? '#f5b301' : '#ccc';
             });
         });
     });

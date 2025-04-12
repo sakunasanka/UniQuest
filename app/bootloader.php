@@ -20,6 +20,7 @@ require_once 'helpers/MailHelper.php';
 require_once 'helpers/LogHelper.php';
 require_once 'helpers/TokenHelper.php';
 require_once 'helpers/UniversityEmailValidator.php';
+require_once 'helpers/TableSearcher.php';
 
 
 //load middlewares
