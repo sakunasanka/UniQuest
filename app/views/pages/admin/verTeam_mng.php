@@ -37,31 +37,31 @@
                     <?php if ($data['vtMembers']) : ?>
                         <?php foreach ($data['vtMembers'] as $user) : ?>
                             <tr>
-                                <td><?php echo $user->UserID; ?></td>
-                                <td><?php echo $user->Email; ?></td>
-                                <td><?php echo $user->ContactNo; ?></td>
-                                <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
-                                <?php if ($user->Status == 'Active') : ?>
-                                    <td><span class="status active">Active</span></td>
-                                    <td class="action">
-                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
-                                            account_box
-                                        </span>
-                                        <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
-                                            person_remove
-                                        </span>
-                                    </td>
-                                <?php elseif ($user->Status == 'Deactive') : ?>
-                                    <td><span class="status inactive">Deactive</span></td>
-                                    <td class="action">
-                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
-                                            account_box
-                                        </span>
-                                        <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
-                                            person_add
-                                        </span>
-                                    </td>
-                                <?php endif; ?>
+                            <td><?php echo $user->UserID; ?></td>
+                            <td><?php echo $user->Email; ?></td>
+                            <td><?php echo $user->ContactNo; ?></td>
+                            <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
+                            <?php if ($user->Status == 'Active') : ?>
+                                <td><span class="status active">Active</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $user->UserID; ?>, "VT-Member", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($user->Email); ?>")'>
+                                        person_remove
+                                    </span>
+                                </td>
+                            <?php elseif ($user->Status == 'Deactive') : ?>
+                                <td><span class="status inactive">Deactive</span></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
+                                        account_box
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $user->UserID; ?>, "VT-Member", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($user->Email); ?>")'>
+                                        person_add
+                                    </span>
+                                </td>
+                            <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>

@@ -2,11 +2,15 @@
 class User extends Controller
 {
     private $model;
+    private $universityEmailValidator;
 
     public function __construct()
     {
         // Load model
         $this->model = $this->model('userModel');
+
+        // Load UniversityEmailValidator
+        $this->universityEmailValidator = new UniversityEmailValidator();
     }
 
     private function validateEmail(&$data)
@@ -54,35 +58,46 @@ class User extends Controller
 
             // Check if there are no errors
             if (empty($data['email_err']) && empty($data['password_err'])) {
-                // Check for user
-                $loggedInUser = $this->model->login($data['email'], $data['password']);
+                // check is email is verified
+                if ($this->model('AdminModel')->isEmailVerified($data['email'])) {
+                    // Check for user
+                    $loggedInUser = $this->model->login($data['email'], $data['password']);
 
-                if ($loggedInUser && $loggedInUser->Status === 'Active') {
-                    // Create session
-                    $this->createSession($loggedInUser->UserID);
-                } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
-                    //activate account again and logge in user
-                    $this->model->activateAccount($loggedInUser->UserID);
-                    $this->createSession($loggedInUser->UserID);
-                } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
-                    if ($loggedInUser->Role === 'Student') {
-                        Redirect::to(URLROOT . '/jobs?pending=1');
-                    } else if ($loggedInUser->Role === 'Company') {
-                        $this->view('pages/login/wait_to_verify_ser');
-                    }
-                } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
-                    if ($loggedInUser->Role === 'Student') {
-                        $this->view('pages/login/deactivate_stu');
-                    } else if ($loggedInUser->Role === 'Company') {
-                        $this->view('pages/login/deactivate_ser');
-                    }
-                    if (isset($_SESSION['user_id'])) {
-                        session_unset();
-                        session_destroy();
+                    if ($loggedInUser && $loggedInUser->Status === 'Active') {
+                        // Create session
+                        $this->createSession($loggedInUser->UserID);
+                    } else if ($loggedInUser && $loggedInUser->Status === 'Pending Deletion') {
+                        // Redirect to reactivate account page
+                        $_SESSION['logged_user_id'] = $loggedInUser->UserID;
+                        $_SESSION['logged_user_email'] = $loggedInUser->Email;
+                        $_SESSION['logged_user_name'] = $loggedInUser->FirstName . ' ' . $loggedInUser->LastName;
+                        Redirect::to(URLROOT . '/user/reactivate_acc');
+                        exit;
+                    } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
+                        if ($loggedInUser->Role === 'Student') {
+                            $this->view('pages/login/deactivate_stu');
+                        } else if ($loggedInUser->Role === 'Company') {
+                            $this->view('pages/login/deactivate_ser');
+                        }
+                    } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
+                        if ($loggedInUser->Role === 'Student') {
+                            $this->view('pages/login/wait_to_verify_stu');
+                        } else if ($loggedInUser->Role === 'Company') {
+                            $this->view('pages/login/wait_to_verify_ser');
+                        }
+                    } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
+                        if ($loggedInUser->Role === 'Student') {
+                            $this->view('pages/login/deactivate_stu');
+                        } else if ($loggedInUser->Role === 'Company') {
+                            $this->view('pages/login/deactivate_ser');
+                        }
+                    } else {
+                        $data['password_err'] = 'Password incorrect';
+                        $this->view('pages/login/login', $data);
                     }
                 } else {
-                    $data['password_err'] = 'Password incorrect';
-                    $this->view('pages/login/login', $data);
+                    //redirect to send verification email page
+                    $this->view('pages/login/email_not_verified', $data);
                 }
             } else {
                 // Load view with errors
@@ -90,7 +105,7 @@ class User extends Controller
             }
         } else {
             $data = [
-                'email' => '',
+                'email' => $_SESSION['verified_email'] ?? '',
                 'password' => '',
                 'email_err' => '',
                 'password_err' => ''
@@ -98,6 +113,131 @@ class User extends Controller
 
             // Load view
             $this->view('pages/login/login', $data);
+        }
+    }
+
+    //send verification email to company
+    public function sendStuVeriEmail()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            $_POST = filter_input_array(INPUT_POST);
+
+            // Init data
+            $data = [
+                'email' => strtolower(trim($_POST['email'])),
+                'email_err' => ''
+            ];
+
+            // Validate email
+            $this->validateEmail($data);
+
+            //validate university email
+            if (!$this->universityEmailValidator->isUniversityEmail($data['email'])) {
+                $data['email_err'] = 'Please enter a valid university email address';
+            }
+
+            // Check if there are no errors
+            if (empty($data['email_err'])) {
+                //Generate the token
+                $token = TokenHelper::generateToken();
+                LogHelper::logDebug('Token generated: ' . $token);
+                //Generate the expiry date
+                $expiryDate = TokenHelper::generateExpiryDate();
+
+                // Save token to database
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
+                    LogHelper::logDebug('Token saved to database');
+                    // Send token to email
+                    MailHelper::sendEmailWithTokenStudent($data['email'], $token, 'user');
+                    // Redirect to verify email page
+                    $this->view('pages/login/veri_email_sent');
+                } else {
+                    LogHelper::logError('Token not saved to database');
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/login/email_not_verified', $data);
+            }
+        } else {
+            // Init data
+            $data = [
+                'email' => '',
+                'email_err' => ''
+            ];
+            // Load view
+            $this->view('pages/login/email_not_verified', $data);
+        }
+    }
+
+    //verify email using token
+    public function verifyStuEmail($queryparams = [])
+    {
+        //check if token is set
+        if (isset($queryparams['token'])) {
+            //get token from query params
+            $token = $queryparams['token'];
+
+            //get token details
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
+
+            //check if token is valid
+            if ($tokenDetails) {
+                //check if token is expired
+                if (TokenHelper::validateToken($tokenDetails->Expiration)) {
+                    //delete token
+                    $this->model('AdminModel')->deleteToken($token);
+
+                    //store email as verified
+                    $this->model('AdminModel')->updateVerifyEmail($tokenDetails->Email);
+
+                    //store verified email in session
+                    $_SESSION['verified_email'] = $tokenDetails->Email;
+
+                    // Redirect to register page
+                    Redirect::to(URLROOT . '/login');
+                } else {
+                    //error message for expired token
+                    die('Token expired');
+                }
+            } else {
+                //error message for invalid token
+                die('Invalid token');
+            }
+        } else {
+            //TODO: Handle this
+            die('Token not found');
+        }
+    }
+
+    public function reactivate_acc()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (!isset($_SESSION['logged_user_id'])) {
+                Redirect::to(URLROOT . '/login');
+                exit;
+            }
+            $userID = $_SESSION['logged_user_id'];
+            unset($_SESSION['logged_user_id']);
+
+            // Check if user wants to reactivate account
+            if (isset($_POST['yes'])) {
+                $this->model->activateAccount($userID);
+                //send email to notify user that their account has been reactivated
+                MailHelper::sendEmailAccountReactivated($_SESSION['logged_user_email'], $_SESSION['logged_user_name']);
+                //add user account log
+                $this->model('AdminModel')->addUserAccountLog($userID, 'Reactivate', 15);
+                unset($_SESSION['logged_user_email']);
+                unset($_SESSION['logged_user_name']);
+                // Create session
+                $this->createSession($userID);
+            } else if (isset($_POST['no'])) {
+                // Redirect to home page
+                Redirect::to(URLROOT);
+            }
+        } else {
+            // Load view
+            $this->view('pages/login/reactivate_acc');
         }
     }
 
@@ -286,7 +426,7 @@ class User extends Controller
                     LogHelper::logDebug('Password reset token generated for ' . $data['email']);
 
                     // Save token to database
-                    if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                    if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                         LogHelper::logDebug('Token saved to database');
                         // Send token to email
                         MailHelper::sendEmailWithTokenResetPassword($data['email'], $token);
@@ -334,7 +474,7 @@ class User extends Controller
                 //get token from query params
                 $token = $queryParams['token'];
                 //get token details
-                $tokenDetails = $this->model->getTokenDetails($token);
+                $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
                 // Check if token is valid
                 if (!$tokenDetails || empty($tokenDetails->Email)) {
                     //log the error
@@ -351,7 +491,7 @@ class User extends Controller
                     // Reset password
                     if ($this->resetPassword($data, $userDetails->UserID)) {
                         // Delete token
-                        $this->model->deleteToken($token);
+                        $this->model('AdminModel')->deleteToken($token);
                         // Redirect to login page
                         Redirect::to(URLROOT . '/login');
                         exit;
@@ -443,7 +583,11 @@ class User extends Controller
             // Check if there are no errors
             if (empty($data['confirm_err'])) {
                 // Deactivate account
-                $this->model->deactivateAccount($_SESSION['user_id']);
+                $this->model->deactivateAccountByUser($_SESSION['user_id']);
+                //send email to notify user that their account
+                MailHelper::sendEmailAccountDeactivated($_SESSION['user_email'], $_SESSION['user_name']);
+                //add user account log
+                $this->model('AdminModel')->addUserAccountLog($_SESSION['user_id'], 'PendingDelete', 11);
                 // Logout
                 $this->logout();
             } else {

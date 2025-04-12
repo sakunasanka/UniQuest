@@ -128,6 +128,22 @@ label {
     padding: 10px 0; /* Add some padding for better spacing */
 }
 
+.btn-row .status-deact{
+    color: #ff4d4d;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ff4d4d50;
+}
+
+.btn-row .status-act{
+    color: #32a852;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #32a85250;
+}
+
 .btn-row button {
     padding: 10px 20px;
     border: none;

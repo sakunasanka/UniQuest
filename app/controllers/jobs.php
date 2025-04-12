@@ -382,9 +382,16 @@ class Jobs extends Controller
                 // Load view with errors
                 $this->view('pages/student/rate_review_company', $data);
             }
+
         } else {
             $data = [
                 'post' => $posts,
+                'user' => $this->model('userModel')->getUserDetails($posts->CompanyID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $posts->CompanyID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID),
+                'messageInput' => '',
+                'messageInput_err' => '',
                 'post_com' => $posts_com_id,
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
@@ -397,6 +404,71 @@ class Jobs extends Controller
                 'rating_err' => '',
                 'comment_err' => '',
                 'existingReview' => $existingReview
+            ];
+
+            $this->view('pages/student/jobsDescription', $data);
+        }
+    }
+
+    public function sendMessage($id) {
+
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $posts->CompanyID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+            $submittedTopic = trim($_POST['topic'] ?? '');
+    
+            // Fetch email
+            $email = null;
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            } elseif ($this->model('userModel')->getUserDetails($posts->CompanyID)) {
+                $userDetails = $this->model('userModel')->getUserDetails($posts->CompanyID);
+                $email = $userDetails->email ?? null;
+            }
+    
+            $data = [
+                'email' => $email,
+                'post' => $posts,
+                'user' => $this->model('userModel')->getUserDetails($posts->CompanyID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $posts->CompanyID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic,
+                'messageInput_err' => ''
+            ];
+    
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
+            }
+    
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    Redirect::to(URLROOT . '/jobs/jobsdescription/' . $id);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with errors
+                $this->view('pages/student/jobsDescription', $data);
+            }
+        }
+        else {
+            $data = [
+                'email' => '',
+                'post' => $posts,
+                'user' => $this->model('userModel')->getUserDetails($posts->CompanyID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $posts->CompanyID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '',
             ];
 
             $this->view('pages/student/jobsDescription', $data);

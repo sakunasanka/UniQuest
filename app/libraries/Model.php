@@ -43,7 +43,7 @@ class Model
             $operator = $condition[1]; // The SQL operator (e.g., '=', 'IN')
             $value = $condition[2]; // The value to compare against
 
-            if ($operator === 'IN') {
+            if ($operator === 'IN' || $operator === 'NOT IN') {
                 // Special handling for the 'IN' operator (e.g., WHERE column IN (values))
 
                 // Array to store placeholders for the 'IN' values
