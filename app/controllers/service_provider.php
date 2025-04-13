@@ -123,7 +123,23 @@ class Service_provider extends Controller
 
     public function report()
     {
-        $this->view('pages/service_provider/job_report');
+        if ($_SESSION['user_role'] == 'Company') {
+            $companyInfo = $this->model('companyModel')->getCompanyInfo();
+        } else {
+            $companyInfo = null; 
+        }
+
+        $data = [
+            
+        ];
+
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+            $this->view('pages/service_provider/job_report', $data);
+        }
+        else {
+            $_SESSION['show_report_error'] = true;
+            Redirect::to($_SERVER['HTTP_REFERER']);
+        }
     }
 
     public function ongoing_jobs()
@@ -373,7 +389,7 @@ class Service_provider extends Controller
             // 'userLoginsData' => $userLoginsData,
         ];
 
-        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active') {
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/ser_analytics', $data);
         }
         else {

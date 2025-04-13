@@ -146,7 +146,14 @@
                         <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                     <?php endif; ?>
                     
-                <?php else: ?>
+                <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company'): ?>
+                    <button onclick="goToReport(<?php echo $post->JobID; ?>)" class="apply-btn">Generate Report</button>
+
+                    <?php if (count($data['reviews']) >= 3): ?> 
+                        <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                    <?php endif; ?>
+                    
+                <?php else:?>    
                     <div></div>
 
                     <?php if (count($data['reviews']) >= 3): ?> 
@@ -211,18 +218,19 @@
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
 
 <script>
-    function goToMakeComplaint(jobId) {
-        window.location.href = "/uniquest/student/make_complain/" + jobId;
-    }
-</script>
+    
+function goToMakeComplaint(jobId) {
+    window.location.href = "/uniquest/student/make_complain/" + jobId;
+}
 
-<script>
-    function goToApplyPage(jobId) {
-        window.location.href = "/UniQuest/student/jobsApplyform/" + jobId;
-    }
-</script>
+function goToApplyPage(jobId) {
+    window.location.href = "/UniQuest/student/jobsApplyform/" + jobId;
+}
 
-<script>
+function goToReport(jobId) {
+    window.location.href = "/uniquest/service_provider/report/" + jobId;
+}
+
 function toggleBookmark(icon, jobId) {
 icon.classList.toggle("fa-regular");
 icon.classList.toggle("fa-solid");

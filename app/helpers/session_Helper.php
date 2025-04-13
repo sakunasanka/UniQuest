@@ -12,6 +12,7 @@ function flash($name) {
 }
 ?>
 
+<!-- Premium error -->
 <?php if(isset($_SESSION['show_premium_error'])): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -19,6 +20,16 @@ function flash($name) {
     });
 </script>
 <?php unset($_SESSION['show_premium_error']); ?>
+<?php endif; ?>
+
+<!-- Report error -->
+<?php if(isset($_SESSION['show_report_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Please upgrade to a premium plan to access this feature.", "error");
+    });
+</script>
+<?php unset($_SESSION['show_report_error']); ?>
 <?php endif; ?>
 
 <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
