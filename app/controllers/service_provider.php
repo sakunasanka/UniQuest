@@ -138,7 +138,8 @@ class Service_provider extends Controller
         }
         else {
             $_SESSION['show_report_error'] = true;
-            Redirect::to($_SERVER['HTTP_REFERER']);
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+            Redirect::to($previousURL);
         }
     }
 
@@ -394,7 +395,8 @@ class Service_provider extends Controller
         }
         else {
             $_SESSION['show_premium_error'] = true;
-            Redirect::to($_SERVER['HTTP_REFERER']);
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+            Redirect::to($previousURL);
         }
     }
 
