@@ -203,6 +203,7 @@
         <!-- Popup Overlay -->
         <?php require APPROOT . '/views/popups/admin/addReason.php'; ?>
         <?php require APPROOT . '/views/popups/admin/editReason.php'; ?>
+        <?php require APPROOT . '/views/popups/admin/deleteReason.php'; ?>
     </main>
 </div>
 

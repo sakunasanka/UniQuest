@@ -175,6 +175,18 @@ class AdminModel extends Model {
         }
     }
 
+    public function deleteReason($reasonID) {
+        try {
+            if ($this->delete('reason', ['ReasonID' => $reasonID])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function addUserAccountLog($userID, $action, $reasonID) {
         try {
             $log = [

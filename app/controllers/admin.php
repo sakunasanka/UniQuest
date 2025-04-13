@@ -1114,4 +1114,39 @@ class Admin extends Controller
         }
         exit;
     }
+
+    public function deleteReason() {
+        header('Content-Type: application/json');
+        
+        try {
+            // Get JSON input
+            $input = json_decode(file_get_contents('php://input'), true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON input');
+            }
+    
+            // Validate reasonID
+            if (empty($input['reasonID'])) {
+                throw new Exception('Invalid reason ID');
+            }
+    
+            $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
+    
+            // Delete in model
+            $success = $this->model('AdminModel')->deleteReason($reasonID);
+    
+            echo json_encode([
+                'success' => $success,
+                'message' => $success ? 'Reason deleted successfully' : 'Failed to delete reason'
+            ]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit;
+    }
 }

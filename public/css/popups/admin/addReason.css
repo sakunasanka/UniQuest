@@ -86,7 +86,7 @@
 
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #4a90e2;
+    border-color: #4CAF50;
     outline: none;
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
@@ -123,12 +123,21 @@
 }
 
 .submit-btn {
-    background-color: #4a90e2;
+    background-color: #4CAF50;
     color: white;
 }
 
 .submit-btn:hover {
-    background-color: #3a7bc8;
+    background-color: #45a049;
+}
+
+.delete-btn {
+    background-color: #e53935;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
 }
 
 /* Required field indicator */
