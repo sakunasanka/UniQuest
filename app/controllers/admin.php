@@ -404,7 +404,7 @@ class Admin extends Controller
 
             $data = [
                 'userID' => $userID,
-                'email' => $email, 
+                'email' => $email,
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
@@ -433,7 +433,7 @@ class Admin extends Controller
             }
         } else {
             // Load initial view without POST request
-            
+
             $data = [
                 'userID' => $userID,
                 'email' => '',
@@ -1024,6 +1024,47 @@ class Admin extends Controller
             $this->view('pages/admin/reason_mng', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function addReason()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get raw POST data and decode it
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+                return;
+            }
+
+            // Sanitize inputs
+            $reasonName = trim(filter_var($input['reasonName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $reason = trim(filter_var($input['reason'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $reasonType = trim(filter_var($input['reasonType'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+            // Validate inputs
+            if (empty($reasonName) || empty($reasonType)) {
+                echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
+                return;
+            }
+
+            try {
+                // Add reason to the database
+                if ($this->model('AdminModel')->addReason($reasonName, $reason, $reasonType)) {
+                    echo json_encode(['success' => true, 'message' => 'Reason added successfully.']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to add reason.']);
+                }
+            } catch (Exception $e) {
+                error_log('Error adding reason: ' . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'An error occurred while adding the reason.']);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
         }
     }
 }

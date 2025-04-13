@@ -1,5 +1,4 @@
 <?php require APPROOT . '/views/components/adm_header.php'; ?>
-<?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/reason_mng.css">
 
@@ -35,7 +34,7 @@
                     <tbody>
                         <?php if ($data['user_activate']) : ?>
                             <?php foreach ($data['user_activate'] as $reason) : ?>
-                                <tr>
+                                <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
                                     <td><?php echo $reason->ReasonName; ?></td>
                                     <td><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
@@ -75,7 +74,7 @@
                     <tbody>
                         <?php if ($data['user_deactivate']) : ?>
                             <?php foreach ($data['user_deactivate'] as $reason) : ?>
-                                <tr>
+                                <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
                                     <td><?php echo $reason->ReasonName; ?></td>
                                     <td><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
@@ -115,7 +114,7 @@
                     <tbody>
                         <?php if ($data['user_reject']) : ?>
                             <?php foreach ($data['user_reject'] as $reason) : ?>
-                                <tr>
+                                <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
                                     <td><?php echo $reason->ReasonName; ?></td>
                                     <td><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
@@ -155,7 +154,7 @@
                     <tbody>
                         <?php if ($data['job_reject']) : ?>
                             <?php foreach ($data['job_reject'] as $reason) : ?>
-                                <tr>
+                                <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
                                     <td><?php echo $reason->ReasonName; ?></td>
                                     <td><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
@@ -177,6 +176,8 @@
                 </table>
             </div>
         </div>
+        <!-- Popup Overlay -->
+        <?php require APPROOT . '/views/popups/admin/addReason.php'; ?>
     </main>
 </div>
 
