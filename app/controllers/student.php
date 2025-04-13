@@ -460,31 +460,6 @@ class Student extends Controller
         $this->view('pages/student/notification_alerts');
     }
 
-    public function trendyCompany()
-    {
-        $trendy_companies = $this->model('RateAndReviewModel')->getTrendyCompanies();
-
-        if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; // Get user ID from session
-
-            // Get bookmarked companies for the user
-            $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
-            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
-        } 
-        else {
-            $userId = null;
-            $bookmarkedCompanies = []; // No bookmarks if not logged in
-        }
-
-        $data =[
-            'trendy_companies' => $trendy_companies,
-            'bookmarkedCompanies' => $bookmarkedCompanies,
-            'bookmarkedCompanyIds' => $bookmarkedCompanyIds
-        ];
-
-        $this->view('pages/student/trendyCompany', $data);
-    }
-
     public function saveJobs()
     {   
 
