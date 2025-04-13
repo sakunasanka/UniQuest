@@ -35,13 +35,19 @@
                         <?php if ($data['user_activate']) : ?>
                             <?php foreach ($data['user_activate'] as $reason) : ?>
                                 <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
-                                    <td><?php echo $reason->ReasonName; ?></td>
-                                    <td><?php echo $reason->Reason; ?></td>
+                                    <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
+                                    <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon">
+                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon">
+                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             delete
                                         </span>
                                     </td>
@@ -75,13 +81,19 @@
                         <?php if ($data['user_deactivate']) : ?>
                             <?php foreach ($data['user_deactivate'] as $reason) : ?>
                                 <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
-                                    <td><?php echo $reason->ReasonName; ?></td>
-                                    <td><?php echo $reason->Reason; ?></td>
+                                    <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
+                                    <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon">
+                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon">
+                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             delete
                                         </span>
                                     </td>
@@ -115,13 +127,19 @@
                         <?php if ($data['user_reject']) : ?>
                             <?php foreach ($data['user_reject'] as $reason) : ?>
                                 <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
-                                    <td><?php echo $reason->ReasonName; ?></td>
-                                    <td><?php echo $reason->Reason; ?></td>
+                                    <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
+                                    <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon">
+                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon">
+                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             delete
                                         </span>
                                     </td>
@@ -155,13 +173,19 @@
                         <?php if ($data['job_reject']) : ?>
                             <?php foreach ($data['job_reject'] as $reason) : ?>
                                 <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
-                                    <td><?php echo $reason->ReasonName; ?></td>
-                                    <td><?php echo $reason->Reason; ?></td>
+                                    <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
+                                    <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon">
+                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon">
+                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             delete
                                         </span>
                                     </td>
@@ -178,6 +202,7 @@
         </div>
         <!-- Popup Overlay -->
         <?php require APPROOT . '/views/popups/admin/addReason.php'; ?>
+        <?php require APPROOT . '/views/popups/admin/editReason.php'; ?>
     </main>
 </div>
 

@@ -1066,5 +1066,52 @@ class Admin extends Controller
             http_response_code(405);
             echo json_encode(['success' => false, 'message' => 'Method not allowed']);
         }
+        exit;
+    }
+
+    public function updateReason() {
+        // Set proper header first
+        header('Content-Type: application/json');
+    
+        try {
+            // Get input data
+            $input = json_decode(file_get_contents('php://input'), true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON input');
+            }
+    
+            // Validate required fields
+            if (empty($input['reasonID']) || empty($input['reasonName'])) {
+                throw new Exception('Missing required fields');
+            }
+    
+            // Sanitize data
+            $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
+            $reasonName = filter_var($input['reasonName'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $reason = filter_var($input['reason'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+            // Update in model
+            $success = $this->model('AdminModel')->updateReason($reasonID, $reasonName, $reason);
+    
+            if ($success) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Reason updated successfully'
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to update reason'
+                ]);
+            }
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit;
     }
 }

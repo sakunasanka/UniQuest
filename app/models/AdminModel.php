@@ -142,14 +142,30 @@ class AdminModel extends Model {
         }
     }
 
-    public function addReason($reasonName, $reasonDescription, $reasonType) {
+    public function addReason($reasonName, $reason, $reasonType) {
         try {
             $reason = [
                 'ReasonName' => $reasonName,
-                'Reason' => $reasonDescription,
+                'Reason' => $reason,
                 'ReasonType' => $reasonType
             ];
             if ($this->insert('reason', $reason)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function updateReason($reasonID, $reasonName, $reason) {
+        try {
+            $reason = [
+                'ReasonName' => $reasonName,
+                'Reason' => $reason
+            ];
+            if ($this->update('reason', $reason, ['ReasonID' => $reasonID])) {
                 return true;
             } else {
                 return false;
