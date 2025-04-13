@@ -333,6 +333,7 @@ class Service_provider extends Controller
         $applicationsByGender = $this->model('M_applicationFields')->getApplicationsByGender();
         $applicationsByWeek = $this->model('M_applicationFields')->getApplicationsByWeek();
         $topPerforming = $this->model('M_applicationFields')->getTopPerformingJobs();
+        $companyInfo = $this->model('companyModel')->getCompanyInfo();
 
         // Fetch data for charts
         $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
@@ -372,7 +373,13 @@ class Service_provider extends Controller
             // 'userLoginsData' => $userLoginsData,
         ];
 
-        $this->view('pages/service_provider/ser_analytics', $data);
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active') {
+            $this->view('pages/service_provider/ser_analytics', $data);
+        }
+        else {
+            $_SESSION['show_premium_error'] = true;
+            Redirect::to($_SERVER['HTTP_REFERER']);
+        }
     }
 
     public function notifications()

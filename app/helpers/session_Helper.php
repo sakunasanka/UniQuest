@@ -10,44 +10,15 @@ function flash($name) {
     }
     return null;
 }
-
-// function setFlash($name, $message, $type = 'success') {
-//     if (!isset($_SESSION['flash_messages'])) {
-//         $_SESSION['flash_messages'] = [];
-//     }
-//     $_SESSION['flash_messages'][$name] = [
-//         'message' => $message,
-//         'type' => $type
-//     ];
-// }
-
-// function showFlashMessages() {
-//     if (!empty($_SESSION['flash_messages'])) {
-//         foreach ($_SESSION['flash_messages'] as $name => $flash) {
-//             echo renderFlashMessage($flash['message'], $flash['type']);
-//             unset($_SESSION['flash_messages'][$name]);
-//         }
-//     }
-// }
-
-// function renderFlashMessage($message, $type = 'success') {
-//     $icons = array(
-//         'success' => 'check-circle',
-//         'error' => 'exclamation-circle',
-//         'warning' => 'exclamation-triangle',
-//         'info' => 'info-circle'
-//     );
-    
-//     $icon = isset($icons[$type]) ? $icons[$type] : 'info-circle';
-    
-//     return <<<HTML
-//     <div class="flash-message {$type}" data-flash>
-//         <i class="fas fa-{$icon}"></i>
-//         <span>{$message}</span>
-//         <button class="flash-close">&times;</button>
-//     </div>
-// HTML;
-// }
 ?>
+
+<?php if(isset($_SESSION['show_premium_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Please upgrade to a premium plan to access this feature.", "error");
+    });
+</script>
+<?php unset($_SESSION['show_premium_error']); ?>
+<?php endif; ?>
 
 <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
