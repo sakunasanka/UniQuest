@@ -107,7 +107,13 @@ class Service_provider extends Controller
 
     public function dashboard()
     {
-        $this->view('pages/service_provider/ser_dashboard');
+        $companyInfo = $this->model('companyModel')->getCompanyInfo();
+
+        $data = [
+            'companyInfo' => $companyInfo
+        ];
+
+        $this->view('pages/service_provider/ser_dashboard', $data);
     }
     public function jobPostform()
     {
@@ -310,7 +316,13 @@ class Service_provider extends Controller
 
     public function premium()
     {
-        $this->view('pages/service_provider/premiumFeatures');
+        $companyInfo = $this->model('companyModel')->getCompanyInfo();
+
+        $data = [
+            'companyInfo' => $companyInfo
+        ];
+
+        $this->view('pages/service_provider/premiumFeatures', $data);
     }
 
     public function analytics()
