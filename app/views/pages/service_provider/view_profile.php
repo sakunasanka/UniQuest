@@ -41,7 +41,8 @@
                         <h2><?php echo $data['user']['Industry'] ?></h2>
                         <p><?php echo $data['user']['Description'] ?></p>
                     </div>
-            
+                    
+                    <?php if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
                     <div class="plan-card">
                         <div class="subscription-plan">
                             <?php if($data['user']['subscription_plan'] == 'professional'): ?>
@@ -50,13 +51,13 @@
                             <?php elseif($data['user']['subscription_plan'] == 'enterprise'): ?>
                                 <span class="material-symbols-outlined black-icon"> workspace_premium </span> Enterprise
 
-                            <?php else: ?>   
-                                <span class="material-symbols-outlined black-icon"> workspace_premium </span> Free Plan
-
                             <?php endif; ?>
                         </div>
-                        <div class="days-remaining"> <?php echo $remainingDays;?> </div>
+                        <?php if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
+                            <div class="days-remaining"> <?php echo $remainingDays;?> </div>
+                        <?php endif;?>    
                     </div>
+                    <?php endif;?>
                 </div>
 
                 <div class="view-card-info">
