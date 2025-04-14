@@ -110,7 +110,7 @@ class companyModel extends Model
                                  subscription_start_date = :start_date,
                                  subscription_end_date = :end_date,
                                  subscription_status = :status
-                             WHERE user_id = :user_id');
+                             WHERE CompanyID = :user_id');
             
             $this->db->bind(':user_id', $user_id);
             $this->db->bind(':plan', $plan);
