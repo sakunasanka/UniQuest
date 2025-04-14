@@ -7,6 +7,15 @@
         <h1>Upgrade to a Premium Plan</h1>
         <p>Take your job posting experience to the next level with our premium plans.</p>
         
+
+        <?php if(isset($_SESSION['payment_message'])): ?>
+            <div class="alert <?php echo strpos($_SESSION['payment_message'], 'successful') !== false ? 'alert-success' : 'alert-danger'; ?>">
+                <?php echo $_SESSION['payment_message']; ?>
+                <?php unset($_SESSION['payment_message']); ?>
+            </div>
+        <?php endif; ?>
+        
+
         <div class="plan-cards">
             <div class="plan-card">
                 <h2>Starter</h2>
@@ -33,7 +42,7 @@
                 </ul>
                 <hr class="option-bar">
                 <div class="plan-price">LKR 3000 <span>per month</span></div>
-                <button class="upgrade-btn"  onclick="initiatePayment('professional', 3000);">Upgrade to Professional</button>
+                <button class="upgrade-btn"  onclick="initiatePayment('professional', 3000, <?php echo $_SESSION['user_id']; ?>);">Upgrade to Professional</button>
             </div>
             
             <div class="plan-card">
@@ -47,7 +56,7 @@
                 </ul>
                 <hr class="option-bar">
                 <div class="plan-price">LKR 5000 <span> per month</span></div>
-                <button class="upgrade-btn" onclick="initiatePayment('enterprise', 5000);">Upgrade to Enterprise</button>
+                <button class="upgrade-btn" onclick="initiatePayment('enterprise', 5000, <?php echo $_SESSION['user_id']; ?>);">Upgrade to Enterprise</button>
             </div>
         </div>
     </div>
