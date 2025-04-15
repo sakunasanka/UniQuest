@@ -5,6 +5,16 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
+<?php 
+    if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active') {
+        $currentDateTime = date('Y-m-d H:i:s');
+        $remainingDays = converttimetodays(strtotime($data['user']['subscription_end_date']) - strtotime($currentDateTime));
+    }
+    else {
+        $remainingDays = 0;  
+    }
+?>
+
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
@@ -25,9 +35,30 @@
             </div>
 
             <div class="view-card-content">
-                <h1><?php echo $data['user']['CompanyName'] ?></h1>
-                <h2><?php echo $data['user']['Industry'] ?></h2>
-                <p><?php echo $data['user']['Description'] ?></p>
+                <div class="view-card-header">
+                    <div class="view-card-title">
+                        <h1><?php echo $data['user']['CompanyName'] ?></h1>
+                        <h2><?php echo $data['user']['Industry'] ?></h2>
+                        <p><?php echo $data['user']['Description'] ?></p>
+                    </div>
+                    
+                    <?php if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
+                    <div class="plan-card">
+                        <div class="subscription-plan">
+                            <?php if($data['user']['subscription_plan'] == 'professional'): ?>
+                                <span class="material-symbols-outlined gold-icon"> workspace_premium </span> Professional
+
+                            <?php elseif($data['user']['subscription_plan'] == 'enterprise'): ?>
+                                <span class="material-symbols-outlined black-icon"> workspace_premium </span> Enterprise
+
+                            <?php endif; ?>
+                        </div>
+                        <?php if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
+                            <div class="days-remaining"> <?php echo $remainingDays;?> </div>
+                        <?php endif;?>    
+                    </div>
+                    <?php endif;?>
+                </div>
 
                 <div class="view-card-info">
                     <div>

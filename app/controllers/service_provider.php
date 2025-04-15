@@ -107,7 +107,13 @@ class Service_provider extends Controller
 
     public function dashboard()
     {
-        $this->view('pages/service_provider/ser_dashboard');
+        $companyInfo = $this->model('companyModel')->getCompanyInfo();
+
+        $data = [
+            'companyInfo' => $companyInfo
+        ];
+
+        $this->view('pages/service_provider/ser_dashboard', $data);
     }
     public function jobPostform()
     {
@@ -117,7 +123,24 @@ class Service_provider extends Controller
 
     public function report()
     {
-        $this->view('pages/service_provider/job_report');
+        if ($_SESSION['user_role'] == 'Company') {
+            $companyInfo = $this->model('companyModel')->getCompanyInfo();
+        } else {
+            $companyInfo = null; 
+        }
+
+        $data = [
+            
+        ];
+
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+            $this->view('pages/service_provider/job_report', $data);
+        }
+        else {
+            $_SESSION['show_report_error'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+            Redirect::to($previousURL);
+        }
     }
 
     public function ongoing_jobs()
@@ -310,7 +333,13 @@ class Service_provider extends Controller
 
     public function premium()
     {
-        $this->view('pages/service_provider/premiumFeatures');
+        $companyInfo = $this->model('companyModel')->getCompanyInfo();
+
+        $data = [
+            'companyInfo' => $companyInfo
+        ];
+
+        $this->view('pages/service_provider/premiumFeatures', $data);
     }
 
     public function analytics()
@@ -321,6 +350,7 @@ class Service_provider extends Controller
         $applicationsByGender = $this->model('M_applicationFields')->getApplicationsByGender();
         $applicationsByWeek = $this->model('M_applicationFields')->getApplicationsByWeek();
         $topPerforming = $this->model('M_applicationFields')->getTopPerformingJobs();
+        $companyInfo = $this->model('companyModel')->getCompanyInfo();
 
         // Fetch data for charts
         $registrationsData = $this->model('M_jobpost')->getJobPostingsByMonth();
@@ -360,7 +390,14 @@ class Service_provider extends Controller
             // 'userLoginsData' => $userLoginsData,
         ];
 
-        $this->view('pages/service_provider/ser_analytics', $data);
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+            $this->view('pages/service_provider/ser_analytics', $data);
+        }
+        else {
+            $_SESSION['show_premium_error'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+            Redirect::to($previousURL);
+        }
     }
 
     public function notifications()

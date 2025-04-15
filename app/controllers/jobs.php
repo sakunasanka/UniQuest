@@ -387,9 +387,7 @@ class Jobs extends Controller
             $data = [
                 'post' => $posts,
                 'user' => $this->model('userModel')->getUserDetails($posts->CompanyID),
-                'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $posts->CompanyID,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID),
                 'messageInput' => '',
                 'messageInput_err' => '',
                 'post_com' => $posts_com_id,
@@ -405,6 +403,11 @@ class Jobs extends Controller
                 'comment_err' => '',
                 'existingReview' => $existingReview
             ];
+
+            if (isset($_SESSION['user_id'])) {
+                $data['sender_id'] = $_SESSION['user_id'];
+                $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID);
+            } 
 
             $this->view('pages/student/jobsDescription', $data);
         }
@@ -429,7 +432,6 @@ class Jobs extends Controller
                 $userDetails = $this->model('userModel')->getUserDetails($posts->CompanyID);
                 $email = $userDetails->email ?? null;
             }
-    
             $data = [
                 'email' => $email,
                 'post' => $posts,
@@ -639,5 +641,35 @@ class Jobs extends Controller
 
             $this->view('pages/student/internshipDescription', $data);
         }    
+    }
+
+    public function trendyCompany()
+    {
+        $trendy_companies = $this->model('RateAndReviewModel')->getTrendyCompanies();
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; // Get user ID from session
+
+            // Get bookmarked companies for the user
+            $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
+            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        } 
+        else {
+            $userId = null;
+            $bookmarkedCompanies = []; // No bookmarks if not logged in
+        }
+
+        $data =[
+            'trendy_companies' => $trendy_companies,
+            'bookmarkedCompanies' => $bookmarkedCompanies,
+            'bookmarkedCompanyIds' => $bookmarkedCompanyIds
+        ];
+
+        if (isset($_SESSION['user_role'])) {
+            $this->view('pages/student/trendyCompany', $data);
+        }
+        else {
+            Redirect::to(URLROOT . '/login');
+        }
     }
 }
