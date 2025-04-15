@@ -1,6 +1,6 @@
 function paymentGateway(plan = 'professional', userId = null) {
     // Set plan details
-    
+
     let planAmount = 3000; // Default to Professional plan
     let planName = "Professional For growing businesses";
     
@@ -20,6 +20,9 @@ function paymentGateway(plan = 'professional', userId = null) {
                 
                 // Send confirmation to server
                 var saveData = new XMLHttpRequest();
+                saveData.open("POST", "http://localhost/UniQuest/service_provider/process_payment_ajax", true);
+                saveData.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                saveData.send("order_id=" + orderId + "&plan=" + plan + "&user_id=" + userId);
                 saveData.onreadystatechange = function() {
                     if (saveData.readyState == 4) {
                         if (saveData.status == 200) {
@@ -37,6 +40,8 @@ function paymentGateway(plan = 'professional', userId = null) {
                         }
                     }
                 };
+                
+                
                 
             };
             
