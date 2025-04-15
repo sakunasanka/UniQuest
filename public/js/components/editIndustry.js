@@ -86,6 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function refreshIndustryPage() {
-        window.location.href = '/UniQuest/admin/reason_mng';
+        location.reload();
     }
 });

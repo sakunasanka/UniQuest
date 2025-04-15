@@ -125,10 +125,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Function to refresh the specific reason table
     function refreshReasonPage() {
-        // Instead of location.reload(), redirect to the reason management page
-        window.location.href = 'http://localhost/UniQuest/admin/reason_mng';
+        location.reload();
     }
 
 });

@@ -1012,7 +1012,7 @@ class Admin extends Controller
     }
 
     //retrieve reasons
-    public function reason_mng()
+    public function app_settings()
     {
         try {
             $data = [
@@ -1022,7 +1022,7 @@ class Admin extends Controller
                 'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data'],
                 'industries' => $this->model('AdminModel')->getIndustries()['data']
             ];
-            $this->view('pages/admin/reason_mng', $data);
+            $this->view('pages/admin/app_settings', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }

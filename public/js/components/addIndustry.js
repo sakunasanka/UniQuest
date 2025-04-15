@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function refreshIndustryTable() {
-        // You can refresh data dynamically or reload the page here
         location.reload();
     }
 });

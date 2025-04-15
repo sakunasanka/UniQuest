@@ -45,7 +45,7 @@
             Reports
         </button>
 
-        <button class="nav-btn" data-path="/UniQuest/admin/reason_mng">
+        <button class="nav-btn" data-path="/UniQuest/admin/app_settings">
             <span class="material-symbols-outlined"> settings_applications </span>
             Application Settings
         </button>
