@@ -1019,7 +1019,8 @@ class Admin extends Controller
                 'user_activate' => $this->model('AdminModel')->getReasonsByType('user_activate')['data'],
                 'user_deactivate' => $this->model('AdminModel')->getReasonsByType('user_deactivate')['data'],
                 'user_reject' => $this->model('AdminModel')->getReasonsByType('user_reject')['data'],
-                'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data']
+                'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data'],
+                'industries' => $this->model('AdminModel')->getIndustries()['data']
             ];
             $this->view('pages/admin/reason_mng', $data);
         } catch (Exception $e) {
@@ -1069,31 +1070,32 @@ class Admin extends Controller
         exit;
     }
 
-    public function updateReason() {
+    public function updateReason()
+    {
         // Set proper header first
         header('Content-Type: application/json');
-    
+
         try {
             // Get input data
             $input = json_decode(file_get_contents('php://input'), true);
-            
+
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new Exception('Invalid JSON input');
             }
-    
+
             // Validate required fields
             if (empty($input['reasonID']) || empty($input['reasonName'])) {
                 throw new Exception('Missing required fields');
             }
-    
+
             // Sanitize data
             $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
             $reasonName = filter_var($input['reasonName'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $reason = filter_var($input['reason'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
+
             // Update in model
             $success = $this->model('AdminModel')->updateReason($reasonID, $reasonName, $reason);
-    
+
             if ($success) {
                 echo json_encode([
                     'success' => true,
@@ -1115,27 +1117,28 @@ class Admin extends Controller
         exit;
     }
 
-    public function deleteReason() {
+    public function deleteReason()
+    {
         header('Content-Type: application/json');
-        
+
         try {
             // Get JSON input
             $input = json_decode(file_get_contents('php://input'), true);
-            
+
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new Exception('Invalid JSON input');
             }
-    
+
             // Validate reasonID
             if (empty($input['reasonID'])) {
                 throw new Exception('Invalid reason ID');
             }
-    
+
             $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
-    
+
             // Delete in model
             $success = $this->model('AdminModel')->deleteReason($reasonID);
-    
+
             echo json_encode([
                 'success' => $success,
                 'message' => $success ? 'Reason deleted successfully' : 'Failed to delete reason'
@@ -1147,6 +1150,49 @@ class Admin extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+        exit;
+    }
+
+    public function addIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryName = trim(filter_var($input['industryName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+        if (empty($industryName)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Please enter an industry name.']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->addIndustry($industryName)) {
+                http_response_code(201);
+                echo json_encode(['success' => true, 'message' => 'Industry added successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to add industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error adding industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while adding the industry.']);
+        }
+
         exit;
     }
 }

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // Get all elements
-    const addButtons = document.querySelectorAll('.add-btn');
+    const addButtons = document.querySelectorAll('.reason-add-btn');
     const popup = document.getElementById('reasonPopup');
     const closeBtn = popup.querySelector('.close-btn');
     const cancelBtn = popup.querySelector('.cancel-btn');

@@ -16,6 +16,9 @@
         ];
         ?>
         <div class="table-block">
+            <div class="content-title-container">
+                <h1 class="content-title">Reason Management</h1>
+            </div>
             <!-- User Activate Table -->
             <div class="table-card">
                 <div class="content-header">
@@ -23,7 +26,7 @@
                         <h2 class="table-title">User Activate</h2>
                     </div>
                     <div class="header-actions">
-                        <button class="add-btn">
+                        <button class="add-btn reason-add-btn">
                             <span class="material-symbols-outlined">add</span>
                             <span class="add-btn-text">Add</span>
                         </button>
@@ -38,13 +41,13 @@
                                     <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
                                     <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                        <span class="material-symbols-outlined action-btn edit-icon reason-edit-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                        <span class="material-symbols-outlined action-btn delete-icon reason-delete-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
@@ -69,7 +72,7 @@
                         <h2 class="table-title">User Deactivate</h2>
                     </div>
                     <div class="header-actions">
-                        <button class="add-btn">
+                        <button class="add-btn reason-add-btn">
                             <span class="material-symbols-outlined">add</span>
                             <span class="add-btn-text">Add</span>
                         </button>
@@ -84,13 +87,13 @@
                                     <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
                                     <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                        <span class="material-symbols-outlined action-btn edit-icon reason-edit-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                        <span class="material-symbols-outlined action-btn delete-icon reason-delete-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
@@ -115,7 +118,7 @@
                         <h2 class="table-title">User Reject</h2>
                     </div>
                     <div class="header-actions">
-                        <button class="add-btn">
+                        <button class="add-btn reason-add-btn">
                             <span class="material-symbols-outlined">add</span>
                             <span class="add-btn-text">Add</span>
                         </button>
@@ -130,13 +133,13 @@
                                     <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
                                     <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                        <span class="material-symbols-outlined action-btn edit-icon reason-edit-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                        <span class="material-symbols-outlined action-btn delete-icon reason-delete-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
@@ -161,7 +164,7 @@
                         <h2 class="table-title">Job Reject</h2>
                     </div>
                     <div class="header-actions">
-                        <button class="add-btn">
+                        <button class="add-btn reason-add-btn">
                             <span class="material-symbols-outlined">add</span>
                             <span class="add-btn-text">Add</span>
                         </button>
@@ -176,16 +179,72 @@
                                     <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
                                     <td class="reason-text"><?php echo $reason->Reason; ?></td>
                                     <td class="actions">
-                                        <span class="material-symbols-outlined action-btn edit-icon"
+                                        <span class="material-symbols-outlined action-btn edit-icon reason-edit-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
                                             edit_note
                                         </span>
-                                        <span class="material-symbols-outlined action-btn delete-icon"
+                                        <span class="material-symbols-outlined action-btn delete-icon reason-delete-btn"
                                             role="button"
                                             tabindex="0"
                                             data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
+                                            delete
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td class="no-data" colspan="3">No data available</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="content-title-container">
+                <h1 class="content-title"></h1>
+            </div>
+
+            <!-- Industries Table -->
+            <div class="table-card">
+                <div class="content-header">
+                    <div class="table-title-container">
+                        <h2 class="table-title">Industries</h2>
+                    </div>
+                    <div class="header-actions">
+                        <button class="add-btn industry-add-btn">
+                            <span class="material-symbols-outlined">add</span>
+                            <span class="add-btn-text">Add</span>
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="table-header">Number</th>
+                            <th class="table-header">Industry Name</th>
+                            <th class="table-header">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($data['industries'])) : ?>
+                            <?php $index = 1; ?>
+                            <?php foreach ($data['industries'] as $industry) : ?>
+                                <tr data-industry-id="<?php echo $industry->IndustryID; ?>">
+                                    <td class="industry-index"><?php echo $index++; ?></td>
+                                    <td class="industry-name"><?php echo htmlspecialchars($industry->IndustryName); ?></td>
+                                    <td class="actions">
+                                        <span class="material-symbols-outlined action-btn edit-icon industry-edit-btn"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($industry->IndustryID); ?>">
+                                            edit_note
+                                        </span>
+                                        <span class="material-symbols-outlined action-btn delete-icon industry-delete-btn"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($industry->IndustryID); ?>">
                                             delete
                                         </span>
                                     </td>
@@ -204,6 +263,7 @@
         <?php require APPROOT . '/views/popups/admin/addReason.php'; ?>
         <?php require APPROOT . '/views/popups/admin/editReason.php'; ?>
         <?php require APPROOT . '/views/popups/admin/deleteReason.php'; ?>
+        <?php require APPROOT . '/views/popups/admin/addIndustry.php'; ?>
     </main>
 </div>
 

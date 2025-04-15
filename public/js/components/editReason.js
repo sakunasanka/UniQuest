@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Get all elements
-    const editButtons = document.querySelectorAll('.edit-icon');
+    const editButtons = document.querySelectorAll('.reason-edit-btn');
     const popup = document.getElementById('editReasonPopup');
     const closeBtn = popup.querySelector('.close-btn');
     const cancelBtn = popup.querySelector('.cancel-btn');

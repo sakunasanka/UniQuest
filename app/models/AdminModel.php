@@ -247,5 +247,59 @@ class AdminModel extends Model {
         }
     }
 
+    //retrieve all industries
+    public function getIndustries() {
+        try {
+            $industries = $this->select('industry', [], 'IndustryID, IndustryName', 'AND', '', '', 0, 1, true);
+            return $industries;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    // add industry
+    public function addIndustry($industryName) {
+        try {
+            $industry = [
+                'IndustryName' => $industryName
+            ];
+            if ($this->insert('industry', $industry)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    // update industry
+    public function updateIndustry($industryID, $industryName) {
+        try {
+            $industry = [
+                'IndustryName' => $industryName
+            ];
+            if ($this->update('industry', $industry, ['IndustryID' => $industryID])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    // delete industry
+    public function deleteIndustry($industryID) {
+        try {
+            if ($this->delete('industry', ['IndustryID' => $industryID])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
 ?>

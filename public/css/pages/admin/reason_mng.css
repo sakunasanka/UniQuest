@@ -10,6 +10,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     margin-top: 20px;
+    background-color: transparent;
 }
 
 .table-card {
@@ -29,6 +30,11 @@
     margin-bottom: 20px;
     position: relative;
     padding: 0 10px;
+}
+
+.content-title-container {
+    grid-column: span 2;
+    margin-left: 20px;
 }
 
 .table-title-container {

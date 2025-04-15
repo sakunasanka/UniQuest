@@ -5,11 +5,6 @@
             Dashboard
         </button>
 
-        <button class="nav-btn" data-path="/UniQuest/admin/reason_mng">
-            <span class="material-symbols-outlined"> table_rows </span>
-            Reasons Management
-        </button>
-
         <button class="nav-btn" data-paths="/UniQuest/admin/students_mng,/UniQuest/admin/company_mng,/UniQuest/admin/verTeam_mng,/UniQuest/admin/add_member,/UniQuest/admin/add_student,/UniQuest/admin/add_company">
             <span class="material-symbols-outlined"> manage_accounts</span>
             User Management
@@ -34,9 +29,9 @@
             <span class="material-symbols-outlined"> problem </span>
             Complaints
         </button>
-        
+
         <button class="nav-btn" data-paths="/UniQuest/admin/messages_stu">
-        <span class="material-symbols-outlined">sms</span>
+            <span class="material-symbols-outlined">sms</span>
             Messages
         </button>
 
@@ -48,6 +43,11 @@
         <button class="nav-btn" data-path="/UniQuest/admin/reports">
             <span class="material-symbols-outlined"> summarize </span>
             Reports
+        </button>
+
+        <button class="nav-btn" data-path="/UniQuest/admin/reason_mng">
+            <span class="material-symbols-outlined"> settings_applications </span>
+            Application Settings
         </button>
 
         <button class="nav-btn" data-path="/UniQuest/user/profile">

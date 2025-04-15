@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
-    const deleteButtons = document.querySelectorAll('.delete-icon');
+    const deleteButtons = document.querySelectorAll('.reason-delete-btn');
     const popup = document.getElementById('deleteReasonPopup');
     const closeBtn = popup.querySelector('.close-btn');
     const cancelBtn = popup.querySelector('.cancel-btn');
