@@ -48,10 +48,12 @@
                         <span>Email</span>
                         <?php echo $data['user']['Email'] ?>
                     </div>
-                    <div>
-                        <span>Website</span>
-                        <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
-                    </div>
+                    <?php if ($data['user']['Website']): ?>
+                        <div>
+                            <span>Website</span>
+                            <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="btn-row">
                     <?php if ($data['verifyDetails']->Action == 'Approve'): ?>

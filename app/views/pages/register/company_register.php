@@ -58,7 +58,13 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="industry">Industry<span class="req"> *</span></label>
-                            <input type="text" id="industry" name="industry" value="<?php echo $data['industry']; ?>" placeholder="Enter Industry" required>
+                            <!-- <input type="text" id="industry" name="industry" value="<?php echo $data['industry']; ?>" placeholder="Enter Industry" required> -->
+                            <select id="industry" name="industry" required>
+                                <option value="" disabled selected>Select Industry</option>
+                                <?php foreach ($data['industries'] as $industry) : ?>
+                                    <option value="<?php echo $industry->IndustryName; ?>" <?php echo ($data['industry'] == $industry->IndustryName) ? 'selected' : ''; ?>><?php echo $industry->IndustryName; ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <span class="error-msg"><?php echo !empty($data['industry_err']) ? $data['industry_err'] : '' ?></span>
                         </div>
                         <div class="input-container">

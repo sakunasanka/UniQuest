@@ -45,6 +45,7 @@ class Register extends Controller
             'role' => 'Company',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Pending',
+            'industries' => $this->model('AdminModel')->getIndustries()['data'],
 
             'companyName_err' => '',
             'email_err' => '',
