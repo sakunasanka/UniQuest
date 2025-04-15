@@ -40,6 +40,21 @@ class M_jobpost extends Model {
         return $row;
     }
 
+    public function getJobCountByCompany() {
+        $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single(); 
+        return $row->job_count;
+    }
+
+    public function getActiveJobCountByCompany() {
+        $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id AND Status = :status');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $this->db->bind(':status', 'Active'); 
+        $row = $this->db->single(); 
+        return $row->job_count;
+    }
+
     public function getPost(){
         $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
         $this->db->bind(':id', $_SESSION['user_id']);
@@ -162,6 +177,48 @@ class M_jobpost extends Model {
             error_log("General Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function getJobPostingsByMonth() {
+        // Get the current date and calculate the start date for the last 5 months
+        $currentDate = date('Y-m-d');
+    
+        // Query to fetch job postings for the last 5 months
+        $this->db->query("
+            WITH months AS (
+                SELECT DATE_FORMAT(DATE_SUB(:current_date, INTERVAL seq MONTH), '%Y-%m-01') AS month_start
+                FROM (
+                    SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+                ) AS seq_table
+            )
+            SELECT 
+                DATE_FORMAT(months.month_start, '%M') AS month_name,
+                COALESCE(SUM(CASE WHEN j.Category = 'Part-time' THEN 1 ELSE 0 END), 0) AS part_time_jobs,
+                COALESCE(SUM(CASE WHEN j.Category = 'Internship' THEN 1 ELSE 0 END), 0) AS internships
+            FROM months
+            LEFT JOIN jobs j 
+                ON DATE_FORMAT(j.create_at, '%Y-%m') = DATE_FORMAT(months.month_start, '%Y-%m')
+                AND j.CompanyID = :user_id
+                AND j.verifiedBy IS NOT NULL
+            GROUP BY months.month_start
+            ORDER BY months.month_start DESC;
+        ");
+    
+        // Bind parameters
+        $this->db->bind(':current_date', $currentDate);
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+    
+        $result = $this->db->resultSet();
+
+        // Extract month names from the result
+        //month names sort by ascending order
+        $monthNames = array_column($result, 'month_name');
+        $monthNames = array_reverse($monthNames);
+
+        return [
+            'month_names' => $monthNames,
+            'data' => $result
+        ];
     }
 }
 ?>

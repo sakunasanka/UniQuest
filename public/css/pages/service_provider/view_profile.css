@@ -131,6 +131,55 @@ body {
     justify-content: space-between;
 }
 
+.view-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.view-card-title {
+    margin-right: 20px;
+}
+
+.plan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.subscription-plan {
+    margin-left: auto;
+    padding: 8px 16px;
+    background-color: #f0f7f4;
+    border: 1px solid #32a852;
+    color: #32a852;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.days-remaining {
+    color: #666; 
+    font-size: 16px;
+    padding: 2px 8px;
+    align-items: center;
+}
+
+.black-icon {
+    color: #000; 
+    font-size: 30px;
+}
+
+.gold-icon {
+    color: #E9992F; 
+    font-size: 30px;
+}
+
 .view-card-info div {
     font-size: 16px;
     color: #333;

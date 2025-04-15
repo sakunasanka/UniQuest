@@ -231,6 +231,153 @@ class M_applicationFields extends Model{
         }
     }
 
+    public function getApplicationCount() {
+        $this->db->query('SELECT Count(*) as application_count FROM v_allapplications WHERE v_allapplications.CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single();
+        return $row->application_count;
+    }
+    
+    public function getApplicationsByGender() {
+        try {
+            $this->db->query("
+                SELECT 
+                    CASE 
+                        WHEN s.gender = 'Male' THEN 'Male'
+                        WHEN s.gender = 'Female' THEN 'Female'
+                    END AS gender,
+                    COUNT(DISTINCT s.studentID) AS user_count
+                FROM applications a
+                INNER JOIN student s ON a.user_id = s.studentID
+                INNER JOIN Jobs j ON a.job_id = j.jobID
+                WHERE j.companyID = :company_id
+                GROUP BY 
+                    CASE 
+                        WHEN s.gender = 'Male' THEN 'Male'
+                        WHEN s.gender = 'Female' THEN 'Female'
+                    END
+                ORDER BY user_count DESC
+            ");
+    
+            $this->db->bind(':company_id', $_SESSION['user_id']);
+            
+            $results = $this->db->resultSet();
+            
+            // Ensure all gender categories are represented
+            $genderCounts = [
+                'Male' => 0,
+                'Female' => 0
+            ];
+    
+            foreach ($results as $row) {
+                $genderCounts[$row->gender] = (int)$row->user_count;
+            }
+    
+            return $genderCounts;
+    
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [
+                'Male' => 0,
+                'Female' => 0
+            ];
+        }
+    }
+
+    // public function getApplicationsByWeek() {
+    //     $this->db->query("SELECT 
+    //             WEEK(SubmissionDate) AS week, 
+    //             COUNT(*) AS applications
+    //         FROM v_allapplications
+    //         WHERE CompanyID = :user_id
+    //         GROUP BY WEEK(SubmissionDate)");
+    //     $this->db->bind(':user_id', $_SESSION['user_id']);    
+    //     return $this->db->resultSet();
+    // }
+
+    public function getApplicationsByWeek() {
+        try {
+            // Query to fetch application counts grouped by week, starting from Monday
+            $this->db->query("
+                WITH weeks AS (
+                    SELECT 
+                        DATE_SUB(DATE(CURRENT_DATE - INTERVAL WEEKDAY(CURRENT_DATE) DAY), INTERVAL seq WEEK) AS week_start,
+                        CONCAT(
+                            DATE_FORMAT(DATE_SUB(DATE(CURRENT_DATE - INTERVAL WEEKDAY(CURRENT_DATE) DAY), INTERVAL seq WEEK), '%Y-%m-%d'), 
+                            ' to ', 
+                            DATE_FORMAT(DATE_ADD(DATE_SUB(DATE(CURRENT_DATE - INTERVAL WEEKDAY(CURRENT_DATE) DAY), INTERVAL seq WEEK), INTERVAL 6 DAY), '%Y-%m-%d')
+                        ) AS week_label
+                    FROM (
+                        SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+                    ) AS seq_table
+                )
+                SELECT 
+                    weeks.week_label AS week_label,
+                    COALESCE(COUNT(a.id), 0) AS application_count
+                FROM weeks
+                LEFT JOIN applications a 
+                    ON DATE(a.created_at) BETWEEN weeks.week_start AND DATE_ADD(weeks.week_start, INTERVAL 6 DAY)
+                    AND a.job_id IN (
+                        SELECT j.jobID 
+                        FROM jobs j 
+                        WHERE j.CompanyID = :user_id
+                          AND j.verifiedBy IS NOT NULL
+                    )
+                GROUP BY weeks.week_start
+                ORDER BY weeks.week_start DESC;
+            ");
+    
+            // Bind the user ID
+            $this->db->bind(':user_id', $_SESSION['user_id']);
+    
+            // Fetch and return the result set
+            $result = $this->db->resultSet();
+    
+            // Extract week labels and application counts
+            $weekLabels = array_column($result, 'week_label');
+            $weekLabels = array_reverse($weekLabels);
+            $applicationCounts = array_column($result, 'application_count');
+            $applicationCounts = array_reverse($applicationCounts);
+    
+            return [
+                'week_labels' => $weekLabels,
+                'application_counts' => $applicationCounts
+            ];
+    
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [
+                'week_labels' => [],
+                'application_counts' => []
+            ];
+        }
+    }
+
+    public function getTopPerformingJobs($limit = 4) {
+        try {
+            $this->db->query("
+                SELECT 
+                    j.title AS job_title,
+                    COUNT(a.id) AS application_count
+                FROM jobs j
+                LEFT JOIN applications a ON j.jobID = a.job_id
+                WHERE j.CompanyID = :company_id
+                GROUP BY j.jobID, j.title
+                ORDER BY application_count DESC
+                LIMIT :limit
+            ");
+            
+            $this->db->bind(':company_id', $_SESSION['user_id']);
+            $this->db->bind(':limit', $limit, PDO::PARAM_INT);
+            
+            return $this->db->resultSet();
+            
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
 public function createApplication($fields, $jobId, $userId) {
     try {
         $this->db->beginTransaction();
@@ -290,9 +437,9 @@ public function createApplication($fields, $jobId, $userId) {
         error_log("Insert result: " . ($result ? 'true' : 'false'));
         
         if (!$result) {
-            // Log the exact SQL error if available
-            $errorInfo = $this->db->errorInfo();
-            error_log("SQL Error: " . print_r($errorInfo, true));
+            // // Log the exact SQL error if available
+            // $errorInfo = $this->db->errorInfo();
+            // error_log("SQL Error: " . print_r($errorInfo, true));
             throw new Exception('Failed to save application: ' . ($errorInfo[2] ?? 'Unknown error'));
         }
         

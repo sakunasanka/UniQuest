@@ -126,7 +126,7 @@ class AdminModel extends Model {
 
     public function getReasonsByType($reasonType) {
         try {
-            $reasonNames = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName', 'AND', '', '', 0, 1, true);
+            $reasonNames = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName, Reason', 'AND', '', '', 0, 1, true);
             return $reasonNames;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -137,6 +137,51 @@ class AdminModel extends Model {
         try {
             $reason = $this->select('reason', [['ReasonID', '=', $reasonID]], 'Reason', 'AND', '', '', 0, 1, false);
             return $reason;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function addReason($reasonName, $reason, $reasonType) {
+        try {
+            $reason = [
+                'ReasonName' => $reasonName,
+                'Reason' => $reason,
+                'ReasonType' => $reasonType
+            ];
+            if ($this->insert('reason', $reason)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function updateReason($reasonID, $reasonName, $reason) {
+        try {
+            $reason = [
+                'ReasonName' => $reasonName,
+                'Reason' => $reason
+            ];
+            if ($this->update('reason', $reason, ['ReasonID' => $reasonID])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function deleteReason($reasonID) {
+        try {
+            if ($this->delete('reason', ['ReasonID' => $reasonID])) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -202,5 +247,59 @@ class AdminModel extends Model {
         }
     }
 
+    //retrieve all industries
+    public function getIndustries() {
+        try {
+            $industries = $this->select('industry', [], 'IndustryID, IndustryName', 'AND', '', '', 0, 1, true);
+            return $industries;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    // add industry
+    public function addIndustry($industryName) {
+        try {
+            $industry = [
+                'IndustryName' => $industryName
+            ];
+            if ($this->insert('industry', $industry)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    // update industry
+    public function updateIndustry($industryID, $industryName) {
+        try {
+            $industry = [
+                'IndustryName' => $industryName
+            ];
+            if ($this->update('industry', $industry, ['IndustryID' => $industryID])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    // delete industry
+    public function deleteIndustry($industryID) {
+        try {
+            if ($this->delete('industry', ['IndustryID' => $industryID])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
 ?>
