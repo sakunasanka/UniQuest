@@ -106,6 +106,15 @@ body {
     font-size: 30px;
 }
 
+.gold-icon {
+    color: #E9992F; 
+    font-size: 30px;
+}
+
+.activate-btn:hover .gold-icon {
+    color: white;
+}
+
 .activate-btn img, .activate-btn .white-icon {
     margin-left: 10px;
 }

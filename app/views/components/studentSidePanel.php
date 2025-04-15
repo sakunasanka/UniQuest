@@ -27,7 +27,7 @@
         </button>
 
         <!-- Trending companies -->
-        <button class="nav-btn" data-path="/UniQuest/student/trendyCompany">
+        <button class="nav-btn" data-path="/UniQuest/jobs/trendyCompany">
             <span class="material-symbols-outlined"> trending_up </span>
             Trending Companies
         </button>

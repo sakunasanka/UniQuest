@@ -40,7 +40,7 @@
                             <td>35</td>
                             <td>18</td>
                             <td class="action">
-                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_job/<?php echo $post->JobID; ?>'" >
+                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $post->JobID; ?>'" >
                                     preview
                                 </span>
                                 <span class="material-symbols-outlined action-btn edit"  onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $post->JobID; ?>'">

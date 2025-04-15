@@ -1,6 +1,6 @@
 // Navigation functions
-function goToApplyPage() {
-    window.location.href = "/uniquest/student/jobsapply"; 
+function goToApplyPage(jobId) {
+    window.location.href = `/uniquest/student/jobsApplyform/${jobId}`;
 }
 
 function goToContactPage() {
@@ -15,72 +15,159 @@ function goToCompany() {
     window.location.href = "/uniquest/student/companydescription"; 
 }
 
-// Track likes, dislikes, and their status for each review
-const likeCounts = {};
-const dislikeCounts = {};
-const likedStatus = {};
-const dislikedStatus = {};
+// Status trackers for each review
+const reviewStatus = {};
 
-// Initialize event listeners for all like and dislike buttons
+// Initialize all event listeners
 function initializeEventListeners() {
     document.querySelectorAll('.like-btn').forEach(button => {
-        button.addEventListener('click', () => toggleLike(button.getAttribute('data-id')));
+        const reviewId = button.getAttribute('data-id');
+        const dbReviewId = button.getAttribute('data-review-id');
+
+        // Initialize state
+        if (!reviewStatus[reviewId]) {
+            reviewStatus[reviewId] = {
+                liked: button.classList.contains('liked'),
+                disliked: false,
+                dbReviewId: dbReviewId
+            };
+        }
+
+        button.addEventListener('click', () => toggleLike(reviewId));
     });
 
     document.querySelectorAll('.dislike-btn').forEach(button => {
-        button.addEventListener('click', () => toggleDislike(button.getAttribute('data-id')));
+        const reviewId = button.getAttribute('data-id');
+        const dbReviewId = button.getAttribute('data-review-id');
+
+        // Initialize state
+        if (!reviewStatus[reviewId]) {
+            reviewStatus[reviewId] = {
+                liked: false,
+                disliked: button.classList.contains('disliked'),
+                dbReviewId: dbReviewId
+            };
+        }
+        
+        button.addEventListener('click', () => toggleDislike(reviewId));
     });
 }
 
-// Toggle like function
+// Toggle like state
 function toggleLike(reviewId) {
-    if (!likeCounts[reviewId]) likeCounts[reviewId] = 0;
-    if (!likedStatus[reviewId]) likedStatus[reviewId] = false;
+    const likeBtn = document.querySelector(`.like-btn[data-id="${reviewId}"]`);
+    const dislikeBtn = document.querySelector(`.dislike-btn[data-id="${reviewId}"]`);
+    const likeCountElem = document.querySelector(`.like-count[data-id="${reviewId}"]`);
+    const dislikeCountElem = document.querySelector(`.dislike-count[data-id="${reviewId}"]`);
 
-    const likeButtons = document.querySelectorAll(`.like-btn[data-id="${reviewId}"] .like-icon`);
-    const likeCountElems = document.querySelectorAll(`.like-count[data-id="${reviewId}"]`);
+    let likeCount = parseInt(likeCountElem.textContent.split(' ')[0]);
+    let dislikeCount = parseInt(dislikeCountElem.textContent.split(' ')[0]);
 
-    if (likedStatus[reviewId]) {
-        likeCounts[reviewId]--;
-        likedStatus[reviewId] = false;
-        likeButtons.forEach(btn => btn.style.color = "");
+    const isLiked = reviewStatus[reviewId].liked;
+    const isDisliked = reviewStatus[reviewId].disliked;
+    const dbReviewId = reviewStatus[reviewId].dbReviewId;
+
+    if (isLiked) {
+        // Unlike
+        likeCount--;
+        likeBtn.classList.remove('liked');
+        likeBtn.querySelector('.like-icon').style.color = "";
+        reviewStatus[reviewId].liked = false;
+        updateLikeStatus(dbReviewId, false);
     } else {
-        likeCounts[reviewId]++;
-        likedStatus[reviewId] = true;
-        likeButtons.forEach(btn => btn.style.color = "#299b63");
+        // Like
+        likeCount++;
+        likeBtn.classList.add('liked');
+        likeBtn.querySelector('.like-icon').style.color = "#299b63";
+        reviewStatus[reviewId].liked = true;
+        updateLikeStatus(dbReviewId, true);
 
-        if (dislikedStatus[reviewId]) {
-            toggleDislike(reviewId); // Remove dislike if active
+        // Remove dislike if active
+        if (isDisliked) {
+            dislikeCount--;
+            dislikeBtn.classList.remove('disliked');
+            dislikeBtn.querySelector('.dislike-icon').style.color = "";
+            reviewStatus[reviewId].disliked = false;
+            updateDislikeStatus(dbReviewId, false);
         }
     }
 
-    likeCountElems.forEach(elem => elem.textContent = `${likeCounts[reviewId]} likes`);
+    // Update counts
+    likeCountElem.textContent = `${likeCount} likes`;
+    dislikeCountElem.textContent = `${dislikeCount} dislikes`;
 }
 
-// Toggle dislike function
+// Toggle dislike state
 function toggleDislike(reviewId) {
-    if (!dislikeCounts[reviewId]) dislikeCounts[reviewId] = 0;
-    if (!dislikedStatus[reviewId]) dislikedStatus[reviewId] = false;
+    const dislikeBtn = document.querySelector(`.dislike-btn[data-id="${reviewId}"]`);
+    const likeBtn = document.querySelector(`.like-btn[data-id="${reviewId}"]`);
+    const dislikeCountElem = document.querySelector(`.dislike-count[data-id="${reviewId}"]`);
+    const likeCountElem = document.querySelector(`.like-count[data-id="${reviewId}"]`);
 
-    const dislikeButtons = document.querySelectorAll(`.dislike-btn[data-id="${reviewId}"] .dislike-icon`);
-    const dislikeCountElems = document.querySelectorAll(`.dislike-count[data-id="${reviewId}"]`);
+    let dislikeCount = parseInt(dislikeCountElem.textContent.split(' ')[0]);
+    let likeCount = parseInt(likeCountElem.textContent.split(' ')[0]);
 
-    if (dislikedStatus[reviewId]) {
-        dislikeCounts[reviewId]--;
-        dislikedStatus[reviewId] = false;
-        dislikeButtons.forEach(btn => btn.style.color = "");
+    const isDisliked = reviewStatus[reviewId].disliked;
+    const isLiked = reviewStatus[reviewId].liked;
+    const dbReviewId = reviewStatus[reviewId].dbReviewId;
+
+    if (isDisliked) {
+        // Undislike
+        dislikeCount--;
+        dislikeBtn.classList.remove('disliked');
+        dislikeBtn.querySelector('.dislike-icon').style.color = "";
+        reviewStatus[reviewId].disliked = false;
+        updateDislikeStatus(dbReviewId, false);
     } else {
-        dislikeCounts[reviewId]++;
-        dislikedStatus[reviewId] = true;
-        dislikeButtons.forEach(btn => btn.style.color = "#e74c3c");
+        // Dislike
+        dislikeCount++;
+        dislikeBtn.classList.add('disliked');
+        dislikeBtn.querySelector('.dislike-icon').style.color = "#e74c3c";
+        reviewStatus[reviewId].disliked = true;
+        updateDislikeStatus(dbReviewId, true);
 
-        if (likedStatus[reviewId]) {
-            toggleLike(reviewId); // Remove like if active
+        // Remove like if active
+        if (isLiked) {
+            likeCount--;
+            likeBtn.classList.remove('liked');
+            likeBtn.querySelector('.like-icon').style.color = "";
+            reviewStatus[reviewId].liked = false;
+            updateLikeStatus(dbReviewId, false);
         }
     }
 
-    dislikeCountElems.forEach(elem => elem.textContent = `${dislikeCounts[reviewId]} dislikes`);
+    // Update counts
+    dislikeCountElem.textContent = `${dislikeCount} dislikes`;
+    likeCountElem.textContent = `${likeCount} likes`;
 }
 
-// Initialize all event listeners on page load
-initializeEventListeners();
+function updateLikeStatus(reviewId, isLiked) {
+    const formData = new FormData();
+    formData.append('review_id', reviewId);
+    formData.append('is_liked', isLiked);
+
+    // Create a new XMLHttpRequest to send the data to the server
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/updateLikeStatus', true);
+
+    // Send the request with the form data
+    xhr.send(formData);
+}
+
+function updateDislikeStatus(reviewId, isDisliked) {
+    const formData = new FormData();
+    formData.append('review_id', reviewId);
+    formData.append('is_disliked', isDisliked);
+
+    // Create a new XMLHttpRequest to send the data to the server
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/updateDislikeStatus', true);
+
+    // Send the request with the form data
+    xhr.send(formData);
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', initializeEventListeners);

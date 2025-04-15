@@ -89,13 +89,13 @@ body {
 }
 
 .card-logo img {
-    width: 120px;
+    width: 100px;
     height: 100px;
     margin-bottom: 10px;
 }
 
 .job-title, .company-titile {
-    font-size: 1.2em;
+    font-size: 1em;
     color: #333;
     margin-bottom: 10px;
     display: -webkit-box;
