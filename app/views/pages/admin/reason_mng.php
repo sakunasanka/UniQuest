@@ -264,6 +264,7 @@
         <?php require APPROOT . '/views/popups/admin/editReason.php'; ?>
         <?php require APPROOT . '/views/popups/admin/deleteReason.php'; ?>
         <?php require APPROOT . '/views/popups/admin/addIndustry.php'; ?>
+        <?php require APPROOT . '/views/popups/admin/editIndustry.php'; ?>
     </main>
 </div>
 
