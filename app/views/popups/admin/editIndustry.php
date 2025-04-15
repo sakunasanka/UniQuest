@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/admin/addIndustry.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/admin/addReason.css">
 
 <!-- Popup Overlay -->
 <div class="popup-overlay" id="editIndustryPopup">

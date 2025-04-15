@@ -1240,4 +1240,48 @@ class Admin extends Controller
 
         exit;
     }
+
+    // Delete industry
+    public function deleteIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryID = filter_var($input['industryID'], FILTER_SANITIZE_NUMBER_INT);
+
+        if (empty($industryID)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid industry ID']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->deleteIndustry($industryID)) {
+                http_response_code(200);
+                echo json_encode(['success' => true, 'message' => 'Industry deleted successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to delete industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error deleting industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while deleting the industry.']);
+        }
+
+        exit;
+    }
 }
