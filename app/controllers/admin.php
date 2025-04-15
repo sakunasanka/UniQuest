@@ -404,7 +404,7 @@ class Admin extends Controller
 
             $data = [
                 'userID' => $userID,
-                'email' => $email, 
+                'email' => $email,
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
@@ -433,7 +433,7 @@ class Admin extends Controller
             }
         } else {
             // Load initial view without POST request
-            
+
             $data = [
                 'userID' => $userID,
                 'email' => '',
@@ -1060,5 +1060,279 @@ class Admin extends Controller
         } else {
             Redirect::to(URLROOT . '/admin/user_detail');
         }
+    }
+
+    //retrieve reasons
+    public function app_settings()
+    {
+        try {
+            $data = [
+                'user_activate' => $this->model('AdminModel')->getReasonsByType('user_activate')['data'],
+                'user_deactivate' => $this->model('AdminModel')->getReasonsByType('user_deactivate')['data'],
+                'user_reject' => $this->model('AdminModel')->getReasonsByType('user_reject')['data'],
+                'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data'],
+                'industries' => $this->model('AdminModel')->getIndustries()['data']
+            ];
+            $this->view('pages/admin/app_settings', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function addReason()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get raw POST data and decode it
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+                return;
+            }
+
+            // Sanitize inputs
+            $reasonName = trim(filter_var($input['reasonName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $reason = trim(filter_var($input['reason'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $reasonType = trim(filter_var($input['reasonType'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+            // Validate inputs
+            if (empty($reasonName) || empty($reasonType)) {
+                echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
+                return;
+            }
+
+            try {
+                // Add reason to the database
+                if ($this->model('AdminModel')->addReason($reasonName, $reason, $reasonType)) {
+                    echo json_encode(['success' => true, 'message' => 'Reason added successfully.']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to add reason.']);
+                }
+            } catch (Exception $e) {
+                error_log('Error adding reason: ' . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'An error occurred while adding the reason.']);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+        }
+        exit;
+    }
+
+    public function updateReason()
+    {
+        // Set proper header first
+        header('Content-Type: application/json');
+
+        try {
+            // Get input data
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON input');
+            }
+
+            // Validate required fields
+            if (empty($input['reasonID']) || empty($input['reasonName'])) {
+                throw new Exception('Missing required fields');
+            }
+
+            // Sanitize data
+            $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
+            $reasonName = filter_var($input['reasonName'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $reason = filter_var($input['reason'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Update in model
+            $success = $this->model('AdminModel')->updateReason($reasonID, $reasonName, $reason);
+
+            if ($success) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Reason updated successfully'
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to update reason'
+                ]);
+            }
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit;
+    }
+
+    public function deleteReason()
+    {
+        header('Content-Type: application/json');
+
+        try {
+            // Get JSON input
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON input');
+            }
+
+            // Validate reasonID
+            if (empty($input['reasonID'])) {
+                throw new Exception('Invalid reason ID');
+            }
+
+            $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
+
+            // Delete in model
+            $success = $this->model('AdminModel')->deleteReason($reasonID);
+
+            echo json_encode([
+                'success' => $success,
+                'message' => $success ? 'Reason deleted successfully' : 'Failed to delete reason'
+            ]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit;
+    }
+
+    public function addIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryName = trim(filter_var($input['industryName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+        if (empty($industryName)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Please enter an industry name.']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->addIndustry($industryName)) {
+                http_response_code(201);
+                echo json_encode(['success' => true, 'message' => 'Industry added successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to add industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error adding industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while adding the industry.']);
+        }
+
+        exit;
+    }
+
+    // Update industry
+    public function updateIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryID = filter_var($input['industryID'], FILTER_SANITIZE_NUMBER_INT);
+        $industryName = trim(filter_var($input['industryName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+        if (empty($industryID) || empty($industryName)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->updateIndustry($industryID, $industryName)) {
+                http_response_code(200);
+                echo json_encode(['success' => true, 'message' => 'Industry updated successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to update industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error updating industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while updating the industry.']);
+        }
+
+        exit;
+    }
+
+    // Delete industry
+    public function deleteIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryID = filter_var($input['industryID'], FILTER_SANITIZE_NUMBER_INT);
+
+        if (empty($industryID)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid industry ID']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->deleteIndustry($industryID)) {
+                http_response_code(200);
+                echo json_encode(['success' => true, 'message' => 'Industry deleted successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to delete industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error deleting industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while deleting the industry.']);
+        }
+
+        exit;
     }
 }
