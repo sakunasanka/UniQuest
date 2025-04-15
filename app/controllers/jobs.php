@@ -136,44 +136,90 @@ class Jobs extends Controller
         }
     }
 
-    // public function updateLikeStatus()
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         // Validate session user ID
-    //         if (isset($_SESSION['user_id'])) {
-    //             $userId = $_SESSION['user_id']; // Get user ID from session
-    //         } else {
-    //             http_response_code(403); // Return 403 forbidden status
-    //             echo json_encode("User not logged in!"); 
-    //             return;
-    //         }
+    // Add like/dislike status methods to the Jobs controller
+    public function updateLikeStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate session user ID
+            if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id']; // Get user ID from session
+            } else {
+                http_response_code(403); // Return 403 forbidden status
+                echo "User not logged in!";
+                return;
+            }
 
-    //         $reviewId = $_POST['review_id'] ?? null; 
+            // Get review ID and like status from POST data
+            $reviewId = $_POST['review_id'] ?? null;
+            $isLiked = $_POST['is_liked'] ?? false;
+            $isLiked = filter_var($isLiked, FILTER_VALIDATE_BOOLEAN);
+            // Check if review ID is provided
+            if (!empty($reviewId)) {
+                if ($isLiked) {
+                    // Add like to review
+                    if ($this->model('RateAndReviewModel')->addLike($reviewId, $userId)) {
+                        echo "Like added successfully!";                  
+                        
+                    } else {
+                        echo "Failed to add like.";
+                    }
+                } else {
+                    // Remove like from review
+                    if ($this->model('RateAndReviewModel')->removeLike($reviewId, $userId)) {
+                        echo "Like removed successfully!";
+                    } else {
+                        echo "Failed to remove like.";
+                    }
+                }
+            } else {
+                echo "Review ID is missing!";
+            }
+        } else {
+            echo "Invalid request method.";
+        }
+    }
 
-    //         if (!empty($reviewId)) { 
-    //             // Check if the review is already liked
-    //             if ($this->model->isLiked($reviewId)) {
-    //                 // If liked, remove the like
-    //                 if ($this->model->removeLike($reviewId)) {
-    //                     echo json_encode("Like removed successfully!"); 
-    //                 } else {
-    //                     echo json_encode("Failed to remove like. Please check the database."); 
-    //                 }
-    //             } else {
-    //                 // If not liked, add a like
-    //                 if ($this->model->addUserLike($reviewId)) {
-    //                     echo json_encode("Like added successfully!");  
-    //                 } else {
-    //                     echo json_encode("Failed to add like. Please check the database."); 
-    //                 }
-    //             }
-    //         } else {
-    //             echo json_encode("Review ID is missing!"); 
-    //         }
-    //     } else {
-    //         echo json_encode("Invalid request method."); 
-    //     }
-    // }
+    public function updateDislikeStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate session user ID
+            if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id']; // Get user ID from session
+            } else {
+                http_response_code(403); // Return 403 forbidden status
+                echo "User not logged in!";
+                return;
+            }
+
+            // Get review ID and dislike status from POST data
+            $reviewId = $_POST['review_id'] ?? null;
+            $isDisliked = $_POST['is_disliked'] ?? false;
+            $isDisliked = filter_var($isDisliked, FILTER_VALIDATE_BOOLEAN);
+
+            // Check if review ID is provided
+            if (!empty($reviewId)) {
+                if ($isDisliked) {
+                    // Add dislike to review
+                    if ($this->model('RateAndReviewModel')->addDislike($reviewId, $userId)) {
+                        echo "Dislike added successfully!";
+                    } else {
+                        echo "Failed to add dislike.";
+                    }
+                } else {
+                    // Remove dislike from review
+                    if ($this->model('RateAndReviewModel')->removeDislike($reviewId, $userId)) {
+                        echo "Dislike removed successfully!";
+                    } else {
+                        echo "Failed to remove dislike.";
+                    }
+                }
+            } else {
+                echo "Review ID is missing!";
+            }
+        } else {
+            echo "Invalid request method.";
+        }
+    }
 
     public function jobs($queryParam = [])
     {
@@ -327,8 +373,10 @@ class Jobs extends Controller
         // Replace reviewer names with anonymous names
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
-            $review->LikeCount = $this->model('jobModel')->getLikesByReviewID($review->ReviewID);
-            $review->DislikeCount = $this->model('jobModel')->getDislikesByReviewID($review->ReviewID);
+            $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
+            $review->DislikeCount = $this->model('RateAndReviewModel')->getDislikesByReviewID($review->ReviewID);
+            $review->is_liked = $this->model('RateAndReviewModel')->checkIfLiked($review->ReviewID, $userId);
+            $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $userId);
         }
 
         // Check if the user has already reviewed the company
@@ -496,6 +544,10 @@ class Jobs extends Controller
 
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
+            $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
+            $review->DislikeCount = $this->model('RateAndReviewModel')->getDislikesByReviewID($review->ReviewID);
+            $review->is_liked = $this->model('RateAndReviewModel')->checkIfLiked($review->ReviewID, $userId);
+            $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $userId);
         }
         
         $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->CompanyID);

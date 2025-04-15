@@ -302,6 +302,18 @@ class User extends Controller
             if ($user['Role'] === 'Student') {
                 $this->view('pages/student/view_profile', $data);
             } else if ($user['Role'] === 'Company') {
+                $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($_SESSION['user_id']);
+
+                foreach ($reviews as $review) {
+                    $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
+                    $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
+                    $review->DislikeCount = $this->model('RateAndReviewModel')->getDislikesByReviewID($review->ReviewID);
+                    $review->is_liked = $this->model('RateAndReviewModel')->checkIfLiked($review->ReviewID, $data['user']['UserID']);
+                    $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $data['user']['UserID']);
+                }
+
+                $data['reviews'] = $reviews;
+
                 $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {
                 $this->view('pages/admin/view_profile', $data); //TODO: Create admin profile view
