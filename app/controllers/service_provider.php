@@ -83,7 +83,7 @@ class Service_provider extends Controller
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
-                    redirect('service_provider/contact_admin');
+                    Redirect::to(URLROOT . '/service_provider/contact_admin');
                 } else {
                     die('Something went wrong. Please try again.');
                 }
@@ -403,7 +403,7 @@ class Service_provider extends Controller
         
         if (!$order_id) {
             $_SESSION['payment_message'] = 'Payment error: Missing order information';
-            redirect('pages/serviceprovider/premiumFeatures');
+            
             return;
         }
         
@@ -412,14 +412,14 @@ class Service_provider extends Controller
         
         if (!$payment) {
             $_SESSION['payment_message'] = 'Payment error: Order not found';
-            redirect('pages/serviceprovider/premiumFeatures');
+            Redirect::to(URLROOT . '/service_provider/premium');
             return;
         }
         
         // Check if already processed
         if ($this->model('companyModel')->getPaymentByOrderId($order_id)) {
             $_SESSION['payment_message'] = 'Payment already processed';
-            redirect('pages/serviceprovider/premiumFeatures');
+            Redirect::to(URLROOT . '/service_provider/premium');
             return;
         }
         
@@ -454,7 +454,7 @@ class Service_provider extends Controller
             $_SESSION['payment_message'] = 'Payment was processed but there was an issue updating your account. Please contact support.';
         }
         
-        redirect('pages/serviceprovider/premiumFeatures');
+        Redirect::to(URLROOT . '/service_provider/premium');
     }
 
     public function premium_pro() {

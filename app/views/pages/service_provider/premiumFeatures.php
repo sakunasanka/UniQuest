@@ -55,11 +55,10 @@
                 </ul>
                 <hr class="option-bar">
                 <div class="plan-price">LKR 3000 <span>per month</span></div>
-                <button class="upgrade-btn"  onclick="initiatePayment('professional', 3000, <?php echo $_SESSION['user_id']; ?>);">Upgrade to Professional</button>
                 <?php if($data['companyInfo']->subscription_plan == 'professional'):?>
                 <button class="current-plan-btn">Current Plan</button>
                 <?php else:?>
-                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', '<?php echo ($data['companyInfo']->subscription_status)?>')">Upgrade to Professional</button>
+                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', '<?php echo ($data['companyInfo']->subscription_status)?>', 'professional')", onclick="initiatePayment('professional', 3000, <?php echo $_SESSION['user_id']; ?>);">Upgrade to Professional</button>
                 <?php endif;?>
             </div>
             
@@ -78,18 +77,24 @@
                 <?php if($data['companyInfo']->subscription_plan == 'enterprise'):?>
                 <button class="current-plan-btn">Current Plan</button>
                 <?php else:?>
-                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', '<?php echo ($data['companyInfo']->subscription_status)?>')">Upgrade to Enterprise</button>
+                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', '<?php echo ($data['companyInfo']->subscription_status)?>', 'enterprise')">Upgrade to Enterprise</button>
                 <?php endif;?>
-                <button class="upgrade-btn" onclick="initiatePayment('enterprise', 5000, <?php echo $_SESSION['user_id']; ?>);">Upgrade to Enterprise</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function RemainingDaysAlert(plan, status) {
+    function RemainingDaysAlert(plan, status, req_plan) {
 
         const remainingDays = <?php echo json_encode($remainingDays); ?>;
+        let planPrice;
+        if (req_plan == 'professional') {
+            planPrice = 3000;
+        }
+        else if (req_plan == 'enterprise') {
+            planPrice = 5000;
+        }
 
         if (plan == 'professional' && status == 'active') {
             Flash.show("You are currently on the Professional plan. " + remainingDays +" until your plan expires.", "error");
@@ -98,7 +103,7 @@
             Flash.show("You are currently on the Enterprise plan. " + remainingDays +" until your plan expires.", "error");
         }
         else {
-            window.location.href = "<?php echo URLROOT; ?>/service_provider/upgradePremium";
+            initiatePayment(req_plan, planPrice, <?php echo $_SESSION['user_id']; ?>);
         }
     }
 </script>
@@ -107,4 +112,3 @@
 
 <script src="https://www.payhere.lk/lib/payhere.js"></script>
 <script src="<?php echo URLROOT; ?>/js/service_provider/payhere.js"></script>
-<?php require APPROOT . '/views/components/footer.php'; ?>

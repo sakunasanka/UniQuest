@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
 
     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
         <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/footer.css">
