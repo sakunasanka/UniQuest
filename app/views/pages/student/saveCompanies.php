@@ -41,7 +41,14 @@
                                 <div class="title-content">
                                     <h3 class="company-title"><?php echo $post->CompanyName; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i> 4.8
+                                        <i class="fa fa-star"></i> 
+                                        <?php 
+                                            if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
+                                                echo round($data['displayRatings'][$post->CompanyID], 2);
+                                            } else {
+                                                echo 'N/A';
+                                            }
+                                        ?>
                                     </div>
                                 </div>
                                 
@@ -53,8 +60,7 @@
                             <?php  if ($_SESSION['user_role'] == 'Student'):?>
  
                                 <div class="card-icons">
-                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>  
                                     <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
                                     
                                 </div>
@@ -85,17 +91,11 @@
 
 <script>
     function goToCompanyDescription(companyId) {
-        window.location.href = "/UniQuest/student/companydescription/" +companyId;
+        window.location.href = "/UniQuest/jobs/companydescription/" +companyId;
     }
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
-
     function toggleBookmark(icon, companyId) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
@@ -123,5 +123,15 @@
 
         // Send the request with the form data
         xhr.send(formData);
+    }
+
+    function shareJob(companyId) {
+        const jobURL = `${window.location.origin}/UniQuest/jobs/companydescription/${companyId}`;
+        
+        navigator.clipboard.writeText(jobURL).then(() => {
+            Flash.show('Company link copied to clipboard!', 'success');
+        }).catch(err => {
+            Flash.show('Failed to copy link', 'error');
+        });
     }
 </script>

@@ -6,9 +6,26 @@
     <main class="content-area">
         <div class="header-section">
             <h1>Welcome!</h1>
+
+            <?php
+            if($data['companyInfo']->subscription_plan == 'professional'):
+            ?>
+            <button class="activate-btn" id="activate-premium" onclick="goToPremiums()">
+                <span class="material-symbols-outlined gold-icon"> workspace_premium </span> Professional
+            </button>
+
+            <?php
+            elseif($data['companyInfo']->subscription_plan == 'enterprise'):
+            ?>
+            <button class="activate-btn" id="activate-premium" onclick="goToPremiums()">
+                <span class="material-symbols-outlined black-icon"> workspace_premium </span> Enterprise
+            </button>
+
+            <?php else: ?>   
             <button class="activate-btn" id="activate-premium" onclick="goToPremiums()">
                 <span class="material-symbols-outlined black-icon"> workspace_premium </span> Activate Premium
             </button>
+            <?php endif; ?>
         </div>
         <div class="grid-container">
             <div class="card" onclick="goToJobs()">

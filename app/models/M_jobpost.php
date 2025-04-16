@@ -1,12 +1,12 @@
 <?php
 
-class M_jobpost {
-    private $db;
+class M_jobpost extends Model {
+    // private $db;
 
-    public function __construct() {
-        // Assuming Database class uses a singleton pattern with getInstance()
-        $this->db = Database::getInstance();
-    }
+    // public function __construct() {
+    //     // Assuming Database class uses a singleton pattern with getInstance()
+    //     $this->db = Database::getInstance();
+    // }
 
     public function getLatestJobId() {
         $this->db->query('SELECT * FROM jobs ORDER BY create_at DESC LIMIT 1');
@@ -18,6 +18,12 @@ class M_jobpost {
         }
         
         return false;
+    }
+
+    public function getJobsByCompanyId($id){
+        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY jobs_create_at DESC');
+        $this->db->bind(':company_id', $id);       
+        return $this->db->resultSet();
     }
 
     public function getpostbyid($jobpostId){
@@ -32,6 +38,21 @@ class M_jobpost {
         $this->db->bind(':id', $companyId);
         $row = $this->db->single();
         return $row;
+    }
+
+    public function getJobCountByCompany() {
+        $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single(); 
+        return $row->job_count;
+    }
+
+    public function getActiveJobCountByCompany() {
+        $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id AND Status = :status');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $this->db->bind(':status', 'Active'); 
+        $row = $this->db->single(); 
+        return $row->job_count;
     }
 
     public function getPost(){
@@ -52,9 +73,9 @@ class M_jobpost {
     public function create($data) {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, CompanyID, Status) 
+            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
             VALUES 
-            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :company_id, :status)
+            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
         ');
 
         // Bind the values from $data array
@@ -65,7 +86,9 @@ class M_jobpost {
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
+        $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':company_id', $_SESSION['user_id']);
+        $this->db->bind(':publish_date', $data['publish_date']); 
         $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
@@ -105,7 +128,7 @@ class M_jobpost {
         return $this->db->execute();
     }
 
-    public function delete($postId){
+    public function deletePost($postId){
         $this->db->query('DELETE FROM jobs WHERE JobID=:id');
         $this->db->bind(':id',$postId );
         
@@ -118,19 +141,84 @@ class M_jobpost {
         }
     }
 
-    public function getPartTimeJobs()
+    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12)
     {
-        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Part-time' ");
-        return $this->db->resultSet();
+        try{
+            $conditions = [
+                ['Status', '=', 'Active'],
+                ['Category', '=', 'Part-time']
+            ];
+
+            $jobs = $this->select('v_jobs', $conditions, '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            return $jobs;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
 
-    public function getInternshipJobs()
+    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12)
     {
-        $this->db->query("SELECT * FROM v_jobs WHERE v_jobs.Category = 'Internship' ");
-        return $this->db->resultSet();
+        try{
+            $conditions = [
+                ['Status', '=', 'Active'],
+                ['Category', '=', 'Internship']
+            ];
+
+            $interns = $this->select('v_jobs', $conditions, '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            return $interns;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
 
+    public function getJobPostingsByMonth() {
+        // Get the current date and calculate the start date for the last 5 months
+        $currentDate = date('Y-m-d');
     
+        // Query to fetch job postings for the last 5 months
+        $this->db->query("
+            WITH months AS (
+                SELECT DATE_FORMAT(DATE_SUB(:current_date, INTERVAL seq MONTH), '%Y-%m-01') AS month_start
+                FROM (
+                    SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+                ) AS seq_table
+            )
+            SELECT 
+                DATE_FORMAT(months.month_start, '%M') AS month_name,
+                COALESCE(SUM(CASE WHEN j.Category = 'Part-time' THEN 1 ELSE 0 END), 0) AS part_time_jobs,
+                COALESCE(SUM(CASE WHEN j.Category = 'Internship' THEN 1 ELSE 0 END), 0) AS internships
+            FROM months
+            LEFT JOIN jobs j 
+                ON DATE_FORMAT(j.create_at, '%Y-%m') = DATE_FORMAT(months.month_start, '%Y-%m')
+                AND j.CompanyID = :user_id
+                AND j.verifiedBy IS NOT NULL
+            GROUP BY months.month_start
+            ORDER BY months.month_start DESC;
+        ");
+    
+        // Bind parameters
+        $this->db->bind(':current_date', $currentDate);
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+    
+        $result = $this->db->resultSet();
 
+        // Extract month names from the result
+        //month names sort by ascending order
+        $monthNames = array_column($result, 'month_name');
+        $monthNames = array_reverse($monthNames);
+
+        return [
+            'month_names' => $monthNames,
+            'data' => $result
+        ];
+    }
 }
 ?>

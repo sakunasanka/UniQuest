@@ -142,30 +142,36 @@ CREATE TABLE IF NOT EXISTS uniquest.Jobs (
     ON UPDATE CASCADE
 )
 ENGINE = InnoDB;
+
+ALTER TABLE Jobs
+ADD COLUMN PublishDate DATE AFTER create_at,
+ADD COLUMN SalaryType ENUM('Per Hour', 'Per Day', 'Per Week', 'Per Month') NOT NULL DEFAULT 'Per Month' AFTER SalaryRange;
 -- ---------------------------------------------------
 
-CREATE VIEW v_jobs AS 
-    SELECT 
-        jobs.JobID AS JobID,
-        company.CompanyID AS CompanyID,
-        jobs.Title AS Title,
-        company.CompanyLogo AS CompanyLogo,
-        company.CompanyName AS CompanyName,
-        jobs.Description AS Description,
-        jobs.Location AS Location,
-        jobs.Category AS Category,
-        jobs.Status AS Status,
-        jobs.JobBenefits AS JobBenefits,
-        jobs.RequiredQualifications AS RequiredQualifications,
-        jobs.SalaryRange AS SalaryRange,
-        user.Email AS Email,
-        user.ContactNo AS ContactNo,
-        jobs.Create_at AS jobs_create_at,         -- Use correct capitalization
-        company.Create_at AS company_create_at    -- Use correct capitalization
-    FROM jobs 
-    INNER JOIN company ON jobs.CompanyID = company.CompanyID
-    INNER JOIN user ON company.CompanyID = user.UserID
-    ORDER BY jobs.Create_at DESC;
+CREATE OR REPLACE VIEW v_jobs AS 
+SELECT 
+    jobs.JobID AS JobID,
+    company.CompanyID AS CompanyID,
+    jobs.Title AS Title,
+    company.CompanyLogo AS CompanyLogo,
+    company.CompanyName AS CompanyName,
+    jobs.Description AS Description,
+    jobs.Location AS Location,
+    jobs.Category AS Category,
+    jobs.Status AS Status,
+    jobs.JobBenefits AS JobBenefits,
+    jobs.RequiredQualifications AS RequiredQualifications,
+    jobs.SalaryRange AS SalaryRange,
+    jobs.SalaryType AS SalaryType,
+    jobs.PublishDate AS PublishDate,
+    user.Email AS Email,
+    user.ContactNo AS ContactNo,
+    jobs.Create_at AS jobs_create_at,
+    company.Create_at AS company_create_at
+FROM jobs 
+INNER JOIN company ON jobs.CompanyID = company.CompanyID
+INNER JOIN user ON company.CompanyID = user.UserID
+ORDER BY jobs.Create_at DESC;
 
 CREATE VIEW v_companies AS
 SELECT 
@@ -311,6 +317,8 @@ CREATE TABLE messages (
     FOREIGN KEY (sender_id) REFERENCES User(UserID) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES User(UserID) ON DELETE CASCADE
 );
+ALTER TABLE messages
+ADD COLUMN user_email VARCHAR(255) AFTER id;
 
 -- -----------------------------------------------------
 -- View uniquest.StudentCompanyComplaints
@@ -354,6 +362,7 @@ SELECT
     j.Status,
     j.RequiredQualifications,       -- Job qualifications
     j.SalaryRange,                  -- Salary range
+    j.SalaryType,                  -- Salary type
     u.Email,        -- Company's email from User table
     u.ContactNo,  -- Company's contact number from User table
     j.create_at AS jobs_create_at,    -- Job creation timestamp
@@ -427,6 +436,10 @@ SELECT
     c.CompanyName,
     c.Description AS CompanyDescription,
     c.CompanyLogo,
+    c.StreetNo AS StreetNo,
+    c.AddressLine1 AS AddressLine1,
+    c.AddressLine2 AS AddressLine2,
+    c.City AS City,
     r.ReviewID,
     r.Rating,
     r.Comment,
@@ -497,6 +510,40 @@ ALTER TABLE application_fields
   ADD CONSTRAINT application_fields_ibfk_1 FOREIGN KEY (job_id) REFERENCES jobs (JobID) ON DELETE CASCADE;
 COMMIT;
 
+--
+-- Table structure for table application_fields_req
+--
+
+CREATE TABLE application_fields_req (
+    id INT PRIMARY KEY,
+	job_id INT,
+    fullname_req BOOLEAN DEFAULT FALSE,
+    photo_req BOOLEAN DEFAULT FALSE,
+    email_req BOOLEAN DEFAULT FALSE,
+    contact_req BOOLEAN DEFAULT FALSE,
+    address_req BOOLEAN DEFAULT FALSE,
+    nic_req BOOLEAN DEFAULT FALSE,
+    nic_copy_req BOOLEAN DEFAULT FALSE,
+    gender_req BOOLEAN DEFAULT FALSE,
+    dob_req BOOLEAN DEFAULT FALSE,
+    qualifications_req BOOLEAN DEFAULT FALSE,
+    experience_req BOOLEAN DEFAULT FALSE,
+    skills_req BOOLEAN DEFAULT FALSE,
+    cv_req BOOLEAN DEFAULT FALSE,
+    linkedin_req BOOLEAN DEFAULT FALSE,
+    other1_req BOOLEAN DEFAULT FALSE,
+    other2_req BOOLEAN DEFAULT FALSE,
+    other3_req BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT fk_application_fields_req_job
+        FOREIGN KEY (job_id) REFERENCES Jobs(jobID)
+        ON DELETE CASCADE
+);
+ALTER TABLE application_fields
+ADD COLUMN other1_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL,
+ADD COLUMN other2_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL,
+ADD COLUMN other3_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL;
+
 -- -----------------------------------------------------
 -- View uniquest.messages_with_roles
 -- -----------------------------------------------------
@@ -504,6 +551,7 @@ COMMIT;
 CREATE VIEW messages_with_roles AS
 SELECT 
     m.id,
+    m.user_email,
     m.sender_id,
     u1.Role AS sender_role,
     u1.Email AS sender_email,
@@ -550,6 +598,10 @@ CREATE TABLE `applications` (
   CONSTRAINT `unique_application` UNIQUE (`job_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+ALTER TABLE applications
+ADD COLUMN other1 TEXT AFTER linkedin,
+ADD COLUMN other2 TEXT AFTER other1,
+ADD COLUMN other3 TEXT AFTER other2;
 
 ---------------------------------------------------
 CREATE VIEW v_allapplications AS
@@ -579,6 +631,10 @@ SELECT
     a.nic AS nic,
     a.nic_copy AS nic_copy,
     a.linkedin AS linkedin,
+    a.other1 AS other1,
+    a.other2 AS other2,
+    a.other3 AS other3,
+    a.status AS status,
     a.created_at AS SubmissionDate,
     a.updated_at AS LastUpdated,
     j.create_at AS JobCreatedAt,
@@ -642,3 +698,32 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
+-- -----------------------------------------------------
+-- Table uniquest.review_likes
+-- -----------------------------------------------------
+
+CREATE TABLE review_likes (
+    ReviewID INT NOT NULL,
+    likeCount INT DEFAULT 0,
+    dislikeCount INT DEFAULT 0,
+    PRIMARY KEY (ReviewID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE
+);
+
+-- Create is_liked table
+CREATE TABLE uniquest.is_liked (
+    ReviewID INT NOT NULL,
+    UserID INT NOT NULL,
+    CONSTRAINT pk_is_liked PRIMARY KEY (ReviewID, UserID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);
+
+-- Create is_disliked table
+CREATE TABLE uniquest.is_disliked (
+    ReviewID INT NOT NULL,
+    UserID INT NOT NULL,
+    CONSTRAINT pk_is_disliked PRIMARY KEY (ReviewID, UserID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);

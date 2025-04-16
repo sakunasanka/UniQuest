@@ -14,26 +14,30 @@
         <div class="form-section">
             <!-- Form Container -->
             <div class="form-container">
-        <form action="<?php echo URLROOT; ?>/student/jobsApply/<?php echo $data['job']->JobID; ?>" 
-              method="POST" 
-              enctype="multipart/form-data"
-              class="application-form">
-            
+                <form action="<?php echo URLROOT; ?>/student/jobsApply/<?php echo $data['job']->JobID; ?>" 
+            method="POST" 
+            enctype="multipart/form-data"
+            class="application-form">
+
             <?php 
             $fields = $data['fields'];
             if ($fields): 
                 foreach ($fields as $fieldName => $fieldConfig): 
+                    $isRequired = isset($fieldConfig['required']) && $fieldConfig['required'];
             ?>
                 <div class="form-group">
-                    <label for="<?php echo $fieldName; ?>"><?php echo $fieldConfig['label']; ?> *</label>
+                    <label for="<?php echo $fieldName; ?>">
+                        <?php echo $fieldConfig['label']; ?>
+                        <span class="required-asterik" <?php if ($isRequired) echo 'style="display:inline;"'; ?>>*</span>
+                    </label>
                     
                     <?php switch($fieldConfig['type']):
                         case 'textarea': ?>
                             <textarea 
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
-                                rows="4"
-                                required
+                                rows="5"
+                                <?php if ($isRequired) echo 'required'; ?>
                             ></textarea>
                             <?php break;
 
@@ -41,7 +45,7 @@
                             <select 
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
-                                required
+                                <?php if ($isRequired) echo 'required'; ?>                  
                             >
                                 <option value="">Select <?php echo $fieldConfig['label']; ?></option>
                                 <?php foreach($fieldConfig['options'] as $option): ?>
@@ -56,7 +60,7 @@
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
                                 accept="<?php echo $fieldConfig['accept']; ?>"
-                                required
+                                <?php if ($isRequired) echo 'required'; ?>
                             >
                             <?php break;
 
@@ -65,7 +69,7 @@
                                 type="<?php echo $fieldConfig['type']; ?>"
                                 id="<?php echo $fieldName; ?>"
                                 name="<?php echo $fieldName; ?>"
-                                required
+                                <?php if ($isRequired) echo 'required'; ?>
                             >
                     <?php endswitch; ?>
                     

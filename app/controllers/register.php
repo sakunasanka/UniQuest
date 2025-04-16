@@ -2,11 +2,15 @@
 class Register extends Controller
 {
     private $model;
+    private $universityEmailValidator;
 
     public function __construct()
     {
         // Load model
         $this->model = $this->model('userModel');
+
+        // Load UniversityEmailValidator
+        $this->universityEmailValidator = new UniversityEmailValidator();
     }
 
     private function validateEmail(&$data)
@@ -143,7 +147,7 @@ class Register extends Controller
                 $expiryDate = TokenHelper::generateExpiryDate();
 
                 // Save token to database
-                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
                     MailHelper::sendEmailWithTokenCompany($data['email'], $token);
@@ -177,17 +181,17 @@ class Register extends Controller
             $token = $queryparams['token'];
 
             //get token details
-            $tokenDetails = $this->model->getTokenDetails($token);
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
 
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
                 if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
-                    $this->model->deleteToken($token);
+                    $this->model('AdminModel')->deleteToken($token);
 
                     //store email as verified
-                    $this->model->verifyEmail($tokenDetails->Email);
+                    $this->model('AdminModel')->verifyEmail($tokenDetails->Email);
 
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
@@ -224,6 +228,11 @@ class Register extends Controller
             // Validate email
             $this->validateEmail($data);
 
+            //validate university email
+            if (!$this->universityEmailValidator->isUniversityEmail($data['email'])) {
+                $data['email_err'] = 'Please enter a valid university email address';
+            }
+
             // Check if there are no errors
             if (empty($data['email_err'])) {
                 //Generate the token
@@ -233,10 +242,10 @@ class Register extends Controller
                 $expiryDate = TokenHelper::generateExpiryDate();
 
                 // Save token to database
-                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
-                    MailHelper::sendEmailWithTokenStudent($data['email'], $token);
+                    MailHelper::sendEmailWithTokenStudent($data['email'], $token, 'register');
                     // Redirect to verify email page
                     $this->view('pages/register/email_sent', $data);
                 } else {
@@ -267,20 +276,23 @@ class Register extends Controller
             $token = $queryparams['token'];
 
             //get token details
-            $tokenDetails = $this->model->getTokenDetails($token);
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
 
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
                 if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
-                    $this->model->deleteToken($token);
+                    $this->model('AdminModel')->deleteToken($token);
 
                     //store email as verified
-                    $this->model->verifyEmail($tokenDetails->Email);
+                    $this->model('AdminModel')->verifyEmail($tokenDetails->Email);
 
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
+
+                    //store university name in session
+                    $_SESSION['university'] = $this->universityEmailValidator->getUniversityForEmail($tokenDetails->Email);
 
                     // Redirect to register page
                     Redirect::to(URLROOT . '/register/student');
@@ -310,7 +322,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model->isEmailVerified($data['email'])) {
+            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 
@@ -373,7 +385,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model->isEmailVerified($data['email'])) {
+            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 

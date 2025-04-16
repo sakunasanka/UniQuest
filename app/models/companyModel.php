@@ -8,6 +8,14 @@ class companyModel extends Model
         $this->db = Database::getInstance();
     }
 
+    public function getCompanyInfo() 
+    {
+        $this->db->query("SELECT * FROM company WHERE CompanyID = :companyId");
+
+        $this->db->bind(':companyId', $_SESSION['user_id']);
+        return $this->db->single();
+    }
+
     public function addUserPostBookmark($companyId)
     {
         try {
