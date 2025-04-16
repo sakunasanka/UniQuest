@@ -767,9 +767,15 @@ class Student extends Controller
         ];
         // Check if the user has already applied for this job
         if ($isApplied) {
-            $_SESSION['show_apply_error'] = true;
-            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
-            Redirect::to($previousURL);
+            if($data['job']->Category == 'Part-time'){ 
+                $_SESSION['show_job_apply_error'] = true;
+                $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                Redirect::to($previousURL);
+            } else {
+                $_SESSION['show_internship_apply_error'] = true;
+                $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                Redirect::to($previousURL);
+            }
         }
         else {
             $this->view('pages/student/jobsApply', $data); 
