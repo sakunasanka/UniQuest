@@ -167,6 +167,12 @@ class Admin extends Controller
                 $data['email_err'] = 'Email is already registered';
             }
 
+            //email verification
+            $emailVerificationResponse = $this->model('AdminModel')->verifyEmail($data['email']);
+            if (!$emailVerificationResponse) {
+                $data['email_err'] = 'Email verification failed';
+            }
+
             $validationResponse = Validator::isValidRegistrationData($data);
             if (!$validationResponse['is_valid']) {
                 $data = array_merge($data, $validationResponse['error']);

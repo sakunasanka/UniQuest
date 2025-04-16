@@ -32,6 +32,13 @@ body {
     gap: 50px; /* Add spacing between picture and content */
 }
 
+/* file previews */
+.view-card .file-preview {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
 .view-card-2 {
     margin: auto;
     padding: 40px;

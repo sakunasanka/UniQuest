@@ -82,6 +82,43 @@
                         </div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="input-container">
+                            <label for="linkedin">LinkedIn</label>
+                            <input type="text" id="linkedin" name="linkedin" value="<?php echo $data['linkedin']; ?>" placeholder="Enter LinkedIn Profile Link" required>
+                            <span class="error-msg"><?php echo !empty($data['linkedin_err']) ? $data['linkedin_err'] : '' ?></span>
+                        </div>
+                        <div class="input-container">
+                            <label for="facebook">Facebook</label>
+                            <input type="text" id="facebook" name="facebook" value="<?php echo $data['facebook']; ?>" placeholder="Enter Facebook Page Link" required>
+                            <span class="error-msg"><?php echo !empty($data['facebook_err']) ? $data['facebook_err'] : '' ?></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-container" style="flex-basis: 100%;">
+                            <label for="brCertificate">Business Registration Copy</label>
+                            <div class="file-drop-area">
+                                <div class="file-content">
+                                    <span>Drag & Drop to Upload Business Registration Copy</span>
+                                    <button type="button" class="browse-btn">Browse File
+                                        <input type="file" id="brCertificate" name="brCertificate" accept=".pdf,.doc,.docx" required>
+                                    </button>
+                                    <span class="file-name">No file selected</span>
+                                </div>
+                            </div>
+                            <span class="req-msg">Only PDF, DOC, DOCX files are allowed, and maximum file size is 5MB</span>
+                            <span class="error-msg"><?php echo !empty($data['brCertificate_err']) ? $data['brCertificate_err'] : ''; ?></span>
+                        </div>
+                        <!-- <div class="input-container"></div> -->
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-container" style="flex-basis: 100%;">
+                            <span class="note-msg">Help us get to know your company! Upload your BR certificate and share your website or social media page so we can verify your profile and activate your account.</span>
+                        </div>
+                    </div>
+
                     <h3>Address</h3>
                     <div class="form-row">
                         <div class="input-container">
