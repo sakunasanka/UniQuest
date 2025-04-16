@@ -28,15 +28,17 @@ function paymentGateway(plan = 'professional', userId = null) {
                         if (saveData.status == 200) {
                             var response = JSON.parse(saveData.responseText);
                             if (response.status === 'success') {
-                                alert("Payment successful! Your subscription has been activated.");
+                                if (typeof localStorage !== 'undefined') {
+                                    localStorage.setItem('show_payment_success', 'true');
+                                }
                                 window.location.reload();
                             } else {
                                 console.log("Plan:", plan);
                                 console.log("User ID:", userId);
-                                alert("Payment processed but database update failed. Please contact support.");
+                                Flash.show('Payment processed but database update failed. Please contact support.', 'error');
                             }
                         } else {
-                            alert("Payment was processed but there was an issue updating your account. Please contact support.");
+                            Flash.show('Payment was processed but there was an issue updating your account. Please contact support.', 'error');
                         }
                     }
                 };
@@ -48,13 +50,13 @@ function paymentGateway(plan = 'professional', userId = null) {
             // Payment window closed
             payhere.onDismissed = function onDismissed() {
                 console.log("Payment dismissed");
-                alert("Payment canceled. You can try again later.");
+                Flash.show('Payment canceled. You can try again later.', 'error');
             };
             
             // Error occurred
             payhere.onError = function onError(error) {
                 console.log("Error:" + error);
-                alert("An error occurred during payment. Please try again.");
+                Flash.show('An error occurred during payment. Please try again.', 'error');
             };
             
             // Payment configuration
@@ -94,3 +96,10 @@ function paymentGateway(plan = 'professional', userId = null) {
 function initiatePayment(plan, amount, userId) {
     paymentGateway(plan, userId);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('show_payment_success') === 'true') {
+        Flash.show('Payment successful! Your subscription has been activated.', 'success');
+        localStorage.removeItem('show_payment_success');
+    }
+});
