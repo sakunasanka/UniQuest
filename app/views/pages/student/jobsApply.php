@@ -10,6 +10,7 @@
             <h1>Application Form for <?php echo $data['job']->Title; ?></h1>
         </div>
         <p>Please fill out the details below to submit your application</p>
+        <?php print_r($data['isApplied']);?>
         
         <div class="form-section">
             <!-- Form Container -->

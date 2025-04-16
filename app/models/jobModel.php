@@ -340,4 +340,19 @@ class jobModel extends Model
         }
     }
 
+    public function isApplied($jobId)
+    {
+        try {
+            $this->db->query("SELECT 1 FROM applications WHERE user_id = :studentId AND job_id = :jobId LIMIT 1");
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobId', $jobId);
+            
+            // Returns true if a row exists, false otherwise
+            return $this->db->single() !== false;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

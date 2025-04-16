@@ -748,6 +748,7 @@ class Student extends Controller
 
         $posts = $this->model('M_jobpost')->getpostbyid($jobId);
         $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
+        $isApplied = $this->model('jobModel')->isApplied($jobId);
 
         if ($posts->Category == 'Internship') {
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
@@ -764,8 +765,15 @@ class Student extends Controller
             'bookmarkedJobIds' => $bookmarkedJobIds,
             'displayRating' => $displayRating,
         ];
-    
-        $this->view('pages/student/jobsApply', $data); 
+        // Check if the user has already applied for this job
+        if ($isApplied) {
+            $_SESSION['show_apply_error'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+            Redirect::to($previousURL);
+        }
+        else {
+            $this->view('pages/student/jobsApply', $data); 
+        }
     }
     public function jobsApply($jobId)
     {
