@@ -9,7 +9,7 @@
             <div class="headerb">
                 <h1>Job Applications Dashboard</h1>
                 <div class="header-buttons">
-                    <button class="btn-primary">Add New Job</button>
+                    <button class="btn-primary" onclick="goToJobPost()">Add New Job</button>
                     <button class="btn-secondary">Filter</button>
                 </div>
             </div>
@@ -59,5 +59,11 @@
         </div>
     </div>
 </div>    
-<?php require APPROOT . '/views/components/footer.php'; ?>    
+<?php require APPROOT . '/views/components/footer.php'; ?>   
+
+<script>
+    function goToJobPost() {
+        window.location.href = "<?php echo URLROOT; ?>/service_provider/jobpost";
+    }
+</script>
     

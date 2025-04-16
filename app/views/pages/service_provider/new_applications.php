@@ -15,7 +15,9 @@
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/service_provider/rejected_applications/<?php echo $data['jobID'];?>">Rejected Applications</button>
         </div>
         <div class="job-details">
-            <h2>Job Title: <?php echo $data['post']->Title; ?></h2>
+            <h2 class="job-title" onclick="goToJob(<?php echo $data['post']->JobID; ?>);">
+                Job Title: <?php echo htmlspecialchars($data['post']->Title); ?>
+            </h2>
             <p>
                 Location: <?php echo $data['post']->Location; ?>
             </p>
@@ -85,3 +87,9 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToJob(jobID) {
+        window.location.href = '<?php echo URLROOT; ?>/jobs/jobsdescription/' + jobID;
+    }
+</script>   

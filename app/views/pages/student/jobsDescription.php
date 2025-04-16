@@ -38,7 +38,12 @@
     
     <div class="content-area">
         <div class="job-description">
-            <h2><?php echo $data['post']->Title; ?></h2>
+            <div class="title-container">
+                <h2><?php echo $data['post']->Title; ?></h2>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company'): ?>
+                    <button onclick="goToApplications(<?php echo $post->JobID; ?>)" class="apply-btn">View Applications</button>
+                <?php endif; ?>
+            </div>
             <p><?php echo $data['post']->Location; ?></p>
             <h3>Description:</h3>
             <ul>
@@ -279,5 +284,9 @@ function shareJob(jobId, jobType) {
 
 function goToCompanyDescription($companyID) {
     window.location.href = "/uniquest/jobs/companydescription/"+$companyID;
+}
+
+function goToApplications(jobId) {
+    window.location.href = "/UniQuest/service_provider/new_applications/" + jobId;
 }
 </script>

@@ -52,6 +52,7 @@ require APPROOT . '/views/components/ser_header.php';
             </div>
 
             <!-- Personal Information -->
+            <?php if(isset($fields['email']) || isset($fields['contact']) || isset($fields['address']) || isset($fields['nic']) || isset($fields['gender']) || isset($fields['dob'])):?>
             <div class="personal-info">
                 <h3>Personal Information</h3>
                 <?php if (isset($fields['email'])): ?>
@@ -138,8 +139,10 @@ require APPROOT . '/views/components/ser_header.php';
                     </div>
                 <?php endif; ?>
             </div>
+            <?php endif; ?>
 
             <!-- Professional Information -->
+            <?php if(isset($fields['qualifications']) || isset($fields['experience']) || isset($fields['skills'])):?>
             <div class="professional-info">
                 <h3>Professional Information</h3>
                 <?php if (isset($fields['qualifications'])): ?>
@@ -200,8 +203,10 @@ require APPROOT . '/views/components/ser_header.php';
                     </div>
                 <?php endif; ?>
             </div>
+            <?php endif; ?>
 
             <!-- Documents & Links -->
+            <?php if(isset($fields['cv']) || isset($fields['nic_copy']) || isset($fields['linkedin']) || isset($fields['other1']) && $data['application']['other1_type'] == 'file' || isset($fields['other2']) && $data['application']['other2_type'] == 'file' || isset($fields['other3']) && $data['application']['other3_type'] == 'file'):?>
             <div class="documents-links">
                 <h3>Documents & Links</h3>
                 <div class="documents-grid">
@@ -299,6 +304,7 @@ require APPROOT . '/views/components/ser_header.php';
 
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Other fields section -->
             <?php if((isset($fields['other1']) && $data['application']['other1_type'] != 'file' || isset($fields['other2']) && $data['application']['other2_type'] != 'file' || isset($fields['other3']) && $data['application']['other3_type'] != 'file')):?>
@@ -349,14 +355,16 @@ require APPROOT . '/views/components/ser_header.php';
             <?php endif; ?>
 
             <!-- Footer with Action Buttons -->
-            <div class="actions-section">
-                <button class="action-button reject-button" onclick="handleStatusChange('Rejected')">
-                    <i class="fas fa-times-circle"></i> Reject
-                </button>
-                <button class="action-button approve-button" onclick="handleStatusChange('Approved')">
-                    <i class="fas fa-check-circle"></i> Approve
-                </button>
-            </div>
+            <?php if($data['application']['status'] == 'Pending'):?>
+                <div class="actions-section">
+                    <button class="action-button reject-button" onclick="handleStatusChange('Rejected')">
+                        <i class="fas fa-times-circle"></i> Reject
+                    </button>
+                    <button class="action-button approve-button" onclick="handleStatusChange('Approved')">
+                        <i class="fas fa-check-circle"></i> Approve
+                    </button>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
