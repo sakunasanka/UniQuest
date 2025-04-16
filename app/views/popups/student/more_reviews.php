@@ -9,24 +9,24 @@
                 <h3>Reviews and Ratings about this company</h3>
 
                 <?php if (!empty($data['reviews'])): ?>
-                <?php foreach ($data['reviews'] as $review): ?>
+                <?php foreach ($data['reviews'] as $index => $review): ?>
                     <div class="review">
                         <p class="review-text"><?php echo htmlspecialchars($review->Comment ?? ''); ?></p>
                         <div class="review-details">
                             <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName ?? 'Anonymous'); ?></span>
                             <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? '0'); ?></span>
                         </div>
-                        <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id']==$data['post']->CompanyID)):?>
+                        <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company')):?>
                             <div class="review-actions">
-                                <button class="like-btn" data-id="<?php echo $i; ?>">
+                                <button class="like-btn <?php echo $review->is_liked ? 'liked' : ''; ?>" data-id="main-<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?> ">
                                     <span class="material-symbols-outlined like-icon">thumb_up</span>
                                 </button>
-                                <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
+                                <span class="like-count" data-id="main-<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                                <button class="dislike-btn" data-id="<?php echo $i; ?>">
+                                <button class="dislike-btn <?php echo $review->is_disliked ? 'disliked' : ''; ?>" data-id="main-<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                     <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                 </button>
-                                <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                                <span class="dislike-count" data-id="main-<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
                             </div>
                         <?php endif;?>
                     </div>

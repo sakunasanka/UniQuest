@@ -490,6 +490,13 @@ p{
     margin-bottom: -10px;
 }
 
+.liked .like-icon {
+    color: #299b63;
+}
+.disliked .dislike-icon {
+    color: #e74c3c;
+}
+
 .title-container {
     display: flex;
     justify-content: space-between;

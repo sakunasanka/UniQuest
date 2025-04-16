@@ -960,7 +960,21 @@ class Student extends Controller
 
     public function myreviews()
     {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+        } 
+        else {
+            $userId = null;
+        }
+        
         $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
+
+        foreach ($reviews as $review) {
+            $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
+            $review->DislikeCount = $this->model('RateAndReviewModel')->getDislikesByReviewID($review->ReviewID);
+            $review->is_liked = $this->model('RateAndReviewModel')->checkIfLiked($review->ReviewID, $userId);
+            $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $userId);
+        }
 
         $data = [
             'reviews' => $reviews,
