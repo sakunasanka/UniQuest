@@ -48,10 +48,26 @@
                         <span>Email</span>
                         <?php echo $data['user']['Email'] ?>
                     </div>
-                    <div>
-                        <span>Website</span>
-                        <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
-                    </div>
+                </div>
+                <div class="view-card-info">
+                    <?php if ($data['user']['Website']): ?>
+                        <div>
+                            <span>Website</span>
+                            <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($data['user']['LinkedIn']): ?>
+                        <div>
+                            <span>LinkedIn</span>
+                            <a href="<?php echo $data['user']['LinkedIn'] ?>" target="_blank"><?php echo $data['user']['LinkedIn'] ?></a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($data['user']['Facebook']): ?>
+                        <div>
+                            <span>Facebook</span>
+                            <a href="<?php echo $data['user']['Facebook'] ?>" target="_blank"><?php echo $data['user']['Facebook'] ?></a>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="btn-row">
                     <?php if ($data['verifyDetails']->Action == 'Approve'): ?>
@@ -96,6 +112,15 @@
                 </div>
             </div>
         </div>
+        <!-- File Previews -->
+        <?php if ($data['user']['BRCertificate']): ?>
+            <div class="view-card file-preview">
+                <div class="detail-row">
+                    <strong>Business Registration </strong>
+                </div>
+                <iframe src="<?php echo UPLOADROOT; ?>/br_certificates/<?php echo htmlspecialchars($data['user']['BRCertificate']); ?>" frameborder="0"></iframe>
+            </div>
+        <?php endif; ?>
     </main>
 </div>
 

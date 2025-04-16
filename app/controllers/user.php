@@ -376,6 +376,12 @@ class User extends Controller
                     // Hash new password
                     $hashed_password = password_hash($data['new_password'], PASSWORD_DEFAULT);
                     $this->model->changePassword($_SESSION['user_id'], $hashed_password);
+                    // Log password change
+                    LogHelper::logDebug('Password changed for user ID: ' . $_SESSION['user_id']);
+                    // Send email to notify user that their password has been changed
+                    // MailHelper::sendEmailPasswordChanged($user['Email'], $user['FirstName'] . ' ' . $user['LastName']);
+                    // Add user account log
+                    $this->model('AdminModel')->addUserAccountLog($_SESSION['user_id'], 'ChangePass', 14);
 
                     // Unset session variables
                     session_unset();
@@ -567,6 +573,10 @@ class User extends Controller
             $this->model->changePassword($userID, $hashed_password);
             //log the password change
             LogHelper::logDebug('Password reset for user ID: ' . $userID);
+            // send email to notify user that their password has been reset
+            // MailHelper::sendEmailPasswordReset($data['email'], $data['name']);
+            //add user account log
+            $this->model('AdminModel')->addUserAccountLog($userID, 'ResetPass', 13);
 
             return true;
         } catch (Exception $e) {

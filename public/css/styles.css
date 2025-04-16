@@ -6,13 +6,13 @@
 @import url("components/studentSidePanel.css");
 @import url("components/pagination.css");
 @import url("components/tableSearchBar.css");
+@import url("components/flash.css");
 
 /* pages */
 @import url("pages/admin/students_mng.css");
 @import url("pages/service_provider/contact_admin.css");
 @import url("pages/service_provider/jobs_table.css");
 @import url("pages/admin/add_member.css");
-
 
 .content-area {
     margin-left: 250px !important; /* Make room for the sidebar */

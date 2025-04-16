@@ -496,3 +496,10 @@ p{
 .disliked .dislike-icon {
     color: #e74c3c;
 }
+
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}

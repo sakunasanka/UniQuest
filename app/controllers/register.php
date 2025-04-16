@@ -42,9 +42,14 @@ class Register extends Controller
             'description' => ucfirst(trim($post['description'] ?? '')),
             'website' => trim($post['website'] ?? ''),
             'industry' => trim($post['industry'] ?? ''),
+            'facebook' => trim($post['facebook'] ?? ''),
+            'linkedin' => trim($post['linkedin'] ?? ''),
+            'brCertificate' => $files['brCertificate'] ?? '',
+            'brCertificateName' => '',
             'role' => 'Company',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Pending',
+            'industries' => $this->model('AdminModel')->getIndustries()['data'],
 
             'companyName_err' => '',
             'email_err' => '',
@@ -58,6 +63,9 @@ class Register extends Controller
             'description_err' => '',
             'website_err' => '',
             'industry_err' => '',
+            'facebook_err' => '',
+            'linkedin_err' => '',
+            'brCertificate_err' => '',
             'companyLogo_err' => '',
             'terms_err' => '',
             'role_err' => '',
@@ -331,9 +339,19 @@ class Register extends Controller
                 $data = array_merge($data, $validationResponse['error']);
             }
 
-            $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
-            if (!$logoValidationResponse['is_valid']) {
-                $data['companyLogo_err'] = $logoValidationResponse['error'];
+            // $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
+            // if (!$logoValidationResponse['is_valid']) {
+            //     $data['companyLogo_err'] = $logoValidationResponse['error'];
+            // }
+
+            //vallidate files
+            $fileValidationResponse = FileUploadHelper::validateFiles([
+                'companyLogo' => ['file' => $data['companyLogo'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                'brCertificate' => ['file' => $data['brCertificate'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
+            ]);
+
+            if (!$fileValidationResponse['is_valid']) {
+                $data = array_merge($data, $fileValidationResponse['error']);
             }
 
             // Check if there are no errors
@@ -342,11 +360,29 @@ class Register extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Upload company logo
-                $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
-                if ($companyLogoResponse['success']) {
-                    $data['companyLogoName'] = $companyLogoResponse['file_name'];
+                // $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
+                // if ($companyLogoResponse['success']) {
+                //     $data['companyLogoName'] = $companyLogoResponse['file_name'];
+                // } else {
+                //     $data['companyLogo_err'] = $companyLogoResponse['error'];
+                //     $this->view('pages/register/company_register', $data);
+                //     return;
+                // }
+
+                //upload each file
+                $uploadedFilesResponse = FileUploadHelper::uploadFiles([
+                    'companyLogo' => ['file' => $data['companyLogo'], 'path' => PUBROOT . '/uploads/profile_pictures/company'],
+                    'brCertificate' => ['file' => $data['brCertificate'], 'path' => PUBROOT . '/uploads/br_certificates']
+                ]);
+
+                //check if all files are uploaded successfully
+                if ($uploadedFilesResponse['success']) {
+                    //set file names to data array
+                    $data = array_merge($data, $uploadedFilesResponse['file_name']);
                 } else {
-                    $data['companyLogo_err'] = $companyLogoResponse['error'];
+                    //merge data with errors
+                    $data = array_merge($data, $uploadedFilesResponse['error']);
+                    // Load view with errors
                     $this->view('pages/register/company_register', $data);
                     return;
                 }
