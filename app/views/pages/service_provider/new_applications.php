@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/new_applications.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/application_table.css">
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -10,16 +10,26 @@
     <main class="content-area">
         <!-- Tabs Header -->
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/service_provider/new_applications">New Applications</button>
-            <button class="tab" data-path="/uniquest/service_provider/offered_applications">Offered Applications</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/service_provider/rejected_applications">Rejected Applications</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/service_provider/new_applications/<?php echo $data['jobID'];?>">Pending Applications</button>
+            <button class="tab" data-path="/UniQuest/service_provider/offered_applications/<?php echo $data['jobID'];?>">Offered Applications</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/service_provider/rejected_applications/<?php echo $data['jobID'];?>">Rejected Applications</button>
         </div>
-
+        <div class="job-details">
+            <h2>Job Title: <?php echo $data['post']->Title; ?></h2>
+            <p>
+                Location: <?php echo $data['post']->Location; ?>
+            </p>
+            <p>
+                Posted: <?php echo $data['posted']; ?>
+            </p>
+        </div>
         <!-- Table Block -->
         <div class="table-block">
             <!-- Content Header with Search Bar -->
             <div class="content-header">
-                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
+                <?php 
+                // require APPROOT . '/views/components/tableSearchBar.php'; 
+                ?>
             </div>
 
             <!-- Applications Table -->
@@ -40,7 +50,7 @@
                                 <td><?php echo $application->StudentName; ?></td>
                                 <td><?php echo $application->StudentEmail; ?></td>
                                 <td><?php echo $application->StudentContact; ?></td>
-                                <td><?php echo $application->SubmissionDate; ?></td>
+                                <td><?php echo (date('M d, Y', strtotime($application->SubmissionDate))); ?></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_application/<?php echo $application->ApplicationID; ?>'">
                                         preview
@@ -56,7 +66,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" class="no-applications">No applications found for this job.</td>
+                            <td colspan="7" class="no-applications">No pending applications to show.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
