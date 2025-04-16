@@ -94,14 +94,15 @@
                 </div>
             </div>
         </div>
-        <!-- Right Side: File Previews -->
-        <div class="view-card file-preview">
-            <h2>File Previews</h2>
-            <div class="detail-row">
-                <strong>Business Registration </strong>
+        <!-- File Previews -->
+        <?php if ($data['user']['BRCertificate']): ?>
+            <div class="view-card file-preview">
+                <div class="detail-row">
+                    <strong>Business Registration </strong>
+                </div>
+                <iframe src="<?php echo UPLOADROOT; ?>/br_certificates/<?php echo htmlspecialchars($data['user']['BRCertificate']); ?>" frameborder="0"></iframe>
             </div>
-            <iframe src="<?php echo UPLOADROOT; ?>/br_certificates/<?php echo htmlspecialchars($data['user']['BRCertificate']); ?>" frameborder="0"></iframe>
-        </div>
+        <?php endif; ?>
     </main>
 </div>
 

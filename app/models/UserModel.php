@@ -156,7 +156,9 @@ class userModel extends Model
                 'Role' => $data['role'],
                 'RegisterDate' => $data['date'],
                 'ContactNo' => $data['contactNo'],
-                'Status' => $data['status']
+                'Status' => $data['status'],
+                'VerifiedDate' => $data['verifiedDate'],
+                'VerifiedBy' => $data['verifiedBy']
             ];
             if (!$this->insert('user', $userData)) {
                 $this->db->rollBack();

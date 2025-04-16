@@ -28,6 +28,8 @@ class Admin extends Controller
             'role' => 'VT-Member',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Active',
+            'verifiedBy' => $_SESSION['user_id'],
+            'verifiedDate' => date('Y-m-d H:i:s'),
 
             'firstName_err' => '',
             'lastName_err' => '',
@@ -585,7 +587,7 @@ class Admin extends Controller
                 'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                // 'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
                 'messageInput' => '',
                 'messageInput_err' => '',
                 'topic' => '', // Default to empty until a message is sent
