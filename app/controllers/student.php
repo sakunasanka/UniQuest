@@ -61,18 +61,18 @@ class Student extends Controller
         
              // Data for the contact form
              $data = [
-                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
 
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
 
             // Validation checks
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Please enter your name';
+            if (empty($data['email'])) {
+                $data['email_err'] = 'Please enter your email';
             }
 
 
@@ -85,7 +85,7 @@ class Student extends Controller
             }
 
             // Ensure no errors before submitting
-            if (empty($data['name_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if($this->model('ContactModel')->sendMessage($data)){
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('student/contact_admin');
@@ -98,10 +98,10 @@ class Student extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'name' => '',
+                'email' => '',
                 'topic' => '',
                 'message' => '',
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
@@ -203,21 +203,38 @@ class Student extends Controller
 
     public function addReview($id = null)
     {
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             // Prepare data for the review
             $data = [
                 'reviews' => $reviews,
-                'rating' => $_POST['rating'] ?? '',
+                'rating' => trim($_POST['rating'] ?? ''),
                 'comment' => trim($_POST['comment'] ?? ''),
-                'user_id' => $_POST['user_id'] ?? '',
-                'company_id' => $_POST['company_id'] ?? '',
+                'user_id' => trim($_POST['user_id'] ?? ''),
+                'company_id' => trim($_POST['company_id'] ?? ''),
+                'existingReview' => $_POST['existingReview'] ?? 'false',
                 'rating_err' => '',
                 'comment_err' => ''
             ];
+
+            // Check if this is an existing review update
+            if ($data['existingReview'] === 'true') {
+                // Get the review ID from the model
+                $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany(
+                    $data['user_id'],
+                    $data['company_id']
+                );
+                
+                if ($existingReview) {
+                    $data['review_id'] = $existingReview->ReviewID;
+                } else {
+                    $data['existingReview'] = 'false'; 
+                }
+            }
 
             // Validate rating and comment
             if (empty($data['rating'])) {
@@ -229,11 +246,22 @@ class Student extends Controller
 
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
-                if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);
+
+                // Check if the user has already reviewed this company
+                if ($data['existingReview'] == 'true') {
+                    if ($this->model('RateAndReviewModel')->updateReview($data)) {
+                        Redirect::to(URLROOT . '/student/myreviews');
+                    } else {
+                        die('Something went wrong'); 
+                    }
                 } else {
-                    die('Something went wrong'); // Improved error handling suggested
+                    if ($this->model('RateAndReviewModel')->addReview($data)) {
+                        Redirect::to(URLROOT . '/student/myreviews');
+                    } else {
+                        die('Something went wrong'); 
+                    }
                 }
+
             } else {
                 // Load view with errors
                 $this->view('pages/student/rate_review_company', $data);
@@ -245,6 +273,7 @@ class Student extends Controller
                 'comment' => '',
                 'user_id' => '',
                 'company_id' => $id,
+                'existingReview' => 'false',
                 'rating_err' => '',
                 'comment_err' => ''
             ];
@@ -252,7 +281,6 @@ class Student extends Controller
             $this->view('pages/student/rate_review_company', $data);
         }
     }
-
    
     public function updateReview($id)
     {
@@ -261,8 +289,8 @@ class Student extends Controller
 
             $data = [
                 'review_id' => $id,
-                'rating' => $_POST['Rating'] ?? '',
-                'comment' => trim($_POST['Comment'] ?? ''),
+                'rating' => $_POST['rating'] ?? '',
+                'comment' => trim($_POST['comment'] ?? ''),
                 'rating_err' => '',
                 'comment_err' => ''
             ];
@@ -301,8 +329,8 @@ class Student extends Controller
             $data = [
             'review_id' => $id,
             'review' => $review,
-            'rating' => $review->Rating,
-            'comment' => $review->Comment,
+            'rating' => $review->rating,
+            'comment' => $review->comment,
             'rating_err' => '',
             'comment_err' => ''
             ];
@@ -339,7 +367,20 @@ class Student extends Controller
     
     public function rate_review_company()
     {
-        $this->view('pages/student/rate_review_company');
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId();
+
+        $data = [
+            'reviews' => $reviews,
+            'rating' => '',
+            'comment' => '',
+            'user_id' => $_SESSION['user_id'],
+            'company_id' => '',
+            'existingReview' => 'false',
+            'rating_err' => '',
+            'comment_err' => ''
+        ];
+        
+        $this->view('pages/student/rate_review_company', $data);
     }
 
     public function all_app()
@@ -351,14 +392,14 @@ class Student extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
 
-            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
+            $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id']);
             $data = [
-                'users' => $users['data'],
-                'currentPage' => $users['currentPage'],
-                'rowsPerPage' => $users['limit'],
-                'totalRows' => $users['totalRows'],
-                'totalPages' => $users['totalPages'],
-                'isLastPage' => $users['isLastPage'] ? 'yes' : 'no',
+                'applications' => $applications,
+                // 'currentPage' => $applications['currentPage'],
+                // 'rowsPerPage' => $applications['limit'],
+                // 'totalRows' => $applications['totalRows'],
+                // 'totalPages' => $applications['totalPages'],
+                // 'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/student/all_applications', $data);
         } catch (Exception $e) {
@@ -417,31 +458,6 @@ class Student extends Controller
     public function notifications()
     {
         $this->view('pages/student/notification_alerts');
-    }
-
-    public function trendyCompany()
-    {
-        $trendy_companies = $this->model('RateAndReviewModel')->getTrendyCompanies();
-
-        if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; // Get user ID from session
-
-            // Get bookmarked companies for the user
-            $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
-            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
-        } 
-        else {
-            $userId = null;
-            $bookmarkedCompanies = []; // No bookmarks if not logged in
-        }
-
-        $data =[
-            'trendy_companies' => $trendy_companies,
-            'bookmarkedCompanies' => $bookmarkedCompanies,
-            'bookmarkedCompanyIds' => $bookmarkedCompanyIds
-        ];
-
-        $this->view('pages/student/trendyCompany', $data);
     }
 
     public function saveJobs()
@@ -570,11 +586,153 @@ class Student extends Controller
         
     }
 
-    public function jobsApply($jobId) {
+    public function companyDescription($id)
+    {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+
+        $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
+        $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
+        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        } 
+        else {
+            $userId = null;
+            $bookmarkedCompanies = []; // No bookmarks if not logged in
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            // Prepare data for the review
+            $data = [
+                'post' => $posts,
+                'bookmarkedCompanies' => $bookmarkedCompanies,
+                'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
+                'reviews' => $reviews,
+                'rating' => $_POST['rating'] ?? '',
+                'comment' => trim($_POST['comment'] ?? ''),
+                'user_id' => $_POST['user_id'] ?? '',
+                'company_id' => $_POST['company_id'] ?? '',
+                'rating_err' => '',
+                'comment_err' => ''
+            ];
+
+            // Validate rating and comment
+            if (empty($data['rating'])) {
+                $data['rating_err'] = 'Please provide a rating.';
+            }
+            if (empty($data['comment'])) {
+                $data['comment_err'] = 'Please provide a comment.';
+            }
+
+            // Check for errors
+            if (empty($data['rating_err']) && empty($data['comment_err'])) {
+                if ($this->model('RateAndReviewModel')->addReview($data)) {
+                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']); //To be corrected
+                } else {
+                    die('Something went wrong'); // Improved error handling suggested
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/student/rate_review_company', $data);
+            }
+        } else {
+            $data = [
+                'post' => $posts,
+                'bookmarkedCompanies' => $bookmarkedCompanies,
+                'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
+                'reviews' => $reviews,
+                'rating' => '',
+                'comment' => '',
+                'user_id' => '',
+                'company_id' => $id,
+                'rating_err' => '',
+                'comment_err' => ''
+            ];
+
+            $this->view('pages/student/companyDescription', $data);
+        }
+    }
+ 
+    public function internshipDescription($id)
+    {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+        }
+        else {
+            $userId = null;
+            $bookmarkedJobs = []; // No bookmarks if not logged in
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }    
+    
+        // Get bookmarked jobs for the user
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
+        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    
+            $data =[
+                'post' => $posts,
+                'post_com' => $posts_com_id,
+                'bookmarkedJobs' => $bookmarkedJobs,
+                'bookmarkedJobIds' => $bookmarkedJobIds,
+                'reviews' => $reviews,
+                'rating' => $_POST['rating'] ?? '',
+                'comment' => trim($_POST['comment'] ?? ''),
+                'user_id' => $_POST['user_id'] ?? '',
+                'company_id' => $_POST['company_id'] ?? '',
+                'rating_err' => '',
+                'comment_err' => ''
+            ];
+        
+            if (empty($data['rating'])) {
+                $data['rating_err'] = 'Please provide a rating.';
+            }
+            if (empty($data['comment'])) {
+                $data['comment_err'] = 'Please provide a comment.';
+            }
+
+            // Check for errors
+            if (empty($data['rating_err']) && empty($data['comment_err'])) {
+                if ($this->model('RateAndReviewModel')->addReview($data)) {
+                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);  //To be corrected
+                } else {
+                    die('Something went wrong'); // Improved error handling suggested
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/student/rate_review_company', $data);
+            }
+        } else {
+            $data = [
+                'post' => $posts,
+                'post_com' => $posts_com_id,
+                'bookmarkedJobs' => $bookmarkedJobs,
+                'bookmarkedJobIds' => $bookmarkedJobIds,
+                'reviews' => $reviews,
+                'rating' => '',
+                'comment' => '',
+                'user_id' => '',
+                'company_id' => $_POST['company_id'] ?? '',
+                'rating_err' => '',
+                'comment_err' => ''
+            ];
+
+            $this->view('pages/student/internshipDescription', $data);
+        }    
+    }
+
+    public function jobsApplyform($jobId) {
         // Load model and get application fields
         $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
     
-        // Fetch job details
+        // Fetch job details3
         $job = $this->model('M_jobpost')->getpostbyid($jobId);
     
         $data = [
@@ -584,7 +742,124 @@ class Student extends Controller
     
         $this->view('pages/student/jobsApply', $data); 
     }
+    public function jobsApply($jobId)
+    {
+        if($_SERVER['REQUEST_METHOD']=='POST'){
+            $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
+
+            // Initialize data array and validation
+        $data = [
+            'job_id' => $jobId,
+            'fields' => [],
+            'errors' => []
+        ];
+
+            // Process each field based on its type
+        foreach ($applicationFields as $fieldName => $fieldConfig) {
+            switch ($fieldConfig['type']) {
+                case 'file':
+                    if (isset($_FILES[$fieldName]) && $_FILES[$fieldName]['error'] === UPLOAD_ERR_OK) {
+                        $uploadResult = $this->handleFileUpload($_FILES[$fieldName], $fieldName);
+                        if ($uploadResult['success']) {
+                            $data['fields'][$fieldName] = $uploadResult['path'];
+                        } else {
+                            $data['errors'][$fieldName] = $uploadResult['error'];
+                        }
+                    } else {
+                        $data['errors'][$fieldName] = 'File upload is required';
+                    }
+                    break;
+
+                default:
+                    $value = trim($_POST[$fieldName] ?? '');
+                    if (empty($value)) {
+                        $data['errors'][$fieldName] = 'This field is required';
+                    } else {
+                        $data['fields'][$fieldName] = $value;
+                    }
+                    break;
+            }
+        }
+
+        // If no errors, save application
+        if (empty($data['errors'])) {
+            $applicationModel = $this->model('M_applicationFields');
+            
+            
+           $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
+            if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
+                flash('application_success', 'Your application has been submitted successfully');
+                redirect('student/all_app');
+            } else {
+                flash('application_error', 'Something went wrong with your application', 'alert alert-danger');
+                
+                $this->view('pages/student/jobsApply', $data);
+            }
+        } else {
+            // Return to form with errors
+            $this->view('pages/student/jobsApply', $data);
+        }
+    } else {
+        // GET request - show the application form
+        $jobModel = $this->model('M_jobpost');
+        $job = $jobModel->getJobById($jobId);
+        
+        if (!$job) {
+            redirect('pages/error');
+        }
+
+        $data = [
+            'job' => $job,
+            'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
+        ];
+
+        $this->view('pages/student/jobsApply', $data);
+    }
+    }
+    private function handleFileUpload($file, $fieldName) {
+        $result = [
+            'success' => false,
+            'path' => '',
+            'error' => ''
+        ];
     
+        // Define allowed file types based on field
+        $allowedTypes = [
+            'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            'photo' => ['image/jpeg', 'image/png'],
+            'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png'],
+            'other1' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
+            'other2' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
+            'other3' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
+        ];
+    
+        // Validate file type
+        if (!in_array($file['type'], $allowedTypes[$fieldName] ?? [])) {
+            $result['error'] = 'Invalid file type';
+            return $result;
+        }
+    
+        // Generate unique filename
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = uniqid() . '_' . time() . '.' . $extension;
+        
+        // Set upload directory based on field type
+        $uploadDir = PUBROOT . '/uploads/' . $fieldName . '/';
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+    
+        $targetPath = $uploadDir . $filename;
+    
+        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+            $result['success'] = true;
+            $result['path'] = 'uploads/' . $fieldName . '/' . $filename;
+        } else {
+            $result['error'] = 'Failed to upload file';
+        }
+    
+        return $result;
+     }
 
     // public function jobsApply()
     // {
@@ -688,7 +963,10 @@ class Student extends Controller
         $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
 
         $data = [
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'rating' => '',
+            'comment' => '',
+            'company_id' => '',
         ];
 
         $this->view('pages/student/myreviews', $data);

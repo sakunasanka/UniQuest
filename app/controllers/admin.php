@@ -28,6 +28,8 @@ class Admin extends Controller
             'role' => 'VT-Member',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Active',
+            'verifiedBy' => $_SESSION['user_id'],
+            'verifiedDate' => date('Y-m-d H:i:s'),
 
             'firstName_err' => '',
             'lastName_err' => '',
@@ -58,8 +60,13 @@ class Admin extends Controller
             $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
             $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search, $searchBy);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+
             $data = [
                 'students' => $students['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $students['currentPage'],
                 'rowsPerPage' => $students['limit'],
                 'totalRows' => $students['totalRows'],
@@ -93,8 +100,13 @@ class Admin extends Controller
             // $order = $_GET['order'] ?? 'ASC';
 
             $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search, $searchBy);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+
             $data = [
                 'companies' => $companies['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $companies['currentPage'],
                 'rowsPerPage' => $companies['limit'],
                 'totalRows' => $companies['totalRows'],
@@ -124,8 +136,13 @@ class Admin extends Controller
             $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
             $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search, $searchBy);
+            $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
+            $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
+
             $data = [
                 'vtMembers' => $vtMembers['data'],
+                'deactReasons' => $deactReasons['data'],
+                'actReasons' => $actReasons['data'],
                 'currentPage' => $vtMembers['currentPage'],
                 'rowsPerPage' => $vtMembers['limit'],
                 'totalRows' => $vtMembers['totalRows'],
@@ -150,6 +167,12 @@ class Admin extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
+            }
+
+            //email verification
+            $emailVerificationResponse = $this->model('AdminModel')->verifyEmail($data['email']);
+            if (!$emailVerificationResponse) {
+                $data['email_err'] = 'Email verification failed';
             }
 
             $validationResponse = Validator::isValidRegistrationData($data);
@@ -361,50 +384,77 @@ class Admin extends Controller
         }
     }
 
-    public function sendMessage()
+    public function sendMessage($userID)
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize input
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            // Data for the chat message
-            $data = [
-                'sender_id' => $_SESSION['user_id'], // Admin ID from session
-                'receiver_id' => trim($_POST['receiver_id'] ?? ''), // Student ID
-                'message' => trim($_POST['message'] ?? ''),
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
 
-                // Error handling
-                'receiver_id_err' => '',
-                'message_err' => ''
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
+            $data = [
+                'userID' => $userID,
+                'email' => $email,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
             ];
 
-            // Validation checks
-            if (empty($data['receiver_id'])) {
-                $data['receiver_id_err'] = 'Receiver ID is required.';
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
             }
 
-            if (empty($data['message'])) {
-                $data['message_err'] = 'Message cannot be empty.';
-            }
-
-            // Ensure no errors before submitting
-            if (empty($data['receiver_id_err']) && empty($data['message_err'])) {
-                $chatModel = $this->model('ChatModel');
-
-                // Attempt to send the message
-                if ($chatModel->sendMessage($data['sender_id'], $data['receiver_id'], $data['message'], 'Admin')) {
-                    flash('chat-msg', 'Message sent successfully.');
-                    redirect('admin/stu_detail' . $data['receiver_id']);
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('admin/user_detail/' . $userID);
                 } else {
                     die('Something went wrong while sending the message.');
                 }
             } else {
-                // Reload view with validation errors
-                $this->view('pages/admin/stu_detail', $data);
+                // Reload view with errors
+                $this->loadUserDetailView($data);
             }
         } else {
-            // For a GET request, redirect back
-            redirect('admin/students');
+            // Load initial view without POST request
+
+            $data = [
+                'userID' => $userID,
+                'email' => '',
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
         }
     }
 
@@ -462,6 +512,16 @@ class Admin extends Controller
 
     public function user_detail($userID)
     {
+        $data = [
+            'userID' => $userID,
+            'user' => $this->model->getUserDetails($userID),
+            'sender_id' => $_SESSION['user_id'],
+            'receiver_id' => $userID,
+            'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+            'messageInput' => '',
+            'messageInput_err' => '',
+        ];
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -472,9 +532,25 @@ class Admin extends Controller
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
 
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
             $data = [
                 'userID' => $userID,
+                'email' => $email,
                 'user' => $this->model->getUserDetails($userID),
+                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID, 'Deactivate'),
+                'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
                 'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
@@ -490,7 +566,7 @@ class Admin extends Controller
 
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
-                if ($this->model('chatModel')->sendMessage($data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
                     redirect('admin/user_detail/' . $userID);
                 } else {
@@ -502,12 +578,16 @@ class Admin extends Controller
             }
         } else {
             // Load initial view without POST request
+
             $data = [
                 'userID' => $userID,
+                'email' => '',
                 'user' => $this->model->getUserDetails($userID),
+                'acc_log' => $this->model('AdminModel')->getLastAccountLogReason($userID),
+                'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                // 'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
                 'messageInput' => '',
                 'messageInput_err' => '',
                 'topic' => '', // Default to empty until a message is sent
@@ -532,8 +612,12 @@ class Admin extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
+            $rejectReasons = $this->model('AdminModel')->getReasonsByType('user_reject');
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($userID);
             $data = [
-                'user' => $user
+                'user' => $user,
+                'rejectReasons' => $rejectReasons['data'],
+                'verifyDetails' => $verifyDetails,
             ];
             if ($user['Role'] == 'Student') {
                 $this->view('pages/admin/stu_ver_detail', $data);
@@ -561,26 +645,45 @@ class Admin extends Controller
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
             }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_ver_reject($userID)
+    public function user_ver_reject($userID, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
             $this->model->rejectUser($userID);
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_activate($userID, $role)
+    public function user_activate($userID, $role, $email, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
             $this->model->activateAccount($userID);
+            $this->model('AdminModel')->addUserAccountLog($userID, 'Activate', $reasonID);
+            MailHelper::sendEmailAccountReactivatedByAdmin($email, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -593,10 +696,14 @@ class Admin extends Controller
         }
     }
 
-    public function user_deactivate($userID, $role)
+    public function user_deactivate($userID, $role, $email, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
             $this->model->deactivateAccount($userID);
+            $this->model('AdminModel')->addUserAccountLog($userID, 'Deactivate', $reasonID);
+            MailHelper::sendEmailAccountDeactivatedByAdmin($email, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -776,7 +883,7 @@ class Admin extends Controller
 
     public function notifications()
     {
-        $messages = $this->model('ContactModel')->getMessages();
+        $messages = $this->model('ContactModel')->getMessagesAll();
 
         // Load the view with the messages
         $data = [
@@ -801,42 +908,103 @@ class Admin extends Controller
         }
     }
 
-    public function messages_stu()
+    public function messages_stu($userID = null)
     {
-        $messages = $this->model('ContactModel')->getMessagesStu();
+        // Fetch all student messages
+        $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
-        // Load the view with the messages
-        $data = [
-            'messages' => $messages
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_stu' => $messages_stu,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_stu' => $messages_stu,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_stu', $data);
     }
 
-    public function messages_com()
+    public function messages_com($userID = null)
     {
-        $messages = $this->model('ContactModel')->getMessagesCom();
+        // Fetch all company messages
+        $messages_com = $this->model('ContactModel')->getMessagesCom();
 
-        // Load the view with the messages
-        $data = [
-            'messages' => $messages
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_com' => $messages_com,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_com' => $messages_com,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_com', $data);
     }
+    
 
-    public function messages_ver()
+    public function messages_ver($userID = null)
     {
-        $messages = $this->model('ContactModel')->getMessagesVer();
+        // Fetch all verification team messages
+        $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
-        // Load the view with the messages
-        $data = [
-            'messages' => $messages
-        ];
+        // If no specific user is selected, just load the messages
+        if (!isset($userID)) {
+            $data = [
+                'messages_ver' => $messages_ver,
+            ];
+        } else {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in."); // Redirect or handle it better
+            }
+
+            // Fetch user details and chat messages
+            $data = [
+                'userID' => $userID,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages_ver' => $messages_ver,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+            ];
+        }
 
         $this->view('pages/admin/messages_ver', $data);
     }
-
+   
     // In AdminController.php
     public function fetchMessageDetails($id)
     {
@@ -867,32 +1035,312 @@ class Admin extends Controller
     public function editMessage($messageId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = json_decode(file_get_contents("php://input"), true);
+            $data = json_decode(file_get_contents("php://input"), true);
+            $newMessage = $data['message'] ?? '';
 
-            if ($this->model('chatModel')->canEditMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->editMessage($messageId, $_POST['message'])) {
+            if (!empty($newMessage)) {
+                $chatModel = $this->model('chatModel');
+                $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+
+                if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
                 } else {
                     echo json_encode(['success' => false, 'error' => 'Failed to edit message.']);
                 }
             } else {
-                echo json_encode(['success' => false, 'error' => 'Edit time limit expired.']);
+                echo json_encode(['success' => false, 'error' => 'Message cannot be empty.']);
             }
+        } else {
+            http_response_code(405);
         }
     }
 
     public function deleteMessage($messageId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($this->model('chatModel')->canDeleteMessage($messageId, $_SESSION['user_id'])) {
-                if ($this->model('chatModel')->deleteMessage($messageId)) {
-                    echo json_encode(['success' => true]);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Failed to delete message.']);
-                }
+            $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+
+            if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
+                Redirect::to(URLROOT . '/admin/user_detail');
             } else {
-                echo json_encode(['success' => false, 'error' => 'Delete time limit expired.']);
+                die('Something went wrong while deleting the message.');
             }
+        } else {
+            Redirect::to(URLROOT . '/admin/user_detail');
         }
+    }
+
+    //retrieve reasons
+    public function app_settings()
+    {
+        try {
+            $data = [
+                'user_activate' => $this->model('AdminModel')->getReasonsByType('user_activate')['data'],
+                'user_deactivate' => $this->model('AdminModel')->getReasonsByType('user_deactivate')['data'],
+                'user_reject' => $this->model('AdminModel')->getReasonsByType('user_reject')['data'],
+                'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data'],
+                'industries' => $this->model('AdminModel')->getIndustries()['data']
+            ];
+            $this->view('pages/admin/app_settings', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function addReason()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Get raw POST data and decode it
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+                return;
+            }
+
+            // Sanitize inputs
+            $reasonName = trim(filter_var($input['reasonName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $reason = trim(filter_var($input['reason'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $reasonType = trim(filter_var($input['reasonType'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+            // Validate inputs
+            if (empty($reasonName) || empty($reasonType)) {
+                echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
+                return;
+            }
+
+            try {
+                // Add reason to the database
+                if ($this->model('AdminModel')->addReason($reasonName, $reason, $reasonType)) {
+                    echo json_encode(['success' => true, 'message' => 'Reason added successfully.']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to add reason.']);
+                }
+            } catch (Exception $e) {
+                error_log('Error adding reason: ' . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'An error occurred while adding the reason.']);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+        }
+        exit;
+    }
+
+    public function updateReason()
+    {
+        // Set proper header first
+        header('Content-Type: application/json');
+
+        try {
+            // Get input data
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON input');
+            }
+
+            // Validate required fields
+            if (empty($input['reasonID']) || empty($input['reasonName'])) {
+                throw new Exception('Missing required fields');
+            }
+
+            // Sanitize data
+            $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
+            $reasonName = filter_var($input['reasonName'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $reason = filter_var($input['reason'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Update in model
+            $success = $this->model('AdminModel')->updateReason($reasonID, $reasonName, $reason);
+
+            if ($success) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Reason updated successfully'
+                ]);
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to update reason'
+                ]);
+            }
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit;
+    }
+
+    public function deleteReason()
+    {
+        header('Content-Type: application/json');
+
+        try {
+            // Get JSON input
+            $input = json_decode(file_get_contents('php://input'), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON input');
+            }
+
+            // Validate reasonID
+            if (empty($input['reasonID'])) {
+                throw new Exception('Invalid reason ID');
+            }
+
+            $reasonID = filter_var($input['reasonID'], FILTER_SANITIZE_NUMBER_INT);
+
+            // Delete in model
+            $success = $this->model('AdminModel')->deleteReason($reasonID);
+
+            echo json_encode([
+                'success' => $success,
+                'message' => $success ? 'Reason deleted successfully' : 'Failed to delete reason'
+            ]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit;
+    }
+
+    public function addIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryName = trim(filter_var($input['industryName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+        if (empty($industryName)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Please enter an industry name.']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->addIndustry($industryName)) {
+                http_response_code(201);
+                echo json_encode(['success' => true, 'message' => 'Industry added successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to add industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error adding industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while adding the industry.']);
+        }
+
+        exit;
+    }
+
+    // Update industry
+    public function updateIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryID = filter_var($input['industryID'], FILTER_SANITIZE_NUMBER_INT);
+        $industryName = trim(filter_var($input['industryName'] ?? '', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+        if (empty($industryID) || empty($industryName)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->updateIndustry($industryID, $industryName)) {
+                http_response_code(200);
+                echo json_encode(['success' => true, 'message' => 'Industry updated successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to update industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error updating industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while updating the industry.']);
+        }
+
+        exit;
+    }
+
+    // Delete industry
+    public function deleteIndustry()
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+            exit;
+        }
+
+        $industryID = filter_var($input['industryID'], FILTER_SANITIZE_NUMBER_INT);
+
+        if (empty($industryID)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid industry ID']);
+            exit;
+        }
+
+        try {
+            if ($this->model('AdminModel')->deleteIndustry($industryID)) {
+                http_response_code(200);
+                echo json_encode(['success' => true, 'message' => 'Industry deleted successfully.']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Failed to delete industry.']);
+            }
+        } catch (Exception $e) {
+            error_log('Error deleting industry: ' . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'An error occurred while deleting the industry.']);
+        }
+
+        exit;
     }
 }

@@ -65,7 +65,10 @@ class userModel extends Model
                 'AddressLine2' => $data['addressLine2'],
                 'City' => $data['city'],
                 'Industry' => $data['industry'],
-                'Website' => $data['website']
+                'Website' => $data['website'],
+                'LinkedIn' => $data['linkedin'],
+                'Facebook' => $data['facebook'],
+                'BRCertificate' => $data['brCertificateName']
             ];
             if (!$this->insert('company', $companyData)) {
                 $this->db->rollBack();
@@ -153,7 +156,9 @@ class userModel extends Model
                 'Role' => $data['role'],
                 'RegisterDate' => $data['date'],
                 'ContactNo' => $data['contactNo'],
-                'Status' => $data['status']
+                'Status' => $data['status'],
+                'VerifiedDate' => $data['verifiedDate'],
+                'VerifiedBy' => $data['verifiedBy']
             ];
             if (!$this->insert('user', $userData)) {
                 $this->db->rollBack();
@@ -369,6 +374,26 @@ class userModel extends Model
         try {
             $userData = [
                 'Status' => 'Deactive'
+            ];
+            if ($this->update('user', $userData, ['UserID' => $userId])) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deactivateAccountByUser($userId)
+    {
+        try {
+            $userData = [
+                'Status' => 'Pending Deletion'
             ];
             if ($this->update('user', $userData, ['UserID' => $userId])) {
                 return true;
@@ -673,5 +698,14 @@ class userModel extends Model
             error_log("General Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function getUserLoginsByGender() {
+        $this->db->query("SELECT 
+                gender, 
+                COUNT(*) AS logins
+            FROM user
+            GROUP BY gender");
+        return $this->db->resultSet();
     }
 }

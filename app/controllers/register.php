@@ -42,9 +42,14 @@ class Register extends Controller
             'description' => ucfirst(trim($post['description'] ?? '')),
             'website' => trim($post['website'] ?? ''),
             'industry' => trim($post['industry'] ?? ''),
+            'facebook' => trim($post['facebook'] ?? ''),
+            'linkedin' => trim($post['linkedin'] ?? ''),
+            'brCertificate' => $files['brCertificate'] ?? '',
+            'brCertificateName' => '',
             'role' => 'Company',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Pending',
+            'industries' => $this->model('AdminModel')->getIndustries()['data'],
 
             'companyName_err' => '',
             'email_err' => '',
@@ -58,6 +63,9 @@ class Register extends Controller
             'description_err' => '',
             'website_err' => '',
             'industry_err' => '',
+            'facebook_err' => '',
+            'linkedin_err' => '',
+            'brCertificate_err' => '',
             'companyLogo_err' => '',
             'terms_err' => '',
             'role_err' => '',
@@ -147,7 +155,7 @@ class Register extends Controller
                 $expiryDate = TokenHelper::generateExpiryDate();
 
                 // Save token to database
-                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
                     MailHelper::sendEmailWithTokenCompany($data['email'], $token);
@@ -181,17 +189,17 @@ class Register extends Controller
             $token = $queryparams['token'];
 
             //get token details
-            $tokenDetails = $this->model->getTokenDetails($token);
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
 
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
                 if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
-                    $this->model->deleteToken($token);
+                    $this->model('AdminModel')->deleteToken($token);
 
                     //store email as verified
-                    $this->model->verifyEmail($tokenDetails->Email);
+                    $this->model('AdminModel')->verifyEmail($tokenDetails->Email);
 
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
@@ -242,10 +250,10 @@ class Register extends Controller
                 $expiryDate = TokenHelper::generateExpiryDate();
 
                 // Save token to database
-                if ($this->model->storeToken($data['email'], $token, $expiryDate)) {
+                if ($this->model('AdminModel')->storeToken($data['email'], $token, $expiryDate)) {
                     LogHelper::logDebug('Token saved to database');
                     // Send token to email
-                    MailHelper::sendEmailWithTokenStudent($data['email'], $token);
+                    MailHelper::sendEmailWithTokenStudent($data['email'], $token, 'register');
                     // Redirect to verify email page
                     $this->view('pages/register/email_sent', $data);
                 } else {
@@ -276,17 +284,17 @@ class Register extends Controller
             $token = $queryparams['token'];
 
             //get token details
-            $tokenDetails = $this->model->getTokenDetails($token);
+            $tokenDetails = $this->model('AdminModel')->getTokenDetails($token);
 
             //check if token is valid
             if ($tokenDetails) {
                 //check if token is expired
                 if (TokenHelper::validateToken($tokenDetails->Expiration)) {
                     //delete token
-                    $this->model->deleteToken($token);
+                    $this->model('AdminModel')->deleteToken($token);
 
                     //store email as verified
-                    $this->model->verifyEmail($tokenDetails->Email);
+                    $this->model('AdminModel')->verifyEmail($tokenDetails->Email);
 
                     //store verified email in session
                     $_SESSION['verified_email'] = $tokenDetails->Email;
@@ -322,7 +330,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model->isEmailVerified($data['email'])) {
+            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 
@@ -331,9 +339,19 @@ class Register extends Controller
                 $data = array_merge($data, $validationResponse['error']);
             }
 
-            $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
-            if (!$logoValidationResponse['is_valid']) {
-                $data['companyLogo_err'] = $logoValidationResponse['error'];
+            // $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
+            // if (!$logoValidationResponse['is_valid']) {
+            //     $data['companyLogo_err'] = $logoValidationResponse['error'];
+            // }
+
+            //vallidate files
+            $fileValidationResponse = FileUploadHelper::validateFiles([
+                'companyLogo' => ['file' => $data['companyLogo'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                'brCertificate' => ['file' => $data['brCertificate'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
+            ]);
+
+            if (!$fileValidationResponse['is_valid']) {
+                $data = array_merge($data, $fileValidationResponse['error']);
             }
 
             // Check if there are no errors
@@ -342,11 +360,29 @@ class Register extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Upload company logo
-                $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
-                if ($companyLogoResponse['success']) {
-                    $data['companyLogoName'] = $companyLogoResponse['file_name'];
+                // $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
+                // if ($companyLogoResponse['success']) {
+                //     $data['companyLogoName'] = $companyLogoResponse['file_name'];
+                // } else {
+                //     $data['companyLogo_err'] = $companyLogoResponse['error'];
+                //     $this->view('pages/register/company_register', $data);
+                //     return;
+                // }
+
+                //upload each file
+                $uploadedFilesResponse = FileUploadHelper::uploadFiles([
+                    'companyLogo' => ['file' => $data['companyLogo'], 'path' => PUBROOT . '/uploads/profile_pictures/company'],
+                    'brCertificate' => ['file' => $data['brCertificate'], 'path' => PUBROOT . '/uploads/br_certificates']
+                ]);
+
+                //check if all files are uploaded successfully
+                if ($uploadedFilesResponse['success']) {
+                    //set file names to data array
+                    $data = array_merge($data, $uploadedFilesResponse['file_name']);
                 } else {
-                    $data['companyLogo_err'] = $companyLogoResponse['error'];
+                    //merge data with errors
+                    $data = array_merge($data, $uploadedFilesResponse['error']);
+                    // Load view with errors
                     $this->view('pages/register/company_register', $data);
                     return;
                 }
@@ -385,7 +421,7 @@ class Register extends Controller
             //check email is already registered
             if ($this->model->findUserByEmail($data['email'])) {
                 $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model->isEmailVerified($data['email'])) {
+            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
                 $data['email_err'] = 'Email is not verified';
             }
 

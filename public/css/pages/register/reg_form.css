@@ -134,12 +134,35 @@ form h3 {
     display: inline-block;
 }
 
+.input-container span.note-msg {
+    font-size: 1rem;
+    color: #32a852;
+    display: inline-block;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 10px;
+    border : 2px solid #32a852;
+}
+
 .input-container input {
     font-size: 1rem;
     padding: 10px 20px;
     border: 2px solid #ddd;
     border-radius: 10px;
     width: 100%;
+}
+
+.input-container select {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.input-container select:focus {
+    outline: none;
+    border-color: #32a852;
 }
 
 /* for inputs with readonly option */

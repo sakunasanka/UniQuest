@@ -127,8 +127,12 @@ class Verification_team extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
+            $rejectReasons = $this->model('AdminModel')->getReasonsByType('user_reject');
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($userID);
             $data = [
-                'user' => $user
+                'user' => $user,
+                'rejectReasons' => $rejectReasons['data'],
+                'verifyDetails' => $verifyDetails,
             ];
             if ($user['Role'] == 'Student') {
                 $this->view('pages/verification_team/stu_ver_detail', $data);
@@ -172,16 +176,31 @@ class Verification_team extends Controller
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
             }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
             Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function user_ver_reject($userID)
+    public function user_ver_reject($userID, $queryParam = [])
     {
         try {
+            $reasonID = isset($queryParam['reason']) ? $queryParam['reason'] : 1;
             $this->model->rejectUser($userID);
+            $user = $this->model->getUserDetails($userID);
+            $email = $user['Email'];
+            $reason = $this->model('AdminModel')->getReasonByID($reasonID)->Reason;
+            if ($user['Role'] == 'Company') {
+                $name = $user['CompanyName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            } elseif ($user['Role'] == 'Student') {
+                $name = $user['FirstName'];
+                MailHelper::sendEmailAccountRejected($email, $name, $reason);
+            }
+            //add verificationlogs
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -299,18 +318,18 @@ class Verification_team extends Controller
 
             // Data for the contact form
             $data = [
-                'name' => trim($_POST['name'] ?? ''),
+                'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
 
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
 
             // Validation checks
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Please enter your name';
+            if (empty($data['email'])) {
+                $data['name_err'] = 'Please enter your email';
             }
 
             if (empty($data['topic'])) {
@@ -322,8 +341,8 @@ class Verification_team extends Controller
             }
 
             // Ensure no errors before submitting
-            if (empty($data['name_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
-                if($this->model('ContactModel')->sendMessage($data)){
+            if (empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
+                if ($this->model('ContactModel')->sendMessage($data)) {
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('verification_team/contact_admin');
                 } else {
@@ -335,15 +354,15 @@ class Verification_team extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'name' => '',
+                'email' => '',
                 'topic' => '',
                 'message' => '',
-                'name_err' => '',
+                'email_err' => '',
                 'topic_err' => '',
                 'message_err' => ''
             ];
 
-        $this->view('pages/verification_team/contact_admin', $data);
+            $this->view('pages/verification_team/contact_admin', $data);
         }
     }
 }

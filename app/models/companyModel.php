@@ -8,6 +8,14 @@ class companyModel extends Model
         $this->db = Database::getInstance();
     }
 
+    public function getCompanyInfo() 
+    {
+        $this->db->query("SELECT * FROM company WHERE CompanyID = :companyId");
+
+        $this->db->bind(':companyId', $_SESSION['user_id']);
+        return $this->db->single();
+    }
+
     public function addUserPostBookmark($companyId)
     {
         try {
@@ -62,5 +70,96 @@ class companyModel extends Model
         $this->db->bind(':companyId', $companyId);
         return $this->db->execute();
     }
+    
+    public function storePendingPayment($user_id, $order_id, $plan, $amount) {
+        try {
+            $this->db->query('INSERT INTO pending_payments 
+                             (user_id, order_id, plan, amount, created_at)
+                             VALUES (:user_id, :order_id, :plan, :amount, NOW())');
+            
+            $this->db->bind(':user_id', $user_id);
+            $this->db->bind(':order_id', $order_id);
+            $this->db->bind(':plan', $plan);
+            $this->db->bind(':amount', $amount);
+            
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log("Database error in storePendingPayment: " . $e->getMessage());
+            return false;
+        }
+    }
 
+    public function getPendingPayment($order_id) {
+        try {
+            $this->db->query('SELECT * FROM pending_payments WHERE order_id = :order_id LIMIT 1');
+            $this->db->bind(':order_id', $order_id);
+            return $this->db->single();
+        } catch (Exception $e) {
+            error_log("Database error in getPendingPayment: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function clearPendingPayment($order_id) {
+        try {
+            $this->db->query('DELETE FROM pending_payments WHERE order_id = :order_id');
+            $this->db->bind(':order_id', $order_id);
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log("Database error in clearPendingPayment: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateSubscription($user_id, $plan, $start_date, $end_date, $status) {
+        try {
+            $this->db->query('UPDATE company 
+                             SET subscription_plan = :plan,
+                                 subscription_start_date = :start_date,
+                                 subscription_end_date = :end_date,
+                                 subscription_status = :status
+                             WHERE CompanyID = :user_id');
+            
+            $this->db->bind(':user_id', $user_id);
+            $this->db->bind(':plan', $plan);
+            $this->db->bind(':start_date', $start_date);
+            $this->db->bind(':end_date', $end_date);
+            $this->db->bind(':status', $status);
+            
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log("Database error in updateSubscription: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function storePaymentSuccess($user_id, $order_id, $payment_id, $plan, $amount) {
+        try {
+            $this->db->query('INSERT INTO payments 
+                             (user_id, order_id, payment_id, plan, amount, currency, payment_date, status)
+                             VALUES (:user_id, :order_id, :payment_id, :plan, :amount, "LKR", NOW(), "completed")');
+            
+            $this->db->bind(':user_id', $user_id);
+            $this->db->bind(':order_id', $order_id);
+            $this->db->bind(':payment_id', $payment_id);
+            $this->db->bind(':plan', $plan);
+            $this->db->bind(':amount', $amount);
+            
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log("Database error in storePaymentSuccess: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getPaymentByOrderId($order_id) {
+        try {
+            $this->db->query('SELECT * FROM payments WHERE order_id = :order_id LIMIT 1');
+            $this->db->bind(':order_id', $order_id);
+            return $this->db->single();
+        } catch (Exception $e) {
+            error_log("Database error in getPaymentByOrderId: " . $e->getMessage());
+            return false;
+        }
+    }
 }

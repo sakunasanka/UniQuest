@@ -1,9 +1,32 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php 
+    if (!isset($_SESSION['user_role'])) {
+        require APPROOT . '/views/components/header.php';
+    }
+    else if ($_SESSION['user_role'] == 'Student') {
+        require APPROOT . '/views/components/stu_header.php';
+    } else if ($_SESSION['user_role'] == 'Company') {
+        require APPROOT . '/views/components/ser_header.php';
+    } 
+    else if ($_SESSION['user_role'] == 'Admin') {
+        require APPROOT . '/views/components/adm_header.php';
+    }
+    else if ($_SESSION['user_role'] == 'VT-Member') {
+        require APPROOT . '/views/components/ver_header.php';
+    }
+?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="main-container">
-    <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>
+        <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
+        <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+    <?php endif; ?>   
 
     <div class="content-area">
         <div class="container">
@@ -58,10 +81,13 @@
                             
                             <?php  if ($_SESSION['user_role'] == 'Student'):?>
                                 <div class="card-icons">
-                                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                                    <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>  
                                     <i class="<?php echo in_array($post['CompanyID'], $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post['CompanyID']; ?>, this);"></i>  
                                 </div>
+                            <?php else: ?>  
+                                <div class="card-icons">
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>  
+                                </div>  
                             <?php endif;?>    
                         </div>
                         <div class="social-media-icons">
@@ -88,16 +114,11 @@
 
 <script>
     function goToCompanyDescription(companyId) {
-        window.location.href = "/UniQuest/student/companydescription/" +companyId;
+        window.location.href = "/UniQuest/jobs/companydescription/" +companyId;
     }
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
 
     function toggleBookmark(icon, companyId) {
         icon.classList.toggle("fa-regular");
@@ -126,5 +147,15 @@
 
         // Send the request with the form data
         xhr.send(formData);
+    }
+
+    function shareJob(companyId) {
+        const jobURL = `${window.location.origin}/UniQuest/jobs/companydescription/${companyId}`;
+        
+        navigator.clipboard.writeText(jobURL).then(() => {
+            Flash.show('Company link copied to clipboard!', 'success');
+        }).catch(err => {
+            Flash.show('Failed to copy link', 'error');
+        });
     }
 </script>

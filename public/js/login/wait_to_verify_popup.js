@@ -3,8 +3,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function open_verify() {
         popup1.classList.toggle("active");
-
-        document.body.style.overflow = 'hidden';
     }
 
     // Automatically open the popup when the page is loaded
