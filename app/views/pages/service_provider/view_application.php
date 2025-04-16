@@ -8,33 +8,6 @@ require APPROOT . '/views/components/stu_header.php';
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
     <div class="content-area">
-        <?php
-        // Hard-coded data array
-        // $data = [
-        //     'application' => [
-        //         'photo' => 'https://via.placeholder.com/150', // Replace with actual image path
-        //         'fullname' => 'John Doe',
-        //         'id' => 'APP12345',
-        //         'created_at' => '2023-01-15 10:30:00',
-        //         'status' => 'Approved',
-        //         'email' => 'john.doe@example.com',
-        //         'contact' => '+1 555-123-4567',
-        //         'address' => '123 Main St, Cityville, ST 12345',
-        //         'nic' => '123456789V',
-        //         'gender' => 'Male',
-        //         'dob' => '1990-05-15',
-        //         'qualifications' => "Bachelor's Degree in Computer Science\nCertified Project Manager",
-        //         'experience' => "5 years web development experience\n2 years team leadership",
-        //         'skills' => 'HTML, CSS, JavaScript, PHP',
-        //         'cv' => 'path/to/cv.pdf',
-        //         'nic_copy' => 'path/to/nic_copy.pdf',
-        //         'linkedin' => 'https://linkedin.com/in/johndoe',
-        //         'other1' => 'path/to/other1.pdf',
-        //         'other2' => 'path/to/other2.pdf',
-        //         'other3' => 'path/to/other3.pdf'
-        //     ]
-        // ];
-        // ?>
         <div class="header">
             <h1>Application Details</h1>
         </div>
@@ -49,7 +22,6 @@ require APPROOT . '/views/components/stu_header.php';
                     <?php endif; ?>
                     <div>
                         <h2><?php echo $data['application']['fullname']; ?></h2>
-                        <p>Application ID: <?php echo $data['application']['id']; ?></p>
                         <p>Applied on: <?php echo date('Y-m-d', strtotime($data['application']['created_at'])); ?></p>
                     </div>
                 </div>
@@ -166,6 +138,24 @@ require APPROOT . '/views/components/stu_header.php';
                         </button>
                     <?php endif; ?>
                 </div>
+            </div>
+
+            <!-- File Previews Section -->
+            <div class="file-previews">
+                <h2>File Previews</h2>
+                <?php if (!empty($data['application']['nic_copy'])): ?>
+                    <div class="detail-row">
+                        <strong>NIC Copy</strong>
+                    </div>
+                    <iframe src="<?php echo UPLOADROOT; ?>/nic_copy/<?php echo htmlspecialchars($data['application']['nic_copy']); ?>" frameborder="0"></iframe>
+                <?php endif; ?>
+                <?php if (!empty($data['application']['cv'])): ?>
+                    <div class="detail-row<div class="detail-row">
+                        <strong>View CV</strong>
+                    </div>
+                    <iframe src="<?php echo UPLOADROOT; ?>/cv/<?php echo htmlspecialchars($data['application']['cv']); ?>" frameborder="0"></iframe>
+                    <?php endif; ?>
+                
             </div>
 
             <!-- Footer with Action Buttons -->

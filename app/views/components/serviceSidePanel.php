@@ -28,7 +28,7 @@
                 <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
             </button>
             <div class="dropdown-menu">
-                <button class="nav-btn" data-path="/UniQuest/service_provider/new_applications">New Applications</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/application_dashboard">New Application Dashboard</button>
                 <button class="nav-btn" data-path="/UniQuest/service_provider/offered_applications">Offered Applications</button>
                 <button class="nav-btn" data-path="/UniQuest/service_provider/rejected_applications">Rejected Applications</button>
             </div>
