@@ -65,7 +65,10 @@ class userModel extends Model
                 'AddressLine2' => $data['addressLine2'],
                 'City' => $data['city'],
                 'Industry' => $data['industry'],
-                'Website' => $data['website']
+                'Website' => $data['website'],
+                'LinkedIn' => $data['linkedin'],
+                'Facebook' => $data['facebook'],
+                'BRCertificate' => $data['brCertificateName']
             ];
             if (!$this->insert('company', $companyData)) {
                 $this->db->rollBack();
@@ -153,7 +156,9 @@ class userModel extends Model
                 'Role' => $data['role'],
                 'RegisterDate' => $data['date'],
                 'ContactNo' => $data['contactNo'],
-                'Status' => $data['status']
+                'Status' => $data['status'],
+                'VerifiedDate' => $data['verifiedDate'],
+                'VerifiedBy' => $data['verifiedBy']
             ];
             if (!$this->insert('user', $userData)) {
                 $this->db->rollBack();
