@@ -18,15 +18,15 @@
                         </div>
                         <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company')):?>
                             <div class="review-actions">
-                                <button class="like-btn <?php echo $review->is_liked ? 'liked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?> ">
+                                <button class="like-btn <?php echo $review->is_liked ? 'liked' : ''; ?>" data-id="main-<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?> ">
                                     <span class="material-symbols-outlined like-icon">thumb_up</span>
                                 </button>
-                                <span class="like-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
+                                <span class="like-count" data-id="main-<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                                <button class="dislike-btn <?php echo $review->is_disliked ? 'disliked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
+                                <button class="dislike-btn <?php echo $review->is_disliked ? 'disliked' : ''; ?>" data-id="main-<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                     <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                 </button>
-                                <span class="dislike-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
+                                <span class="dislike-count" data-id="main-<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
                             </div>
                         <?php endif;?>
                     </div>
