@@ -843,7 +843,6 @@ class Service_provider extends Controller
             $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
                 'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
-                'job_location' => trim($_POST['jobLocation'] ?? ''),
                 'job_category' => trim($_POST['jobType'] ?? ''),
                 'publish_date' => !empty($_POST['jobPostDate']) ? trim($_POST['publishDate']) : $publishDate,
                 'required_skills' => trim($_POST['qualifications'] ?? ''),
@@ -851,6 +850,10 @@ class Service_provider extends Controller
                 'salary_type' => trim($_POST['salaryType'] ?? ''),
                 'Description' => trim($_POST['jobDescription'] ?? ''),
                 'status' => 'Pending',
+                'job_district' => trim($_POST['job_district'] ?? ''),
+                'job_city' => trim($_POST['job_city'] ?? ''),
+                'districts' => $this->model('AdminModel')->getDistricts()['data'], // Fetch districts from the model
+                'cities' => [], // Initialize cities as an empty array
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -880,8 +883,8 @@ class Service_provider extends Controller
             if (empty($data['job_name'])) {
                 $data['job_name_err'] = 'Please enter job name';
             }
-            if (empty($data['job_location'])) {
-                $data['job_location_err'] = 'Please enter job location';
+            if (empty($data['job_district'] && $data['job_city'])) {
+                $data['job_location_err'] = 'Please select district and city';
             }
             if (empty($data['job_category'])) {
                 $data['job_category_err'] = 'Please enter job category';
@@ -923,6 +926,10 @@ class Service_provider extends Controller
                 'salary_type' => '',
                 'Description' => '',
                 'publish_date' => $publishDate,
+                'job_district' => '', // Default value for job district
+                'job_city' => '', // Default value for job city
+                'districts' => $this->model('AdminModel')->getDistricts()['data'], // Fetch districts from the model
+                'cities' => [], // Initialize cities as an empty array
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -937,6 +944,36 @@ class Service_provider extends Controller
             ];
             $this->view('pages/service_provider/jobPost', $data);
         }
+    }
+
+    public function getCitiesByDistrict() {
+        try {
+            // Get the district ID from POST data
+            $districtID = $_POST['districtID'] ?? null;
+            
+            if (!$districtID) {
+                throw new Exception('District ID is required');
+            }
+            
+            // Fetch cities based on the district ID
+            $cities = $this->model('AdminModel')->getCitiesByDistrict($districtID)['data'];
+            
+            if (!$cities) {
+                throw new Exception('No cities found for the given district ID');
+            }
+            
+            // Return JSON response
+            echo json_encode([
+                'success' => true,
+                'cities' => $cities
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit; // Important to prevent any additional output
     }
 
     public function delete($postId)

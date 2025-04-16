@@ -113,15 +113,16 @@ class M_jobpost extends Model {
     public function create($data) {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, Location, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
+            (Title, Description, District, City, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
             VALUES 
-            (:job_name, :Description, :job_location, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
+            (:job_name, :Description, :job_district, :job_city, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
         ');
 
         // Bind the values from $data array
         $this->db->bind(':job_name', $data['job_name']);
         $this->db->bind(':Description', $data['Description']);
-        $this->db->bind(':job_location', $data['job_location']);
+        $this->db->bind(':job_district', $data['job_district']);
+        $this->db->bind(':job_city', $data['job_city']);
         $this->db->bind(':job_category', $data['job_category']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);

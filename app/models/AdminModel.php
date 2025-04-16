@@ -301,5 +301,26 @@ class AdminModel extends Model {
             return $e->getMessage();
         }
     }
+
+    // get all districts
+    public function getDistricts() {
+        try {
+            $districts = $this->select('districts', [], 'DistrictID, DistrictName', 'AND', '', '', 0, 1, true);
+            return $districts;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    //get all cities for a district
+    public function getCitiesByDistrict($districtID) {
+        try {
+            $cities = $this->select('cities', [['DistrictID', '=', $districtID]], 'CityID, CityName', 'AND', '', '', 0, 1, true);
+            return $cities;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 }
 ?>
