@@ -575,7 +575,7 @@ public function getAllApplications($userId) {
         // }
     
     }
-    public function getApplicationsByuserID($applicationID)
+    public function getApplicationsByID($applicationID)
     {
         // try {
             // Prepare the SQL query
@@ -592,6 +592,39 @@ public function getAllApplications($userId) {
         //     return [];
         // }
     
+    }
+
+    public function getPendnigApplicationsByJobID($jobID)
+    {
+        $query ='SELECT * FROM v_allapplications WHERE jobID = :jobID AND status = "Pending"';
+        $this->db->query($query);
+        // Bind the job ID parameter
+        $this->db->bind(':jobID', $jobID);
+
+        // Execute the query and return the results
+        return $this->db->resultSet();
+    }
+    
+    public function getOfferedApplicationsByJobID($jobID)
+    {
+        $query ='SELECT * FROM v_allapplications WHERE jobID = :jobID AND status = "Accepted"';
+        $this->db->query($query);
+        // Bind the job ID parameter
+        $this->db->bind(':jobID', $jobID);
+
+        // Execute the query and return the results
+        return $this->db->resultSet();
+    }
+
+    public function getRejectedApplicationsByJobID($jobID)
+    {
+        $query ='SELECT * FROM v_allapplications WHERE jobID = :jobID AND status = "Rejected"';
+        $this->db->query($query);
+        // Bind the job ID parameter
+        $this->db->bind(':jobID', $jobID);
+
+        // Execute the query and return the results
+        return $this->db->resultSet();
     }
     
 }
