@@ -91,17 +91,23 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    height: 80%;
+    height: 80%; 
 }
 
 .job-logo img {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
+}
+
+.job-logo2 img {
+    width: 200px;
+    height: 200px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .job-details h3 {
-    font-size: 1.7em;
+    font-size: 1.5em;
     color: #333;
     margin-bottom: 10px;
 }
@@ -117,6 +123,63 @@ body {
     color: #fbc02d;
 }
 
+.job-item p {
+    font-size: 1.1em;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.job-item span {
+    display: block;
+    font-size: 1em;
+    color: #555;
+}
+
+.job-item .apply-btn {
+    margin-top: 10px;
+    background-color: #299b63;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.job-item .apply-btn:hover {
+    background-color: #137d4a;
+}
+
+.apply-btn, .contact-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.3em;
+}
+
+.apply-btn {
+    background-color: #299b63;
+    color: #fff;
+}
+
+.contact-btn {
+    background-color: #6eb2fc;
+    color: #fff;
+}
+
+.apply-btn:hover {
+    background-color: #137d4a;
+}
+
+.contact-btn:hover {
+    background-color: #4aa1fd;
+}
+
 /* Social Media Icons */
 .social-media-icons {
     display: flex;
@@ -126,8 +189,8 @@ body {
 }
 
 .social-media-icons a i {
-    font-size: 20px;
     color: #555;
+    font-size: 18px;
     cursor: pointer;
     transition: color 0.3s, transform 0.2s ease-in-out;
 }
@@ -146,7 +209,7 @@ body {
 
 .table td {
     padding: 10px;
-    text-align: center; 
+    text-align: left; 
     color: #555;
     font-size: 1.1em;
     border-bottom: 1px solid #ddd;
@@ -156,6 +219,29 @@ body {
     border-bottom: none;
 }
 
+.card-icons {
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.card-icons i {
+    font-size: 18px;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.card-icons i:hover {
+    color: #333;
+    transform: scale(1.5); 
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out; 
+}
+
+.buttons {
+    margin-top: 20px;
+}
 
 .form-group span {
     display: none;

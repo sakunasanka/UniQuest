@@ -729,15 +729,40 @@ class Student extends Controller
     }
 
     public function jobsApplyform($jobId) {
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+        } else {
+            $userId = null;
+            $bookmarkedJobs = [];
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }
+
         // Load model and get application fields
         $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
     
         // Fetch job details3
         $job = $this->model('M_jobpost')->getpostbyid($jobId);
+
+        $posts = $this->model('M_jobpost')->getpostbyid($jobId);
+        $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
+
+        if ($posts->Category == 'Internship') {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+        } else {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        }
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
     
         $data = [
             'fields' => $applicationFields,
-            'job' => $job, // Pass job data to the view
+            'job' => $job, 
+            'post' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRating' => $displayRating,
         ];
     
         $this->view('pages/student/jobsApply', $data); 
