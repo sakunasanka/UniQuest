@@ -55,11 +55,51 @@ class M_jobpost extends Model {
         return $row->job_count;
     }
 
-    public function getPost(){
-        $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
-        $this->db->bind(':id', $_SESSION['user_id']);
-        $results = $this->db->resultSet();
-        return $results;
+    // public function getPost(){
+    //     $this->db->query('SELECT * FROM v_jobs WHERE v_jobs.CompanyID = :id');
+    //     $this->db->bind(':id', $_SESSION['user_id']);
+    //     $results = $this->db->resultSet();
+    //     return $results;
+    // }
+
+    public function getActivePost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
+    {
+        try{
+            $conditions = [
+                ['CompanyID', '=', $_SESSION['user_id']],
+                [$searchBy, 'LIKE', $search . '%'],
+                ['Status', '=', 'Active']
+            ];
+
+            $posts = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $posts;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getDeactivePost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
+    {
+        try{
+            $conditions = [
+                ['CompanyID', '=', $_SESSION['user_id']],
+                [$searchBy, 'LIKE', $search . '%'],
+                ['Status', '=', 'Deactive']
+            ];
+
+            $posts = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $posts;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
     
     public function getPosts(){
