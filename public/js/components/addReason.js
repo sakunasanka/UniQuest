@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', function () {
         'User Activate': 'user_activate',
         'User Deactivate': 'user_deactivate',
         'User Reject': 'user_reject',
-        'Job Reject': 'job_reject'
+        'Job Reject': 'job_reject',
+        'Job Activate': 'job_activate',
+        'Job Deactivate': 'job_deactivate',
     };
 
     // Get all elements
