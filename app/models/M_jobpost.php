@@ -129,7 +129,20 @@ class M_jobpost extends Model {
     }
 
     public function deletePost($postId){
-        $this->db->query('DELETE FROM jobs WHERE JobID=:id');
+        $this->db->query('UPDATE jobs SET Status="Deleted" WHERE JobID=:id');
+        $this->db->bind(':id',$postId );
+        
+
+        //execute
+        if($this->db->execute()){
+            return true;
+        }else{               
+            return false;
+        }
+    }
+
+    public function deactivatePost($postId){
+        $this->db->query('UPDATE jobs SET Status="Deactive" WHERE JobID=:id');
         $this->db->bind(':id',$postId );
         
 

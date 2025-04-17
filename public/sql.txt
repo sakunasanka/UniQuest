@@ -730,3 +730,15 @@ CREATE TABLE uniquest.is_disliked (
     FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
     FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
 );
+
+-- Create is_viewed_job table
+CREATE TABLE is_viewed_job (
+    JobID INT NOT NULL,
+    UserID INT NOT NULL,
+    ViewedAt DATETIME DEFAULT CURRENT_TIMESTAMP, 
+
+    PRIMARY KEY (JobID, UserID),
+
+    FOREIGN KEY (JobID) REFERENCES Jobs(JobID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);

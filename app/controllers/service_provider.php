@@ -947,10 +947,30 @@ class Service_provider extends Controller
                 redirect('student/jobs');
             } else {
 
-
-
                 if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
+                    redirect('service_provider/ongoing_jobs');
+                } else {
+                    die('Something went wrong');
+                }
+            }
+        }
+    }
+
+    public function deactivate($postId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $post = $this->model('M_jobpost')->getpostbyid($postId);
+
+            //check owner
+            if ($post->CompanyID != $_SESSION['user_id']) {
+                redirect('student/jobs');
+            } else {
+
+
+
+                if ($this->model('M_jobpost')->deactivatePost($postId)) {
+                    flash('post-msg', 'post is deactivated');
                     redirect('service_provider/ongoing_jobs');
                 } else {
                     die('Something went wrong');

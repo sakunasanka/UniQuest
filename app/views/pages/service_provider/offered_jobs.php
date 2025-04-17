@@ -8,8 +8,8 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/service_provider/ongoing_jobs">Ongoing Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/service_provider/offered_jobs">Offered Jobs</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/service_provider/ongoing_jobs">Ongoing Jobs</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/service_provider/offered_jobs">Offered Jobs</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -87,7 +87,9 @@
                     </tr>
                 </tbody>
             </table>
-            <?php require APPROOT . '/views/components/pagination.php'; ?>  
+            <?php 
+            // require APPROOT . '/views/components/pagination.php'; 
+            ?>  
         </div>
     </main>
 </div>
