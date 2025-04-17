@@ -20,14 +20,17 @@
 
             <ul class="nav-links">
                 <li><a href="/uniquest/home" class="hov">Home</a></li>
-                <li class="dropdown">
+                <li><a href="/UniQuest/jobs" class="hov">Part-time Jobs</a></li>
+                <li><a href="/UniQuest/internships" class="hov">Internships</a></li>
+                <li><a href="/UniQuest/companies" class="hov">Companies</a></li>
+                <!-- <li class="dropdown">
                     <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
                     <div class="dropdown-content">
                         <a href="/UniQuest/jobs">Part-time Jobs</a>
                         <a href="/UniQuest/internships">Internships</a>
                         <a href="/UniQuest/companies">Companies</a>
                     </div>
-                </li>
+                </li> -->
             </ul>
 
             <div class="nav-button">

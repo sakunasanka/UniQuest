@@ -36,6 +36,11 @@ class TableSearcher
 
         unset($queryParams['search']); // Remove 'search' param to add dynamically
         unset($queryParams['searchBy']); // Remove 'searchBy' param to add dynamically
+        unset($queryParams['page']); // Remove 'page' param to add dynamically
+        unset($queryParams['sort']); // Remove 'sort' param to add dynamically
+        unset($queryParams['order']); // Remove 'order' param to add dynamically
+        unset($queryParams['limit']); // Remove 'limit' param to add dynamically
+        unset($queryParams['offset']); // Remove 'offset' param to add dynamically
 
         return $parsedUrl['path'] . '?' . http_build_query($queryParams);
     }

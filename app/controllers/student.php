@@ -460,15 +460,35 @@ class Student extends Controller
         $this->view('pages/student/notification_alerts');
     }
 
-    public function saveJobs()
+    public function saveJobs($queryParam = [])
     {   
 
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
+            // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
+
+        // get filter data from query params
+        $filters = [
+            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
+        ];
+
           // Get bookmarked jobs for the user
-        $posts = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $displayRatings = [];
+          $post_data = $this->model('M_jobpost')->getSaveJobs($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
+          $posts = $post_data['data'];
+          $displayRatings = [];
 
             // Loop through each job post to get the display rating for the associated company
             foreach ($posts as $post) {
@@ -487,28 +507,52 @@ class Student extends Controller
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
-            'displayRatings' => $displayRatings
+            'displayRatings' => $displayRatings,
+            'totalRows' => $post_data['totalRows'],
+            'rowsPerPage' => $post_data['limit'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
+            'cities' => [], //Initially empty, will be populated based on selected district
+            'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
         $this->view('pages/student/saveJobs', $data);
     }
 
-    public function saveInternships()
+    public function saveInternships($queryParam = [])
     {
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
+            // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
+
+        // get filter data from query params
+        $filters = [
+            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
+        ];
+
           // Get bookmarked jobs for the user
-        $posts = $this->model('jobModel')->getBookmarkedInternships($userId);
-        $displayRatings = [];
+          $post_data = $this->model('M_jobpost')->getSaveInternships($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
+          $posts = $post_data['data'];
+          $displayRatings = [];
 
             // Loop through each job post to get the display rating for the associated company
             foreach ($posts as $post) {
                 $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
                 $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
             }
-
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         } 
         else {
@@ -520,26 +564,51 @@ class Student extends Controller
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
-            'displayRatings' => $displayRatings
+            'displayRatings' => $displayRatings,
+            'totalRows' => $post_data['totalRows'],
+            'rowsPerPage' => $post_data['limit'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
+            'cities' => [], //Initially empty, will be populated based on selected district
+            'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
         $this->view('pages/student/saveInternships', $data);
     }
 
-    public function saveCompanies()
+    public function saveCompanies($queryParam = [])
     {
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
-          // Get bookmarked jobs for the user
-        $posts = $this->model('companyModel')->getBookmarkedCompanies($userId);
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyName';
+
+        // get filter data from query params
+        $filters = [
+            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
+        ];
+
+        // Retrieve companies
+        $post_data = $this->model('M_jobpost')->getSaveCompanies($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
+        $posts = $post_data['data'];
         $displayRatings = [];
 
-            // Loop through each job post to get the display rating for the associated company
-            foreach ($posts as $post) {
-                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
-                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
-            }
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($posts as $post) {
+            $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+            $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+        }
 
         $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
         $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
@@ -553,7 +622,12 @@ class Student extends Controller
             'posts' => $posts,
             'bookmarkedCompanies' => $bookmarkedCompanies,
             'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
-            'displayRatings' => $displayRatings
+            'displayRatings' => $displayRatings,
+            'totalRows' => $post_data['totalRows'],
+            'rowsPerPage' => $post_data['limit'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
+            'cities' => [], //Initially empty, will be populated based on selected district
+            'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
         $this->view('pages/student/saveCompanies', $data);

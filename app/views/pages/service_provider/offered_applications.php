@@ -18,7 +18,7 @@
                 Job Title: <?php echo htmlspecialchars($data['post']->Title); ?>
             </h2>
             <p>
-                Location: <?php echo htmlspecialchars($data['post']->Location); ?>
+                Location: <?php echo htmlspecialchars($data['post']->City); ?>
             </p>
             <p>
                 Posted: <?php echo htmlspecialchars($data['posted']); ?>

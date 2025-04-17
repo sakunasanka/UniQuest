@@ -31,7 +31,7 @@
                             <span class="form-invalid"><?php echo $data['job_benifits_err']; ?></span>
 
                             <label for="jobPostDate" class="required">Job Post Date:</label>
-                            <input type="date" id="jobPostDate" name="publishDate" 
+                            <input type="date" id="jobPostDate" name="publishDate"
                                 value="<?php echo $data['publish_date']; ?>">
                             <span class="form-invalid"><?php echo $data['publish_date_err']; ?></span>
 
@@ -55,7 +55,20 @@
                             <span class="form-invalid"><?php echo $data['required_skills_err']; ?></span>
 
                             <label for="jobLocation" class="required">Job Location:</label>
-                            <input type="text" id="jobLocation" name="jobLocation" placeholder="Job Location" value="<?php echo isset($data['job_location']) ? $data['job_location'] : ''; ?>">
+                            <div class="salary-container">
+                                <select id="job_district" name="job_district" required style="width: 50%;">
+                                    <option value="" disabled selected>Select District</option>
+                                    <?php foreach ($data['districts'] as $district): ?>
+                                        <option value="<?php echo $district->DistrictID; ?>" <?php echo ($data['job_district'] === $district->DistrictID) ? 'selected' : ''; ?>>
+                                            <?php echo $district->DistrictName; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+
+                                <select id="job_city" name="job_city" required style="width: 50%;">
+                                    <option value="" disabled selected>Select City</option>
+                                </select>
+                            </div>
                             <span class="form-invalid"><?php echo $data['job_location_err']; ?></span>
 
                             <label for="jobType" class="required">Job Type:</label>
@@ -77,14 +90,14 @@
                             <h3>Application Form Structure</h3>
                             <p>Select the fields you want to include in the application form</p>
                         </div>
-                        
+
                         <div class="field-table">
                             <div class="field-header">
                                 <div class="field-col field-col-include">Include</div>
                                 <div class="field-col field-col-name">Field Name</div>
                                 <div class="field-col field-col-required">Required Field</div>
                             </div>
-                            
+
                             <!-- Full Name -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -98,7 +111,7 @@
                                     <label for="name_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Photo -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -112,7 +125,7 @@
                                     <label for="photo_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Email -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -126,7 +139,7 @@
                                     <label for="email_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Contact Number -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -140,7 +153,7 @@
                                     <label for="contactNo_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Address -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -154,7 +167,7 @@
                                     <label for="address_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- NIC Number -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -168,7 +181,7 @@
                                     <label for="nic-no_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- NIC Copy -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -182,7 +195,7 @@
                                     <label for="nic-copy_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Gender -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -196,7 +209,7 @@
                                     <label for="gender_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Date of Birth -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -210,7 +223,7 @@
                                     <label for="dob_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Qualifications -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -224,7 +237,7 @@
                                     <label for="qualification_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Experience -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -238,7 +251,7 @@
                                     <label for="experience_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Skills -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -252,7 +265,7 @@
                                     <label for="skills_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- CV -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -266,7 +279,7 @@
                                     <label for="cv_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- LinkedIn -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
@@ -280,7 +293,7 @@
                                     <label for="linkedin_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Custom Field 1 -->
                             <div class="field-row custom-field">
                                 <div class="field-col field-col-include">
@@ -301,7 +314,7 @@
                                     <label for="other1_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Custom Field 2 -->
                             <div class="field-row custom-field">
                                 <div class="field-col field-col-include">
@@ -322,7 +335,7 @@
                                     <label for="other2_req">Required</label>
                                 </div>
                             </div>
-                            
+
                             <!-- Custom Field 3 -->
                             <div class="field-row custom-field">
                                 <div class="field-col field-col-include">
@@ -358,5 +371,5 @@
 <script src="<?php echo URLROOT; ?>/js/components/formPagination.js"></script>
 <script src="<?php echo URLROOT; ?>/js/service_provider/date_time_validate.js"></script>
 <script src="<?php echo URLROOT; ?>/js/service_provider/jobPostValidation.js"></script>
-
+<script src="<?php echo URLROOT; ?>/js/service_provider/citiesForDistrict.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>

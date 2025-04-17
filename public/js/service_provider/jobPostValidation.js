@@ -212,8 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function validateAllFields() {
       // Check if all required fields are filled
       if (jobName.value.trim() === '' ||
-          salaryRange.value.trim() === '' ||
-          jobLocation.value.trim() === '') {
+          salaryRange.value.trim() === '') {
         return false;
       }
       
