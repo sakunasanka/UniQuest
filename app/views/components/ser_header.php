@@ -27,8 +27,8 @@
                 <li><a href="/UniQuest/internships" class="hov">Internships</a></li>
                 <li><a href="/UniQuest/companies" class="hov">Companies</a></li>
                 <!-- <li class="dropdown">
-                <li><a href="/uniquest/home" class="hov">Home</a></li>
-                <li><a href="/uniquest/service_provider/dashboard" class="hov">Dashboard</a></li>
+                <li><a href="/UniQuest/home" class="hov">Home</a></li>
+                <li><a href="/UniQuest/service_provider/dashboard" class="hov">Dashboard</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropbtn">Explore<span class="material-symbols-outlined"> expand_more </span></a>
                     <div class="dropdown-content">
@@ -37,7 +37,7 @@
                         <a href="/UniQuest/companies">Companies</a>
                     </div>
                 </li>
-                <!-- <li><a href="/uniquest/about" class="hov">About Us</a></li> -->
+                <!-- <li><a href="/UniQuest/about" class="hov">About Us</a></li> -->
                 <li><a href="/UniQuest/service_provider/contact_admin" class="hov">Contact Us</a></li>
             </ul>
             <?php require APPROOT . '/views/components/navProfile.php'; ?>

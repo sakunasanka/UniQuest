@@ -1,16 +1,16 @@
 // Navigation functions
 function goToApplyPage(jobId) {
-    window.location.href = `/uniquest/student/jobsApplyform/${jobId}`;
+    window.location.href = `/UniQuest/student/jobsApplyform/${jobId}`;
 }
 
 function goToContactPage() {
-    window.location.href = "/uniquest/student/contact_sp"; 
+    window.location.href = "/UniQuest/student/contact_sp"; 
 }
 
 function goToAddReview() {
-    window.location.href = "/uniquest/student/addReview";
+    window.location.href = "/UniQuest/student/addReview";
 }
 
 function goToCompany() {
-    window.location.href = "/uniquest/student/companydescription"; 
+    window.location.href = "/UniQuest/student/companydescription"; 
 }

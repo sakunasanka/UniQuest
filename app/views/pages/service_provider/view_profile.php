@@ -81,7 +81,7 @@
                     <?php endif; ?>
                 </div>
                 <div class="edit-btn">
-                    <button class="edit-btn" onclick="window.location.href='/uniquest/service_provider/edit_profile';">
+                    <button class="edit-btn" onclick="window.location.href='/UniQuest/service_provider/edit_profile';">
                         <span class="material-symbols-outlined"> edit </span>
                         Edit Profile
                     </button>

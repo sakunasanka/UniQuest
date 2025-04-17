@@ -236,7 +236,7 @@ function showError(input, message) {
 }
     
 function goToMakeComplaint(jobId) {
-    window.location.href = "/uniquest/student/make_complain/" + jobId;
+    window.location.href = "/UniQuest/student/make_complain/" + jobId;
 }
 
 function goToApplyPage(jobId) {
@@ -244,7 +244,7 @@ function goToApplyPage(jobId) {
 }
 
 function goToReport(jobId) {
-    window.location.href = "/uniquest/service_provider/report/" + jobId;
+    window.location.href = "/UniQuest/service_provider/report/" + jobId;
 }
 
 function toggleBookmark(icon, jobId) {
@@ -294,7 +294,7 @@ function shareJob(jobId, jobType) {
 }
 
 function goToCompanyDescription($companyID) {
-    window.location.href = "/uniquest/jobs/companydescription/"+$companyID;
+    window.location.href = "/UniQuest/jobs/companydescription/"+$companyID;
 }
 
 function goToApplications(jobId) {

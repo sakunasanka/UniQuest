@@ -22,7 +22,7 @@
             </div>
             <ul class="nav-links">
                 <li><a href="/UniQuest/home" class="hov">Home</a></li>
-                <li><a href="/uniquest/verification_team/dashboard" class="hov">Dashboard</a></li>
+                <li><a href="/UniQuest/verification_team/dashboard" class="hov">Dashboard</a></li>
                 <li><a href="/UniQuest/jobs" class="hov">Part-time Jobs</a></li>
                 <li><a href="/UniQuest/internships" class="hov">Internships</a></li>
                 <li><a href="/UniQuest/companies" class="hov">Companies</a></li>
