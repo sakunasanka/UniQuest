@@ -63,8 +63,9 @@ class userModel extends Model
                 'StreetNo' => $data['streetNo'],
                 'AddressLine1' => $data['addressLine1'],
                 'AddressLine2' => $data['addressLine2'],
-                'City' => $data['city'],
-                'Industry' => $data['industry'],
+                'DistrictID' => $data['districtID'],
+                'CityID' => $data['cityID'],
+                'IndustryID' => $data['industryID'],
                 'Website' => $data['website'],
                 'LinkedIn' => $data['linkedin'],
                 'Facebook' => $data['facebook'],
@@ -222,7 +223,7 @@ class userModel extends Model
             // Determine the role and fetch additional details
             $roleTables = [
                 'Student' => ['table' => 'Student', 'ID' => 'StudentID'],
-                'Company' => ['table' => 'Company', 'ID' => 'CompanyID'],
+                'Company' => ['table' => 'v_company', 'ID' => 'CompanyID'],
                 'VT-Member' => ['table' => 'VerificationTeam', 'ID' => 'VT_MemberID'],
                 'Admin' => ['table' => 'Admin', 'ID' => 'AdminID']
             ];

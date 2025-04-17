@@ -21,6 +21,7 @@ require_once 'helpers/LogHelper.php';
 require_once 'helpers/TokenHelper.php';
 require_once 'helpers/UniversityEmailValidator.php';
 require_once 'helpers/TableSearcher.php';
+require_once 'helpers/URLNormalizer.php';
 
 
 //load middlewares

@@ -9,7 +9,7 @@ class Service_provider extends Controller
         AuthMiddleware::requireAuth();
         // Check if user has the required role
         AuthMiddleware::requireRole('Company');
-        
+
         // Load model
         $this->model = $this->model('userModel');
     }
@@ -17,7 +17,20 @@ class Service_provider extends Controller
     private function prepareEditProfileData($post = [], $files = [])
     {
         $user = $this->model->getUserDetails($_SESSION['user_id']);
-        return $data = [
+
+        // Normalize and validate URLs using the helper
+        $urlResults = URLNormalizer::validateAndNormalizeUrls([
+            'website' => $post['website'] ?? '',
+            'facebook' => $post['facebook'] ?? '',
+            'linkedin' => $post['linkedin'] ?? '',
+        ]);
+
+        // Use normalized or fallback to user's current data
+        $website = $urlResults['website'] ?: ($user['Website'] ?? '');
+        $facebook = $urlResults['facebook'] ?: ($user['Facebook'] ?? '');
+        $linkedin = $urlResults['linkedin'] ?: ($user['LinkedIn'] ?? '');
+
+        return [
             'userID' => $user['UserID'],
             'companyName' => ucfirst(trim($post['companyName'] ?? $user['CompanyName'])),
             'contactNo' => trim($post['contactNo'] ?? $user['ContactNo']),
@@ -29,9 +42,12 @@ class Service_provider extends Controller
             'companyLogoName' => $files['companyLogoName'] ?? $user['CompanyLogo'],
             'description' => trim($post['description'] ?? $user['Description']),
             'industry' => trim($post['industry'] ?? $user['Industry']),
-            'website' => trim($post['website'] ?? $user['Website']),
+            'website' => $website,
+            'linkedin' => $linkedin,
+            'facebook' => $facebook,
             'role' => $_SESSION['user_role'],
 
+            // Error fields
             'companyName_err' => '',
             'contactNo_err' => '',
             'streetNo_err' => '',
@@ -41,9 +57,12 @@ class Service_provider extends Controller
             'companyLogo_err' => '',
             'description_err' => '',
             'industry_err' => '',
-            'website_err' => ''
+            'website_err' => $urlResults['website_err'],
+            'linkedin_err' => $urlResults['linkedin_err'],
+            'facebook_err' => $urlResults['facebook_err']
         ];
     }
+
 
     public function index()
     {
@@ -81,7 +100,7 @@ class Service_provider extends Controller
 
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
-                if($this->model('ContactModel')->sendMessage($data)){
+                if ($this->model('ContactModel')->sendMessage($data)) {
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('service_provider/contact_admin');
                 } else {
@@ -100,10 +119,10 @@ class Service_provider extends Controller
                 'topic_err' => '',
                 'message_err' => ''
             ];
-    
-     $this->view('pages/service_provider/contact_admin', $data);
+
+            $this->view('pages/service_provider/contact_admin', $data);
+        }
     }
-}
 
     public function dashboard()
     {
@@ -119,24 +138,21 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/jobPost');
     }
-    
+
 
     public function report()
     {
         if ($_SESSION['user_role'] == 'Company') {
             $companyInfo = $this->model('companyModel')->getCompanyInfo();
         } else {
-            $companyInfo = null; 
+            $companyInfo = null;
         }
 
-        $data = [
-            
-        ];
+        $data = [];
 
         if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/job_report', $data);
-        }
-        else {
+        } else {
             $_SESSION['show_report_error'] = true;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
             Redirect::to($previousURL);
@@ -166,35 +182,35 @@ class Service_provider extends Controller
 
     // public function new_applications($id)
     // {
-        
+
     //         // Get user ID from session
     //         $userId = $_SESSION['user_id'] ?? null;
-            
+
     //         if (!$userId) {
     //             redirect('users/login');
     //         }
-            
+
     //         // Load models
     //         $applicationModel = $this->model('M_applications');
     //         $fieldModel = $this->model('M_applicationFields');
     //         $jobModel = $this->model('M_jobpost');
-            
+
     //         // Get all applications for this student
     //         $applications = $applicationModel->getApplicationsByStudentId($userId);
-            
+
     //         // Prepare data for each application with job-specific fields
     //         $applicationsData = [];
-            
+
     //         foreach ($applications as $app) {
     //             // Get job details
     //             $job = $jobModel->getpostbyid($app->job_id);
-                
+
     //             // Get application fields for this job
     //             $fields = $fieldModel->getFieldsByJobId($app->job_id);
-                
+
     //             // Get application responses for this application
     //             $responses = $applicationModel->getApplicationResponses($app->id);
-                
+
     //             $applicationsData[] = [
     //                 'application' => $app,
     //                 'job' => $job,
@@ -202,12 +218,12 @@ class Service_provider extends Controller
     //                 'responses' => $responses
     //             ];
     //         }
-            
+
     //         $data = [
     //             'applications' => $applicationsData
     //         ];
-            
-            
+
+
     //     $this->view('pages/service_provider/new_applications', $data);
     // }
     public function new_applications($jobID)
@@ -225,49 +241,49 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/new_applications', $data);
     }
     public function view_application($applicationID)
-{
-    // Fetch application details
-    $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
+    {
+        // Fetch application details
+        $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
 
-    if (!$application) {
-        // Handle the case where the application is not found
-        redirect('error/not_found');
+        if (!$application) {
+            // Handle the case where the application is not found
+            redirect('error/not_found');
+        }
+
+        // Access the first element of the $application array
+        $application = $application[0];
+
+        // Prepare the application data
+        $applicationData = [
+            'photo' => $application->StudentProfileImage ?? null,
+            'fullname' => $application->StudentName ?? null,
+            'id' => $application->ApplicationID ?? null,
+            'created_at' => $application->SubmissionDate ?? null,
+            'status' => $application->ApplicationStatus ?? null,
+            'email' => $application->StudentEmail ?? null,
+            'contact' => $application->StudentContact ?? null,
+            'address' => $application->address ?? null,
+            'nic' => $application->nic ?? null,
+            'gender' => $application->gender ?? null,
+            'dob' => $application->dob ?? null,
+            'qualifications' => $application->Qualifications ?? null,
+            'experience' => $application->Experience ?? null,
+            'skills' => $application->Skills ?? null,
+            'cv' => $application->cv ?? null,
+            'nic_copy' => $application->nic_copy ?? null,
+            'linkedin' => $application->linkedin ?? null,
+            'other1' => $application->other1 ?? null,
+            'other2' => $application->other2 ?? null,
+            'other3' => $application->other3 ?? null
+        ];
+
+        $data = [
+            'application' => $applicationData,
+        ];
+
+        // Load the view
+        $this->view('pages/service_provider/view_application', $data);
     }
-
-    // Access the first element of the $application array
-    $application = $application[0];
-    
-    // Prepare the application data
-    $applicationData = [
-        'photo' => $application->StudentProfileImage ?? null,
-        'fullname' => $application->StudentName ?? null,
-        'id' => $application->ApplicationID ?? null,
-        'created_at' => $application->SubmissionDate ?? null,
-        'status' => $application->ApplicationStatus ?? null,
-        'email' => $application->StudentEmail ?? null,
-        'contact' => $application->StudentContact ?? null,
-        'address' => $application->address ?? null,
-        'nic' => $application->nic ?? null,
-        'gender' => $application->gender ?? null,
-        'dob' => $application->dob ?? null,
-        'qualifications' => $application->Qualifications ?? null,
-        'experience' => $application->Experience ?? null,
-        'skills' => $application->Skills ?? null,
-        'cv' => $application->cv ?? null,
-        'nic_copy' => $application->nic_copy ?? null,
-        'linkedin' => $application->linkedin ?? null,
-        'other1' => $application->other1 ?? null,
-        'other2' => $application->other2 ?? null,
-        'other3' => $application->other3 ?? null
-    ];
-
-    $data = [
-        'application' => $applicationData,
-    ];
-
-    // Load the view
-    $this->view('pages/service_provider/view_application', $data);
-}
 
     public function rejected_applications()
     {
@@ -326,9 +342,6 @@ class Service_provider extends Controller
         ];
 
         $this->view('pages/service_provider/application_dashboard', $data);
-    
-
-        
     }
 
     public function premium()
@@ -359,22 +372,22 @@ class Service_provider extends Controller
         $Jobspermonth = [];
         $Internshipspermonth = [];
 
-            // Loop through each job post to get the display rating for the associated company
-            foreach ($registrationsData['data'] as $registration) {
-                $job_count = $registration->part_time_jobs; 
-                $Jobspermonth[] = $job_count;
-            }
-            $Jobspermonth = array_reverse($Jobspermonth);
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($registrationsData['data'] as $registration) {
+            $job_count = $registration->part_time_jobs;
+            $Jobspermonth[] = $job_count;
+        }
+        $Jobspermonth = array_reverse($Jobspermonth);
 
-            // Loop through each job post to get the display rating for the associated company
-            foreach ($registrationsData['data'] as $registration) {
-                $internship_count = $registration->internships; 
-                $Internshipspermonth[] = $internship_count;
-            }
-            $Internshipspermonth = array_reverse($Internshipspermonth);
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($registrationsData['data'] as $registration) {
+            $internship_count = $registration->internships;
+            $Internshipspermonth[] = $internship_count;
+        }
+        $Internshipspermonth = array_reverse($Internshipspermonth);
 
         // $userLoginsData = $this->model('M_user')->getUserLoginsByGender();
-        
+
         $data = [
             'job_count' => $jobCount,
             'activeJobCount' => $activeJobCount,
@@ -392,8 +405,7 @@ class Service_provider extends Controller
 
         if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/ser_analytics', $data);
-        }
-        else {
+        } else {
             $_SESSION['show_premium_error'] = true;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
             Redirect::to($previousURL);
