@@ -37,7 +37,7 @@
                         <?php foreach ($data['posts'] as $post): ?>
                             <tr>
                                 <td><?php echo $post->Title; ?></td>
-                                <td><?php echo $post->Location; ?></td>
+                                <td><?php echo $post->City; ?></td>
                                 <td><?php echo date('Y-m-d', strtotime($post->jobs_create_at)); ?></td>
                                 <td>35</td>
                                 <td>18</td>

@@ -48,7 +48,7 @@
 
             <div class="cards-container">
                 <?php if(empty($data['trendy_companies'])): ?>
-                    <div class="no-results">No trending companies to show.</div>
+                    <div class="no-results">No results found.</div>
                 <?php endif; ?>
                 
                 <?php foreach($data['trendy_companies'] as $post): ?>

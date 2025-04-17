@@ -32,7 +32,7 @@
             </div> -->
             <div class="cards-container">
                 <?php if(empty($data['posts'])): ?>
-                    <div class="no-results">No saved internships to show.</div>
+                    <div class="no-results">No results found.</div>
                 <?php endif; ?>
             <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
