@@ -175,6 +175,37 @@ class Jobs extends Controller
     //     }
     // }
 
+    // In your controller
+    public function getCitiesByDistrict() {
+        try {
+            // Get the district ID from POST data
+            $districtID = $_POST['districtID'] ?? null;
+            
+            if (!$districtID) {
+                throw new Exception('District ID is required');
+            }
+            
+            // Fetch cities based on the district ID
+            $cities = $this->model('AdminModel')->getCitiesByDistrict($districtID)['data'];
+            
+            if (!$cities) {
+                throw new Exception('No cities found for the given district ID');
+            }
+            
+            // Return JSON response
+            echo json_encode([
+                'success' => true,
+                'cities' => $cities
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit; // Important to prevent any additional output
+    }
+
     public function jobs($queryParam = [])
     {
         // Get the requested data from query params
@@ -185,8 +216,27 @@ class Jobs extends Controller
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
         $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
+        // get filter data from query params
+        $district = isset($queryParam['district']) ? $queryParam['district'] : null;
+        $city = isset($queryParam['city']) ? $queryParam['city'] : null;
+        $industry = isset($queryParam['industry']) ? $queryParam['industry'] : null;
+        $rating = isset($queryParam['rating']) ? $queryParam['rating'] : null;
+        $minSalary = isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null;
+        $maxSalary = isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null;
+        $salaryType = isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null;
+
+        $filters = [
+            'district' => $district,
+            'city' => $city,
+            'industry' => $industry,
+            'rating' => $rating,
+            'minSalary' => $minSalary,
+            'maxSalary' => $maxSalary,
+            'salaryType' => $salaryType
+        ];
+
         // Fetch part-time job posts
-        $post_data = $this->model('M_jobpost')->getPartTimeJobs($page, $limit, $sort, $order, $search, $searchBy);
+        $post_data = $this->model('M_jobpost')->getPartTimeJobs($page, $limit, $sort, $order, $search, $searchBy, $filters);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -214,9 +264,12 @@ class Jobs extends Controller
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
-            'displayRatings' => $displayRatings, 
+            'displayRatings' => $displayRatings,
             'totalRows' => $post_data['totalRows'],
-            'rowsPerPage' => $post_data['limit']
+            'rowsPerPage' => $post_data['limit'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
+            'cities' => [], //$this->model('AdminModel')->getCitiesByDistrict(1)['data'], // Get cities for filtering
+            'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
         // Load the view with the data
@@ -232,6 +285,26 @@ class Jobs extends Controller
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
         $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
+
+        // get filter data from query params
+        $district = isset($queryParam['district']) ? $queryParam['district'] : null;
+        $city = isset($queryParam['city']) ? $queryParam['city'] : null;
+        $industry = isset($queryParam['industry']) ? $queryParam['industry'] : null;
+        $rating = isset($queryParam['rating']) ? $queryParam['rating'] : null;
+        $minSalary = isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null;
+        $maxSalary = isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null;
+        $salaryType = isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null;
+
+        $filters = [
+            'district' => $district,
+            'city' => $city,
+            'industry' => $industry,
+            'rating' => $rating,
+            'minSalary' => $minSalary,
+            'maxSalary' => $maxSalary,
+            'salaryType' => $salaryType
+        ];
+
         // Retrieve internship jobs
         $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit, $sort, $order, $search, $searchBy);
         $posts = $post_data['data'];
@@ -261,7 +334,10 @@ class Jobs extends Controller
             'bookmarkedJobIds' => $bookmarkedJobIds,
             'displayRatings' => $displayRatings, // Add display ratings to the data array
             'totalRows' => $post_data['totalRows'],
-            'rowsPerPage' => $post_data['limit']
+            'rowsPerPage' => $post_data['limit'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
+            'cities' => $this->model('AdminModel')->getCitiesByDistrict(1)['data'], // Get cities for filtering
+            'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
         $this->view('pages/student/jobs', $data); // Render internships view
@@ -379,14 +455,14 @@ class Jobs extends Controller
                     // Update existing review
                     $data['review_id'] = $existingReview->ReviewID;
                     if ($this->model('RateAndReviewModel')->updateReview($data)) {
-                        Redirect::to(URLROOT . '/student/myreviews'); 
+                        Redirect::to(URLROOT . '/student/myreviews');
                     } else {
                         die('Something went wrong');
                     }
                 } else {
                     // Add new review
                     if ($this->model('RateAndReviewModel')->addReview($data)) {
-                        Redirect::to(URLROOT . '/student/myreviews'); 
+                        Redirect::to(URLROOT . '/student/myreviews');
                     } else {
                         die('Something went wrong');
                     }
@@ -395,7 +471,6 @@ class Jobs extends Controller
                 // Load view with errors
                 $this->view('pages/student/rate_review_company', $data);
             }
-
         } else {
             $data = [
                 'post' => $posts,
@@ -407,7 +482,7 @@ class Jobs extends Controller
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
                 'displayRating' => $displayRating,
-                'reviews' => $reviews,  
+                'reviews' => $reviews,
                 'rating' => $existingReview ? $existingReview->Rating : '',
                 'comment' => $existingReview ? $existingReview->Comment : '',
                 'user_id' => $userId,
@@ -420,23 +495,24 @@ class Jobs extends Controller
             if (isset($_SESSION['user_id'])) {
                 $data['sender_id'] = $_SESSION['user_id'];
                 $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID);
-            } 
+            }
 
             $this->view('pages/student/jobsDescription', $data);
         }
     }
 
-    public function sendMessage($id) {
+    public function sendMessage($id)
+    {
 
         $posts = $this->model('M_jobpost')->getpostbyid($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    
+
             $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $posts->CompanyID);
             $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
             $submittedTopic = trim($_POST['topic'] ?? '');
-    
+
             // Fetch email
             $email = null;
             if ($previousMessage && !empty($previousMessage->user_email)) {
@@ -456,11 +532,11 @@ class Jobs extends Controller
                 'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic,
                 'messageInput_err' => ''
             ];
-    
+
             if (empty($data['messageInput'])) {
                 $data['messageInput_err'] = 'Message cannot be empty';
             }
-    
+
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
@@ -472,8 +548,7 @@ class Jobs extends Controller
                 // Reload view with errors
                 $this->view('pages/student/jobsDescription', $data);
             }
-        }
-        else {
+        } else {
             $data = [
                 'email' => '',
                 'post' => $posts,
@@ -493,12 +568,11 @@ class Jobs extends Controller
     public function companyDescription($id)
     {
         if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; 
+            $userId = $_SESSION['user_id'];
 
-        $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
-        $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
-        } 
-        else {
+            $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
+            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        } else {
             $userId = null;
             $bookmarkedCompanies = []; // No bookmarks if not logged in
             $bookmarkedCompanyIds = [];
@@ -510,7 +584,7 @@ class Jobs extends Controller
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
         }
-        
+
         $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->CompanyID);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -546,14 +620,14 @@ class Jobs extends Controller
                     // Update existing review
                     $data['review_id'] = $existingReview->ReviewID;
                     if ($this->model('RateAndReviewModel')->updateReview($data)) {
-                        Redirect::to(URLROOT . '/student/myreviews'); 
+                        Redirect::to(URLROOT . '/student/myreviews');
                     } else {
                         die('Something went wrong');
                     }
                 } else {
                     // Add new review
                     if ($this->model('RateAndReviewModel')->addReview($data)) {
-                        Redirect::to(URLROOT . '/student/myreviews'); 
+                        Redirect::to(URLROOT . '/student/myreviews');
                     } else {
                         die('Something went wrong');
                     }
@@ -581,31 +655,30 @@ class Jobs extends Controller
             $this->view('pages/student/companyDescription', $data);
         }
     }
- 
+
     public function internshipDescription($id)
     {
         if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; 
-        }
-        else {
+            $userId = $_SESSION['user_id'];
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
             $posts = [];
             $posts_com_id = [];
             $reviews = [];
-        }    
-    
+        }
+
         // Get bookmarked jobs for the user
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         $posts = $this->model('M_jobpost')->getpostbyid($id);
         $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    
-            $data =[
+
+            $data = [
                 'post' => $posts,
                 'post_com' => $posts_com_id,
                 'bookmarkedJobs' => $bookmarkedJobs,
@@ -618,7 +691,7 @@ class Jobs extends Controller
                 'rating_err' => '',
                 'comment_err' => ''
             ];
-        
+
             if (empty($data['rating'])) {
                 $data['rating_err'] = 'Please provide a rating.';
             }
@@ -629,9 +702,9 @@ class Jobs extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/myreviews');  
+                    Redirect::to(URLROOT . '/student/myreviews');
                 } else {
-                    die('Something went wrong'); 
+                    die('Something went wrong');
                 }
             } else {
                 // Load view with errors
@@ -653,7 +726,7 @@ class Jobs extends Controller
             ];
 
             $this->view('pages/student/internshipDescription', $data);
-        }    
+        }
     }
 
     public function trendyCompany()
@@ -666,13 +739,12 @@ class Jobs extends Controller
             // Get bookmarked companies for the user
             $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
             $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
-        } 
-        else {
+        } else {
             $userId = null;
             $bookmarkedCompanies = []; // No bookmarks if not logged in
         }
 
-        $data =[
+        $data = [
             'trendy_companies' => $trendy_companies,
             'bookmarkedCompanies' => $bookmarkedCompanies,
             'bookmarkedCompanyIds' => $bookmarkedCompanyIds
@@ -680,8 +752,7 @@ class Jobs extends Controller
 
         if (isset($_SESSION['user_role'])) {
             $this->view('pages/student/trendyCompany', $data);
-        }
-        else {
+        } else {
             Redirect::to(URLROOT . '/login');
         }
     }

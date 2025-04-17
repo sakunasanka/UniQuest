@@ -3,10 +3,12 @@ class Filter
 {
     private static $instance = null;
     private $industry;
-    private $location;
+    private $district;
+    private $city;
     private $rating;
     private $minSalary;
     private $maxSalary;
+    private $salaryType;
     private $baseUrl;
     private $filtersApplied;
 
@@ -28,10 +30,12 @@ class Filter
     private function initializeFilters()
     {
         $this->industry = isset($_GET['industry']) ? htmlspecialchars($_GET['industry'], ENT_QUOTES, 'UTF-8') : "";
-        $this->location = isset($_GET['location']) ? htmlspecialchars($_GET['location'], ENT_QUOTES, 'UTF-8') : "";
+        $this->district = isset($_GET['district']) ? htmlspecialchars($_GET['district'], ENT_QUOTES, 'UTF-8') : "";
+        $this->city = isset($_GET['city']) ? htmlspecialchars($_GET['city'], ENT_QUOTES, 'UTF-8') : "";
         $this->rating = isset($_GET['rating']) ? htmlspecialchars($_GET['rating'], ENT_QUOTES, 'UTF-8') : "";
         $this->minSalary = isset($_GET['minSalary']) ? htmlspecialchars($_GET['minSalary'], ENT_QUOTES, 'UTF-8') : "";
         $this->maxSalary = isset($_GET['maxSalary']) ? htmlspecialchars($_GET['maxSalary'], ENT_QUOTES, 'UTF-8') : "";
+        $this->salaryType = isset($_GET['salaryType']) ? htmlspecialchars($_GET['salaryType'], ENT_QUOTES, 'UTF-8') : "";
     }
 
     private function checkFiltersApplied()
@@ -54,16 +58,17 @@ class Filter
         return $parsedUrl['path'];
     }
 
-    public function renderFilters(array $categories, array $locations, array $ratings)
+    public function renderFilters(array $industries, array $districts, array $cities, array $ratings)
     {
         $filtersApplied = $this->filtersApplied ? 'true' : 'false';
 
         $filterHtml = "<div class='filter-container' data-filters-applied='$filtersApplied'>";
         $filterHtml .= "<form id='filterForm' class='filter-form' method='GET' action='#'>";
 
-        $filterHtml .= $this->renderSelectFilter('industry', 'All Industries', $categories, $this->industry);
-        $filterHtml .= $this->renderSelectFilter('location', 'All Locations', $locations, $this->location);
-        $filterHtml .= $this->renderSelectFilter('rating', 'All Ratings', $ratings, $this->rating);
+        $filterHtml .= $this->renderSelectFilter('industry', 'All Industries', $industries, $this->industry);
+        $filterHtml .= $this->renderSelectFilter('district', 'All Districts', $districts, $this->district);
+        $filterHtml .= $this->renderSelectFilter('city', 'All Cities', $cities, $this->city);
+        // $filterHtml .= $this->renderSelectFilter('rating', 'All Ratings', $ratings, $this->rating);
         $filterHtml .= $this->renderSalaryInputs();
         $filterHtml .= "<div>";
         $filterHtml .= "<button type='button' id='applyFilters' class='apply-filter-button'>Apply</button>";
@@ -80,8 +85,8 @@ class Filter
         $html = "<select class='filter' name='$name'>";
         $html .= "<option value=''>$defaultLabel</option>";
         foreach ($options as $key => $label) {
-            $selected = ($selectedValue == $key) ? "selected" : "";
-            $html .= "<option value='$key' $selected>$label</option>";
+            $selected = ($selectedValue == $label) ? "selected" : "";
+            $html .= "<option id='$key' value='$label' $selected>$label</option>";
         }
         $html .= "</select>";
         return $html;
@@ -91,7 +96,7 @@ class Filter
     {
         $minSalaryEscaped = $this->minSalary ?: 0;
         $maxSalaryEscaped = $this->maxSalary ?: 500000;
-        $salaryFrequency = isset($_GET['salaryFrequency']) ? $_GET['salaryFrequency'] : 'monthly'; // Default to 'Per Month'
+        $salaryType = $this->salaryType ?: '';
 
         $html = "<div class='salary-filter'>";
         $html .= "<label class='salary-label'>Salary Range:</label>";
@@ -101,10 +106,12 @@ class Filter
         $html .= "<div class='salary-values'>";
         $html .= "<span id='minSalaryValue'>$minSalaryEscaped</span> - ";
         $html .= "<span id='maxSalaryValue'>$maxSalaryEscaped</span>";
-        $html .= "<select id='salaryFrequency' name='salaryFrequency' class='salary-frequency'>";
-        $html .= "<option value='monthly' " . ($salaryFrequency == 'monthly' ? "selected" : "") . ">Per Month</option>";
-        $html .= "<option value='weekly' " . ($salaryFrequency == 'weekly' ? "selected" : "") . ">Per Week</option>";
-        $html .= "<option value='daily' " . ($salaryFrequency == 'daily' ? "selected" : "") . ">Per Day</option>";
+        $html .= "<select id='salaryType' name='salaryType' class='salary-frequency'>";
+        $html .= "<option value=''>All Types</option>";
+        $html .= "<option value='Per Month' " . ($salaryType == 'Per Month' ? "selected" : "") . ">Per Month</option>";
+        $html .= "<option value='Per Day' " . ($salaryType == 'Per Day' ? "selected" : "") . ">Per Day</option>";
+        $html .= "<option value='Per Week' " . ($salaryType == 'Per Week' ? "selected" : "") . ">Per Week</option>";
+        $html .= "<option value='Per Hour' " . ($salaryType == 'Per Hour' ? "selected" : "") . ">Per Hour</option>";
         $html .= "</select>";
         $html .= "</div>";
 
@@ -117,7 +124,7 @@ class Filter
         // Hidden inputs for form submission
         $html .= "<input type='hidden' name='minSalary' id='minSalary' value='$minSalaryEscaped'>";
         $html .= "<input type='hidden' name='maxSalary' id='maxSalary' value='$maxSalaryEscaped'>";
-        // $html .= "<input type='hidden' name='salaryFrequencyHidden' id='salaryFrequencyHidden' value='$salaryFrequency'>";
+        // $html .= "<input type='hidden' name='salaryTypeHidden' id='salaryTypeHidden' value='$salaryType'>";
 
         $html .= "</div>";
         $html .= "</div>";

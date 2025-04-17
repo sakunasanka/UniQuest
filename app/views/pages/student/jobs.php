@@ -105,7 +105,7 @@
                                 <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
 
                                 <div class="job-location-details">
-                                    <?php echo $post->Location; ?>
+                                    <?php echo $post->City; ?>
                                 </div>
                             </div>
                             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
