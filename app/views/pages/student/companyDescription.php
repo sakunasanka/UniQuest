@@ -229,7 +229,7 @@ if (!isset($_SESSION['user_role'])) {
 
 <script>
     function goToJobDescription(jobId) {
-        window.location.href = "/uniquest/jobs/jobsdescription/" + jobId;
+        window.location.href = "/UniQuest/jobs/jobsdescription/" + jobId;
     }
 </script>
 

@@ -13,7 +13,7 @@
             <img src="<?php echo URLROOT; ?>/images/search.png" alt="SearchJob">
         </div>
         <div class="right-side">
-            <a href  ="/uniquest/student/searchJob" >
+            <a href  ="/UniQuest/student/searchJob" >
             <h2>Search Jobs</h2>
             </a>
             <h3>Finding an opportunity?</h3>
