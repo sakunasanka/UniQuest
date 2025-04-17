@@ -38,7 +38,12 @@
     
     <div class="content-area">
         <div class="job-description">
-            <h2><?php echo $data['post']->Title; ?></h2>
+            <div class="title-container">
+                <h2><?php echo $data['post']->Title; ?></h2>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company'): ?>
+                    <button onclick="goToApplications(<?php echo $post->JobID; ?>)" class="apply-btn">View Applications</button>
+                <?php endif; ?>
+            </div>
             <p><?php echo $data['post']->City; ?></p>
             <h3>Description:</h3>
             <ul>
@@ -119,12 +124,12 @@
                                 </div>
                                 <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                                     <div class="review-actions">
-                                        <button class="like-btn" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
+                                        <button class="like-btn <?php echo $review->is_liked ? 'liked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined like-icon">thumb_up</span>
                                         </button>
                                         <span class="like-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                                        <button class="dislike-btn" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
+                                        <button class="dislike-btn <?php echo $review->is_disliked ? 'disliked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                         </button>
                                         <span class="dislike-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
@@ -216,6 +221,7 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/student/myreviews.js"></script>
 
 <script>
     
@@ -279,5 +285,9 @@ function shareJob(jobId, jobType) {
 
 function goToCompanyDescription($companyID) {
     window.location.href = "/uniquest/jobs/companydescription/"+$companyID;
+}
+
+function goToApplications(jobId) {
+    window.location.href = "/UniQuest/service_provider/new_applications/" + jobId;
 }
 </script>

@@ -803,18 +803,57 @@ class Student extends Controller
     }
 
     public function jobsApplyform($jobId) {
+
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+        } else {
+            $userId = null;
+            $bookmarkedJobs = [];
+            $posts = [];
+            $posts_com_id = [];
+            $reviews = [];
+        }
+
         // Load model and get application fields
         $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
     
         // Fetch job details3
         $job = $this->model('M_jobpost')->getpostbyid($jobId);
+
+        $posts = $this->model('M_jobpost')->getpostbyid($jobId);
+        $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
+        $isApplied = $this->model('jobModel')->isApplied($jobId);
+
+        if ($posts->Category == 'Internship') {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+        } else {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        }
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
     
         $data = [
             'fields' => $applicationFields,
-            'job' => $job, // Pass job data to the view
+            'job' => $job, 
+            'post' => $posts,
+            'bookmarkedJobs' => $bookmarkedJobs,
+            'bookmarkedJobIds' => $bookmarkedJobIds,
+            'displayRating' => $displayRating,
         ];
-    
-        $this->view('pages/student/jobsApply', $data); 
+        // Check if the user has already applied for this job
+        if ($isApplied) {
+            if($data['job']->Category == 'Part-time'){ 
+                $_SESSION['show_job_apply_error'] = true;
+                $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                Redirect::to($previousURL);
+            } else {
+                $_SESSION['show_internship_apply_error'] = true;
+                $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                Redirect::to($previousURL);
+            }
+        }
+        else {
+            $this->view('pages/student/jobsApply', $data); 
+        }
     }
     public function jobsApply($jobId)
     {
@@ -1034,7 +1073,21 @@ class Student extends Controller
 
     public function myreviews()
     {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id']; 
+        } 
+        else {
+            $userId = null;
+        }
+        
         $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
+
+        foreach ($reviews as $review) {
+            $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
+            $review->DislikeCount = $this->model('RateAndReviewModel')->getDislikesByReviewID($review->ReviewID);
+            $review->is_liked = $this->model('RateAndReviewModel')->checkIfLiked($review->ReviewID, $userId);
+            $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $userId);
+        }
 
         $data = [
             'reviews' => $reviews,

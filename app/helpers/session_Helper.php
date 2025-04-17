@@ -27,3 +27,21 @@ function flash($name) {
 </script>
 <?php unset($_SESSION['show_report_error']); ?>
 <?php endif; ?>
+
+<?php if(isset($_SESSION['show_job_apply_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("You have already applied for this job", "error");
+    });
+</script>
+<?php unset($_SESSION['show_job_apply_error']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['show_internship_apply_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("You have already applied for this internship", "error");
+    });
+</script>
+<?php unset($_SESSION['show_internship_apply_error']); ?>
+<?php endif; ?>

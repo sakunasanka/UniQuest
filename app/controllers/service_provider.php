@@ -194,9 +194,21 @@ class Service_provider extends Controller
         }
     }
 
-    public function offered_applications()
+    public function offered_applications($jobID)
     {
-        $this->view('pages/service_provider/offered_applications');
+        // Fetch applications for the given job ID
+        $applications = $this->model('M_applicationFields')->getOfferedApplicationsByJobID($jobID);
+
+        // Pass data to the view
+        $data = [
+            'applications' => $applications,
+            'jobID' => $jobID,
+            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+        ];
+        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+
+        // Load the view
+        $this->view('pages/service_provider/offered_applications', $data);
     }
 
     // public function new_applications($id)
@@ -248,13 +260,15 @@ class Service_provider extends Controller
     public function new_applications($jobID)
     {
         // Fetch applications for the given job ID
-        $applications = $this->model('M_applicationFields')->getApplicationsByJobID($jobID);
+        $applications = $this->model('M_applicationFields')->getPendnigApplicationsByJobID($jobID);
 
         // Pass data to the view
         $data = [
             'applications' => $applications,
-            'jobID' => $jobID
+            'jobID' => $jobID,
+            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
+        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
 
         // Load the view
         $this->view('pages/service_provider/new_applications', $data);
@@ -304,9 +318,21 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/view_application', $data);
     }
 
-    public function rejected_applications()
+    public function rejected_applications($jobID)
     {
-        $this->view('pages/service_provider/rejected_applications');
+        // Fetch applications for the given job ID
+        $applications = $this->model('M_applicationFields')->getRejectedApplicationsByJobID($jobID);
+
+        // Pass data to the view
+        $data = [
+            'applications' => $applications,
+            'jobID' => $jobID,
+            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+        ];
+        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+
+        // Load the view
+        $this->view('pages/service_provider/rejected_applications', $data);
     }
     public function application_dashboard()
     {
