@@ -746,6 +746,18 @@ CREATE TABLE uniquest.is_disliked (
     FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
 );
 
+-- Create is_viewed_job table
+CREATE TABLE is_viewed_job (
+    JobID INT NOT NULL,
+    UserID INT NOT NULL,
+    ViewedAt DATETIME DEFAULT CURRENT_TIMESTAMP, 
+
+    PRIMARY KEY (JobID, UserID),
+
+    FOREIGN KEY (JobID) REFERENCES Jobs(JobID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);
+
 -- Create districts table
 CREATE TABLE districts (
     DistrictID INT AUTO_INCREMENT PRIMARY KEY,
@@ -1000,3 +1012,4 @@ FROM
     LEFT JOIN districts d ON c.DistrictID = d.DistrictID
     LEFT JOIN cities ci ON c.CityID = ci.CityID
     LEFT JOIN industry i ON c.IndustryID = i.IndustryID  ;
+

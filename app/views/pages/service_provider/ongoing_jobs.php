@@ -61,7 +61,9 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-            <?php require APPROOT . '/views/components/pagination.php'; ?>
+            <?php 
+            // require APPROOT . '/views/components/pagination.php'; 
+            ?>
         </div>
     </main>
 </div>
