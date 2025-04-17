@@ -234,7 +234,7 @@ function goToApplyPage(jobId) {
 }
 
 function goToReport(jobId) {
-    window.location.href = "/uniquest/service_provider/report/" + jobId;
+    window.location.href = "/uniquest/report/JobReport/" + jobId;
 }
 
 function toggleBookmark(icon, jobId) {
