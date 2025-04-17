@@ -312,7 +312,10 @@ class User extends Controller
                     $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $data['user']['UserID']);
                 }
 
+                $companyData = $this->model('M_jobpost')->getpostbycompanyid($_SESSION['user_id']);
+
                 $data['reviews'] = $reviews;
+                $data['companyData'] = $companyData;
 
                 $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {

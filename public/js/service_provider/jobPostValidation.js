@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const salaryRange = document.getElementById('salaryRange');
     const salaryType = document.getElementById('salaryType');
     const qualifications = document.getElementById('qualifications');
-    const jobLocation = document.getElementById('jobLocation');
+    const jobLocation = document.getElementById('job_district');
     const nextBtn = document.querySelector('.next-btn');
     
     // Function to validate form on submission

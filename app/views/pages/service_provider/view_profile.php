@@ -38,7 +38,7 @@
                 <div class="view-card-header">
                     <div class="view-card-title">
                         <h1><?php echo $data['user']['CompanyName'] ?></h1>
-                        <h2><?php echo $data['user']['Industry'] ?></h2>
+                        <h2><?php echo $data['companyData']->Industry ?></h2>
                         <p><?php echo $data['user']['Description'] ?></p>
                     </div>
                     
@@ -63,7 +63,7 @@
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        <?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['user']['City'] ?></span>
+                        <?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['companyData']->City ?></span>
                     </div>
                     <div>
                         <span>Contact No</span>
