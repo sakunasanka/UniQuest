@@ -55,6 +55,7 @@ class userModel extends Model
         try {
             // Base conditions
             $conditions = [
+                ['Status', '=', 'Active']
             ];
 
             // Add search condition if search term exists

@@ -12,6 +12,11 @@
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/saveCompanies">Saved Companies</button>
         </div>
         <div class="container">
+            <?php $columns = [
+                'jobs_create_at' => 'Newest',
+                'Rating' => 'Highest Rating',
+                'SalaryRange' => 'Highest Salary'
+            ]; ?>
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
             <!-- <div class="search-bar-container">
                 <div class="search-bar">
@@ -26,6 +31,9 @@
                 </div>
             </div> -->
             <div class="cards-container">
+                <?php if(empty($data['posts'])): ?>
+                    <div class="no-results">No saved jobs to show.</div>
+                <?php endif; ?>
                 <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
                     <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">

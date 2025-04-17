@@ -301,6 +301,101 @@ class M_jobpost extends Model
         }
     }
 
+    public function getSaveJobs($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    {
+        try {
+            // Base conditions
+            $conditions = [
+                ['Status', '=', 'Active'],
+                ['Category', '=', 'Part-time'],
+                ['StudentID', '=', $studentId]
+            ];
+
+            // Add search condition if search term exists
+            if (!empty($search)) {
+                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+            }
+
+            // Add filter conditions
+            $filterConditions = $this->buildFilterConditions($filters);
+            $conditions = array_merge($conditions, $filterConditions);
+
+            // Get the jobs with applied filters
+            $jobs = $this->select('v_bookmarkedJobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+
+            return $jobs;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getSaveInternships($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    {
+        try {
+            // Base conditions
+            $conditions = [
+                ['Status', '=', 'Active'],
+                ['Category', '=', 'Internship'],
+                ['StudentID', '=', $studentId]
+            ];
+
+            // Add search condition if search term exists
+            if (!empty($search)) {
+                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+            }
+
+            // Add filter conditions
+            $filterConditions = $this->buildFilterConditions($filters);
+            $conditions = array_merge($conditions, $filterConditions);
+
+            // Get the jobs with applied filters
+            $jobs = $this->select('v_bookmarkedJobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+
+            return $jobs;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getSaveCompanies($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    {
+        try {
+            // Base conditions
+            $conditions = [
+                ['Status', '=', 'Active'],
+                ['StudentID', '=', $studentId]
+            ];
+
+            // Add search condition if search term exists
+            if (!empty($search)) {
+                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+            }
+
+            // Add filter conditions
+            $filterConditions = $this->buildFilterConditions($filters);
+            $conditions = array_merge($conditions, $filterConditions);
+
+            // Get the jobs with applied filters
+            $jobs = $this->select('v_bookmarkedCompanies', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+
+            return $jobs;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function getJobPostingsByMonth()
     {
         // Get the current date and calculate the start date for the last 5 months

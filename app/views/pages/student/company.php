@@ -41,6 +41,9 @@ if (!isset($_SESSION['user_role'])) {
             <?php require APPROOT . '/views/components/searchBarComp.php'; ?>
 
             <div class="cards-container">
+                <?php if(empty($data['posts'])): ?>
+                    <div class="no-results">No coompanies to show.</div>
+                <?php endif; ?>
                 <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)">

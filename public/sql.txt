@@ -379,6 +379,10 @@ INNER JOIN
 ORDER BY 
     bj.bookmark_create_at DESC;
 
+-- -----------------------------------------------------
+-- View uniquest.v_bookmarkedCompanies
+-- -----------------------------------------------------
+
 CREATE VIEW v_bookmarkedCompanies AS
 SELECT 
     bc.StudentID,                   -- Student who bookmarked the company
@@ -389,17 +393,25 @@ SELECT
     c.StreetNo,                    -- Street number of the company
     c.AddressLine1,                -- First address line
     c.AddressLine2,                -- Second address line
-    c.City,                        -- City
-    c.Industry,                    -- Industry
+    ci.CityName AS City,           -- City
+    i.IndustryName AS Industry,                    -- Industry
     c.Website,                     -- Company website
+    u.Status,
     c.create_at AS company_create_at,  -- Company creation timestamp
     bc.bookmark_create_at          -- When the bookmark was created
 FROM 
     BookmarkCompanies bc
 INNER JOIN 
     company c ON bc.CompanyID = c.CompanyID
+INNER JOIN 
+    user u ON bc.CompanyID = u.UserID   
+INNER JOIN 
+    cities ci ON ci.CityID = c.CityID  
+INNER JOIN 
+    industry i ON i.IndustryID = c.IndustryID      
 ORDER BY 
     bc.bookmark_create_at DESC;    -- Ordered by bookmark creation timestamp
+
 
 -- -----------------------------------------------------
 -- View uniquest.StudentJobComplaints
@@ -429,7 +441,6 @@ JOIN
 -- -----------------------------------------------------
 -- View uniquest.CompanyReviews
 -- -----------------------------------------------------
-
 CREATE VIEW CompanyReviews AS
 SELECT 
     c.CompanyID,
@@ -439,7 +450,7 @@ SELECT
     c.StreetNo AS StreetNo,
     c.AddressLine1 AS AddressLine1,
     c.AddressLine2 AS AddressLine2,
-    c.City AS City,
+    ci.CityName AS City,
     r.ReviewID,
     r.Rating,
     r.Comment,
@@ -453,6 +464,10 @@ JOIN
     Review r
 ON 
     c.CompanyID = r.CompanyID
+JOIN 
+    cities ci
+ON 
+    ci.CityID = c.CityID    
 JOIN 
     student s
 ON 
@@ -973,6 +988,7 @@ CREATE VIEW `v_company` AS SELECT
     u.ContactNo,
     u.Role,
     u.Status,
+    c.create_at AS company_create_at,
     (SELECT COUNT(*) FROM review r WHERE r.CompanyID = c.CompanyID) AS ReviewCount,
     (SELECT COUNT(*) FROM jobs j WHERE j.CompanyID = c.CompanyID AND j.Status = 'Active') AS ActiveJobsCount
 FROM 

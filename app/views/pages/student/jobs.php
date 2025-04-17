@@ -78,6 +78,9 @@ if (!isset($_SESSION['user_role'])) {
                 </div>
             </div> -->
             <div class="cards-container">
+                <?php if(empty($data['posts'])): ?>
+                    <div class="no-results">No opportunities to show.</div>
+                <?php endif; ?>
                 <form id="bookmarkForm" method="POST" action="<?php echo URLROOT; ?>/student/addBookmarkJob" class="hidden-form"></form>
                 <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
