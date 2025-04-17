@@ -202,6 +202,100 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Job Activate Table -->
+            <div class="table-card">
+                <div class="content-header">
+                    <div class="table-title-container">
+                        <h2 class="table-title">Job Activate</h2>
+                    </div>
+                    <div class="header-actions">
+                        <button class="add-btn reason-add-btn">
+                            <span class="material-symbols-outlined">add</span>
+                            <span class="add-btn-text">Add</span>
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
+                    <tbody>
+                        <?php if ($data['job_activate']) : ?>
+                            <?php foreach ($data['job_activate'] as $reason) : ?>
+                                <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
+                                    <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
+                                    <td class="reason-text"><?php echo $reason->Reason; ?></td>
+                                    <td class="actions">
+                                        <span class="material-symbols-outlined action-btn edit-icon reason-edit-btn"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
+                                            edit_note
+                                        </span>
+                                        <span class="material-symbols-outlined action-btn delete-icon reason-delete-btn"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
+                                            delete
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td class="no-data" colspan="3">No data available</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Job Deactivate Table -->
+            <div class="table-card">
+                <div class="content-header">
+                    <div class="table-title-container">
+                        <h2 class="table-title">Job Deactivate</h2>
+                    </div>
+                    <div class="header-actions">
+                        <button class="add-btn reason-add-btn">
+                            <span class="material-symbols-outlined">add</span>
+                            <span class="add-btn-text">Add</span>
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
+                    <tbody>
+                        <?php if ($data['job_deactivate']) : ?>
+                            <?php foreach ($data['job_deactivate'] as $reason) : ?>
+                                <tr data-reason-id="<?php echo $reason->ReasonID; ?>">
+                                    <td class="reason-name"><?php echo $reason->ReasonName; ?></td>
+                                    <td class="reason-text"><?php echo $reason->Reason; ?></td>
+                                    <td class="actions">
+                                        <span class="material-symbols-outlined action-btn edit-icon reason-edit-btn"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
+                                            edit_note
+                                        </span>
+                                        <span class="material-symbols-outlined action-btn delete-icon reason-delete-btn"
+                                            role="button"
+                                            tabindex="0"
+                                            data-id="<?php echo htmlspecialchars($reason->ReasonID); ?>">
+                                            delete
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td class="no-data" colspan="3">No data available</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+
             <div class="content-title-container">
                 <h1 class="content-title"></h1>
             </div>

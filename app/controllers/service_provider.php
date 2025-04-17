@@ -9,7 +9,7 @@ class Service_provider extends Controller
         AuthMiddleware::requireAuth();
         // Check if user has the required role
         AuthMiddleware::requireRole('Company');
-        
+
         // Load model
         $this->model = $this->model('userModel');
     }
@@ -81,7 +81,7 @@ class Service_provider extends Controller
 
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
-                if($this->model('ContactModel')->sendMessage($data)){
+                if ($this->model('ContactModel')->sendMessage($data)) {
                     flash('contact-msg', 'Your message has been sent successfully.');
                     Redirect::to(URLROOT . '/service_provider/contact_admin');
                 } else {
@@ -100,10 +100,10 @@ class Service_provider extends Controller
                 'topic_err' => '',
                 'message_err' => ''
             ];
-    
-     $this->view('pages/service_provider/contact_admin', $data);
+
+            $this->view('pages/service_provider/contact_admin', $data);
+        }
     }
-}
 
     public function dashboard()
     {
@@ -119,44 +119,79 @@ class Service_provider extends Controller
     {
         $this->view('pages/service_provider/jobPost');
     }
-    
+
 
     public function report()
     {
         if ($_SESSION['user_role'] == 'Company') {
             $companyInfo = $this->model('companyModel')->getCompanyInfo();
         } else {
-            $companyInfo = null; 
+            $companyInfo = null;
         }
 
-        $data = [
-            
-        ];
+        $data = [];
 
         if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/job_report', $data);
-        }
-        else {
+        } else {
             $_SESSION['show_report_error'] = true;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
             Redirect::to($previousURL);
         }
     }
 
-    public function ongoing_jobs()
+    public function ongoing_jobs($queryParam = [])
     {
-        //$id = $_SESSION['user_id'];
-        $posts = $this->model('M_jobpost')->getPost();
-        $data = [
-            'posts' => $posts
-        ];
+        try {
+            // Get the requested data from query params
+            $pageNumber = isset($queryParam['page']) ? (int)$queryParam['page'] : 1;
+            $rowsPerPage = isset($queryParam['limit']) ? (int)$queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
-        $this->view('pages/service_provider/ongoing_jobs', $data);
+            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $data = [
+                'posts' => $posts['data'],
+                'currentPage' => $posts['currentPage'],
+                'rowsPerPage' => $posts['limit'],
+                'totalRows' => $posts['totalRows'],
+                'totalPages' => $posts['totalPages'],
+                'isLastPage' => $posts['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/service_provider/ongoing_jobs', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
-    public function offered_jobs()
+    public function offered_jobs($queryParam = [])
     {
-        $this->view('pages/service_provider/offered_jobs');
+        try {
+            // Get the requested data from query params
+            $pageNumber = isset($queryParam['page']) ? (int)$queryParam['page'] : 1;
+            $rowsPerPage = isset($queryParam['limit']) ? (int)$queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
+
+            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $data = [
+                'posts' => $posts['data'],
+                'currentPage' => $posts['currentPage'],
+                'rowsPerPage' => $posts['limit'],
+                'totalRows' => $posts['totalRows'],
+                'totalPages' => $posts['totalPages'],
+                'isLastPage' => $posts['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/service_provider/offered_jobs', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     public function offered_applications($jobID)
@@ -178,35 +213,35 @@ class Service_provider extends Controller
 
     // public function new_applications($id)
     // {
-        
+
     //         // Get user ID from session
     //         $userId = $_SESSION['user_id'] ?? null;
-            
+
     //         if (!$userId) {
     //             redirect('users/login');
     //         }
-            
+
     //         // Load models
     //         $applicationModel = $this->model('M_applications');
     //         $fieldModel = $this->model('M_applicationFields');
     //         $jobModel = $this->model('M_jobpost');
-            
+
     //         // Get all applications for this student
     //         $applications = $applicationModel->getApplicationsByStudentId($userId);
-            
+
     //         // Prepare data for each application with job-specific fields
     //         $applicationsData = [];
-            
+
     //         foreach ($applications as $app) {
     //             // Get job details
     //             $job = $jobModel->getpostbyid($app->job_id);
-                
+
     //             // Get application fields for this job
     //             $fields = $fieldModel->getFieldsByJobId($app->job_id);
-                
+
     //             // Get application responses for this application
     //             $responses = $applicationModel->getApplicationResponses($app->id);
-                
+
     //             $applicationsData[] = [
     //                 'application' => $app,
     //                 'job' => $job,
@@ -214,12 +249,12 @@ class Service_provider extends Controller
     //                 'responses' => $responses
     //             ];
     //         }
-            
+
     //         $data = [
     //             'applications' => $applicationsData
     //         ];
-            
-            
+
+
     //     $this->view('pages/service_provider/new_applications', $data);
     // }
     public function new_applications($jobID)
@@ -240,54 +275,47 @@ class Service_provider extends Controller
     }
     public function view_application($applicationID)
     {
-    // Fetch application details
-    $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        // Fetch application details
+        $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
 
-    if (!$application) {
-        // Handle the case where the application is not found
-        redirect('error/not_found');
-    }
+        if (!$application) {
+            // Handle the case where the application is not found
+            redirect('error/not_found');
+        }
 
-    // Access the first element of the $application array
-    $application = $application[0];
-    
-    // Prepare the application data
-    $applicationData = [
-        'jobID' => $application->JobID ?? null,
-        'photo' => $application->StudentProfileImage ?? null,
-        'fullname' => $application->StudentName ?? null,
-        'id' => $application->ApplicationID ?? null,
-        'created_at' => $application->SubmissionDate ?? null,
-        'status' => $application->ApplicationStatus ?? null,
-        'email' => $application->StudentEmail ?? null,
-        'contact' => $application->StudentContact ?? null,
-        'address' => $application->address ?? null,
-        'nic' => $application->nic ?? null,
-        'gender' => $application->gender ?? null,
-        'dob' => $application->dob ?? null,
-        'qualifications' => $application->Qualifications ?? null,
-        'experience' => $application->Experience ?? null,
-        'skills' => $application->Skills ?? null,
-        'cv' => $application->cv ?? null,
-        'nic_copy' => $application->nic_copy ?? null,
-        'linkedin' => $application->linkedin ?? null,
-        'other1' => $application->other1 ?? null,
-        'other2' => $application->other2 ?? null,
-        'other3' => $application->other3 ?? null,
-        'other1_type' => $application->other1_type ?? null,
-        'other2_type' => $application->other2_type ?? null,
-        'other3_type' => $application->other3_type ?? null,
-    ];
+        // Access the first element of the $application array
+        $application = $application[0];
 
-    $data = [
-        'application' => $applicationData,
-    ];
-    $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
+        // Prepare the application data
+        $applicationData = [
+            'photo' => $application->StudentProfileImage ?? null,
+            'fullname' => $application->StudentName ?? null,
+            'id' => $application->ApplicationID ?? null,
+            'created_at' => $application->SubmissionDate ?? null,
+            'status' => $application->ApplicationStatus ?? null,
+            'email' => $application->StudentEmail ?? null,
+            'contact' => $application->StudentContact ?? null,
+            'address' => $application->address ?? null,
+            'nic' => $application->nic ?? null,
+            'gender' => $application->gender ?? null,
+            'dob' => $application->dob ?? null,
+            'qualifications' => $application->Qualifications ?? null,
+            'experience' => $application->Experience ?? null,
+            'skills' => $application->Skills ?? null,
+            'cv' => $application->cv ?? null,
+            'nic_copy' => $application->nic_copy ?? null,
+            'linkedin' => $application->linkedin ?? null,
+            'other1' => $application->other1 ?? null,
+            'other2' => $application->other2 ?? null,
+            'other3' => $application->other3 ?? null
+        ];
 
-    $data['fields'] = $fields;
+        $data = [
+            'application' => $applicationData,
+        ];
 
-    // Load the view
-    $this->view('pages/service_provider/view_application', $data);
+        // Load the view
+        $this->view('pages/service_provider/view_application', $data);
     }
 
     public function rejected_applications($jobID)
@@ -359,11 +387,8 @@ class Service_provider extends Controller
         ];
 
         $this->view('pages/service_provider/application_dashboard', $data);
-    
-
-        
     }
-    public function premium() 
+    public function premium()
     {
         $companyInfo = $this->model('companyModel')->getCompanyInfo();
 
@@ -373,39 +398,40 @@ class Service_provider extends Controller
 
         $this->view('pages/service_provider/premiumFeatures', $data);
     }
-    public function payhereprocess() {
+    public function payhereprocess()
+    {
         // Get user data from session
         $user_id = $_SESSION['user_id'] ?? 0;
-        
+
         // Get plan from query parameter
         $plan = $_GET['plan'] ?? 'professional';
-        
+
         // Plan details
         $amount = ($plan === 'enterprise') ? 5000 : 3000;
-        
+
         $merchant_id = '1230028';
         $order_id = 'ORDER_' . time() . '_' . $user_id;
         $merchant_secret = "NDEyMTM4MDkxMzEwNDM3Njc5NTYzNzA0OTE1MDEzNzYwNDM2OTgw";
         $currency = 'LKR';
-        
+
         // Generate hash
         $hash = strtoupper(
             md5(
-                $merchant_id . 
-                $order_id .
-                number_format($amount, 2, '.', '') .
-                $currency .
-                strtoupper(md5($merchant_secret))
+                $merchant_id .
+                    $order_id .
+                    number_format($amount, 2, '.', '') .
+                    $currency .
+                    strtoupper(md5($merchant_secret))
             )
         );
-        
+
         // Store pending payment in database
         $this->model('companyModel')->storePendingPayment($user_id, $order_id, $plan, $amount);
-        
+
         // Store in session as fallback
         $_SESSION['pending_order_id'] = $order_id;
         $_SESSION['pending_plan'] = $plan;
-        
+
         // Create response
         $response = [
             'merchant_id' => $merchant_id,
@@ -414,61 +440,62 @@ class Service_provider extends Controller
             'currency' => $currency,
             'hash' => $hash
         ];
-        
+
         header('Content-Type: application/json');
         echo json_encode($response);
         exit;
     }
 
-    public function payment_return() {
+    public function payment_return()
+    {
         // Start session if not already started
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        
+
         // Log all incoming data
         error_log("Payment Return - GET: " . print_r($_GET, true));
         error_log("Payment Return - POST: " . print_r($_POST, true));
         error_log("Payment Return - SESSION: " . print_r($_SESSION, true));
-        
+
         // Get order_id from URL first, then session
         $order_id = $_GET['order_id'] ?? ($_SESSION['pending_order_id'] ?? null);
-        
+
         if (!$order_id) {
             $_SESSION['payment_message'] = 'Payment error: Missing order information';
-            
+
             return;
         }
-        
+
         // Get payment details from database
         $payment = $this->model('companyModel')->getPendingPayment($order_id);
-        
+
         if (!$payment) {
             $_SESSION['payment_message'] = 'Payment error: Order not found';
             Redirect::to(URLROOT . '/service_provider/premium');
             return;
         }
-        
+
         // Check if already processed
         if ($this->model('companyModel')->getPaymentByOrderId($order_id)) {
             $_SESSION['payment_message'] = 'Payment already processed';
             Redirect::to(URLROOT . '/service_provider/premium');
             return;
         }
-        
+
         // Calculate dates
         $start_date = date('Y-m-d H:i:s');
         $end_date = date('Y-m-d H:i:s', strtotime('+30 days'));
-        
+
         // Update subscription
         $result = $this->model('companyModel')->updateSubscription(
-            $payment->user_id, 
-            $payment->plan, 
-            $start_date, 
-            $end_date, 
+            $payment->user_id,
+            $payment->plan,
+            $start_date,
+            $end_date,
             'active'
         );
-        
+
         if ($result) {
             // Store payment (use temporary payment_id for return_url flow)
             $payment_id = 'RET_' . time();
@@ -479,21 +506,22 @@ class Service_provider extends Controller
                 $payment->plan,
                 $payment->amount
             );
-            
+
             $_SESSION['payment_message'] = 'Payment successful! Your subscription has been activated.';
             unset($_SESSION['pending_order_id']);
             unset($_SESSION['pending_plan']);
         } else {
             $_SESSION['payment_message'] = 'Payment was processed but there was an issue updating your account. Please contact support.';
         }
-        
+
         Redirect::to(URLROOT . '/service_provider/premium');
     }
 
-    public function premium_pro() {
+    public function premium_pro()
+    {
         // Log the full request
         file_put_contents('payhere_notify.log', date('Y-m-d H:i:s') . " - " . print_r($_POST, true) . "\n", FILE_APPEND);
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $merchant_id = $_POST['merchant_id'];
             $order_id = $_POST['order_id'];
@@ -501,31 +529,31 @@ class Service_provider extends Controller
             $amount = $_POST['payhere_amount'];
             $status_code = $_POST['status_code'];
             $md5sig = $_POST['md5sig'];
-            
+
             // Verify signature
             $merchant_secret = "NDEyMTM4MDkxMzEwNDM3Njc5NTYzNzA0OTE1MDEzNzYwNDM2OTgw";
             $local_md5sig = strtoupper(
                 md5(
-                    $merchant_id . 
-                    $order_id . 
-                    $amount . 
-                    $_POST['payhere_currency'] . 
-                    $status_code . 
-                    strtoupper(md5($merchant_secret))
+                    $merchant_id .
+                        $order_id .
+                        $amount .
+                        $_POST['payhere_currency'] .
+                        $status_code .
+                        strtoupper(md5($merchant_secret))
                 )
             );
-            
+
             if ($local_md5sig === $md5sig && $status_code == 2) {
                 // Payment verified - process it
-                
+
                 // Get pending payment
                 $payment = $this->model('companyModel')->getPendingPayment($order_id);
-                
+
                 if ($payment) {
                     // Update subscription
                     $start_date = date('Y-m-d H:i:s');
                     $end_date = date('Y-m-d H:i:s', strtotime('+30 days'));
-                    
+
                     $this->model('companyModel')->updateSubscription(
                         $payment->user_id,
                         $payment->plan,
@@ -533,7 +561,7 @@ class Service_provider extends Controller
                         $end_date,
                         'active'
                     );
-                    
+
                     // Store payment success
                     $this->model('companyModel')->storePaymentSuccess(
                         $payment->user_id,
@@ -542,41 +570,42 @@ class Service_provider extends Controller
                         $payment->plan,
                         $amount
                     );
-                    
+
                     // Clean up pending payment
                     $this->model('companyModel')->clearPendingPayment($order_id);
                 }
             }
         }
-        
+
         http_response_code(200);
         exit;
     }
 
-    public function process_payment_ajax() {
+    public function process_payment_ajax()
+    {
         header('Content-Type: application/json');
-        
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
             exit;
         }
-        
+
         $order_id = $_POST['order_id'] ?? null;
         $plan = $_POST['plan'] ?? null;
-        
+
         if (!$order_id || !$plan) {
             echo json_encode(['status' => 'error', 'message' => 'Missing parameters']);
             exit;
         }
-        
+
         // Extract user_id from order_id (ORDER_timestamp_userid)
         $parts = explode('_', $order_id);
         $user_id = end($parts);
-        
+
         // Calculate dates
         $start_date = date('Y-m-d H:i:s');
         $end_date = date('Y-m-d H:i:s', strtotime('+30 days'));
-        
+
         // Update subscription
         $result = $this->model('companyModel')->updateSubscription(
             $user_id,
@@ -585,12 +614,12 @@ class Service_provider extends Controller
             $end_date,
             'active'
         );
-        
+
         if ($result) {
             // Store payment
             $payment_id = 'AJAX_' . time();
             $amount = ($plan === 'enterprise') ? 5000 : 3000;
-            
+
             $this->model('companyModel')->storePaymentSuccess(
                 $user_id,
                 $order_id,
@@ -598,16 +627,16 @@ class Service_provider extends Controller
                 $plan,
                 $amount
             );
-            
+
             echo json_encode(['status' => 'success']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Database update failed']);
         }
-        
+
         exit;
     }
-    
-    
+
+
     public function analytics()
     {
         $jobCount = $this->model('M_jobpost')->getJobCountByCompany();
@@ -625,22 +654,22 @@ class Service_provider extends Controller
         $Jobspermonth = [];
         $Internshipspermonth = [];
 
-            // Loop through each job post to get the display rating for the associated company
-            foreach ($registrationsData['data'] as $registration) {
-                $job_count = $registration->part_time_jobs; 
-                $Jobspermonth[] = $job_count;
-            }
-            $Jobspermonth = array_reverse($Jobspermonth);
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($registrationsData['data'] as $registration) {
+            $job_count = $registration->part_time_jobs;
+            $Jobspermonth[] = $job_count;
+        }
+        $Jobspermonth = array_reverse($Jobspermonth);
 
-            // Loop through each job post to get the display rating for the associated company
-            foreach ($registrationsData['data'] as $registration) {
-                $internship_count = $registration->internships; 
-                $Internshipspermonth[] = $internship_count;
-            }
-            $Internshipspermonth = array_reverse($Internshipspermonth);
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($registrationsData['data'] as $registration) {
+            $internship_count = $registration->internships;
+            $Internshipspermonth[] = $internship_count;
+        }
+        $Internshipspermonth = array_reverse($Internshipspermonth);
 
         // $userLoginsData = $this->model('M_user')->getUserLoginsByGender();
-        
+
         $data = [
             'job_count' => $jobCount,
             'activeJobCount' => $activeJobCount,
@@ -658,8 +687,7 @@ class Service_provider extends Controller
 
         if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/ser_analytics', $data);
-        }
-        else {
+        } else {
             $_SESSION['show_premium_error'] = true;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
             Redirect::to($previousURL);
@@ -841,7 +869,6 @@ class Service_provider extends Controller
             $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
                 'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
-                'job_location' => trim($_POST['jobLocation'] ?? ''),
                 'job_category' => trim($_POST['jobType'] ?? ''),
                 'publish_date' => !empty($_POST['jobPostDate']) ? trim($_POST['publishDate']) : $publishDate,
                 'required_skills' => trim($_POST['qualifications'] ?? ''),
@@ -849,6 +876,10 @@ class Service_provider extends Controller
                 'salary_type' => trim($_POST['salaryType'] ?? ''),
                 'Description' => trim($_POST['jobDescription'] ?? ''),
                 'status' => 'Pending',
+                'job_district' => trim($_POST['job_district'] ?? ''),
+                'job_city' => trim($_POST['job_city'] ?? ''),
+                'districts' => $this->model('AdminModel')->getDistricts()['data'], // Fetch districts from the model
+                'cities' => [], // Initialize cities as an empty array
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -878,8 +909,8 @@ class Service_provider extends Controller
             if (empty($data['job_name'])) {
                 $data['job_name_err'] = 'Please enter job name';
             }
-            if (empty($data['job_location'])) {
-                $data['job_location_err'] = 'Please enter job location';
+            if (empty($data['job_district'] && $data['job_city'])) {
+                $data['job_location_err'] = 'Please select district and city';
             }
             if (empty($data['job_category'])) {
                 $data['job_category_err'] = 'Please enter job category';
@@ -921,6 +952,10 @@ class Service_provider extends Controller
                 'salary_type' => '',
                 'Description' => '',
                 'publish_date' => $publishDate,
+                'job_district' => '', // Default value for job district
+                'job_city' => '', // Default value for job city
+                'districts' => $this->model('AdminModel')->getDistricts()['data'], // Fetch districts from the model
+                'cities' => [], // Initialize cities as an empty array
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -935,6 +970,36 @@ class Service_provider extends Controller
             ];
             $this->view('pages/service_provider/jobPost', $data);
         }
+    }
+
+    public function getCitiesByDistrict() {
+        try {
+            // Get the district ID from POST data
+            $districtID = $_POST['districtID'] ?? null;
+            
+            if (!$districtID) {
+                throw new Exception('District ID is required');
+            }
+            
+            // Fetch cities based on the district ID
+            $cities = $this->model('AdminModel')->getCitiesByDistrict($districtID)['data'];
+            
+            if (!$cities) {
+                throw new Exception('No cities found for the given district ID');
+            }
+            
+            // Return JSON response
+            echo json_encode([
+                'success' => true,
+                'cities' => $cities
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit; // Important to prevent any additional output
     }
 
     public function delete($postId)

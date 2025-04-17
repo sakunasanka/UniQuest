@@ -42,11 +42,15 @@
                     </div>
                 </div>
             </div> -->
-        
+
             <h1 class= "H1">Trending Companies</h1>
             <h2 class= "H2">Check out the top-rated companies based on the student reviews</h2>
 
             <div class="cards-container">
+                <?php if(empty($data['trendy_companies'])): ?>
+                    <div class="no-results">No results found.</div>
+                <?php endif; ?>
+                
                 <?php foreach($data['trendy_companies'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToCompanyDescription(<?php echo $post['CompanyID']; ?>)">

@@ -12,7 +12,13 @@
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/student/saveCompanies">Saved Companies</button>
         </div>
         <div class="container">
-            <?php require APPROOT . '/views/components/searchBar.php'; ?>
+        <?php $columns = [
+            'CompanyName' => 'Company Name',
+            'City' => 'Location',
+            'Industry' => 'Industry',
+            'Rating' => 'Rating'
+            ]; ?>
+            <?php require APPROOT . '/views/components/searchBarComp.php'; ?>
             <!-- <div class="search-bar-container">
                 <div class="search-bar">
                     <div class="search-icon">
@@ -26,56 +32,88 @@
                 </div>
             </div> -->
 
-            <div class="cards-container">    
-                <?php foreach($data['posts'] as $post): ?>
+            <div class="cards-container">
+                <?php if(empty($data['posts'])): ?>
+                    <div class="no-results">No results found.</div>
+                <?php endif; ?>
+                <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
                         <div class="card-logo" onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)">
-                        <img
-                            src="<?php echo empty($post->CompanyLogo)
-                                        ? URLROOT . '/images/profile_pic_preview.png'
-                                        : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
-                            alt="Profile Picture">
+                            <img
+                                src="<?php echo empty($post->CompanyLogo)
+                                            ? URLROOT . '/images/profile_pic_preview.png'
+                                            : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
+                                alt="Profile Picture">
                         </div>
                         <div class="card-content">
                             <div class="content-hover-class" onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)">
                                 <div class="title-content">
                                     <h3 class="company-title"><?php echo $post->CompanyName; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i> 
-                                        <?php 
-                                            if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
-                                                echo round($data['displayRatings'][$post->CompanyID], 2);
-                                            } else {
-                                                echo 'N/A';
-                                            }
+                                        <i class="fa fa-star"></i>
+                                        <?php
+                                        if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
+                                            echo round($data['displayRatings'][$post->CompanyID], 2);
+                                        } else {
+                                            echo 'N/A';
+                                        }
                                         ?>
                                     </div>
                                 </div>
-                                
-                                
+
+
                                 <div class="job-location-details">
-                                        <?php echo $post->City; ?>
+                                    <?php echo $post->City; ?>
                                 </div>
                             </div>
-                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
- 
+
+                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
                                 <div class="card-icons">
-                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>  
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
                                     <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
-                                    
                                 </div>
-                            <?php endif;?>
+                            <?php else: ?>
+                                <div class="card-icons">
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="social-media-icons">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <?php if (!empty($post->Website)): ?>
+                                <?php $website = (strpos($post->Website, 'http') === 0) ? $post->Website : 'https://' . $post->Website; ?>
+                                <a href="<?php echo htmlspecialchars($website); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Company website">
+                                    <i class="fas fa-globe"></i>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($post->LinkedIn)): ?>
+                                <?php $linkedin = (strpos($post->LinkedIn, 'http') === 0) ? $post->LinkedIn : 'https://www.linkedin.com/' . ltrim($post->LinkedIn, '/'); ?>
+                                <a href="<?php echo htmlspecialchars($linkedin); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="LinkedIn profile">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($post->Facebook)): ?>
+                                <?php $facebook = (strpos($post->Facebook, 'http') === 0) ? $post->Facebook : 'https://www.facebook.com/' . ltrim($post->Facebook, '/'); ?>
+                                <a href="<?php echo htmlspecialchars($facebook); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Facebook page">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         </div>
+        <?php require APPROOT . '/views/components/pagination.php'; ?>
     </div>
 </div>
 
