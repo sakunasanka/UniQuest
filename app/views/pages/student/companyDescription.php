@@ -1,18 +1,15 @@
-<?php 
-    if (!isset($_SESSION['user_role'])) {
-        require APPROOT . '/views/components/header.php';
-    }
-    else if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/stu_header.php';
-    } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/ser_header.php';
-    } 
-    else if ($_SESSION['user_role'] == 'Admin') {
-        require APPROOT . '/views/components/adm_header.php';
-    }
-    else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ver_header.php';
-    }
+<?php
+if (!isset($_SESSION['user_role'])) {
+    require APPROOT . '/views/components/header.php';
+} else if ($_SESSION['user_role'] == 'Student') {
+    require APPROOT . '/views/components/stu_header.php';
+} else if ($_SESSION['user_role'] == 'Company') {
+    require APPROOT . '/views/components/ser_header.php';
+} else if ($_SESSION['user_role'] == 'Admin') {
+    require APPROOT . '/views/components/adm_header.php';
+} else if ($_SESSION['user_role'] == 'VT-Member') {
+    require APPROOT . '/views/components/ver_header.php';
+}
 ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
@@ -33,7 +30,7 @@
         <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
     <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
         <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
-    <?php endif; ?>   
+    <?php endif; ?>
 
     <div class="content-area">
         <div class="view-card">
@@ -46,70 +43,99 @@
 
             <div class="view-card-content">
                 <div class="title-with-bookmark">
-                    <h1><?php echo $data['post']->CompanyName;?></h1>
+                    <h1><?php echo $data['post']->CompanyName; ?></h1>
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                         <div class="card-icons">
-                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>  
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
                             <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
                         </div>
-                    <?php else:?>
+                    <?php else: ?>
                         <div class="card-icons">
-                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>  
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
                         </div>
                     <?php endif; ?>
                 </div>
 
                 <h2><?php echo $data['post']->Industry; ?></h2>
                 <p><?php echo $data['post']->Description; ?></p>
-              
+
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        <?php 
-                        $addressParts = [
-                            rtrim($data['post']->StreetNo, ','),        // Remove trailing comma if it exists
-                            rtrim($data['post']->AddressLine1, ','),
-                            rtrim($data['post']->AddressLine2, ','),
-                            rtrim($data['post']->City, ',')
-                        ];
-
-                        $address = implode(', ', array_filter($addressParts)); // Join parts with commas
-                        echo $address;
-                        ?>
+                        <?php echo $data['post']->Address; ?>
                     </div>
                     <div>
-                        <span>Phone</span>
+                        <span>Contact No</span>
                         <?php echo $data['post']->ContactNo; ?>
                     </div>
                     <div>
                         <span>Email</span>
                         <?php echo $data['post']->Email; ?>
                     </div>
-                    <div>
-                        <span>Website</span>
-                        <a href="<?php echo (strpos($data['post']->Website, 'http://') === 0 || strpos($data['post']->Website, 'https://') === 0) 
-                                    ? $data['post']->Website 
-                                    : 'http://' . $data['post']->Website; ?>" 
-                        target="_blank">
-                            <?php echo $data['post']->Website; ?>
-                        </a>
-                    </div>
                 </div>
+                <div class="view-card-info">
+                    <?php if (!empty($data['post']->Website)): ?>
+                        <div>
+                            <span>Website</span>
+                            <?php
+                            $website = $data['post']->Website;
+                            // Ensure website has proper protocol
+                            if (!preg_match("~^(?:f|ht)tps?://~i", $website)) {
+                                $website = "https://" . ltrim($website, '/');
+                            }
+                            ?>
+                            <a href="<?php echo htmlspecialchars($website); ?>" target="_blank" rel="noopener noreferrer">
+                                <?php echo htmlspecialchars(parse_url($website, PHP_URL_HOST) ?: $website); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
 
+                    <?php if (!empty($data['post']->LinkedIn)): ?>
+                        <div>
+                            <span>LinkedIn</span>
+                            <?php
+                            $linkedin = $data['post']->LinkedIn;
+                            // Format LinkedIn URL properly
+                            if (!preg_match("~^(?:f|ht)tps?://~i", $linkedin)) {
+                                $linkedin = "https://www.linkedin.com/" . ltrim($linkedin, '/');
+                            }
+                            ?>
+                            <a href="<?php echo htmlspecialchars($linkedin); ?>" target="_blank" rel="noopener noreferrer">
+                                linkedin.com/<?php echo htmlspecialchars(basename($linkedin)); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($data['post']->Facebook)): ?>
+                        <div>
+                            <span>Facebook</span>
+                            <?php
+                            $facebook = $data['post']->Facebook;
+                            // Format Facebook URL properly
+                            if (!preg_match("~^(?:f|ht)tps?://~i", $facebook)) {
+                                $facebook = "https://www.facebook.com/" . ltrim($facebook, '/');
+                            }
+                            ?>
+                            <a href="<?php echo htmlspecialchars($facebook); ?>" target="_blank" rel="noopener noreferrer">
+                                facebook.com/<?php echo htmlspecialchars(basename($facebook)); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
 
         <div class="view-card">
             <div class="job-list">
-            <?php if(empty($data['jobs'])):?>
-                <div class="job-header">
-                    <div>
-                        <h5><?php echo ("No available jobs to show."); ?></h5>
+                <?php if (empty($data['jobs'])): ?>
+                    <div class="job-header">
+                        <div>
+                            <h5><?php echo ("No available jobs to show."); ?></h5>
+                        </div>
                     </div>
-                </div>
-            <?php else:?>
+                <?php else: ?>
 
-                <?php foreach ($data['jobs'] as $index => $job): ?>
+                    <?php foreach ($data['jobs'] as $index => $job): ?>
                         <div class="job-item" onclick="goToJobDescription(<?php echo ($job->JobID); ?>)">
                             <div class="job-header">
                                 <div>
@@ -121,7 +147,7 @@
                                 <!-- <span class="tag">Design</span> -->
                             </div>
                             <div>
-                                <p>Location: <?php echo ($job->Location); ?></p>
+                                <p>Location: <?php echo ($job->City); ?></p>
                             </div>
                             <div>
                                 <p>Salary: Rs.<?php echo ($job->SalaryRange); ?> <?php echo ($job->SalaryType); ?></p>
@@ -134,8 +160,8 @@
                                 <button class="details-btn">View Details</button>
                             </div>
                         </div>
-                <?php endforeach; ?>
-            <?php endif;?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -173,20 +199,24 @@
             </div>
             <div class="buttons btn-space-between">
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
-                        <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
-                        
-                        <?php if (count($data['reviews']) >= 3): ?> 
-                            <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
-                        <?php endif; ?>
-                        
-                    <?php else: ?>
-                        <div></div>
+                    <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
 
-                        <?php if (count($data['reviews']) >= 3): ?> 
-                            <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
-                        <?php endif; ?>
-                        
+                    <?php if (count($data['reviews']) >= 3): ?>
+                        <button class="seemore" style="margin-top: 1px;">
+                            <p onclick="toggleMoreReviews()">See more reviews...</p>
+                        </button>
                     <?php endif; ?>
+
+                <?php else: ?>
+                    <div></div>
+
+                    <?php if (count($data['reviews']) >= 3): ?>
+                        <button class="seemore" style="margin-top: 1px;">
+                            <p onclick="toggleMoreReviews()">See more reviews...</p>
+                        </button>
+                    <?php endif; ?>
+
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -234,7 +264,7 @@
 
     function shareJob(companyId) {
         const jobURL = `${window.location.origin}/UniQuest/jobs/companydescription/${companyId}`;
-        
+
         navigator.clipboard.writeText(jobURL).then(() => {
             Flash.show('Company link copied to clipboard!', 'success');
         }).catch(err => {

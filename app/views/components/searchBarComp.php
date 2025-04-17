@@ -26,12 +26,8 @@
         ];
         ?>
         <?php
-        $searcher = Sorter::getInstance();
-        echo $searcher->renderMainSort($columns);
-        ?>
-        <?php
         $searcher = MainSearcher::getInstance();
-        echo $searcher->renderSearchBar('Search for Jobs Title...');
+        echo $searcher->renderSearchBar('Search Company Names...');
         ?>
     </div>
 
@@ -39,7 +35,7 @@
     <div class='filter-row'>
         <?php
         $filter = Filter::getInstance();
-        echo $filter->renderFilters($industries, $districts, $cities, $ratings);
+        echo $filter->renderFilterComp($industries, $districts, $cities, $ratings);
         ?>
     </div>
 </div>

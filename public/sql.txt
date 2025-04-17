@@ -881,36 +881,103 @@ AUTO_INCREMENT=7
 ;
 
 
-SELECT 
-  j.JobID AS JobID,
-  c.CompanyID AS CompanyID,
-  j.Title AS Title,
-  c.CompanyLogo AS CompanyLogo,
-  c.CompanyName AS CompanyName,
-  c.Industry AS Industry,
-  c.Website AS Website,
-  j.Description AS Description,
-  TRIM(REGEXP_REPLACE(CONCAT_WS(', ', c.StreetNo, c.AddressLine1, c.AddressLine2, ci.CityName), ', ,+', ',')) AS CompanyAddress,
-  j.Category AS Category,
-  j.Status AS Status,
-  d.DistrictName AS District,
-  ci.CityName AS City,
-  CONCAT(d.DistrictName, ', ', ci.CityName) AS Location,
-  j.JobBenefits AS JobBenefits,
-  j.RequiredQualifications AS RequiredQualifications,
-  j.SalaryRange AS SalaryRange,
-  j.SalaryType AS SalaryType,
-  j.PublishDate AS PublishDate,
-  u.Email AS Email,
-  u.ContactNo AS ContactNo,
-  j.create_at AS jobs_create_at,
-  c.create_at AS company_create_at
+CREATE VIEW `v_jobs` AS SELECT 
+    j.JobID AS JobID,
+    c.CompanyID AS CompanyID,
+    j.Title AS Title,
+    c.CompanyLogo AS CompanyLogo,
+    c.CompanyName AS CompanyName,
+    i.IndustryName AS Industry,
+    c.Website AS Website,
+    j.Description AS Description,
+    TRIM(REGEXP_REPLACE(CONCAT_WS(', ', c.StreetNo, c.AddressLine1, c.AddressLine2, ci.CityName), ', ,+', ',')) AS CompanyAddress,
+    j.Category AS Category,
+    j.Status AS Status,
+    d.DistrictName AS District,
+    ci.CityName AS City,
+    j.JobBenefits AS JobBenefits,
+    j.RequiredQualifications AS RequiredQualifications,
+    j.SalaryRange AS SalaryRange,
+    j.SalaryType AS SalaryType,
+    j.PublishDate AS PublishDate,
+    u.Email AS Email,
+    u.ContactNo AS ContactNo,
+    j.create_at AS jobs_create_at,
+    c.create_at AS company_create_at
 FROM 
-  jobs j
-  JOIN company c ON j.CompanyID = c.CompanyID
-  JOIN user u ON c.CompanyID = u.UserID
-  JOIN districts d ON j.DistrictID = d.DistrictID
-  JOIN cities ci ON j.CityID = ci.CityID
+    jobs j
+    JOIN company c ON j.CompanyID = c.CompanyID
+    JOIN user u ON c.CompanyID = u.UserID
+    JOIN districts d ON j.DistrictID = d.DistrictID
+    JOIN cities ci ON j.CityID = ci.CityID
+    LEFT JOIN industry i ON c.IndustryID = i.IndustryID
 ORDER BY 
-  j.create_at DESC 
+    j.create_at DESC  ;
 
+
+
+CREATE TABLE `company` (
+	`CompanyID` INT(11) NOT NULL AUTO_INCREMENT,
+	`CompanyName` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`Description` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`CompanyLogo` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`StreetNo` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`AddressLine1` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`AddressLine2` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`DistrictID` INT(11) NULL DEFAULT NULL,
+	`CityID` INT(11) NULL DEFAULT NULL,
+	`IndustryID` INT(11) NULL DEFAULT NULL,
+	`Website` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`Facebook` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`LinkedIn` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`BRCertificate` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`create_at` TIMESTAMP NULL DEFAULT current_timestamp(),
+	`subscription_plan` ENUM('free','professional','enterprise') NOT NULL DEFAULT 'free' COLLATE 'utf8mb4_general_ci',
+	`subscription_start_date` DATETIME NULL DEFAULT NULL,
+	`subscription_end_date` DATETIME NULL DEFAULT NULL,
+	`subscription_status` ENUM('active','expired','cancelled') NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	PRIMARY KEY (`CompanyID`) USING BTREE,
+	INDEX `fk_company_district` (`DistrictID`) USING BTREE,
+	INDEX `fk_company_city` (`CityID`) USING BTREE,
+	INDEX `FK_industry` (`IndustryID`) USING BTREE,
+	CONSTRAINT `fk_ServiceProvider_User1` FOREIGN KEY (`CompanyID`) REFERENCES `user` (`UserID`) ON UPDATE RESTRICT ON DELETE CASCADE,
+	CONSTRAINT `fk_company_city` FOREIGN KEY (`CityID`) REFERENCES `cities` (`CityID`) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT `fk_company_district` FOREIGN KEY (`DistrictID`) REFERENCES `districts` (`DistrictID`) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT `fk_company_industry` FOREIGN KEY (`IndustryID`) REFERENCES `industry` (`IndustryID`) ON UPDATE CASCADE ON DELETE RESTRICT
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=7
+;
+
+
+
+
+CREATE VIEW `v_company` AS SELECT 
+    c.CompanyID,
+    c.CompanyName,
+    c.Description,
+    c.CompanyLogo,
+    CONCAT_WS(', ',
+        CONCAT(c.StreetNo, ' ', c.AddressLine1),
+        c.AddressLine2,
+        ci.CityName
+    ) AS Address,
+    d.DistrictName AS District,
+    ci.CityName AS City,
+    i.IndustryName AS Industry,
+    c.Website,
+    c.Facebook,
+    c.LinkedIn,
+    u.Email,
+    u.ContactNo,
+    u.Role,
+    u.Status,
+    (SELECT COUNT(*) FROM review r WHERE r.CompanyID = c.CompanyID) AS ReviewCount,
+    (SELECT COUNT(*) FROM jobs j WHERE j.CompanyID = c.CompanyID AND j.Status = 'Active') AS ActiveJobsCount
+FROM 
+    company c
+    JOIN user u ON c.CompanyID = u.UserID
+    LEFT JOIN districts d ON c.DistrictID = d.DistrictID
+    LEFT JOIN cities ci ON c.CityID = ci.CityID
+    LEFT JOIN industry i ON c.IndustryID = i.IndustryID  ;

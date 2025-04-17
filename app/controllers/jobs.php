@@ -217,22 +217,14 @@ class Jobs extends Controller
         $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
         // get filter data from query params
-        $district = isset($queryParam['district']) ? $queryParam['district'] : null;
-        $city = isset($queryParam['city']) ? $queryParam['city'] : null;
-        $industry = isset($queryParam['industry']) ? $queryParam['industry'] : null;
-        $rating = isset($queryParam['rating']) ? $queryParam['rating'] : null;
-        $minSalary = isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null;
-        $maxSalary = isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null;
-        $salaryType = isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null;
-
         $filters = [
-            'district' => $district,
-            'city' => $city,
-            'industry' => $industry,
-            'rating' => $rating,
-            'minSalary' => $minSalary,
-            'maxSalary' => $maxSalary,
-            'salaryType' => $salaryType
+            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
         ];
 
         // Fetch part-time job posts
@@ -268,7 +260,7 @@ class Jobs extends Controller
             'totalRows' => $post_data['totalRows'],
             'rowsPerPage' => $post_data['limit'],
             'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
-            'cities' => [], //$this->model('AdminModel')->getCitiesByDistrict(1)['data'], // Get cities for filtering
+            'cities' => [], //Initially empty, will be populated based on selected district
             'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
@@ -287,26 +279,18 @@ class Jobs extends Controller
         $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
         // get filter data from query params
-        $district = isset($queryParam['district']) ? $queryParam['district'] : null;
-        $city = isset($queryParam['city']) ? $queryParam['city'] : null;
-        $industry = isset($queryParam['industry']) ? $queryParam['industry'] : null;
-        $rating = isset($queryParam['rating']) ? $queryParam['rating'] : null;
-        $minSalary = isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null;
-        $maxSalary = isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null;
-        $salaryType = isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null;
-
         $filters = [
-            'district' => $district,
-            'city' => $city,
-            'industry' => $industry,
-            'rating' => $rating,
-            'minSalary' => $minSalary,
-            'maxSalary' => $maxSalary,
-            'salaryType' => $salaryType
+            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
         ];
 
         // Retrieve internship jobs
-        $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit, $sort, $order, $search, $searchBy);
+        $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit, $sort, $order, $search, $searchBy, $filters);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -336,7 +320,7 @@ class Jobs extends Controller
             'totalRows' => $post_data['totalRows'],
             'rowsPerPage' => $post_data['limit'],
             'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
-            'cities' => $this->model('AdminModel')->getCitiesByDistrict(1)['data'], // Get cities for filtering
+            'cities' => [], //Initially empty, will be populated based on selected district
             'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
@@ -353,8 +337,20 @@ class Jobs extends Controller
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
         $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyName';
+
+        // get filter data from query params
+        $filters = [
+            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
+        ];
+
         // Retrieve companies
-        $post_data = $this->model('userModel')->getcompany($page, $limit, $sort, $order, $search, $searchBy);
+        $post_data = $this->model('userModel')->getcompany($page, $limit, $sort, $order, $search, $searchBy, $filters);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -382,7 +378,10 @@ class Jobs extends Controller
             'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
             'displayRatings' => $displayRatings,
             'totalRows' => $post_data['totalRows'],
-            'rowsPerPage' => $post_data['limit']
+            'rowsPerPage' => $post_data['limit'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'], // Get districts for filtering
+            'cities' => [], //Initially empty, will be populated based on selected district
+            'industries' => $this->model('AdminModel')->getIndustries()['data'], // Get industries for filtering
         ];
 
         $this->view('pages/student/company', $data);

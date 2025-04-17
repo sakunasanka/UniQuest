@@ -80,6 +80,27 @@ class Filter
         return $filterHtml;
     }
 
+    public function renderFilterComp(array $industries, array $districts, array $cities, array $ratings)
+    {
+        $filtersApplied = $this->filtersApplied ? 'true' : 'false';
+
+        $filterHtml = "<div class='filter-container' data-filters-applied='$filtersApplied'>";
+        $filterHtml .= "<form id='filterForm' class='filter-form' method='GET' action='#'>";
+
+        $filterHtml .= $this->renderSelectFilter('industry', 'All Industries', $industries, $this->industry);
+        $filterHtml .= $this->renderSelectFilter('district', 'All Districts', $districts, $this->district);
+        $filterHtml .= $this->renderSelectFilter('city', 'All Cities', $cities, $this->city);
+        // $filterHtml .= $this->renderSelectFilter('rating', 'All Ratings', $ratings, $this->rating);
+        $filterHtml .= "<div>";
+        $filterHtml .= "<button type='button' id='applyFilters' class='apply-filter-button'>Apply</button>";
+        $filterHtml .= "<a href='" . htmlspecialchars($this->baseUrl, ENT_QUOTES, 'UTF-8') . "' class='clear-filter-button'>Clear</a>";
+        $filterHtml .= "</div>";
+        $filterHtml .= "</form>";
+        $filterHtml .= "</div>";
+
+        return $filterHtml;
+    }
+
     private function renderSelectFilter($name, $defaultLabel, array $options, $selectedValue)
     {
         $html = "<select class='filter' name='$name'>";

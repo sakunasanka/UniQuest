@@ -39,7 +39,7 @@ class M_jobpost extends Model
 
     public function getpostbycompanyid($companyId)
     {
-        $this->db->query('SELECT * FROM v_companies WHERE v_companies.CompanyID = :id');
+        $this->db->query('SELECT * FROM v_company WHERE v_company.CompanyID = :id');
         $this->db->bind(':id', $companyId);
         $row = $this->db->single();
         return $row;
@@ -193,12 +193,6 @@ class M_jobpost extends Model
         }
     }
 
-    /**
-     * Convert filters array to database conditions
-     * 
-     * @param array $filters The filters array
-     * @return array Array of conditions ready for the select method
-     */
     protected function buildFilterConditions(array $filters = []): array
     {
         $conditions = [];
@@ -279,14 +273,22 @@ class M_jobpost extends Model
         }
     }
 
-    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
+    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
     {
         try {
             $conditions = [
                 ['Status', '=', 'Active'],
-                ['Category', '=', 'Internship'],
-                [$searchBy, 'LIKE', $search . '%']
+                ['Category', '=', 'Internship']
             ];
+
+            // Add search condition if search term exists
+            if (!empty($search)) {
+                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+            }
+
+            // Add filter conditions
+            $filterConditions = $this->buildFilterConditions($filters);
+            $conditions = array_merge($conditions, $filterConditions);
 
             $interns = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $interns;

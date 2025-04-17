@@ -39,7 +39,7 @@
     <div class="content-area">
         <div class="job-description">
             <h2><?php echo $data['post']->Title; ?></h2>
-            <p><?php echo $data['post']->Location; ?></p>
+            <p><?php echo $data['post']->City; ?></p>
             <h3>Description:</h3>
             <ul>
             <?php
@@ -192,7 +192,7 @@
                 
                 <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
-                <p><?php echo $data['post']->Location; ?></p>
+                <p><?php echo $data['post']->City; ?></p>
                 <table class="table">
                     <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                     <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>

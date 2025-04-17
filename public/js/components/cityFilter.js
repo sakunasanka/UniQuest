@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to fetch cities
     async function fetchCities(districtID, selectCity = null) {
         citySelect.disabled = true;
-        citySelect.innerHTML = '<option value="">Loading cities...</option>';
+        // citySelect.innerHTML = '<option value="">Loading cities...</option>';
 
         try {
             const response = await fetch('/UniQuest/jobs/getCitiesByDistrict', {
