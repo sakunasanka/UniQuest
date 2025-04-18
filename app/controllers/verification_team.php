@@ -311,56 +311,39 @@ class Verification_team extends Controller
 
     public function contact_admin()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         // Check if a user ID was submitted via POST
+         if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
+        $messages_admin = $this->model('ContactModel')->getMessagesAdmin();
 
-            // Data for the contact form
-            $data = [
-                'email' => trim($_POST['email'] ?? ''),
-                'topic' => trim($_POST['topic'] ?? ''),
-                'message' => trim($_POST['message'] ?? ''),
-
-                'email_err' => '',
-                'topic_err' => '',
-                'message_err' => ''
-            ];
-
-            // Validation checks
-            if (empty($data['email'])) {
-                $data['name_err'] = 'Please enter your email';
+        // Initialize data with the message list
+        $data = [
+            'messages_admin' => $messages_admin,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
             }
-
-            if (empty($data['topic'])) {
-                $data['topic_err'] = 'Please select a topic';
-            }
-
-            if (empty($data['message'])) {
-                $data['message_err'] = 'Please enter your message';
-            }
-
-            // Ensure no errors before submitting
-            if (empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
-                if($this->model('ContactModel')->sendMessage($data)){
-                    flash('contact-msg', 'Your message has been sent successfully.');
-                    redirect('verification_team/contact_admin');
-                } else {
-                    die('Something went wrong. Please try again.');
-                }
-            } else {
-                $this->view('pages/verification_team/contact_admin', $data);
-            }
-        } else {
-            // Initialize default data for the view on GET request
-            $data = [
-                'email' => '',
-                'topic' => '',
-                'message' => '',
-                'email_err' => '',
-                'topic_err' => '',
-                'message_err' => ''
-            ];
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
 
         $this->view('pages/verification_team/contact_admin', $data);
-        }
     }
-}
+ }
+
