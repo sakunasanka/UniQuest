@@ -46,7 +46,7 @@ if (!isset($_SESSION['user_role'])) {
                 <?php endif; ?>
                 <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
-                        <div class="card-logo" onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)">
+                        <div class="card-logo" onclick="goToCompanyDescription(<?php echo $post->UserID; ?>)">
                             <img
                                 src="<?php echo empty($post->CompanyLogo)
                                             ? URLROOT . '/images/profile_pic_preview.png'
@@ -54,14 +54,14 @@ if (!isset($_SESSION['user_role'])) {
                                 alt="Profile Picture">
                         </div>
                         <div class="card-content">
-                            <div class="content-hover-class" onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)">
+                            <div class="content-hover-class" onclick="goToCompanyDescription(<?php echo $post->UserID; ?>)">
                                 <div class="title-content">
                                     <h3 class="company-title"><?php echo $post->CompanyName; ?></h3>
                                     <div class="job-rating">
                                         <i class="fa fa-star"></i>
                                         <?php
-                                        if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
-                                            echo round($data['displayRatings'][$post->CompanyID], 2);
+                                        if (isset($data['displayRatings'][$post->UserID]) && $data['displayRatings'][$post->UserID] != 0) {
+                                            echo round($data['displayRatings'][$post->UserID], 2);
                                         } else {
                                             echo 'N/A';
                                         }
@@ -77,12 +77,12 @@ if (!isset($_SESSION['user_role'])) {
 
                             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
                                 <div class="card-icons">
-                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
-                                    <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->UserID; ?>)"></i>
+                                    <i class="<?php echo in_array($post->UserID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->UserID; ?>, this);"></i>
                                 </div>
                             <?php else: ?>
                                 <div class="card-icons">
-                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->UserID; ?>)"></i>
                                 </div>
                             <?php endif; ?>
                         </div>

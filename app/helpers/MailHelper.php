@@ -224,4 +224,46 @@ class MailHelper
 
         return self::sendEmail($toEmail, '', $subject, $template);
     }
+
+    //send email to notify company that their job post has been approved
+    public static function sendEmailJobApproved($toEmail, $toName, $title, $publishDate)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR .'emails' . DIRECTORY_SEPARATOR . 'job_approved.html');
+        //create link
+        $link = URLROOT . '/';//TODO: change to company dashboard page
+
+        //replace placeholders
+        $template = str_replace('{{dashboard_link}}', $link, $template);
+        $template = str_replace('{{company_name}}', $toName, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+        $template = str_replace('{{publish_date}}', $publishDate, $template);
+        $template = str_replace('{{job_title}}', $title, $template); 
+
+        $subject = "Job Post Approved";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
+
+    //send email to notify student that their job post has been rejected with reason
+    public static function sendEmailJobRejected($toEmail, $toName, $title, $reason)
+    {
+        //load template
+        $template = file_get_contents(TEMPLATEROOT . DIRECTORY_SEPARATOR . 'emails' . DIRECTORY_SEPARATOR . 'job_rejected.html');
+        //create link
+        $contactLink = URLROOT . '/contact';//TODO: change to contact admin page
+        $editLink = URLROOT . '/register';//TODO: change to resubmit registration page
+
+        //replace placeholders
+        $template = str_replace('{{company_name}}', $toName, $template);
+        $template = str_replace('{{rejection_reason}}', $reason, $template);
+        $template = str_replace('{{year}}', date('Y'), $template);
+        $template = str_replace('{{contact_admin_link}}', $contactLink, $template);
+        $template = str_replace('{{edit_link}}', $editLink, $template);
+        $template = str_replace('{{job_title}}', $title, $template);
+
+        $subject = "Job Post Rejected";
+
+        return self::sendEmail($toEmail, $toName, $subject, $template);
+    }
 }

@@ -50,7 +50,7 @@ class userModel extends Model
         return $conditions;
     }
 
-    public function getcompany($pageNumber = 1, $rowsPerPage = 12, $sort = "CompanyID", $order = "DESC", $search = '', $searchBy = 'CompanyName', array $filters = [])
+    public function getcompany($pageNumber = 1, $rowsPerPage = 12, $sort = "UserID", $order = "DESC", $search = '', $searchBy = 'CompanyName', array $filters = [])
     {
         try {
             // Base conditions

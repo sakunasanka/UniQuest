@@ -28,10 +28,10 @@
 
             <div class="view-card-content">
                 <h1><?php echo $data['job']->Title ?></h1>
-                <span><?php echo $data['job']->City ?></span>
-                <span><?php echo $data['job']->SalaryRange ?></span>
+                <span><?php echo $data['job']->District ?>, <?php echo $data['job']->City ?></span>
+                <span>Rs.<?php echo $data['job']->SalaryRange ?></span>
                 <div class="description">
-                        <p><?php echo $data['job']->Description ?></p>
+                    <p><?php echo $data['job']->Description ?></p>
                 </div>
                 <div class="view-card-info">
                     <div>
