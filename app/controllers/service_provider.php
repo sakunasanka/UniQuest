@@ -303,7 +303,7 @@ class Service_provider extends Controller
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -312,9 +312,10 @@ class Service_provider extends Controller
 
         // Access the first element of the $application array
         $application = $application[0];
-
+        
         // Prepare the application data
         $applicationData = [
+            'jobID' => $application->JobID ?? null,
             'photo' => $application->StudentProfileImage ?? null,
             'fullname' => $application->StudentName ?? null,
             'id' => $application->ApplicationID ?? null,
@@ -334,12 +335,18 @@ class Service_provider extends Controller
             'linkedin' => $application->linkedin ?? null,
             'other1' => $application->other1 ?? null,
             'other2' => $application->other2 ?? null,
-            'other3' => $application->other3 ?? null
+            'other3' => $application->other3 ?? null,
+            'other1_type' => $application->other1_type ?? null,
+            'other2_type' => $application->other2_type ?? null,
+            'other3_type' => $application->other3_type ?? null,
         ];
 
         $data = [
             'application' => $applicationData,
         ];
+        $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
+
+        $data['fields'] = $fields;
 
         // Load the view
         $this->view('pages/service_provider/view_application', $data);
