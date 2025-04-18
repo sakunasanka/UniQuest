@@ -363,15 +363,18 @@ class userModel extends Model
 
                 case 'Company':
                     $companyData = [
-                        'CompanyName' => $data['companyName'] ?? null,
-                        'StreetNo' => $data['streetNo'] ?? null,
-                        'AddressLine1' => $data['addressLine1'] ?? null,
-                        'AddressLine2' => $data['addressLine2'] ?? null,
-                        'City' => $data['city'] ?? null,
-                        'CompanyLogo' => $data['companyLogoName'] ?? null,
-                        'Description' => $data['description'] ?? null,
-                        'Website' => $data['website'] ?? null,
-                        'Industry' => $data['industry'] ?? null
+                        'CompanyName' => $data['companyName'],
+                        'Description' => $data['description'],
+                        'CompanyLogo' => $data['companyLogoName'],
+                        'StreetNo' => $data['streetNo'],
+                        'AddressLine1' => $data['addressLine1'],
+                        'AddressLine2' => $data['addressLine2'],
+                        'DistrictID' => $data['districtID'],
+                        'CityID' => $data['cityID'],
+                        'IndustryID' => $data['industryID'],
+                        'Website' => $data['website'],
+                        'LinkedIn' => $data['linkedin'],
+                        'Facebook' => $data['facebook']
                     ];
                     if (!$this->update('company', $companyData, ['CompanyID' => $data['userID']])) {
                         $this->db->rollBack();

@@ -89,7 +89,7 @@ class Register extends Controller
             'status' => 'Pending',
             'industries' => $this->model('AdminModel')->getIndustries()['data'],
             'districts' => $this->model('AdminModel')->getDistricts()['data'],
-            'cities' => $this->model('AdminModel')->getCitiesByDistrict(1)['data'],
+            'cities' => [],
 
             // Error fields
             'companyName_err' => '',

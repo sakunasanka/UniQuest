@@ -303,9 +303,9 @@ class Validator
                 $errors['addressLine1_err'] = 'Address line 1 is required';
             }
 
-            if (self::isEmpty($data['city'])) {
-                $errors['city_err'] = 'City is required';
-            }
+            // if (self::isEmpty($data['city'])) {
+            //     $errors['city_err'] = 'City is required';
+            // }
         }
 
         // If there are no errors, return true; otherwise, return the errors
