@@ -21,7 +21,7 @@
                         <th onclick="sortTable(2)">Location</th>
                         <th onclick="sortTable(3)">Date</th>
                         <th onclick="sortTable(4)">Status</th>
-                        <!-- <th class="no-sort">Actions</th> -->
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +46,7 @@
                     <?php endif; ?>
                 </td>
                 <td class="action">
-                    <a href="<?php echo URLROOT; ?>/student/application_details/<?php echo $application->ApplicationID; ?>">
+                    <a href="<?php echo URLROOT; ?>/student/view_application/<?php echo $application->ApplicationID; ?>">
                         <span class="material-symbols-outlined action-btn view">
                             preview
                         </span>

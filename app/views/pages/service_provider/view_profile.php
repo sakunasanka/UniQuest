@@ -102,7 +102,7 @@ if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subs
             </div>
         </div>
         <div class="view-card-2">
-            <div class="reviews-section">
+            <div class="reviews-section" id="reviews-section">
                 <h4>Reviews and Ratings about this company</h4>
 
                 <?php if (!empty($data['reviews'])): ?>
