@@ -200,9 +200,11 @@ body {
     font-size: 16px;
     color: #333;
     max-width: 200px;
-    /* flex: 1; */
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 
 .view-card-info div span {
     display: block;
