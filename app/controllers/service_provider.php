@@ -17,21 +17,41 @@ class Service_provider extends Controller
     private function prepareEditProfileData($post = [], $files = [])
     {
         $user = $this->model->getUserDetails($_SESSION['user_id']);
-        return $data = [
+
+        // Normalize and validate URLs using the helper
+        $urlResults = URLNormalizer::validateAndNormalizeUrls([
+            'website' => $post['website'] ?? '',
+            'facebook' => $post['facebook'] ?? '',
+            'linkedin' => $post['linkedin'] ?? '',
+        ]);
+
+        // Use normalized or fallback to user's current data
+        $website = $urlResults['website'] ?: ($user['Website'] ?? '');
+        $facebook = $urlResults['facebook'] ?: ($user['Facebook'] ?? '');
+        $linkedin = $urlResults['linkedin'] ?: ($user['LinkedIn'] ?? '');
+
+        return [
             'userID' => $user['UserID'],
             'companyName' => ucfirst(trim($post['companyName'] ?? $user['CompanyName'])),
             'contactNo' => trim($post['contactNo'] ?? $user['ContactNo']),
-            'streetNo' => trim($post['streetNo'] ?? $user['StreetNo']),
-            'addressLine1' => trim($post['addressLine1'] ?? $user['AddressLine1']),
-            'addressLine2' => trim($post['addressLine2'] ?? $user['AddressLine2']),
-            'city' => ucfirst(trim($post['city'] ?? $user['City'])),
+            'streetNo' => ucfirst(trim($post['streetNo'] ?? $user['StreetNo'])),
+            'addressLine1' => ucfirst(trim($post['addressLine1'] ?? $user['AddressLine1'])),
+            'addressLine2' => ucfirst(trim($post['addressLine2'] ?? $user['AddressLine2'])),
+            'districtID' => trim($post['districtID'] ?? $user['DistrictID']),
+            'cityID' => trim($post['cityID'] ?? $user['CityID']),
+            'industryID' => trim($post['industryID'] ?? $user['IndustryID']),
             'companyLogo' => $files['companyLogo'] ?? $user['CompanyLogo'],
             'companyLogoName' => $files['companyLogoName'] ?? $user['CompanyLogo'],
-            'description' => trim($post['description'] ?? $user['Description']),
-            'industry' => trim($post['industry'] ?? $user['Industry']),
-            'website' => trim($post['website'] ?? $user['Website']),
+            'description' => ucfirst(trim($post['description'] ?? $user['Description'])),
+            'website' => $website,
+            'linkedin' => $linkedin,
+            'facebook' => $facebook,
             'role' => $_SESSION['user_role'],
+            'industries' => $this->model('AdminModel')->getIndustries()['data'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'],
+            'cities' => [],
 
+            // Error fields
             'companyName_err' => '',
             'contactNo_err' => '',
             'streetNo_err' => '',
@@ -41,9 +61,12 @@ class Service_provider extends Controller
             'companyLogo_err' => '',
             'description_err' => '',
             'industry_err' => '',
-            'website_err' => ''
+            'website_err' => $urlResults['website_err'],
+            'linkedin_err' => $urlResults['linkedin_err'],
+            'facebook_err' => $urlResults['facebook_err']
         ];
     }
+
 
     public function index()
     {

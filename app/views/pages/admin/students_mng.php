@@ -9,7 +9,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <?php $columns = [
-            "UserID" => "UserID",
+            "FullName" => "Full Name",
             "Email" => "Email",
             "ContactNo" => "Mobile Number",
             "RegisterDate" => "Registered Date",
@@ -36,7 +36,7 @@
                     <?php if ($data['students']) : ?>
                         <?php foreach ($data['students'] as $student) : ?>
                             <tr>
-                            <td><?php echo $student->UserID; ?></td>
+                            <td><?php echo $student->FullName; ?></td>
                             <td><?php echo $student->Email; ?></td>
                             <td><?php echo $student->ContactNo; ?></td>
                             <td><?php echo substr($student->RegisterDate, 0, 10); ?></td>

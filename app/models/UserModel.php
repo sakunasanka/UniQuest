@@ -109,8 +109,9 @@ class userModel extends Model
                 'StreetNo' => $data['streetNo'],
                 'AddressLine1' => $data['addressLine1'],
                 'AddressLine2' => $data['addressLine2'],
-                'City' => $data['city'],
-                'Industry' => $data['industry'],
+                'DistrictID' => $data['districtID'],
+                'CityID' => $data['cityID'],
+                'IndustryID' => $data['industryID'],
                 'Website' => $data['website'],
                 'LinkedIn' => $data['linkedin'],
                 'Facebook' => $data['facebook'],
@@ -268,7 +269,7 @@ class userModel extends Model
             // Determine the role and fetch additional details
             $roleTables = [
                 'Student' => ['table' => 'Student', 'ID' => 'StudentID'],
-                'Company' => ['table' => 'Company', 'ID' => 'CompanyID'],
+                'Company' => ['table' => 'v_company', 'ID' => 'UserID'],
                 'VT-Member' => ['table' => 'VerificationTeam', 'ID' => 'VT_MemberID'],
                 'Admin' => ['table' => 'Admin', 'ID' => 'AdminID']
             ];
@@ -293,6 +294,34 @@ class userModel extends Model
             return false;
         }
     }
+
+    // public function getUserDetailsView($role, $userId)
+    // {
+    //     try {
+    //         // Define view and columns per role
+    //         $roleMap = [
+    //             'Student'    => ['view' => 'v_student',    'columns' => '*'],
+    //             'Company'    => ['view' => 'v_company',    'columns' => '*'],
+    //             'VT-Member'  => ['view' => 'v_vtmember',   'columns' => '*'],
+    //             'Admin'      => ['view' => 'v_admin',      'columns' => '*'],
+    //         ];
+
+    //         // Check if role is valid
+    //         if (!isset($roleMap[$role])) {
+    //             throw new Exception("Invalid role specified: " . $role);
+    //         }
+
+    //         // Fetch user details
+    //         $userDetails = $this->select($roleMap[$role]['view'], [['UserID', '=', $userId]], $roleMap[$role]['columns']);
+    //         return $userDetails;
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("General Error: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     public function updateProfile($data)
     {
@@ -334,15 +363,18 @@ class userModel extends Model
 
                 case 'Company':
                     $companyData = [
-                        'CompanyName' => $data['companyName'] ?? null,
-                        'StreetNo' => $data['streetNo'] ?? null,
-                        'AddressLine1' => $data['addressLine1'] ?? null,
-                        'AddressLine2' => $data['addressLine2'] ?? null,
-                        'City' => $data['city'] ?? null,
-                        'CompanyLogo' => $data['companyLogoName'] ?? null,
-                        'Description' => $data['description'] ?? null,
-                        'Website' => $data['website'] ?? null,
-                        'Industry' => $data['industry'] ?? null
+                        'CompanyName' => $data['companyName'],
+                        'Description' => $data['description'],
+                        'CompanyLogo' => $data['companyLogoName'],
+                        'StreetNo' => $data['streetNo'],
+                        'AddressLine1' => $data['addressLine1'],
+                        'AddressLine2' => $data['addressLine2'],
+                        'DistrictID' => $data['districtID'],
+                        'CityID' => $data['cityID'],
+                        'IndustryID' => $data['industryID'],
+                        'Website' => $data['website'],
+                        'LinkedIn' => $data['linkedin'],
+                        'Facebook' => $data['facebook']
                     ];
                     if (!$this->update('company', $companyData, ['CompanyID' => $data['userID']])) {
                         $this->db->rollBack();
@@ -561,27 +593,38 @@ class userModel extends Model
     public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
     {
         try {
-            // Conditions for the query
-            $conditions = [
-                ['Status', 'IN', ['Active', 'Deactive']], // Use IN clause for Status
-                ['Role', '=', $role], // Use simple equality for Role
-                [$searchBy, 'LIKE', $search . '%'] // Use LIKE for search
+            // Define view and columns per role
+            $roleMap = [
+                'Student'    => ['view' => 'v_student',    'columns' => 'UserID, FullName, Email, ContactNo, RegisterDate, Status, Role'],
+                'Company'    => ['view' => 'v_company',    'columns' => 'UserID, CompanyName, Email, ContactNo, RegisterDate, Status, Role'],
+                'VT-Member'  => ['view' => 'v_vtmember',   'columns' => 'UserID, FullName, Email, ContactNo, RegisterDate, Status, Role'],
+                'Admin'      => ['view' => 'v_admin',      'columns' => 'UserID, FullName, Email, ContactNo, RegisterDate, Status, Role'],
             ];
 
-            // Fetch users using the select method
-            $users = $this->select(
-                'User', // Table name
-                $conditions, // Conditions array
-                'UserID, Email, ContactNo, RegisterDate, Status', // Columns to select
-                'AND', // Logical operator (AND between conditions)
-                '', // No GROUP BY
-                $sort . ' ' . $order, // ORDER BY
-                $rowsPerPage, // LIMIT
-                $pageNumber, // Page number
-                true // Fetch all results
-            );
+            // Check if role is valid
+            if (!isset($roleMap[$role])) {
+                throw new Exception("Invalid role specified: " . $role);
+            }
 
-            return $users;
+            // Define conditions
+            $conditions = [
+                ['Status', 'IN', ['Active', 'Deactive']],
+                // ['Role', '=', $role],
+                [$searchBy, 'LIKE', $search . '%']
+            ];
+
+            // Perform select
+            return $this->select(
+                $roleMap[$role]['view'],
+                $conditions,
+                $roleMap[$role]['columns'],
+                'AND',
+                '',
+                "$sort $order",
+                $rowsPerPage,
+                $pageNumber,
+                true
+            );
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
@@ -590,6 +633,7 @@ class userModel extends Model
             return false;
         }
     }
+
 
     public function getCountRegisteredUsers($role)
     {
