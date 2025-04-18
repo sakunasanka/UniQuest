@@ -1,11 +1,30 @@
 <?php 
-require APPROOT . '/views/components/ser_header.php'; 
+    if ($_SESSION['user_role'] == 'Student') {
+        require APPROOT . '/views/components/stu_header.php';
+    } else if ($_SESSION['user_role'] == 'Company') {
+        require APPROOT . '/views/components/ser_header.php';
+    } 
+    else if ($_SESSION['user_role'] == 'Admin') {
+        require APPROOT . '/views/components/adm_header.php';
+    }
+    else if ($_SESSION['user_role'] == 'VT-Member') {
+        require APPROOT . '/views/components/ver_header.php';
+    }
 ?>
+
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/viewApplication.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="main-container">
-    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
+        <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>
+        <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
+        <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+    <?php endif; ?> 
 
     <div class="content-area">
         <div class="header">
@@ -355,7 +374,7 @@ require APPROOT . '/views/components/ser_header.php';
             <?php endif; ?>
 
             <!-- Footer with Action Buttons -->
-            <?php if($data['application']['status'] == 'Pending'):?>
+            <?php if($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Pending'):?>
                 <div class="actions-section">
                     <button class="action-button reject-button" onclick="handleStatusChange('Rejected')">
                         <i class="fas fa-times-circle"></i> Reject

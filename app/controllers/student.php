@@ -989,87 +989,57 @@ class Student extends Controller
         $this->view('pages/login/deactivate_stu');
     }
   
-    // public function jobsDescription($id){
-        
-    //     if (isset($_SESSION['user_id'])) {
-    //         $userId = $_SESSION['user_id']; 
-    //     }
-    //     else {
-    //         $userId = null;
-    //         $bookmarkedJobs = []; // No bookmarks if not logged in
-    //         $posts = [];
-    //         $posts_com_id = [];
-    //         $reviews = [];
-    //     }    
-    
-    //     // Get bookmarked jobs for the user
-    //     $posts = $this->model('M_jobpost')->getpostbyid($id);
-        
-    //     if ($posts->Category == 'Internship') {
-    //         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);         
-    //     } 
-    //     else {
-    //         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-    //     }    
-    //     $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-    //     $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
-    //     $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-         
-        
+    public function view_application($applicationID)
+    {
+        // Fetch application details
+        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
 
-    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //         $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    
-    //         $data =[
-    //             'post' => $posts,
-    //             'post_com' => $posts_com_id,
-    //             'bookmarkedJobs' => $bookmarkedJobs,
-    //             'bookmarkedJobIds' => $bookmarkedJobIds,
-    //             'reviews' => $reviews,
-    //             'rating' => $_POST['rating'] ?? '',
-    //             'comment' => trim($_POST['comment'] ?? ''),
-    //             'user_id' => $_POST['user_id'] ?? '',
-    //             'company_id' => $_POST['company_id'] ?? '',
-    //             'rating_err' => '',
-    //             'comment_err' => ''
-    //         ];
-    //         if (empty($data['rating'])) {
-    //             $data['rating_err'] = 'Please provide a rating.';
-    //         }
-    //         if (empty($data['comment'])) {
-    //             $data['comment_err'] = 'Please provide a comment.';
-    //         }
+        if (!$application) {
+            // Handle the case where the application is not found
+            redirect('error/not_found');
+        }
 
-    //         // Check for errors
-    //         if (empty($data['rating_err']) && empty($data['comment_err'])) {
-    //             if ($this->model('RateAndReviewModel')->addReview($data)) {
-    //                 Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']); //To be corrected
-    //             } else {
-    //                 die('Something went wrong'); // Improved error handling suggested
-    //             }
-    //         } else {
-    //             // Load view with errors
-    //             $this->view('pages/student/rate_review_company', $data);
-    //         }
-    //     } else {
-    //         $data = [
-    //             'post' => $posts,
-    //             'post_com' => $posts_com_id,
-    //             'bookmarkedJobs' => $bookmarkedJobs,
-    //             'bookmarkedJobIds' => $bookmarkedJobIds,
-    //             'reviews' => $reviews,
-    //             'rating' => '',
-    //             'comment' => '',
-    //             'user_id' => '',
-    //             'company_id' => $posts->CompanyID,
-    //             'rating_err' => '',
-    //             'comment_err' => ''
-    //         ];
+        // Access the first element of the $application array
+        $application = $application[0];
+        
+        // Prepare the application data
+        $applicationData = [
+            'jobID' => $application->JobID ?? null,
+            'photo' => $application->StudentProfileImage ?? null,
+            'fullname' => $application->StudentName ?? null,
+            'id' => $application->ApplicationID ?? null,
+            'created_at' => $application->SubmissionDate ?? null,
+            'status' => $application->ApplicationStatus ?? null,
+            'email' => $application->StudentEmail ?? null,
+            'contact' => $application->StudentContact ?? null,
+            'address' => $application->address ?? null,
+            'nic' => $application->nic ?? null,
+            'gender' => $application->gender ?? null,
+            'dob' => $application->dob ?? null,
+            'qualifications' => $application->Qualifications ?? null,
+            'experience' => $application->Experience ?? null,
+            'skills' => $application->Skills ?? null,
+            'cv' => $application->cv ?? null,
+            'nic_copy' => $application->nic_copy ?? null,
+            'linkedin' => $application->linkedin ?? null,
+            'other1' => $application->other1 ?? null,
+            'other2' => $application->other2 ?? null,
+            'other3' => $application->other3 ?? null,
+            'other1_type' => $application->other1_type ?? null,
+            'other2_type' => $application->other2_type ?? null,
+            'other3_type' => $application->other3_type ?? null,
+        ];
 
-    //         $this->view('pages/student/jobsDescription', $data);
-    //     }    
-    
-    // }
+        $data = [
+            'application' => $applicationData,
+        ];
+        $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
+
+        $data['fields'] = $fields;
+
+        // Load the view
+        $this->view('pages/service_provider/view_application', $data);
+    }
 
     public function myreviews()
     {
