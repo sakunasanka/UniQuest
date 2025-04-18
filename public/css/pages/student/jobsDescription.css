@@ -489,3 +489,17 @@ p{
 .job-description  h2 {
     margin-bottom: -10px;
 }
+
+.liked .like-icon {
+    color: #299b63;
+}
+.disliked .dislike-icon {
+    color: #e74c3c;
+}
+
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}

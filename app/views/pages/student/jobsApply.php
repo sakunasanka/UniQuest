@@ -88,22 +88,35 @@
 
             <!-- Job Information Card -->
             <div class="job-card">
+                <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
+                    <div class="card-icons">
+                        <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>                     
+                        <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                    </div>
+                <?php else:?>
+                    <div class="card-icons">
+                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
+                    </div>
+                <?php endif;?> 
                 <div class="job-logo">
-                    <img src="<?php echo URLROOT; ?>/images/upeka.jpg" alt="Burger King Logo">
+                    <img src="<?php echo empty($data['post']->CompanyLogo)
+                                    ? URLROOT . '/images/profile_pic_preview.png'
+                                    : UPLOADROOT . '/profile_pictures/company/' . $data['post']->CompanyLogo; ?>"
+                        alt="Burger King Logo">
                 </div>
                 <div class="job-details">
-                    <h3>Female Promotion Assistant</h3>
-                    <p>Piliyandala</p>
-                    <p>Rs. 2500 (per day)</p>
-                    <p>2 hours ago</p>
-                    <p class="job-rating"><i class="fa fa-star"></i> 4.8</p>
-                    <p>Piliyandala</p>
-                    <table class="table">
-                        <tr><td>Education:</td><td>Ordinary Level</td></tr>
-                        <!-- <tr><td>Experience:</td><td>No Experience</td></tr> -->
-                        <tr><td>Salary Range:</td><td>Rs. 2500 (per day)</td></tr>
-                    </table>
+                    <h3><?php echo $data['post']->Title; ?></h3>
+                    <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                     
+                    <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+                    <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
+                    <p><?php echo $data['post']->Location; ?></p>
+                    <table class="table">
+                        <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
+                        <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
+                        <tr><td>Applicants:</td><td>26</td></tr>
+                    </table>
+
                     <div class="social-media-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -111,11 +124,16 @@
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-            </div>
+                <div class="buttons">
+                    <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
+                </div>
+            </div>  
         </div>
     </div>
 
 </div>
+
+<?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>
 document.querySelector("form").addEventListener("submit", function(event) {
@@ -216,6 +234,70 @@ function showError(input, message) {
     errorElement.style.display = "block";
     input.style.borderColor = "red";
 }
-</script>  
+    
+function goToMakeComplaint(jobId) {
+    window.location.href = "/UniQuest/student/make_complain/" + jobId;
+}
 
-<?php require APPROOT . '/views/components/footer.php'; ?>
+function goToApplyPage(jobId) {
+    window.location.href = "/UniQuest/student/jobsApplyform/" + jobId;
+}
+
+function goToReport(jobId) {
+    window.location.href = "/UniQuest/service_provider/report/" + jobId;
+}
+
+function toggleBookmark(icon, jobId) {
+icon.classList.toggle("fa-regular");
+icon.classList.toggle("fa-solid");
+icon.classList.toggle("icon-active");
+}
+
+// Function to bookmark a job
+function bookmarkJob(jobId, iconElement) {
+    // Create a new FormData object to send the jobId
+    const formData = new FormData();
+    formData.append('job_id', jobId); // Append the job ID to the request data
+
+    // Create a new XMLHttpRequest to send the data to the server
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo URLROOT; ?>/jobs/toggleBookmark', true);
+
+    // Set up the callback for when the request completes
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
+        } else {
+            alert('Failed to bookmark the job.');
+        }
+    };
+
+    // Send the request with the form data
+    xhr.send(formData);
+}
+
+function shareJob(jobId, jobType) {
+    const jobURL = `${window.location.origin}/UniQuest/jobs/jobsdescription/${jobId}`;
+    
+    navigator.clipboard.writeText(jobURL).then(() => {
+        if (jobType === 'Part-time') {
+            Flash.show('Job link copied to clipboard!', 'success');
+        } else if (jobType === 'Internship') {
+            Flash.show('Internship link copied to clipboard!', 'success');
+        } else {
+            Flash.show('Link copied to clipboard!', 'success');
+        }
+    }).catch(err => {
+        Flash.show('Failed to copy link', 'error');
+    });
+}
+
+function goToCompanyDescription($companyID) {
+    window.location.href = "/UniQuest/jobs/companydescription/"+$companyID;
+}
+
+function goToApplications(jobId) {
+    window.location.href = "/UniQuest/service_provider/new_applications/" + jobId;
+}
+</script>

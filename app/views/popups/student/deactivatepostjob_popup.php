@@ -5,25 +5,26 @@
         <div class="overlay"></div>
         <div class="content">
         <div class="close-btn-container"><button class="close-btn" onclick="closedeletereviewconfirm()"><i class="fa fa-times"></i></button></div>
-            <h2>Delete post</h2>
+            <h2>Deactivate post</h2>
             <input type="hidden" id="postID">
-            <form action="<?php echo URLROOT; ?>/service_provider/delete" id="delete-post-form" method="POST">
+            <form action="<?php echo URLROOT; ?>/service_provider/deactivate" id="delete-post-form" method="POST">
                 <input type="hidden" id="postID">
                 <div class="warning">
-                    <p>Are you sure you want to delete your post?<br>
-                        Once you delete your post, you can't recover it.</p>
+                    <p>Are you sure you want to deactivate your post?<br>
+                        Once you deactivate your post, you can still view it in Offered Jobs.<br>
+                        If you want to delete it forever, delete from offered jobs.</p>
                 </div>
                 <label>
                     <input type="checkbox" name="confirm" value="yes" required>
-                    <div class="label-text">I confirm my post deletion</div>
+                    <div class="label-text">I confirm my post deactivation</div>
                 </label>
                 <div class="buttons">
                     <a onclick="canceldeletereviewconfirm()" href="#" class="cancel-btn">Cancel</a>
-                  <button type="submit" class="delete-btn">Delete post</button>
+                  <button type="submit" class="delete-btn">Deactivate post</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<script src="<?php echo URLROOT; ?>/public/js/student/delete_postjob.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/student/deactivate_postjob.js"></script>

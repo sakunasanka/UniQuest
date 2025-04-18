@@ -4,5 +4,5 @@
     <h1>403</h1>
     <h2>Forbidden.</h2>
     <p>Access to this page or resource on the server is deneid!.</p>
-    <a href="/uniquest/home" class="home-button">Go to Home Page</a>
+    <a href="/UniQuest/home" class="home-button">Go to Home Page</a>
 </div>

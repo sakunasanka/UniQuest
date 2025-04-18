@@ -1,18 +1,15 @@
-<?php 
-    if (!isset($_SESSION['user_role'])) {
-        require APPROOT . '/views/components/header.php';
-    }
-    else if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/stu_header.php';
-    } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/ser_header.php';
-    } 
-    else if ($_SESSION['user_role'] == 'Admin') {
-        require APPROOT . '/views/components/adm_header.php';
-    }
-    else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ver_header.php';
-    }
+<?php
+if (!isset($_SESSION['user_role'])) {
+    require APPROOT . '/views/components/header.php';
+} else if ($_SESSION['user_role'] == 'Student') {
+    require APPROOT . '/views/components/stu_header.php';
+} else if ($_SESSION['user_role'] == 'Company') {
+    require APPROOT . '/views/components/ser_header.php';
+} else if ($_SESSION['user_role'] == 'Admin') {
+    require APPROOT . '/views/components/adm_header.php';
+} else if ($_SESSION['user_role'] == 'VT-Member') {
+    require APPROOT . '/views/components/ver_header.php';
+}
 ?>
 
 <?php if (isset($_GET['pending'])): ?>
@@ -24,7 +21,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Get the popup element
             const popup = document.getElementById('pendingVerificationPopup');
-            
+
             // Show the popup
             if (popup) {
                 popup.style.display = 'block';
@@ -53,13 +50,18 @@
     <?php endif; ?>
 
     <div class="content-area">
-        <div class="tabs-header">
+        <!-- <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/jobs">Part Time Jobs</button>
             <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/internships">Internships</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/companies">Companies</button>
-        </div>
+        </div> -->
         <div class="container">
 
+            <?php $columns = [
+                'jobs_create_at' => 'Newest',
+                'Rating' => 'Highest Rating',
+                'SalaryRange' => 'Highest Salary'
+            ]; ?>
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
 
 
@@ -76,6 +78,9 @@
                 </div>
             </div> -->
             <div class="cards-container">
+                <?php if(empty($data['posts'])): ?>
+                    <div class="no-results">No results found.</div>
+                <?php endif; ?>
                 <form id="bookmarkForm" method="POST" action="<?php echo URLROOT; ?>/student/addBookmarkJob" class="hidden-form"></form>
                 <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
@@ -101,21 +106,21 @@
                                     </div>
                                 </div>
                                 <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
-                                <p class="job-salary"><?php echo 'Rs.'?><?php echo $post->SalaryRange; ?> <?php echo $post->SalaryType; ?></p>
+                                <p class="job-salary"><?php echo 'Rs.' ?><?php echo $post->SalaryRange; ?> <?php echo $post->SalaryType; ?></p>
                                 <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
 
                                 <div class="job-location-details">
-                                    <?php echo $post->Location; ?>
+                                    <?php echo $post->City; ?>
                                 </div>
                             </div>
                             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                                 <div class="card-icons">
-                                <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
                                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
                                 </div>
-                            <?php else:?>
+                            <?php else: ?>
                                 <div class="card-icons">
-                                <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -182,7 +187,7 @@
 
     function shareJob(jobId, jobType) {
         const jobURL = `${window.location.origin}/UniQuest/jobs/jobsdescription/${jobId}`;
-        
+
         navigator.clipboard.writeText(jobURL).then(() => {
             if (jobType === 'Part-time') {
                 Flash.show('Job link copied to clipboard!', 'success');

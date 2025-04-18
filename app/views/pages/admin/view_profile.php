@@ -17,7 +17,7 @@
                     <img
                         src="<?php echo empty($data['user']['ProfilePic'])
                                     ? URLROOT . '/images/profile_pic_preview.png'
-                                    : UPLOADROOT . '/profile_pictures/vT-Member/' . $data['user']['ProfilePic']; ?>"
+                                    : UPLOADROOT . '/profile_pictures/admin/' . $data['user']['ProfilePic']; ?>"
                         alt="Profile Picture">
                 </div>
                 <ul>

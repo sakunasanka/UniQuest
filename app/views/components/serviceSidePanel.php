@@ -20,19 +20,11 @@
             </div>
         </div>
 
-        <!-- Applications with Dropdown -->
-        <div class="nav-dropdown">
-            <button class="nav-btn dropdown-toggle">
-                <span class="material-symbols-outlined"> assignment </span>
-                Applications
-                <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
-            </button>
-            <div class="dropdown-menu">
-                <button class="nav-btn" data-path="/UniQuest/service_provider/new_applications">New Applications</button>
-                <button class="nav-btn" data-path="/UniQuest/service_provider/offered_applications">Offered Applications</button>
-                <button class="nav-btn" data-path="/UniQuest/service_provider/rejected_applications">Rejected Applications</button>
-            </div>
-        </div>
+        <!-- Application Dashboard -->
+        <button class="nav-btn" data-path="/UniQuest/service_provider/application_dashboard">
+            <span class="material-symbols-outlined"> assignment </span>
+            Application Dashboard
+        </button>
 
         <!-- Analytics -->
         <button class="nav-btn" data-path="/UniQuest/service_provider/analytics">
@@ -47,7 +39,7 @@
         </button>
 
         <!-- Trending companies -->
-        <button class="nav-btn" data-path="/uniquest/jobs/trendyCompany">
+        <button class="nav-btn" data-path="/UniQuest/jobs/trendyCompany">
             <span class="material-symbols-outlined"> trending_up </span>
             Trending Companies
         </button>

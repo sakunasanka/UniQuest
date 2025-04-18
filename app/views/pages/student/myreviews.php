@@ -14,7 +14,7 @@
             <div class="view-card view-card-2">
                 <div class="reviews-section">
                     <!-- Reviews on Main Page -->
-                    <?php foreach ($data['reviews'] as $review): ?>
+                    <?php foreach ($data['reviews'] as $index => $review): ?>
                         <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
                             <!-- Review Header: Company Name and Date -->
                             <div class="review-header">
@@ -27,17 +27,17 @@
                                 <span class="review-rating"><i class="fa fa-star"></i> <?php echo $review->Rating; ?></span>
                             </div>
                             <div class="review-details">
-                                <?php if (($_SESSION['user_role'] == 'Student') || ($_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
+                                <?php if (($_SESSION['user_role'] == 'Student') || ($_SESSION['user_role'] == 'Company')): ?>
                                     <div class="review-actions">
-                                        <button class="like-btn" data-id="<?php echo $review->ReviewID; ?>">
+                                        <button class="like-btn <?php echo $review->is_liked ? 'liked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined like-icon">thumb_up</span>
                                         </button>
-                                        <span class="like-count" data-id="<?php echo $review->ReviewID; ?>">0 likes</span>
+                                        <span class="like-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                                        <button class="dislike-btn" data-id="<?php echo $review->ReviewID; ?>">
+                                        <button class="dislike-btn <?php echo $review->is_disliked ? 'disliked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                         </button>
-                                        <span class="dislike-count" data-id="<?php echo $review->ReviewID; ?>">0 dislikes</span>
+                                        <span class="dislike-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
                                     </div>
                                     <div class="post-control-btn-row">
                                     <button class="post-control-btn edit" onclick="showEditReviewPopup(<?= $review->ReviewID ?>, <?= $review->Rating ?>, '<?= addslashes($review->Comment) ?>', <?= $review->CompanyID ?>)">EDIT</button> 

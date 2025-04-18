@@ -21,6 +21,8 @@ require_once 'helpers/LogHelper.php';
 require_once 'helpers/TokenHelper.php';
 require_once 'helpers/UniversityEmailValidator.php';
 require_once 'helpers/TableSearcher.php';
+require_once 'helpers/MainSearcher.php';
+require_once 'helpers/Filter.php';
 require_once 'helpers/URLNormalizer.php';
 
 

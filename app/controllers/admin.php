@@ -1079,6 +1079,8 @@ class Admin extends Controller
                 'user_deactivate' => $this->model('AdminModel')->getReasonsByType('user_deactivate')['data'],
                 'user_reject' => $this->model('AdminModel')->getReasonsByType('user_reject')['data'],
                 'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data'],
+                'job_activate' => $this->model('AdminModel')->getReasonsByType('job_activate')['data'],
+                'job_deactivate' => $this->model('AdminModel')->getReasonsByType('job_deactivate')['data'],
                 'industries' => $this->model('AdminModel')->getIndustries()['data']
             ];
             $this->view('pages/admin/app_settings', $data);

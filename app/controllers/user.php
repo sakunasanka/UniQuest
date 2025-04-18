@@ -302,6 +302,21 @@ class User extends Controller
             if ($user['Role'] === 'Student') {
                 $this->view('pages/student/view_profile', $data);
             } else if ($user['Role'] === 'Company') {
+                $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($_SESSION['user_id']);
+
+                foreach ($reviews as $review) {
+                    $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
+                    $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
+                    $review->DislikeCount = $this->model('RateAndReviewModel')->getDislikesByReviewID($review->ReviewID);
+                    $review->is_liked = $this->model('RateAndReviewModel')->checkIfLiked($review->ReviewID, $data['user']['UserID']);
+                    $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $data['user']['UserID']);
+                }
+
+                $companyData = $this->model('M_jobpost')->getpostbycompanyid($_SESSION['user_id']);
+
+                $data['reviews'] = $reviews;
+                $data['companyData'] = $companyData;
+
                 $this->view('pages/service_provider/view_profile', $data);
             } else if ($user['Role'] === 'Admin') {
                 $this->view('pages/admin/view_profile', $data); //TODO: Create admin profile view
@@ -364,6 +379,12 @@ class User extends Controller
                     // Hash new password
                     $hashed_password = password_hash($data['new_password'], PASSWORD_DEFAULT);
                     $this->model->changePassword($_SESSION['user_id'], $hashed_password);
+                    // Log password change
+                    LogHelper::logDebug('Password changed for user ID: ' . $_SESSION['user_id']);
+                    // Send email to notify user that their password has been changed
+                    // MailHelper::sendEmailPasswordChanged($user['Email'], $user['FirstName'] . ' ' . $user['LastName']);
+                    // Add user account log
+                    $this->model('AdminModel')->addUserAccountLog($_SESSION['user_id'], 'ChangePass', 14);
 
                     // Unset session variables
                     session_unset();
@@ -555,6 +576,10 @@ class User extends Controller
             $this->model->changePassword($userID, $hashed_password);
             //log the password change
             LogHelper::logDebug('Password reset for user ID: ' . $userID);
+            // send email to notify user that their password has been reset
+            // MailHelper::sendEmailPasswordReset($data['email'], $data['name']);
+            //add user account log
+            $this->model('AdminModel')->addUserAccountLog($userID, 'ResetPass', 13);
 
             return true;
         } catch (Exception $e) {

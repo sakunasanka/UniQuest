@@ -18,10 +18,56 @@ class userModel extends Model
             return false;
         }
     }
-    public function getcompany($pageNumber = 1, $rowsPerPage = 12)
+
+    protected function buildFilterConditions(array $filters = []): array
+    {
+        $conditions = [];
+
+        if (empty($filters)) {
+            return $conditions;
+        }
+
+        // District filter
+        if (!empty($filters['district'])) {
+            $conditions[] = ['District', '=', $filters['district']];
+        }
+
+        // City filter
+        if (!empty($filters['city'])) {
+            $conditions[] = ['City', '=', $filters['city']];
+        }
+
+        // Industry filter
+        if (!empty($filters['industry'])) {
+            $conditions[] = ['Industry', '=', $filters['industry']];
+        }
+
+        // Rating filter
+        if (!empty($filters['rating'])) {
+            $conditions[] = ['Rating', '>=', $filters['rating']];
+        }
+
+        return $conditions;
+    }
+
+    public function getcompany($pageNumber = 1, $rowsPerPage = 12, $sort = "CompanyID", $order = "DESC", $search = '', $searchBy = 'CompanyName', array $filters = [])
     {
         try {
-            $companies = $this->select('company', [], '*', 'AND', '', '', $rowsPerPage, $pageNumber, true);
+            // Base conditions
+            $conditions = [
+                ['Status', '=', 'Active']
+            ];
+
+            // Add search condition if search term exists
+            if (!empty($search)) {
+                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+            }
+
+            // Add filter conditions
+            $filterConditions = $this->buildFilterConditions($filters);
+            $conditions = array_merge($conditions, $filterConditions);
+
+            $companies = $this->select('v_company', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $companies;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -31,7 +77,7 @@ class userModel extends Model
             return false;
         }
     }
-    
+
     public function companyRegister(array $data)
     {
         try {
@@ -551,7 +597,7 @@ class userModel extends Model
         try {
             // Get users by role
             $users = $this->select('User', [['Role', '=', $role], ['Status', '=', 'Active']], 'COUNT(UserID) AS UserCount', 'AND', '', '', 0, true);
-            
+
             // Check if the result is an object and access the property correctly
             if (is_object($users)) {
                 return $users->UserCount;
@@ -701,7 +747,8 @@ class userModel extends Model
         }
     }
 
-    public function getUserLoginsByGender() {
+    public function getUserLoginsByGender()
+    {
         $this->db->query("SELECT 
                 gender, 
                 COUNT(*) AS logins

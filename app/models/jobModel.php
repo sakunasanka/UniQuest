@@ -79,141 +79,6 @@ class jobModel extends Model
         return $this->db->execute();
     }
 
-    public function get_likes_dislikes()
-    {
-        $this->db->query("SELECT * FROM review_likes");
-        return $this->db->resultSet();
-    }
-
-    public function getLikesByReviewID($reviewId) 
-    {
-        $this->db->query("SELECT likeCount FROM review_likes WHERE ReviewID = :reviewId");
-        $this->db->bind(':reviewId', $reviewId);
-        $row = $this->db->single();
-        return $row ? $row->likeCount : 0; 
-    }
-
-    public function getDislikesByReviewID($reviewId) 
-    {
-        $this->db->query("SELECT dislikeCount FROM review_likes WHERE ReviewID = :reviewId");
-        $this->db->bind(':reviewId', $reviewId);
-        $row = $this->db->single();
-        return $row ? $row->dislikeCount : 0; 
-    }
-
-    public function addUserLike($reviewId)
-    {
-        try {
-            // First check if already liked
-            if ($this->isLiked($reviewId)) {
-                return false;
-            }
-            
-            // Insert into is_liked table
-            $this->db->query("INSERT INTO is_liked (ReviewID, UserID) VALUES(:reviewId, :userId)");
-            $this->db->bind(':reviewId', $reviewId);
-            $this->db->bind(':userId', $_SESSION['user_id']);
-            $result1 = $this->db->execute();
-            
-            // Update like count
-            $this->db->query("UPDATE review_likes SET likeCount = likeCount + 1 WHERE ReviewID = :reviewId");
-            $this->db->bind(':reviewId', $reviewId);
-            $result2 = $this->db->execute();
-            
-            return $result1 && $result2;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    // Method to check if a review is liked by the user
-    public function isLiked($reviewId)
-    {
-        $this->db->query("SELECT COUNT(*) AS count FROM is_liked WHERE UserID = :userID AND ReviewID = :reviewId");
-        $this->db->bind(':userID', $_SESSION['user_id']);
-        $this->db->bind(':reviewId', $reviewId);
-        $row = $this->db->single();
-        return $row->count > 0;
-    }
-
-    public function removeLike($reviewId)
-    {
-        try {
-            // Delete from is_liked table
-            $this->db->query("DELETE FROM is_liked WHERE UserID = :userId AND ReviewID = :reviewId");
-            $this->db->bind(':userId', $_SESSION['user_id']);
-            $this->db->bind(':reviewId', $reviewId);
-            $result1 = $this->db->execute();
-            
-            // Update like count
-            $this->db->query("UPDATE review_likes SET likeCount = GREATEST(likeCount - 1, 0) WHERE ReviewID = :reviewId");
-            $this->db->bind(':reviewId', $reviewId);
-            $result2 = $this->db->execute();
-            
-            return $result1 && $result2;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function addUserDislike($reviewId)
-    {
-        try {
-            // First check if already disliked
-            if ($this->isDisliked($reviewId)) {
-                return false;
-            }
-            
-            // Insert into is_disliked table
-            $this->db->query("INSERT INTO is_disliked (ReviewID, UserID) VALUES(:reviewId, :userId)");
-            $this->db->bind(':reviewId', $reviewId);
-            $this->db->bind(':userId', $_SESSION['user_id']);
-            $result1 = $this->db->execute();
-            
-            // Update dislike count
-            $this->db->query("UPDATE review_likes SET dislikeCount = dislikeCount + 1 WHERE ReviewID = :reviewId");
-            $this->db->bind(':reviewId', $reviewId);
-            $result2 = $this->db->execute();
-            
-            return $result1 && $result2;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function isDisliked($reviewId)
-    {
-        $this->db->query("SELECT COUNT(*) AS count FROM is_disliked WHERE UserID = :userID AND ReviewID = :reviewId");
-        $this->db->bind(':userID', $_SESSION['user_id']);
-        $this->db->bind(':reviewId', $reviewId);
-        $row = $this->db->single();
-        return $row->count > 0;
-    }
-
-    public function removeDislike($reviewId)
-    {
-        try {
-            // Delete from is_disliked table
-            $this->db->query("DELETE FROM is_disliked WHERE UserID = :userId AND ReviewID = :reviewId");
-            $this->db->bind(':userId', $_SESSION['user_id']);
-            $this->db->bind(':reviewId', $reviewId);
-            $result1 = $this->db->execute();
-            
-            // Update dislike count
-            $this->db->query("UPDATE review_likes SET dislikeCount = GREATEST(dislikeCount - 1, 0) WHERE ReviewID = :reviewId");
-            $this->db->bind(':reviewId', $reviewId);
-            $result2 = $this->db->execute();
-            
-            return $result1 && $result2;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
     // public function create_complaint($data)
     // {
     //     try {
@@ -472,6 +337,21 @@ class jobModel extends Model
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function isApplied($jobId)
+    {
+        try {
+            $this->db->query("SELECT 1 FROM applications WHERE user_id = :studentId AND job_id = :jobId LIMIT 1");
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobId', $jobId);
+            
+            // Returns true if a row exists, false otherwise
+            return $this->db->single() !== false;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
         }
     }
 
