@@ -84,11 +84,11 @@
 
 <script>
     function goToJobs() {
-        window.location.href = "/UniQuest/service_provider/";
+        window.location.href = "/UniQuest/service_provider/pending_jobs";
     }
 
     function goToApplications() {
-        window.location.href = "/UniQuest/service_provider/new_applications";
+        window.location.href = "/UniQuest/service_provider/application_dashboard";
     }
 
     function goToAnalytics() {
@@ -96,8 +96,19 @@
     }
 
     function goToReviews() {
-        window.location.href = "/UniQuest/service_provider/reviews";
+        window.location.href = "/UniQuest/user/profile#reviews-section";
     }
+
+    window.onload = function() {
+        if(window.location.hash === "#reviews-section") {
+            const reviewsSection = document.getElementById('reviews-section');
+            if(reviewsSection) {
+                reviewsSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        }
+    };
 
     function goToPremiums() {
         window.location.href = "/UniQuest/service_provider/premium";

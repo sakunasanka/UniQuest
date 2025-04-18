@@ -34,10 +34,10 @@
         </button>
 
         <!-- Reviews -->
-        <button class="nav-btn" data-path="/UniQuest/service_provider/reviews">
+        <!-- <button class="nav-btn" data-path="/UniQuest/user/profile#reviews-section">
             <span class="material-symbols-outlined"> rate_review </span>
             Reviews
-        </button>
+        </button> -->
 
         <!-- Trending companies -->
         <button class="nav-btn" data-path="/UniQuest/jobs/trendyCompany">

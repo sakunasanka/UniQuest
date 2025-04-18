@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
+                            <?php if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] == 'Student')): ?>
                                 <div class="card-icons">
                                     <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>
                                     <i class="<?php echo in_array($post['CompanyID'], $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post['CompanyID']; ?>, this);"></i>
@@ -95,8 +95,9 @@
                             <?php endif; ?>
                         </div>
                         <div class="social-media-icons">
-                            <?php if (!empty($data['bookmarkedCompanies'][$index]->Website)): ?>
-                                <?php $website = (strpos($data['bookmarkedCompanies'][$index]->Website, 'http') === 0) ? $data['bookmarkedCompanies'][$index]->Website : 'https://' . $data['bookmarkedCompanies'][$index]->Website; ?>
+                            
+                            <?php if (!empty(($post['Website']))): ?>
+                                <?php $website = (strpos($post['Website'], 'http') === 0) ? $post['Website'] : 'https://' . $post['Website']; ?>
                                 <a href="<?php echo htmlspecialchars($website); ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -105,8 +106,8 @@
                                 </a>
                             <?php endif; ?>
 
-                            <?php if (!empty($data['bookmarkedCompanies'][$index]->LinkedIn)): ?>
-                                <?php $linkedin = (strpos($data['bookmarkedCompanies'][$index]->LinkedIn, 'http') === 0) ? $data['bookmarkedCompanies'][$index]->LinkedIn : 'https://www.linkedin.com/' . ltrim($data['bookmarkedCompanies'][$index]->LinkedIn, '/'); ?>
+                            <?php if (!empty($post['LinkedIn'])): ?>
+                                <?php $linkedin = (strpos($post['LinkedIn'], 'http') === 0) ? $post['LinkedIn'] : 'https://www.linkedin.com/' . ltrim($post['LinkedIn'], '/'); ?>
                                 <a href="<?php echo htmlspecialchars($linkedin); ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -115,8 +116,8 @@
                                 </a>
                             <?php endif; ?>
 
-                            <?php if (!empty($data['bookmarkedCompanies'][$index]->Facebook)): ?>
-                                <?php $facebook = (strpos($data['bookmarkedCompanies'][$index]->Facebook, 'http') === 0) ? $data['bookmarkedCompanies'][$index]->Facebook : 'https://www.facebook.com/' . ltrim($data['bookmarkedCompanies'][$index]->Facebook, '/'); ?>
+                            <?php if (!empty($post['Facebook'])): ?>
+                                <?php $facebook = (strpos($post['Facebook'], 'http') === 0) ? $post['Facebook'] : 'https://www.facebook.com/' . ltrim($post['Facebook'], '/'); ?>
                                 <a href="<?php echo htmlspecialchars($facebook); ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
