@@ -402,7 +402,7 @@ class Jobs extends Controller
 
         // Loop through each job post to get the display rating for the associated company
         foreach ($posts as $post) {
-            $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+            $companyID = $post->UserID; // Assuming each job post has a CompanyID field
             $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
         }
 
