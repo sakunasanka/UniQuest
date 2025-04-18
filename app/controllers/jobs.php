@@ -626,7 +626,7 @@ class Jobs extends Controller
         }
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
         $jobs = $this->model('M_jobpost')->getJobsByCompanyId($id);
-        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->UserID);
 
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
@@ -636,7 +636,7 @@ class Jobs extends Controller
             $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $userId);
         }
 
-        $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->CompanyID);
+        $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->UserID);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
