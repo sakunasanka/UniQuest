@@ -84,7 +84,7 @@
 
 <script>
     function goToJobs() {
-        window.location.href = "/UniQuest/service_provider/ongoing_jobs";
+        window.location.href = "/UniQuest/service_provider/";
     }
 
     function goToApplications() {

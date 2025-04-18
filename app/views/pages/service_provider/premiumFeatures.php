@@ -52,6 +52,7 @@
                     <li>✓ Post up to 20 job listings</li>
                     <li>✓ 50 candidate applications</li>
                     <li>✓ Generate Job Report</li>
+                    <li>✓ Edit Active Jobs</li>
                 </ul>
                 <hr class="option-bar">
                 <div class="plan-price">LKR 3000 <span>per month</span></div>
@@ -70,6 +71,7 @@
                     <li>✓ Unlimited job listings</li>
                     <li>✓ Unlimited candidate applications</li>
                     <li>✓ Generate Job Report</li>
+                    <li>✓ Edit Active Jobs</li>
                     <li>✓ Prioritize Posts</li>
                 </ul>
                 <hr class="option-bar">
