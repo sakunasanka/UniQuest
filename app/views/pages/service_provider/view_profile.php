@@ -4,9 +4,10 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
+<?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 
 <?php
-if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active') {
+if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise')) {
     $currentDateTime = date('Y-m-d H:i:s');
     $remainingDays = converttimetodays(strtotime($data['user']['subscription_end_date']) - strtotime($currentDateTime));
 } else {
@@ -41,7 +42,7 @@ if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subs
                         <p><?php echo $data['user']['Description'] ?></p>
                     </div>
 
-                    <?php if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
+                    <?php if (($data['user']['subscription_plan'] == 'professional' || $data['user'])): ?>
                         <div class="plan-card">
                             <div class="subscription-plan">
                                 <?php if ($data['user']['subscription_plan'] == 'professional'): ?>
@@ -52,7 +53,7 @@ if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subs
 
                                 <?php endif; ?>
                             </div>
-                            <?php if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
+                            <?php if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise')): ?>
                                 <div class="days-remaining"> <?php echo $remainingDays; ?> </div>
                             <?php endif; ?>
                         </div>

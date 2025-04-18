@@ -12,6 +12,7 @@
         $columns = [
             "Title" => "Title",
             "Location" => "Location",
+            "Category" => "Category",
             "jobs_create_at" => "Date Posted",
             "Views" => "Views",
             "Applicants" => "Applicants",
@@ -39,6 +40,7 @@
                             <tr>
                                 <td><?php echo $post->Title; ?></td>
                                 <td><?php echo $post->City; ?></td>
+                                <td><?php echo $post->Category; ?></td>
                                 <td><?php echo date('Y-m-d', strtotime($post->jobs_create_at)); ?></td>
                                 <td>35</td>
                                 <td>18</td>

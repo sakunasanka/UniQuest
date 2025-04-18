@@ -154,7 +154,7 @@ class Service_provider extends Controller
 
         $data = [];
 
-        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/job_report', $data);
         } else {
             $_SESSION['show_report_error'] = true;
@@ -742,7 +742,7 @@ class Service_provider extends Controller
             // 'userLoginsData' => $userLoginsData,
         ];
 
-        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/ser_analytics', $data);
         } else {
             $_SESSION['show_premium_error'] = true;
@@ -823,11 +823,13 @@ class Service_provider extends Controller
             }
         } else {
             $post = $this->model('M_jobpost')->getpostbyid($postId);
+            $subscription = $this->model('companyModel')->getSubscriptionPlan($_SESSION['user_id']);
 
             //check the owner
-            if ($post->CompanyID != $_SESSION['user_id']) {
+            if ($post->CompanyID != $_SESSION['user_id'] && $subscription == 'free') {
                 redirect('student/jobs');
             }
+             
             $data = [
                 'job_name' => $post->Title,
                 'job_id' => $postId,
@@ -836,6 +838,7 @@ class Service_provider extends Controller
                 'required_skills' => $post->RequiredQualifications,
                 'salary_range' => $post->SalaryRange,
                 'Description' => $post->Description,
+                'subscription' => $subscription,
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -844,6 +847,11 @@ class Service_provider extends Controller
                 'salary_range_err' => '',
                 'Description_err' => ''
             ];
+            if($post->Status != 'Pending' && $data['subscription'] == 'free'){ 
+                $_SESSION['show_job_edit_error'] = true;
+                $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                Redirect::to($previousURL);
+            }   
             // echo json_encode($data);
             $this->view('pages/service_provider/edit_job', $data);
         }
