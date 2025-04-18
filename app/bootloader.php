@@ -23,6 +23,8 @@ require_once 'helpers/UniversityEmailValidator.php';
 require_once 'helpers/TableSearcher.php';
 require_once 'helpers/MainSearcher.php';
 require_once 'helpers/Filter.php';
+require_once 'helpers/URLNormalizer.php';
+
 
 //load middlewares
 require_once 'middlewares/AuthMiddleware.php';

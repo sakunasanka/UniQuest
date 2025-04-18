@@ -39,7 +39,7 @@ class M_jobpost extends Model
 
     public function getpostbycompanyid($companyId)
     {
-        $this->db->query('SELECT * FROM v_company WHERE v_company.CompanyID = :id');
+        $this->db->query('SELECT * FROM v_company WHERE v_company.UserID = :id');
         $this->db->bind(':id', $companyId);
         $row = $this->db->single();
         return $row;

@@ -38,7 +38,7 @@
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        <?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['user']['City'] ?></span>
+                        <?php echo $data['user']['Address'] ?>
                     </div>
                     <div>
                         <span>Contact No</span>

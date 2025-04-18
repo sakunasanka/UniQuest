@@ -5,14 +5,13 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
-<?php 
-    if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active') {
-        $currentDateTime = date('Y-m-d H:i:s');
-        $remainingDays = converttimetodays(strtotime($data['user']['subscription_end_date']) - strtotime($currentDateTime));
-    }
-    else {
-        $remainingDays = 0;  
-    }
+<?php
+if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active') {
+    $currentDateTime = date('Y-m-d H:i:s');
+    $remainingDays = converttimetodays(strtotime($data['user']['subscription_end_date']) - strtotime($currentDateTime));
+} else {
+    $remainingDays = 0;
+}
 ?>
 
 <!-- Sidebar and Content Layout -->
@@ -41,29 +40,29 @@
                         <h2><?php echo $data['companyData']->Industry ?></h2>
                         <p><?php echo $data['user']['Description'] ?></p>
                     </div>
-                    
-                    <?php if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
-                    <div class="plan-card">
-                        <div class="subscription-plan">
-                            <?php if($data['user']['subscription_plan'] == 'professional'): ?>
-                                <span class="material-symbols-outlined gold-icon"> workspace_premium </span> Professional
 
-                            <?php elseif($data['user']['subscription_plan'] == 'enterprise'): ?>
-                                <span class="material-symbols-outlined black-icon"> workspace_premium </span> Enterprise
+                    <?php if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
+                        <div class="plan-card">
+                            <div class="subscription-plan">
+                                <?php if ($data['user']['subscription_plan'] == 'professional'): ?>
+                                    <span class="material-symbols-outlined gold-icon"> workspace_premium </span> Professional
 
+                                <?php elseif ($data['user']['subscription_plan'] == 'enterprise'): ?>
+                                    <span class="material-symbols-outlined black-icon"> workspace_premium </span> Enterprise
+
+                                <?php endif; ?>
+                            </div>
+                            <?php if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
+                                <div class="days-remaining"> <?php echo $remainingDays; ?> </div>
                             <?php endif; ?>
                         </div>
-                        <?php if(($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise') && $data['user']['subscription_status'] == 'active'): ?>
-                            <div class="days-remaining"> <?php echo $remainingDays;?> </div>
-                        <?php endif;?>    
-                    </div>
-                    <?php endif;?>
+                    <?php endif; ?>
                 </div>
 
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        <?php echo $data['user']['StreetNo'] ?>, <?php echo $data['user']['AddressLine1'] ?>, <?php echo $data['user']['AddressLine2'] ?><?php echo empty($data['user']['AddressLine2']) ? '' : ',' ?> <?php echo $data['companyData']->City ?></span>
+                        <?php echo $data['user']['Address'] ?>
                     </div>
                     <div>
                         <span>Contact No</span>
@@ -73,10 +72,24 @@
                         <span>Email</span>
                         <?php echo $data['user']['Email'] ?>
                     </div>
+                </div>
+                <div class="view-card-info">
                     <?php if ($data['user']['Website']): ?>
                         <div>
                             <span>Website</span>
                             <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($data['user']['LinkedIn']): ?>
+                        <div>
+                            <span>LinkedIn</span>
+                            <a href="<?php echo $data['user']['LinkedIn'] ?>" target="_blank"><?php echo $data['user']['LinkedIn'] ?></a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($data['user']['Facebook']): ?>
+                        <div>
+                            <span>Facebook</span>
+                            <a href="<?php echo $data['user']['Facebook'] ?>" target="_blank"><?php echo $data['user']['Facebook'] ?></a>
                         </div>
                     <?php endif; ?>
                 </div>
