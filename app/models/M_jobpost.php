@@ -69,6 +69,26 @@ class M_jobpost extends Model
     //     return $results;
     // }
 
+    public function getPendingPost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
+    {
+        try {
+            $conditions = [
+                ['CompanyID', '=', $_SESSION['user_id']],
+                [$searchBy, 'LIKE', $search . '%'],
+                ['Status', '=', 'Pending']
+            ];
+
+            $posts = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $posts;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function getActivePost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
     {
         try {

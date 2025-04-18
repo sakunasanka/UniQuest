@@ -151,7 +151,7 @@
                         <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                     <?php endif; ?>
                     
-                <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company'): ?>
+                <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $data['post']->Status != 'Pending'): ?>
                     <button onclick="goToReport(<?php echo $post->JobID; ?>)" class="apply-btn">Generate Report</button>
 
                     <?php if (count($data['reviews']) >= 3): ?> 

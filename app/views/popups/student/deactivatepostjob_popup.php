@@ -11,8 +11,8 @@
                 <input type="hidden" id="postID">
                 <div class="warning">
                     <p>Are you sure you want to deactivate your post?<br>
-                        Once you deactivate your post, you can still view it in Offered Jobs.<br>
-                        If you want to delete it forever, delete from offered jobs.</p>
+                        Once you deactivate your post, you can still view it in Deactive Jobs.<br>
+                        If you want to delete it forever, delete from Deactive jobs.</p>
                 </div>
                 <label>
                     <input type="checkbox" name="confirm" value="yes" required>

@@ -140,7 +140,34 @@ class Service_provider extends Controller
         }
     }
 
-    public function ongoing_jobs($queryParam = [])
+    public function pending_jobs($queryParam = [])
+    {
+        try {
+            // Get the requested data from query params
+            $pageNumber = isset($queryParam['page']) ? (int)$queryParam['page'] : 1;
+            $rowsPerPage = isset($queryParam['limit']) ? (int)$queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
+
+            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $data = [
+                'posts' => $posts['data'],
+                'currentPage' => $posts['currentPage'],
+                'rowsPerPage' => $posts['limit'],
+                'totalRows' => $posts['totalRows'],
+                'totalPages' => $posts['totalPages'],
+                'isLastPage' => $posts['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/service_provider/pending_jobs', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function active_jobs($queryParam = [])
     {
         try {
             // Get the requested data from query params
@@ -161,13 +188,13 @@ class Service_provider extends Controller
                 'isLastPage' => $posts['isLastPage'] ? 'yes' : 'no',
             ];
 
-            $this->view('pages/service_provider/ongoing_jobs', $data);
+            $this->view('pages/service_provider/active_jobs', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function offered_jobs($queryParam = [])
+    public function deactive_jobs($queryParam = [])
     {
         try {
             // Get the requested data from query params
@@ -188,7 +215,7 @@ class Service_provider extends Controller
                 'isLastPage' => $posts['isLastPage'] ? 'yes' : 'no',
             ];
 
-            $this->view('pages/service_provider/offered_jobs', $data);
+            $this->view('pages/service_provider/deactive_jobs', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -276,7 +303,7 @@ class Service_provider extends Controller
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByuserID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -285,9 +312,10 @@ class Service_provider extends Controller
 
         // Access the first element of the $application array
         $application = $application[0];
-
+        
         // Prepare the application data
         $applicationData = [
+            'jobID' => $application->JobID ?? null,
             'photo' => $application->StudentProfileImage ?? null,
             'fullname' => $application->StudentName ?? null,
             'id' => $application->ApplicationID ?? null,
@@ -307,12 +335,18 @@ class Service_provider extends Controller
             'linkedin' => $application->linkedin ?? null,
             'other1' => $application->other1 ?? null,
             'other2' => $application->other2 ?? null,
-            'other3' => $application->other3 ?? null
+            'other3' => $application->other3 ?? null,
+            'other1_type' => $application->other1_type ?? null,
+            'other2_type' => $application->other2_type ?? null,
+            'other3_type' => $application->other3_type ?? null,
         ];
 
         $data = [
             'application' => $applicationData,
         ];
+        $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
+
+        $data['fields'] = $fields;
 
         // Load the view
         $this->view('pages/service_provider/view_application', $data);
@@ -755,7 +789,7 @@ class Service_provider extends Controller
             ) {
                 if ($this->model('M_jobpost')->edit($data)) {
                     flash('post-msg', 'post is updated');
-                    redirect('service_provider/ongoing_jobs');
+                    redirect('service_provider/active_jobs');
                 } else {
                     die('something went wrong');
                 }
@@ -930,7 +964,7 @@ class Service_provider extends Controller
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
-                    redirect('service_provider/ongoing_jobs');
+                    redirect('service_provider/active_jobs');
                 } else {
                     die('something went wrong');
                 }
@@ -1014,7 +1048,7 @@ class Service_provider extends Controller
 
                 if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
-                    redirect('service_provider/ongoing_jobs');
+                    redirect('service_provider/active_jobs');
                 } else {
                     die('Something went wrong');
                 }
@@ -1036,7 +1070,7 @@ class Service_provider extends Controller
 
                 if ($this->model('M_jobpost')->deactivatePost($postId)) {
                     flash('post-msg', 'post is deactivated');
-                    redirect('service_provider/ongoing_jobs');
+                    redirect('service_provider/active_jobs');
                 } else {
                     die('Something went wrong');
                 }
