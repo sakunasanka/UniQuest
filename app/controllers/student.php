@@ -879,14 +879,14 @@ class Student extends Controller
                         } else {
                             $data['errors'][$fieldName] = $uploadResult['error'];
                         }
-                    } else {
+                    } elseif (isset($fieldConfig['required']) && $fieldConfig['required']) {
                         $data['errors'][$fieldName] = 'File upload is required';
                     }
                     break;
 
                 default:
                     $value = trim($_POST[$fieldName] ?? '');
-                    if (empty($value)) {
+                    if (empty($value) && isset($fieldConfig['required']) && $fieldConfig['required']) {
                         $data['errors'][$fieldName] = 'This field is required';
                     } else {
                         $data['fields'][$fieldName] = $value;
@@ -899,7 +899,7 @@ class Student extends Controller
         if (empty($data['errors'])) {
             $applicationModel = $this->model('M_applicationFields');
             
-            
+             
            $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
             if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
                 flash('application_success', 'Your application has been submitted successfully');
