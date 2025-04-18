@@ -190,22 +190,6 @@ class jobModel extends Model
             } else {
                 return false;
             }
-
-            // $logData = [
-            //     'EntityID' => $jobId,
-            //     'EntityType' => 'Job',
-            //     'Action' => 'Approve',
-            //     'ActionBy' => $_SESSION['user_id'],
-            //     'ActionDate' => date('Y-m-d H:i:s')
-            // ];
-
-            // if (!$this->insert('VerificationLogs', $logData)) {
-            //     $this->db->rollBack();
-            //     return false;
-            // }
-
-            // $this->db->commit();
-            // return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;

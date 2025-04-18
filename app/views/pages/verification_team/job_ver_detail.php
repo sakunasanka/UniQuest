@@ -55,8 +55,44 @@
                     </div>
                 </div>
                 <div class="btn-row">
-                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_ver_reject/<?php echo $data['job']->JobID; ?>'">Reject</button>
-                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_ver_approve/<?php echo $data['job']->JobID; ?>'">Approve</button>
+                    <?php if ($data['verifyDetails']->Action == 'Approve'): ?>
+                        <div class="status-act" style="width: 100%;">
+                            <span>Approved By: </span>
+                            <?php if ($data['verifyDetails']->ActionByID == $_SESSION['user_id'] || $data['verifyDetails']->ActionByRole == 'Admin'): ?>
+                                <span><?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                            <?php else: ?>
+                                <span class="actionby-link" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['verifyDetails']->ActionByID; ?>'">
+                                    <?php echo $data['verifyDetails']->ActionByName ?>
+                                </span><br>
+                            <?php endif; ?>
+                            <span>Approved On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php elseif ($data['verifyDetails']->Action == 'Reject'): ?>
+                        <div class="status-deact" style="width: 100%;">
+                            <span>Rejected By: </span>
+                            <?php if ($data['verifyDetails']->ActionByID == $_SESSION['user_id'] || $data['verifyDetails']->ActionByRole == 'Admin'): ?>
+                                <span><?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                            <?php else: ?>
+                                <span class="actionby-link" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['verifyDetails']->ActionByID; ?>'">
+                                    <?php echo $data['verifyDetails']->ActionByName ?>
+                                </span><br>
+                            <?php endif; ?>
+                            <span>Reason: <?php echo $data['verifyDetails']->Reason ?></span><br>
+                            <span>Rejected On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="btn-row">
+                    <form action="<?php echo URLROOT; ?>/verification_team/job_ver_reject/<?php echo $data['job']->JobID ?>" method="GET">
+                        <select class="reason" name="reason" required <?php if($data['job']->Status == 'Not Approved') echo 'disabled'; ?>>
+                            <option value="" disabled selected>Select Reason</option>
+                            <?php foreach ($data['rejectReasons'] as $reason) : ?>
+                                <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="submit" class="reject-btn" <?php if($data['job']->Status == 'Not Approved') echo 'disabled'; ?>>Reject</button>
+                    </form>
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_ver_approve/<?php echo $data['job']->JobID ?>'">Approve</button>
                 </div>
             </div>
         </div>

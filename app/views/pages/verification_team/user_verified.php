@@ -37,7 +37,7 @@
                                 <td><?php echo substr($user->ActionDate, 0, 10); ?></td>
                                 <?php if ($user->Status == 'Active') : ?>
                                     <td><span class="status active">Active</span></td>
-                                <?php elseif ($user->Status == 'Deactive') : ?>
+                                <?php elseif ($user->Status == 'Deactive' || $user->Status == 'Pending Deletion') : ?>
                                     <td><span class="status inactive">Deactive</span></td>
                                 <?php endif; ?>
                                 <td class="action">
