@@ -1,7 +1,8 @@
 /* Profile Dropdown */
 .profile-dropdown {
     position: relative;
-    margin-left: 50px;
+    margin-left: 0px;
+    margin-right: 5px;
 }
 
 /* profile pic */

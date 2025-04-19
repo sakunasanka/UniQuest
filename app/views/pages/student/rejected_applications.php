@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">

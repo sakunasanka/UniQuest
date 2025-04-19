@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -9,7 +9,6 @@
     <main class="content-area">
         <?php
         $columns = [
-            "JobID" => "Job ID",
             "Title" => "Title",
             "Email" => "Company Email",
             "Category" => "Job Type",
@@ -32,7 +31,6 @@
                     <?php if ($data['jobs']) : ?>
                         <?php foreach ($data['jobs'] as $job) : ?>
                             <tr>
-                                <td><?php echo $job->JobID; ?></td>
                                 <td><?php echo $job->Title; ?></td>
                                 <td><?php echo $job->Email; ?></td>
                                 <td><?php echo $job->Category; ?></td>

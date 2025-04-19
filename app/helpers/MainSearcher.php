@@ -3,7 +3,6 @@ class MainSearcher
 {
     private static $instance = null;
     private $searchTerm;
-    private $searchBy;
     private $baseUrl;
     private $filtersApplied;
 
@@ -11,7 +10,6 @@ class MainSearcher
     private function __construct()
     {
         $this->searchTerm = isset($_GET['search']) ? $_GET['search'] : "";
-        $this->searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : "Title";
         $this->baseUrl = $this->generateBaseUrl();
         $this->filtersApplied = $this->checkFiltersApplied();
     }

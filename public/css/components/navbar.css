@@ -62,6 +62,11 @@
     border-radius: 5px;
 }
 
+.nav-links a:hover {
+    color: white !important;
+    text-decoration: none !important;
+}
+
 .nav-links .hov:hover {
     background-color: #137d4a;
 }
@@ -113,11 +118,11 @@
 .nav-icons {
     display: flex;
     align-items: center;
-    margin-right: 30px;
+    margin-right: 40px;
 }
 
 .nav-icons a {
-    margin-left: 50px;
+    margin-left: 20px;
     text-decoration: none;
 }
 
@@ -125,7 +130,7 @@
 .notification-badge {
     position: absolute;
     top: 40px;
-    right: 48px;
+    right: 113px;
     background-color: red;
     color: white;
     font-size: 0.8rem;
@@ -143,6 +148,10 @@
     font-weight: bold;
     font-size: 1rem;
     transition: background-color 0.3s ease;
+}
+
+.nav-button {
+    margin-left: 20px; /* Space between button and icons */
 }
 
 .nav-button a:hover {

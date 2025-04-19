@@ -472,7 +472,6 @@ class Student extends Controller
         $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
         // get filter data from query params
         $filters = [
@@ -486,7 +485,7 @@ class Student extends Controller
         ];
 
           // Get bookmarked jobs for the user
-          $post_data = $this->model('M_jobpost')->getSaveJobs($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
+          $post_data = $this->model('M_jobpost')->getSaveJobs($userId, $page, $limit, $sort, $order, $search, $filters);
           $posts = $post_data['data'];
           $displayRatings = [];
 
@@ -529,7 +528,6 @@ class Student extends Controller
         $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
         // get filter data from query params
         $filters = [
@@ -543,7 +541,7 @@ class Student extends Controller
         ];
 
           // Get bookmarked jobs for the user
-          $post_data = $this->model('M_jobpost')->getSaveInternships($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
+          $post_data = $this->model('M_jobpost')->getSaveInternships($userId, $page, $limit, $sort, $order, $search, $filters);
           $posts = $post_data['data'];
           $displayRatings = [];
 
@@ -586,7 +584,6 @@ class Student extends Controller
         $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyName';
 
         // get filter data from query params
         $filters = [
@@ -600,7 +597,7 @@ class Student extends Controller
         ];
 
         // Retrieve companies
-        $post_data = $this->model('M_jobpost')->getSaveCompanies($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
+        $post_data = $this->model('M_jobpost')->getSaveCompanies($userId, $page, $limit, $sort, $order, $search, $filters);
         $posts = $post_data['data'];
         $displayRatings = [];
 

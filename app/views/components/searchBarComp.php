@@ -27,7 +27,7 @@
         ?>
         <?php
         $searcher = MainSearcher::getInstance();
-        echo $searcher->renderSearchBar('Search Company Names...');
+        echo $searcher->renderSearchBar('Search Company Names, Industry, Location...');
         ?>
     </div>
 

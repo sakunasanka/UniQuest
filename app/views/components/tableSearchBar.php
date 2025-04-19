@@ -8,5 +8,5 @@
 
 <?php
     $seacher = TableSearcher::getInstance();
-    echo $seacher->renderSearchBar($columns);
+    echo $seacher->renderSearchBar();
 ?>

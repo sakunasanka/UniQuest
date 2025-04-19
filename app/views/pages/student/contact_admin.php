@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/contact_form.css">
 
 <div class="main-container">
