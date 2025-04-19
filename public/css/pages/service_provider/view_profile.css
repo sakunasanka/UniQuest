@@ -214,13 +214,13 @@ body {
 }
 
 /* Link Styling */
-a {
+.view-card-info a {
     color: #3498db;
     text-decoration: none;
     font-weight: 500;
 }
 
-a:hover {
+.view-card-info a:hover {
     color: #2c8cc3;
     text-decoration: underline;
 }

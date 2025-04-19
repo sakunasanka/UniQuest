@@ -78,6 +78,7 @@ p{
 .reviewer-name {
     font-style: italic;
     color: #333;
+    font-size: 14px;
 }
 
 .review-rating {
@@ -216,12 +217,12 @@ p{
     text-align: right;
     margin-top: -40px;
     margin-right: 20px;
-    font-size: 1.1em;
+    font-size: 1.1em !important;
     color: #4aa1fd !important;
 }
 
 .seemore p{
-    font-size: 1.1em;
+    font-size: 1.1em !important;
 }
 
 .seemore p:hover {
@@ -502,4 +503,29 @@ p{
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.company-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    cursor: pointer;
+}
+
+.company-title:hover {
+    text-decoration: underline;
+}
+
+.review-date {
+    font-size: 0.9em;
+    color: #777;
+    font-style: italic;
 }
