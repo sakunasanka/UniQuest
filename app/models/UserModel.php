@@ -590,7 +590,7 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
+    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '')
     {
         try {
             // Define view and columns per role
@@ -601,17 +601,25 @@ class userModel extends Model
                 'Admin'      => ['view' => 'v_admin',      'columns' => 'UserID, FullName, Email, ContactNo, RegisterDate, Status, Role'],
             ];
 
+            // Define base conditions
+            $conditions = [
+                ['Status', 'IN', ['Active', 'Deactive']]
+            ];
+
             // Check if role is valid
             if (!isset($roleMap[$role])) {
                 throw new Exception("Invalid role specified: " . $role);
             }
 
-            // Define conditions
-            $conditions = [
-                ['Status', 'IN', ['Active', 'Deactive']],
-                // ['Role', '=', $role],
-                [$searchBy, 'LIKE', $search . '%']
-            ];
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField = ($role === 'Company')
+                    ? "CONCAT_WS(' ', CompanyName, Email, ContactNo, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status, Role)"
+                    : "CONCAT_WS(' ', FullName, Email, ContactNo, Status, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Role)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
 
             // Perform select
             return $this->select(

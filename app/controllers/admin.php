@@ -99,7 +99,7 @@ class Admin extends Controller
             // $sort = $_GET['sort'] ?? 'UserID';
             // $order = $_GET['order'] ?? 'ASC';
 
-            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search, $searchBy);
+            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
 
