@@ -47,9 +47,12 @@
                                     <td><span class="status inactive"><?php echo $complaint->Status ?></span></td>
                                 <?php endif; ?>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaint->ComplaintID; ?>'">
-                                        preview
-                                    </span>
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaint->ComplaintID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View Complaint</span>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

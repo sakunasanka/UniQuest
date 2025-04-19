@@ -37,9 +37,12 @@
                                 <td><?php echo $complaint->ComplaintCount; ?></td>
                                 <td><?php echo substr($complaint->LastComplainedDate, 0, 10); ?></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_company/<?php echo $complaint->CompanyID; ?>'">
-                                        preview
-                                    </span>
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_company/<?php echo $complaint->CompanyID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View Complaints</span>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
