@@ -29,7 +29,7 @@
             <div class="view-card-content">
                 <h1><?php echo $data['job']->Title ?></h1>
                 <span><?php echo $data['job']->City ?></span>
-                <span><?php echo $data['job']->SalaryRange ?></span>
+                <span><?php echo $data['job']->SalaryRange ?> <?php echo $data['job']->SalaryType ?></span>
                 <div class="description">
                     <p><?php echo $data['job']->Description ?></p>
                 </div>
