@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsApply.css">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ver_header.php'; ?>>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/job_detail.css">
 

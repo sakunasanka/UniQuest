@@ -1,10 +1,4 @@
-<?php 
-  if ($_SESSION['user_role'] == 'Student') {
-      require APPROOT . '/views/components/stu_header.php';
-  } else {
-      require APPROOT . '/views/components/ser_header.php';
-  } 
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/notification.css">
 

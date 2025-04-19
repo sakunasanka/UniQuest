@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->

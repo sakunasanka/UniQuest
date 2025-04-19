@@ -1,16 +1,4 @@
-<?php
-if (!isset($_SESSION['user_role'])) {
-    require APPROOT . '/views/components/header.php';
-} else if ($_SESSION['user_role'] == 'Student') {
-    require APPROOT . '/views/components/stu_header.php';
-} else if ($_SESSION['user_role'] == 'Company') {
-    require APPROOT . '/views/components/ser_header.php';
-} else if ($_SESSION['user_role'] == 'Admin') {
-    require APPROOT . '/views/components/adm_header.php';
-} else if ($_SESSION['user_role'] == 'VT-Member') {
-    require APPROOT . '/views/components/ver_header.php';
-}
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <?php if (isset($_GET['pending'])): ?>
     <div id="pendingVerificationPopup" class="popup-overlay" style="display: none;">

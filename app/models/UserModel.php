@@ -622,7 +622,8 @@ class userModel extends Model
 
             // Define base conditions
             $conditions = [
-                ['Status', 'IN', ['Active', 'Deactive']]
+                ['Status', 'IN', ['Active', 'Deactive']],
+                ['Role', '=', $role]
             ];
 
             // Check if role is valid
