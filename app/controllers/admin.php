@@ -220,8 +220,8 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order, $search);

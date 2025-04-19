@@ -31,12 +31,12 @@
                             <div class="file-content">
                                 <span>Drag & Drop to Upload Business Registration Copy</span>
                                 <button type="button" class="browse-btn">Browse File
-                                    <input type="file" id="proof" name="proof" accept=".pdf,.doc,.docx,image/*" required>
+                                    <input type="file" id="proof" name="proof" accept=".pdf,.jpg,.jpeg,.png" required>
                                 </button>
                                 <span class="file-name">No file selected</span>
                             </div>
                         </div>
-                        <span class="req-msg">Only PDF, DOC, DOCX files are allowed, and maximum file size is 5MB</span>
+                        <span class="req-msg">Only PDF, JPG, JPEG, PNG files are allowed, and maximum file size is 5MB</span>
                         <span class="error-msg"><?php echo !empty($data['proof_err']) ? $data['proof_err'] : ''; ?></span>
                     </div>
 

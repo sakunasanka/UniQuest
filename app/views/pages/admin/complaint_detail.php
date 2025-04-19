@@ -48,9 +48,9 @@
                         </a></span>
                 </div>
                 <div class="detail-row">
-                    <strong>Complaint Date </strong>
+                    <strong>Complained Date </strong>
                     <span class="col">:</span>
-                    <span><?php echo $data['complaint']->ComplainedDate ?></span>
+                    <span><?php echo substr($data['complaint']->ComplainedDate, 0, 10); ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Complaint Discription </strong>
@@ -70,7 +70,15 @@
             <!-- Right Side: File Previews -->
             <div class="file-previews">
                 <h2>Proof Previews</h2>
-                <iframe src="" frameborder="0"></iframe>
+                <?php if (empty($data['complaint']->Proof)) : ?>
+                    <span class="no-file">Not available</span>
+                <?php elseif (pathinfo($data['complaint']->Proof, PATHINFO_EXTENSION) == 'pdf') : ?>
+                    <iframe class="file-preview" src="<?php echo UPLOADROOT . '/proofs/' . $data['complaint']->Proof; ?>" frameborder="0"></iframe>
+                <?php elseif (in_array(pathinfo($data['complaint']->Proof, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png'])) : ?>
+                    <img class="file-preview" src="<?php echo UPLOADROOT . '/proofs/' . $data['complaint']->Proof; ?>" alt="Proof Image">
+                <?php else : ?>
+                    <span class="no-file">Unsupported file type</span>
+                <?php endif; ?>
             </div>
         </div>
     </main>
