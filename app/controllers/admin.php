@@ -553,7 +553,7 @@ class Admin extends Controller
                 'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
                 'messageInput' => trim($_POST['messageInput'] ?? ''),
                 'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
                 'messageInput_err' => '',
@@ -587,7 +587,7 @@ class Admin extends Controller
                 'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
                 'messageInput' => '',
                 'messageInput_err' => '',
                 'topic' => '', // Default to empty until a message is sent
