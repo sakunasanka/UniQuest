@@ -922,6 +922,8 @@ CREATE VIEW `v_jobs` AS SELECT
     c.CompanyName AS CompanyName,
     i.IndustryName AS Industry,
     c.Website AS Website,
+    c.Facebook,
+    c.LinkedIn,
     j.Description AS Description,
     TRIM(REGEXP_REPLACE(CONCAT_WS(', ', c.StreetNo, c.AddressLine1, c.AddressLine2, ci.CityName), ', ,+', ',')) AS CompanyAddress,
     j.Category AS Category,

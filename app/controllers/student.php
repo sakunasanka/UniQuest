@@ -550,7 +550,7 @@ class Student extends Controller
                 $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
                 $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
             }
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         } 
         else {
