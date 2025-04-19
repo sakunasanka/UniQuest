@@ -142,7 +142,7 @@ class M_jobpost extends Model
     {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, District, City, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
+            (Title, Description, DistrictID, CityID, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
             VALUES 
             (:job_name, :Description, :job_district, :job_city, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
         ');
