@@ -144,8 +144,10 @@ class Verification_team extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($userID);
             $data = [
-                'user' => $user
+                'user' => $user,
+                'verifyDetails' => $verifyDetails,
             ];
 
             if ($user['Role'] == 'Student') {
@@ -249,8 +251,10 @@ class Verification_team extends Controller
     {
         try {
             $job = $this->model('jobModel')->getJobDetails($jobID);
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($jobID);
             $data = [
-                'job' => $job
+                'job' => $job,
+                'verifyDetails' => $verifyDetails,
             ];
             $this->view('pages/verification_team/job_detail', $data);
         } catch (Exception $e) {

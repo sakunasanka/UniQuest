@@ -54,6 +54,22 @@
                         <?php echo $data['job']->JobBenefits ?>
                     </div>
                 </div>
+                <div class="btn-row">
+                    <?php if ($data['verifyDetails']): ?>
+                        <?php if ($data['verifyDetails']->Action == 'Approve'): ?>
+                            <div class="status-act" style="width: 100%;">
+                                <span>Approved By: <?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                                <span>Approved On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                            </div>
+                        <?php elseif ($data['verifyDetails']->Action == 'Reject'): ?>
+                            <div class="status-deact" style="width: 100%;">
+                                <span>Rejected By: <?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                                <span>Reason: <?php echo $data['verifyDetails']->Reason ?></span><br>
+                                <span>Rejected On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </main>
