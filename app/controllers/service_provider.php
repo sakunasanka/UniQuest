@@ -172,9 +172,8 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
-            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, );
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -199,9 +198,8 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
-            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -226,9 +224,8 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
-            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -987,7 +984,7 @@ class Service_provider extends Controller
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
-                    redirect('service_provider/active_jobs');
+                    redirect('service_provider/pending_jobs');
                 } else {
                     die('something went wrong');
                 }
@@ -1098,6 +1095,26 @@ class Service_provider extends Controller
                     die('Something went wrong');
                 }
             }
+        }
+    }
+
+    public function approve_application($applicationID, $jobID)
+    {
+        try {
+            $this->model('M_applicationFields')->approveApplication($applicationID);
+            Redirect::to(URLROOT . '/service_provider/offered_applications/'.$jobID);
+        } catch (Exception $e) {
+            die($e->getMessage()); 
+        }
+    }
+
+    public function reject_application($applicationID, $jobID)
+    {
+        try {
+            $this->model('M_applicationFields')->rejectApplication($applicationID);
+            Redirect::to(URLROOT . '/service_provider/rejected_applications/'.$jobID);
+        } catch (Exception $e) {
+            die($e->getMessage()); 
         }
     }
 }

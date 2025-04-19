@@ -1,16 +1,4 @@
-<?php
-if (!isset($_SESSION['user_role'])) {
-    require APPROOT . '/views/components/header.php';
-} else if ($_SESSION['user_role'] == 'Student') {
-    require APPROOT . '/views/components/stu_header.php';
-} else if ($_SESSION['user_role'] == 'Company') {
-    require APPROOT . '/views/components/ser_header.php';
-} else if ($_SESSION['user_role'] == 'Admin') {
-    require APPROOT . '/views/components/adm_header.php';
-} else if ($_SESSION['user_role'] == 'VT-Member') {
-    require APPROOT . '/views/components/ver_header.php';
-}
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
@@ -46,12 +34,12 @@ if (!isset($_SESSION['user_role'])) {
                     <h1><?php echo $data['post']->CompanyName; ?></h1>
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                         <div class="card-icons">
-                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
-                            <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->UserID; ?>)"></i>
+                            <i class="<?php echo in_array($post->UserID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->UserID; ?>, this);"></i>
                         </div>
                     <?php else: ?>
                         <div class="card-icons">
-                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->CompanyID; ?>)"></i>
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->UserID; ?>)"></i>
                         </div>
                     <?php endif; ?>
                 </div>

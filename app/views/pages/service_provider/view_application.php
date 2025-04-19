@@ -1,16 +1,4 @@
-<?php 
-    if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/stu_header.php';
-    } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/ser_header.php';
-    } 
-    else if ($_SESSION['user_role'] == 'Admin') {
-        require APPROOT . '/views/components/adm_header.php';
-    }
-    else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ver_header.php';
-    }
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/viewApplication.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -376,13 +364,27 @@
             <!-- Footer with Action Buttons -->
             <?php if($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Pending'):?>
                 <div class="actions-section">
-                    <button class="action-button reject-button" onclick="handleStatusChange('Rejected')">
-                        <i class="fas fa-times-circle"></i> Reject
+                    <button class="action-button reject-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/reject_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Reject
+                        <i class="fas fa-times-circle"></i> 
                     </button>
-                    <button class="action-button approve-button" onclick="handleStatusChange('Approved')">
-                        <i class="fas fa-check-circle"></i> Approve
+                    <button class="action-button approve-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/approve_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Approve
+                        <i class="fas fa-check-circle"></i> 
                     </button>
                 </div>
+
+                <?php elseif($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Accepted'):?>
+                <div class="actions-section">
+                    <button class="action-button reject-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/reject_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Reject
+                        <i class="fas fa-times-circle"></i> 
+                    </button>
+                </div>    
+
+                <?php elseif($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Rejected'):?>
+                <div class="actions-section">
+                    <button class="action-button approve-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/approve_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Approve
+                        <i class="fas fa-check-circle"></i> 
+                    </button>
+                </div>    
             <?php endif; ?>
         </div>
     </div>
@@ -395,3 +397,4 @@
         Flash.show('Not provided', 'error');
     }
 </script>
+

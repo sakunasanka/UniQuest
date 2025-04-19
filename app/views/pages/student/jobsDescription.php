@@ -1,19 +1,4 @@
-<?php 
-    if (!isset($_SESSION['user_role'])) {
-        require APPROOT . '/views/components/header.php';
-    }
-    else if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/stu_header.php';
-    } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/ser_header.php';
-    } 
-    else if ($_SESSION['user_role'] == 'Admin') {
-        require APPROOT . '/views/components/adm_header.php';
-    }
-    else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ver_header.php';
-    }
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <?php require APPROOT . '/views/components/chat-sent.php'; ?>
@@ -117,7 +102,11 @@
                     <?php foreach ($data['reviews'] as $index => $review): ?>
                         <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
-                                <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                <div class="review-header">
+                                    <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                    <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
+                                </div>
+
                                 <div class="review-details">
                                     <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
                                     <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
@@ -195,7 +184,7 @@
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                 
-                <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+                <p><?php echo converttimetoreadableformat($post->PublishDate); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
                 <p><?php echo $data['post']->City; ?></p>
                 <table class="table">

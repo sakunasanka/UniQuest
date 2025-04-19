@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/job_detail.css">
 
@@ -29,7 +29,7 @@
             <div class="view-card-content">
                 <h1><?php echo $data['job']->Title ?></h1>
                 <span><?php echo $data['job']->District ?>, <?php echo $data['job']->City ?></span>
-                <span>Rs.<?php echo $data['job']->SalaryRange ?></span>
+                <span>Rs.<?php echo $data['job']->SalaryRange ?> <?php echo $data['job']->SalaryType ?></span>
                 <div class="description">
                     <p><?php echo $data['job']->Description ?></p>
                 </div>
