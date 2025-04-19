@@ -9,7 +9,6 @@
     <main class="content-area">
         <?php
         $columns = [
-            "JobID" => "JobID",
             "Title" => "Title",
             "Email" => "Company Email",
             "Category" => "Job Type",

@@ -57,9 +57,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search, $searchBy);
+            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
 
@@ -93,7 +92,6 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
             // $page = $_GET['page'] ?? 1;
             // $limit = $_GET['limit'] ?? 2;
             // $sort = $_GET['sort'] ?? 'UserID';
@@ -133,9 +131,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search, $searchBy);
+            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
 
@@ -226,9 +223,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'ComplaintID';
 
-            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order, $search, $searchBy);
+            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order, $search);
 
             $data = [
                 'complaints_job' => $complaints_job['data'],
@@ -254,9 +250,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyID';
 
-            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order, $search, $searchBy);
+            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order, $search);
 
             $data = [
                 'complaints_com' => $complaints_com['data'],
@@ -293,9 +288,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'ComplaintID';
 
-            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order, $search, $searchBy);
+            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order, $search);
 
             $data = [
                 'complaints' => $complaints['data'],
@@ -341,9 +335,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
-
-            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search, $searchBy);
+            
+            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search);
             $data = [
                 'ptjobs' => $ptjobs['data'],
                 'currentPage' => $ptjobs['currentPage'],
@@ -367,9 +360,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
-
-            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search, $searchBy);
+            
+            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search);
             $data = [
                 'interns' => $interns['data'],
                 'currentPage' => $interns['currentPage'],
@@ -467,9 +459,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -493,9 +484,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -747,9 +737,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
-
-            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search, $searchBy);
+            
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -790,9 +779,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
-
-            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search, $searchBy);
+            
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],

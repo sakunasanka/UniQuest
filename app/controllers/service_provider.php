@@ -172,9 +172,8 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
-            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, );
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -199,9 +198,8 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
-            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -226,9 +224,8 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
-            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search, $searchBy);
+            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],

@@ -9,10 +9,10 @@
     <main class="content-area">
         <?php
         $columns = [
-            "UserID" => "UserID",
+            "Name" => "Name",
             "Email" => "Email",
             "Role" => "Account Type",
-            "RegisterDate" => "Registered Date",
+            "ActionDate" => "Verified Date",
             "Status" => "Status",
             "Actions" => "Actions"
         ];
@@ -31,7 +31,7 @@
                     <?php if ($data['users']) : ?>
                         <?php foreach ($data['users'] as $user) : ?>
                             <tr>
-                                <td><?php echo $user->UserID; ?></td>
+                                <td><?php echo $user->Name; ?></td>
                                 <td><?php echo $user->Email; ?></td>
                                 <td><?php echo $user->Role; ?></td>
                                 <td><?php echo substr($user->ActionDate, 0, 10); ?></td>
