@@ -376,11 +376,11 @@
             <!-- Footer with Action Buttons -->
             <?php if($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Pending'):?>
                 <div class="actions-section">
-                    <button class="action-button reject-button" onclick="handleStatusChange('Rejected')">
-                        <i class="fas fa-times-circle"></i> Reject
+                    <button class="action-button reject-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/reject_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Reject
+                        <i class="fas fa-times-circle"></i> 
                     </button>
-                    <button class="action-button approve-button" onclick="handleStatusChange('Approved')">
-                        <i class="fas fa-check-circle"></i> Approve
+                    <button class="action-button approve-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/approve_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Approve
+                        <i class="fas fa-check-circle"></i> 
                     </button>
                 </div>
             <?php endif; ?>
@@ -395,3 +395,4 @@
         Flash.show('Not provided', 'error');
     }
 </script>
+

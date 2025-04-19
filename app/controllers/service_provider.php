@@ -1100,4 +1100,24 @@ class Service_provider extends Controller
             }
         }
     }
+
+    public function approve_application($applicationID, $jobID)
+    {
+        try {
+            $this->model('M_applicationFields')->approveApplication($applicationID);
+            Redirect::to(URLROOT . '/service_provider/offered_applications/'.$jobID);
+        } catch (Exception $e) {
+            die($e->getMessage()); 
+        }
+    }
+
+    public function reject_application($applicationID, $jobID)
+    {
+        try {
+            $this->model('M_applicationFields')->rejectApplication($applicationID);
+            Redirect::to(URLROOT . '/service_provider/rejected_applications/'.$jobID);
+        } catch (Exception $e) {
+            die($e->getMessage()); 
+        }
+    }
 }
