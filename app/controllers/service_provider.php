@@ -987,7 +987,7 @@ class Service_provider extends Controller
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
-                    redirect('service_provider/active_jobs');
+                    redirect('service_provider/pending_jobs');
                 } else {
                     die('something went wrong');
                 }
