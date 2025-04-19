@@ -49,10 +49,35 @@
                             </div>
                         </div>
                         <div class="social-media-icons">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <?php if (!empty($post->Website)): ?>
+                                <?php $website = (strpos($post->Website, 'http') === 0) ? $post->Website : 'https://' . $post->Website; ?>
+                                <a href="<?php echo htmlspecialchars($website); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Company website">
+                                    <i class="fas fa-globe"></i>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($post->LinkedIn)): ?>
+                                <?php $linkedin = (strpos($post->LinkedIn, 'http') === 0) ? $post->LinkedIn : 'https://www.linkedin.com/' . ltrim($post->LinkedIn, '/'); ?>
+                                <a href="<?php echo htmlspecialchars($linkedin); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="LinkedIn profile">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($post->Facebook)): ?>
+                                <?php $facebook = (strpos($post->Facebook, 'http') === 0) ? $post->Facebook : 'https://www.facebook.com/' . ltrim($post->Facebook, '/'); ?>
+                                <a href="<?php echo htmlspecialchars($facebook); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Facebook page">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endfor; ?>
