@@ -5,18 +5,14 @@ class ComplaintModel extends Model {
     {
         try {
             $complaintData = [
-                'studentId' => $_SESSION['user_id'],
-                'jobId' => $data['posts']->JobID,
-                'description' => $data['complaint']
+                'StudentID' => $_SESSION['user_id'],
+                'JobID' => $data['jobID'],
+                'Complaint' => $data['complaint'],
+                'Proof' => $data['proofName'],
+                'Status' => 'Pending'
             ];
             $this->insert('complaint_jobs', $complaintData);
             return true;
-        } catch (PDOException $e) {
-            error_log("Database Error: " . $e->getMessage());
-            return false;
-        } catch (Exception $e) {
-            error_log("General Error: " . $e->getMessage());
-            return false;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
