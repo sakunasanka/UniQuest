@@ -199,7 +199,7 @@
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                 
-                <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+                <p><?php echo converttimetoreadableformat($post->PublishDate); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
                 <p><?php echo $data['post']->City; ?></p>
                 <table class="table">
