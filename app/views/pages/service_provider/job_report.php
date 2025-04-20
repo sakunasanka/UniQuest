@@ -26,7 +26,7 @@
 
 <div id="visible-content">
     <div class="report-date">
-        <p>Job Post Date: <?php echo isset($data['job']->create_at) ? date('M-d-Y', strtotime($data['job']->create_at)) : 'N/A'; ?></p>
+        <p>Job Post Date: <?php echo isset($data['job']->jobs_create_at) ? date('M-d-Y', strtotime($data['job']->jobs_create_at)) : 'N/A'; ?></p>
     </div>
 
     <section class="job-details">
