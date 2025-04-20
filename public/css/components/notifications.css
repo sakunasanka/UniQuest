@@ -80,7 +80,7 @@
 }
 
 .mark-all-read {
-    font-size: 13px;
+    font-size: 13px !important;
     color: #3498db;
     text-decoration: none;
     transition: color 0.3s;
@@ -110,11 +110,6 @@
 .notification-item:hover {
     background-color: #eef5fb;
     box-shadow: inset 3px 0 0 #3498db;
-}
-
-.notification-item.unread {
-    background-color: #f8f9fa;
-    font-weight: 500;
 }
 
 .notification-item.read {
@@ -202,31 +197,15 @@
 /* Icon Styling */
 .notification-icon {
     margin-right: 10px;
+    margin-left: -5px;
     display: flex;
     align-items: center;
     font-size: 18px;
     color: #666;
 }
 
-/* Scrollbar Styling (Optional) */
-.notification-dropdown::-webkit-scrollbar {
-    width: 6px;
-}
-.notification-dropdown::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-.notification-dropdown::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-}
-.notification-dropdown::-webkit-scrollbar-thumb:hover {
-    background: #aaa;
-}
-
-/* Better visual distinction for read/unread */
 .notification-item.unread {
-    background-color: #f8f9fa;
+    background-color: #e9ecf0;
     font-weight: 500;
     position: relative;
 }
@@ -244,12 +223,8 @@
 
 .notification-item.read {
     background-color: #fff;
+    color: #555;
     opacity: 0.9;
-}
-
-.notification-item.read .notification-message {
-    font-weight: normal;
-    color: #666;
 }
 
 /* Hover effects for notification items */
@@ -278,15 +253,6 @@
 .notification-item.danger .notification-icon,
 .notification-item.error .notification-icon {
     color: #ff3860;
-}
-
-.mark-as-read {
-    font-size: 12px !important;
-    color: #3498db !important;
-    text-decoration: none !important;
-    cursor: pointer !important;
-    transition: color 0.3s !important;
-    border: none !important;
 }
 
 /* Expanded notification dropdown */
