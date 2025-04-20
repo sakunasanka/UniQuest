@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateJob.php'; ?>
 
 <!-- Sidebar and Content Layout -->
@@ -10,7 +10,6 @@
     <main class="content-area">
         <?php
         $columns = [
-            "JobID" => "Job ID",
             "Title" => "Title",
             "CompanyName" => "Company Name",
             "Email" => "Company Email",
@@ -37,7 +36,6 @@
                     <?php if ($data['ptjobs']) : ?>
                         <?php foreach ($data['ptjobs'] as $job) : ?>
                             <tr>
-                                <td><?php echo $job->JobID; ?></td>
                                 <td><?php echo $job->Title; ?></td>
                                 <td><?php echo $job->CompanyName; ?></td>
                                 <td><?php echo $job->Email; ?></td>

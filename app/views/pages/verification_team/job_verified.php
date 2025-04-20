@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ver_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -9,7 +9,6 @@
     <main class="content-area">
         <?php
         $columns = [
-            "JobID" => "JobID",
             "Title" => "Title",
             "Email" => "Company Email",
             "Category" => "Job Type",
