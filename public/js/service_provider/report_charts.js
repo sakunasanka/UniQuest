@@ -35,19 +35,21 @@ const CHART_CONFIG = {
     }
 };
 
-// Main initialization
-document.addEventListener('DOMContentLoaded', initDemographicCharts);
-
-function initDemographicCharts() {
-    // Initialize with default empty data if not provided
-    window.reportData = window.reportData || {
-        gender: {},
-        age: {},
-        location: {}
-    };
-
-    // Debug log the incoming data
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure reportData is defined and log it for debugging
+    console.log(reportData.totalApplicants);
+    if (typeof reportData === 'undefined' || !reportData) {
+        console.error('reportData is not defined or invalid');
+        hideAllChartCards();
+        return;
+    }
     console.debug('Demographic Data:', reportData);
+
+    // Hide all charts if no applicants
+    if (!reportData.totalApplicants || parseInt(reportData.totalApplicants) === 0) {
+        hideAllChartCards();
+        return; // Prevent further chart initialization
+    }
 
     try {
         // Initialize all charts
@@ -57,8 +59,35 @@ function initDemographicCharts() {
     } catch (error) {
         console.error('Chart initialization failed:', error);
     }
+});
+
+// Function to hide all chart cards
+function hideAllChartCards() {
+    const chartContainers = document.querySelectorAll('.demographic-card');
+    chartContainers.forEach(container => {
+        container.style.display = 'none';
+    });
+    
+    // Optional: Show a message
+    const demographicsSection = document.querySelector('.applicant-demographics');
+    if (demographicsSection) {
+        const noDataMessage = document.createElement('p');
+        noDataMessage.textContent = 'No applicant data available';
+        noDataMessage.style.textAlign = 'center';
+        noDataMessage.style.padding = '20px';
+        noDataMessage.style.fontStyle = 'italic';
+        noDataMessage.style.color = '#666';
+        demographicsSection.appendChild(noDataMessage);
+    }
 }
 
+// Function to hide gender distribution chart
+function hideGenderDistribution() {
+    const genderChartCard = document.querySelector('.gender-distribution-card');
+    if (genderChartCard) {
+        genderChartCard.style.display = 'none';
+    }
+}
 // Generic chart initialization
 function initChart(type, dataProcessor) {
     const canvasId = `${type}Chart`;
@@ -73,6 +102,23 @@ function initChart(type, dataProcessor) {
     if (!rawData || Object.keys(rawData).length === 0) {
         showChartError(canvasId, `No ${type} data available`);
         return;
+    }
+
+    // Remove any existing no-data message when showing charts
+    const demographicSection = document.querySelector('.applicant-demographics');
+    if (demographicSection) {
+        const msg = demographicSection.querySelector('.no-data-message');
+        if (msg) msg.style.display = 'none';
+        
+        // Ensure the grid is visible
+        const grid = demographicSection.querySelector('.demographic-grid');
+        if (grid) grid.style.display = 'grid';
+        
+        // Show all cards
+        const cards = demographicSection.querySelectorAll('.demographic-card, .card');
+        cards.forEach(card => {
+            card.style.display = 'block';
+        });
     }
 
     const processedData = dataProcessor(rawData);
@@ -151,6 +197,10 @@ function renderPieChart(canvasId, labels, data, colors, title) {
     try {
         const ctx = document.getElementById(canvasId).getContext('2d');
         
+        // Destroy existing chart if it exists
+        const existingChart = Chart.getChart(canvasId);
+        if (existingChart) existingChart.destroy();
+        
         new Chart(ctx, {
             ...CHART_CONFIG,
             data: {
@@ -184,12 +234,23 @@ function renderPieChart(canvasId, labels, data, colors, title) {
 function showChartError(canvasId, message) {
     const canvas = document.getElementById(canvasId);
     if (canvas) {
-        canvas.innerHTML = `
-            <div class="chart-error">
-                <span class="material-icons">error_outline</span>
-                <p>${message}</p>
-            </div>
+        const existingChart = Chart.getChart(canvasId);
+        if (existingChart) existingChart.destroy();
+        
+        // Clear any existing content
+        canvas.innerHTML = '';
+        
+        // Create error message element
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'chart-error';
+        errorDiv.innerHTML = `
+            <span class="material-icons">error_outline</span>
+            <p>${message}</p>
         `;
+        
+        // Append to canvas container
+        canvas.parentNode.appendChild(errorDiv);
     }
     console.warn(`Chart Error [${canvasId}]: ${message}`);
 }
+// Add this function to handle PDF generation
