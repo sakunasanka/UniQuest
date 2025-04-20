@@ -214,7 +214,7 @@ class Admin extends Controller
         }
     }
 
-    public function job_complaint($queryParam = [])
+    public function all_complaints($queryParam = [])
     {
         try {
             // Get the requested data from query params
@@ -235,20 +235,47 @@ class Admin extends Controller
                 'isLastPage' => $complaints_job['isLastPage'] ? 'yes' : 'no',
             ];
 
-            $this->view('pages/admin/job_complaint', $data);
+            $this->view('pages/admin/all_complaints', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function company_complaint($queryParam = [])
+    public function job_complaints($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'LastComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+
+            $complaints_job = $this->model('ComplaintModel')->getComplaintsGroupedByJob($page, $limit, $sort, $order, $search);
+
+            $data = [
+                'complaints_job' => $complaints_job['data'],
+                'currentPage' => $complaints_job['currentPage'],
+                'rowsPerPage' => $complaints_job['limit'],
+                'totalRows' => $complaints_job['totalRows'],
+                'totalPages' => $complaints_job['totalPages'],
+                'isLastPage' => $complaints_job['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/job_complaints', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function company_complaints($queryParam = [])
+    {
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'LastComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order, $search);
@@ -262,7 +289,7 @@ class Admin extends Controller
                 'isLastPage' => $complaints_com['isLastPage'] ? 'yes' : 'no',
             ];
 
-            $this->view('pages/admin/company_complaint', $data);
+            $this->view('pages/admin/company_complaints', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -285,8 +312,8 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order, $search);
@@ -301,6 +328,33 @@ class Admin extends Controller
             ];
 
             $this->view('pages/admin/complaint_company', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function complaint_job($company, $queryParam = [])
+    {
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+
+            $complaints = $this->model('ComplaintModel')->getComplaintsByJob($company, $page, $limit, $sort, $order, $search);
+
+            $data = [
+                'complaints' => $complaints['data'],
+                'currentPage' => $complaints['currentPage'],
+                'rowsPerPage' => $complaints['limit'],
+                'totalRows' => $complaints['totalRows'],
+                'totalPages' => $complaints['totalPages'],
+                'isLastPage' => $complaints['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/complaint_job', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }

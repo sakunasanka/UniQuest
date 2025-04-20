@@ -35,7 +35,7 @@ class ComplaintModel extends Model {
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
-            $complaints = $this->select('studentjobcomplaints', $conditions, 'ComplaintID, JobTitle, CompanyEmail, Complaint, StudentName, ComplainedDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $complaints = $this->select('v_complaints', $conditions, 'ComplaintID, JobTitle, CompanyEmail, Complaint, StudentName, ComplainedDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $complaints;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -49,7 +49,7 @@ class ComplaintModel extends Model {
     public function getComplaintDetails($complaintId)
     {
         try {
-            $complaint = $this->select('studentjobcomplaints', [['ComplaintID', '=',  $complaintId]], '*', 'AND', '', '', 0, 1, false);
+            $complaint = $this->select('v_complaints', [['ComplaintID', '=',  $complaintId]], '*', 'AND', '', '', 0, 1, false);
             return $complaint;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -60,11 +60,13 @@ class ComplaintModel extends Model {
         }
     }
 
-    public function getComplaintsGroupedByCompany($pageNumber = 1, $rowsPerPage = 10, $sort = "CompanyID", $order = "ASC", $search = '', $searchBy = 'CompanyID')
+    public function getComplaintsGroupedByCompany($pageNumber = 1, $rowsPerPage = 10, $sort = "LastComplainedDate", $order = "DESC", $search = '')
     {
         try {
             // Define base conditions
-            $conditions = [];
+            $conditions = [
+                ['ComplaintCount', '>', 0]
+            ];
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
@@ -73,8 +75,7 @@ class ComplaintModel extends Model {
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
-            // $complaints = $this->select('studentjobcomplaints', [], 'CompanyID, CompanyName, CompanyEmail, Status, MAX(ComplainedDate) AS LastComplainedDate, COUNT(CompanyID) AS ComplaintCount', '', 'CompanyID', 'ComplaintCount DESC', $rowsPerPage, $pageNumber, true);
-            $complaints = $this->select('v_complaintsforcompany', [[$searchBy, 'LIKE', $search . '%']], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $complaints = $this->select('v_complaintsforcompany', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $complaints;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -85,7 +86,33 @@ class ComplaintModel extends Model {
         }
     }
 
-    public function getComplaintsByCompany($companyID, $pageNumber = 1, $rowsPerPage = 10, $sort = "ComplaintID", $order = "ASC", $search = '')
+    public function getComplaintsGroupedByJob($pageNumber = 1, $rowsPerPage = 10, $sort = "LastComplainedDate", $order = "DESC", $search = '')
+    {
+        try {
+            // Define base conditions
+            $conditions = [
+                ['ComplaintCount', '>', 0]
+            ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', CompanyEmail, CompanyName, ComplaintCount, DATE_FORMAT(LastComplainedDate, '%Y-%m-%d'))";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+            $complaints = $this->select('v_complaintsforJob', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $complaints;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getComplaintsByCompany($companyID, $pageNumber = 1, $rowsPerPage = 10, $sort = "ComplainedDate", $order = "DESC", $search = '')
     {
         try {
             // Define base conditions
@@ -100,7 +127,33 @@ class ComplaintModel extends Model {
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
-            $complaints = $this->select('studentjobcomplaints', $conditions, 'ComplaintID, JobTitle, CompanyEmail, Complaint, StudentName, ComplainedDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $complaints = $this->select('v_complaints', $conditions, 'ComplaintID, JobTitle, CompanyEmail, Complaint, StudentName, ComplainedDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $complaints;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getComplaintsByJob($jobID, $pageNumber = 1, $rowsPerPage = 10, $sort = "ComplainedDate", $order = "DESC", $search = '')
+    {
+        try {
+            // Define base conditions
+            $conditions = [
+                ['JobID', '=', $jobID]
+            ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', JobTitle, CompanyEmail, Complaint, StudentName, DATE_FORMAT(ComplainedDate, '%Y-%m-%d'), Status)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+            $complaints = $this->select('v_complaints', $conditions, 'ComplaintID, JobTitle, CompanyEmail, Complaint, StudentName, ComplainedDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $complaints;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -114,7 +167,7 @@ class ComplaintModel extends Model {
     public function getCountPendingComplaints()
     {
         try {
-            $complaints = $this->select('studentjobcomplaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, 1, false);
+            $complaints = $this->select('v_complaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, 1, false);
             return $complaints->PendingCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -129,7 +182,7 @@ class ComplaintModel extends Model {
     public function resolveComplaint($complaintId)
     {
         try {
-            $this->update('studentjobcomplaints', ['Status' =>  'Resolved'], ['ComplaintID' => $complaintId]);
+            $this->update('v_complaints', ['Status' =>  'Resolved'], ['ComplaintID' => $complaintId]);
             return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -143,7 +196,7 @@ class ComplaintModel extends Model {
     public function rejectComplaint($complaintId)
     {
         try {
-            $this->update('studentjobcomplaints', ['Status' => 'Rejected'], ['ComplaintID' => $complaintId]);
+            $this->update('v_complaints', ['Status' => 'Rejected'], ['ComplaintID' => $complaintId]);
             return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
