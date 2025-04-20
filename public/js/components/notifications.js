@@ -68,8 +68,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="fas ${getIcon(notification.type)}"></i>
                     </div>
                     <div class="notification-content">
-
-                        <a href="/UniQuest${notification.related_url}" class="notification-link mark-read" data-id="${notification.id}" data-role="${userRole}">${notification.message}</a>
+                        ${notification.related_url ? `
+                            <a href="/UniQuest${notification.related_url}" class="notification-link mark-read" data-id="${notification.id}" data-role="${userRole}">
+                                ${notification.message}
+                            </a>` 
+                            : 
+                            `<span class="notification-link mark-read" data-id="${notification.id}" data-role="${userRole}">
+                                ${notification.message}
+                            </span>`}
                         <small>${timeAgo}</small>
                     </div>
                     ${notification.is_read ? '' : `
