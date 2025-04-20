@@ -15,14 +15,12 @@
             <select class="limit-select" name="limit" onchange="this.form.submit()">
                 <?php
                 $selectedLimit = isset($_GET['limit']) ? (int)$_GET['limit'] : $data['rowsPerPage'];
-                if ($selectedLimit == 12) {
+                if (in_array($selectedLimit, [12, 24, 48, 96])) {
                     $limits = [12, 24, 48, 96];
-                } elseif ($selectedLimit == 10) {
-                    $limits = [5, 10, 20, 40, 80];
-                } elseif ($selectedLimit == 2) {
-                    $limits = [2, 4, 8, 16, 32]; //test
+                } elseif (in_array($selectedLimit, [10, 20, 40, 80])) {
+                    $limits = [10, 20, 40, 80];
                 } else {
-                    $limits = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+                    $limits = [10, 20, 40, 80];
                 }
                 foreach ($limits as $limit) {
                     $selected = ($limit == $selectedLimit) ? "selected" : "";

@@ -130,13 +130,13 @@ class Register extends Controller
             'city' => ucfirst(trim($post['city'] ?? '')),
             'gender' => ucfirst(trim($post['gender'] ?? '')),
             'dob' => trim($post['dob'] ?? ''),
-            'profilePic' => $files['profilePic'] ?? '',
+            'profilePic' => $files['profilePic'] ?? null,
             'nicNo' => trim($post['nicNo'] ?? ''),
-            'nicCopy' => $files['nicCopy'] ?? '',
-            'cv' => $files['cv'] ?? '',
+            'nicCopy' => $files['nicCopy'] ?? null,
+            'cv' => $files['cv'] ?? null,
             'university' => ucfirst(trim($post['university'] ?? '')),
             'universityID' => trim($post['universityID'] ?? ''),
-            'universityIDCopy' => $files['universityIDCopy'] ?? '',
+            'universityIDCopy' => $files['universityIDCopy'] ?? null,
             'terms' => trim($post['terms'] ?? ''),
             'role' => 'Student',
             'status' => 'Pending',
@@ -471,6 +471,14 @@ class Register extends Controller
             $validationResponse = Validator::isValidRegistrationData($data);
             if (!$validationResponse['is_valid']) {
                 $data = array_merge($data, $validationResponse['error']);
+            }
+
+            //validate required files
+            if (empty($data['nicCopy']['name'])) {
+                $data['nicCopy_err'] = 'Please upload a NIC copy';
+            }
+            if (empty($data['universityIDCopy']['name'])) {
+                $data['universityIDCopy_err'] = 'Please upload a university ID copy';
             }
 
             //vallidate files

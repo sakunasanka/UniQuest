@@ -18,7 +18,7 @@
         ];
         ?>
         <div class="content-header">
-            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/company_complaints'">
+            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_complaints'">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
                 <h1>Complaint Management</h1>
             </button>
