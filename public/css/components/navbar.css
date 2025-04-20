@@ -118,7 +118,8 @@
 .nav-icons {
     display: flex;
     align-items: center;
-    margin-right: 40px;
+    margin-right: 30px;
+    margin-left: 20px;
 }
 
 .nav-icons a {
@@ -129,8 +130,8 @@
 /* Notification Badge */
 .notification-badge {
     position: absolute;
-    top: 40px;
-    right: 113px;
+    top: 25px;
+    right:0px;
     background-color: red;
     color: white;
     font-size: 0.8rem;

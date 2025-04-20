@@ -135,7 +135,7 @@
 .notification-dropdown {
     display: none;
     position: absolute;
-    right: 0;
+    right: 40px;
     top: 100%;
     width: 350px;
     max-height: 500px;
