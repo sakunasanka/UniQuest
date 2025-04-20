@@ -6,7 +6,6 @@ if (isset($_SESSION['user_id'])) {
     $unreadCount = $notificationModel->getUnreadCount($_SESSION['user_id']);
 }
 ?>
-
 <?php 
     if ($_SESSION['user_role'] == 'Student')
         $role = 'student';
@@ -20,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
         $role = 'Guest';
 ?>
 <script>
-    const role = "<?= $role ?>";
+    const userRole = "<?= $role ?>";
 </script>
 
 <button class="notification-btn" id="notificationDropdown">
@@ -30,15 +29,15 @@ if (isset($_SESSION['user_id'])) {
     <?php endif; ?>
 </button>
 <div class="notification-dropdown" id="notificationDropdownContent">
-<div class="notification-header">
-    <h4>Notifications</h4>
-    <a href="<?= URLROOT . '/' . $role . '/markAllRead' ?>" class="mark-all-read">Mark all as read</a>
-</div>
+    <div class="notification-header">
+        <h4>Notifications</h4>
+        <a href="<?= URLROOT . '/' . $role . '/markAllRead' ?>" class="mark-all-read">Mark all as read</a>
+    </div>
     <div class="notification-items">
         <?php if (!empty($notifications)): ?>
             <?php foreach ($notifications as $notification): ?>
                 <div class="notification-item <?= $notification->is_read ? 'read' : 'unread' ?> <?= $notification->type ?>"
-                     data-id="<?= $notification->id ?>">
+                    data-id="<?= $notification->id ?>">
                     <div class="notification-icon">
                         <i class="fas <?= 
                             $notification->type == 'success' ? 'fa-check-circle text-success' : 
@@ -47,19 +46,32 @@ if (isset($_SESSION['user_id'])) {
                         ?>"></i>
                     </div>
                     <div class="notification-content">
-                        <?php if ($notification->related_url): ?>
-                            <a href="<?= URLROOT . $notification->related_url ?>">
-                                <?= htmlspecialchars($notification->message) ?>
+                        <?php if (!empty($notification->related_url)): ?>
+                            <a href="<?= URLROOT . $notification->related_url ?>" class="notification-link">
+                                <div class="notification-message">
+                                    <?= htmlspecialchars($notification->message) ?>
+                                </div>
+                                <div class="notification-time">
+                                    <?= date('M j, Y g:i A', strtotime($notification->created_at)) ?>
+                                </div>
                             </a>
                         <?php else: ?>
-                            <?= htmlspecialchars($notification->message) ?>
+                            <div class="notification-message">
+                                <?= htmlspecialchars($notification->message) ?>
+                            </div>
+                            <div class="notification-time">
+                                <?= date('M j, Y g:i A', strtotime($notification->created_at)) ?>
+                            </div>
                         <?php endif; ?>
-                        <small><?= date('M j, Y g:i A', strtotime($notification->created_at)) ?></small>
                     </div>
                     <?php if (!$notification->is_read): ?>
                         <button class="mark-read" data-id="<?= $notification->id ?>" data-role="<?= $role ?>">
-                            <span class="material-symbols-outlined">check_circle</span>
+                            <span class="mark-as-read">Mark As Read</span>
                         </button>
+                    <?php else: ?>
+                        <div class="read-indicator">
+                            <span class="material-symbols-outlined">done_all</span>
+                        </div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
