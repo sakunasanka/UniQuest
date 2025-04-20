@@ -58,6 +58,12 @@ textarea {
     resize: vertical;
 }
 
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #32a852;
+}
+
 .complaint-submit-btn {
     background-color: #299b63;
     color: #fff;

@@ -179,10 +179,24 @@ class ComplaintModel extends Model {
     }
     
 
+    public function startReview($complaintId)
+    {
+        try {
+            $this->update('complaint_jobs', ['Status' =>  'In-Review'], ['ComplaintID' => $complaintId]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function resolveComplaint($complaintId)
     {
         try {
-            $this->update('v_complaints', ['Status' =>  'Resolved'], ['ComplaintID' => $complaintId]);
+            $this->update('complaint_jobs', ['Status' =>  'Resolved'], ['ComplaintID' => $complaintId]);
             return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -196,7 +210,27 @@ class ComplaintModel extends Model {
     public function rejectComplaint($complaintId)
     {
         try {
-            $this->update('v_complaints', ['Status' => 'Rejected'], ['ComplaintID' => $complaintId]);
+            $this->update('complaint_jobs', ['Status' => 'Rejected'], ['ComplaintID' => $complaintId]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function addComplaintLog($data)
+    {
+        try {
+            $logData = [
+                'ComplaintID' => $data['complaintID'],
+                'Note' => $data['note'] ?? null,
+                'ReasonID' => $data['reasonID'],
+                'StatusAfter' => $data['statusAfter']
+            ];
+            $this->insert('complaint_logs', $logData);
             return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());

@@ -645,6 +645,11 @@ class Student extends Controller
                 $data['complaint_err'] = 'Please provide a complaint.';
             }
 
+            // Validate proof file
+            if (empty($data['proof']['name'])) {
+                $data['proof_err'] = 'Please upload a proof file.';
+            } 
+            
             // Check for errors
             if (empty($data['complaint_err']) && empty($data['proof_err'])) {
                 // Handle file upload for proof
