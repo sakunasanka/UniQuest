@@ -20,16 +20,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load notifications
     function loadNotifications() {
-        fetch(`${URLROOT}/student/notifications/get-recent`, {
+        fetch(`/UniQuest/${role}/getRecentNotifications`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 renderNotifications(data.notifications, data.unreadCount);
             }
+        })
+        .catch(error => {
+            console.error('Error loading notifications:', error);
         });
     }
     
@@ -52,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <small>${timeAgo}</small>
                     </div>
                     ${notification.is_read ? '' : `
-                    <button class="mark-read" data-id="${notification.id}">
+                    <button class="mark-read" data-id="${notification.id}" data-role="${role}">
                         <span class="material-symbols-outlined">check_circle</span>
                     </button>`}
                 </div>`;
@@ -68,20 +76,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mark as read handler
     document.addEventListener('click', function(e) {
         if (e.target.closest('.mark-read')) {
-            const id = e.target.closest('.mark-read').dataset.id;
-            markAsRead(id);
+            const button = e.target.closest('.mark-read');
+            const id = button.dataset.id;
+            const role = button.dataset.role;
+            markAsRead(id, role);
         }
     });
     
     // Mark as read function
-    function markAsRead(id) {
-        fetch(`${URLROOT}/student/notifications/mark-read/${id}`, {
+    function markAsRead(id, role) {
+        fetch(`/UniQuest/${role}/markAsRead/${id}`, {
             method: 'POST',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 const item = document.querySelector(`.notification-item[data-id="${id}"]`);
@@ -92,6 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 updateBadge(data.unreadCount);
             }
+        })
+        .catch(error => {
+            console.error('Error marking notification as read:', error);
         });
     }
     

@@ -37,7 +37,6 @@
             'Rating' => 'Rating'
             ]; ?>
             <?php require APPROOT . '/views/components/searchBarComp.php'; ?>
-            <?php require APPROOT . '/views/components/notification_dropdown.php'; ?>
             <div class="cards-container">
                 <?php if(empty($data['posts'])): ?>
                     <div class="no-results">No results found.</div>

@@ -30,7 +30,7 @@ function sendNotification($userId, $message, $title, $type = 'info', $link = nul
  function notifyStudentApplicationAccepted($applicationId, $studentId, $jobTitle) {
     try {
         $message = "Congratulations! Your application for '{$jobTitle}' has been accepted";
-        $link = URLROOT . "/student/view_application/{$applicationId}";
+        $link = "/student/view_application/{$applicationId}";
         $title = "Application Accepted";
         $type = 'success';
         

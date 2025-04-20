@@ -21,31 +21,8 @@
                 <li><a href="/UniQuest/student/contact_admin" class="hov">Contact Us</a></li>
         </ul>
         <div class="nav-icons">
-            
-                <button class="notification-btn" id="notificationDropdown">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <?php if (isset($unreadCount) && $unreadCount > 0): ?>
-                        <span class="notification-badge"><?= $unreadCount ?></span>
-                    <?php endif; ?>
-                    <span class="notification-badge">1</span>
-                </button>
-                <div class="notification-dropdown" id="notificationDropdownContent">
-                    <div class="notification-header">
-                        <h4>Notifications</h4>
-                        <a href="<?= URLROOT ?>/student/notifications/mark-all-read" class="mark-all-read">Mark all as read</a>
-                    </div>
-                    <div class="notification-items">
-                        <div class="text-center py-3">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="notification-footer">
-                        <a href="<?= URLROOT ?>/student/notifications">View all notifications</a>
-                    </div>
-                </div>
-            </div>
+            <?php require APPROOT . '/views/components/notification_dropdown.php'; ?>           
+        </div>
             
         <?php require APPROOT . '/views/components/navProfile.php'; ?>
     <?php else: ?>

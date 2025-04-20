@@ -1360,4 +1360,17 @@ class Admin extends Controller
 
         exit;
     }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        $this->model('NotificationModel')->markAsRead($notificationId);
+        // $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/notifications';
+        // Redirect::to($previousURL);
+    }
 }

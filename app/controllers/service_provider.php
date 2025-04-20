@@ -1132,4 +1132,19 @@ class Service_provider extends Controller
             die($e->getMessage()); 
         }
     }
+
+    public function markAllRead() {
+        if (!isset($_SESSION['user_id'])) {
+            redirect('users/login');
+        }
+
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        $this->model('NotificationModel')->markAsRead($notificationId);
+        // $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/notifications';
+        // Redirect::to($previousURL);
+    }
 }

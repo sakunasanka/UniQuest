@@ -386,4 +386,17 @@ class Verification_team extends Controller
             $this->view('pages/verification_team/contact_admin', $data);
         }
     }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        $this->model('NotificationModel')->markAsRead($notificationId);
+        // $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/notifications';
+        // Redirect::to($previousURL);
+    }
 }

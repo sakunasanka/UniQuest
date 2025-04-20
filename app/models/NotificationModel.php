@@ -46,4 +46,17 @@ class NotificationModel extends Model {
         $this->db->bind(':user_id', $userId);
         return $this->db->execute();
     }
+
+    public function getRecentNotifications($userId, $limit = 5) {
+        $this->db->query('SELECT * FROM notifications 
+                         WHERE UserID = :user_id 
+                         ORDER BY created_at DESC 
+                         LIMIT :limit');
+        
+        $this->db->bind(':user_id', $userId);
+        $this->db->bind(':limit', $limit, PDO::PARAM_INT);
+        
+        return $this->db->resultSet();
+    }
+    
 }
