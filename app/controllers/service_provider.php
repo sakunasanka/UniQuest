@@ -1126,7 +1126,22 @@ class Service_provider extends Controller
     public function reject_application($applicationID, $jobID)
     {
         try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
             $this->model('M_applicationFields')->rejectApplication($applicationID);
+
+            //Send notification to student
+            notifyStudentApplicationAccepted(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+            
             Redirect::to(URLROOT . '/service_provider/rejected_applications/'.$jobID);
         } catch (Exception $e) {
             die($e->getMessage()); 
