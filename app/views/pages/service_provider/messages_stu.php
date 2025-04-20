@@ -101,11 +101,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //Refresh the page when the popup is closed
 closePopupBtn?.addEventListener("click", function () {
-    window.location.href = "/UniQuest/admin/messages_stu";
+    window.location.href = "/UniQuest/service_provider/messages_stu";
 });
 
 backgroundOverlay?.addEventListener("click", function () {
-    window.location.href = "/UniQuest/admin/messages_stu";
+    window.location.href = "/UniQuest/service_provider/messages_stu";
 });
 
 </script>

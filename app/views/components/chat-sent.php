@@ -56,6 +56,8 @@
             <?php
             if ($_SESSION['user_role'] == 'Admin') {
                 echo URLROOT . '/admin/sendMessage/' . $data['user']['UserID'];
+            }elseif ($_SESSION['user_role'] == 'Company') {
+                    echo URLROOT . '/service_provider/sendMessage/' . $data['user']['UserID'];
             } elseif ($_SESSION['user_role'] == 'Student') {
                 echo URLROOT . '/jobs/sendMessage/' . $data['post']->JobID;
             }
