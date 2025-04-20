@@ -659,6 +659,7 @@ SELECT
     a.created_at AS SubmissionDate,
     a.updated_at AS LastUpdated,
     j.create_at AS JobCreatedAt,
+    j.PublishDate,
     c.create_at AS company_create_at
 FROM
     applications a
@@ -1016,3 +1017,18 @@ FROM
     LEFT JOIN cities ci ON c.CityID = ci.CityID
     LEFT JOIN industry i ON c.IndustryID = i.IndustryID  ;
 
+-- notifications
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL,
+  `type` enum('info','success','warning','danger') NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `related_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `UserID` (`UserID`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

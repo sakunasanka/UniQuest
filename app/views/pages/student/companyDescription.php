@@ -153,7 +153,7 @@ if (!isset($_SESSION['user_role'])) {
                                 <p>Salary: Rs.<?php echo ($job->SalaryRange); ?> <?php echo ($job->SalaryType); ?></p>
                             </div>
                             <div>
-                                <p>Posted: <?php echo converttimetoreadableformat($job->jobs_create_at); ?></p>
+                                <p>Published On: <?php echo converttimetoreadableformat($job->PublishDate); ?></p>
                             </div>
                             </br>
                             <div class="job-actions">

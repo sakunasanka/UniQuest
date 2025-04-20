@@ -25,7 +25,7 @@
                             <p>
                                 
                                 <?php echo $job['location']; ?> •
-                                Posted: <?php echo $job['posted']; ?>
+                                Published On: <?php echo $job['posted']; ?>
                             </p>
                         </div>
                         <div class="job-stats">

@@ -255,7 +255,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/offered_applications', $data);
@@ -318,7 +318,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/new_applications', $data);
@@ -386,7 +386,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/rejected_applications', $data);
@@ -410,7 +410,7 @@ class Service_provider extends Controller
                     'title' => $application->JobTitle,
                     'jobID' => $jobId,
                     'location' => $application->JobLocation,
-                    'posted' => date('M d, Y', strtotime($application->JobCreatedAt)),
+                    'posted' => date('M d, Y', strtotime($application->PublishDate)),
                     'stats' => [
                         'total' => 0,
                         'accepted' => 0,

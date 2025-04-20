@@ -14,6 +14,16 @@ if (!isset($_SESSION['user_role'])) {
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <!-- Add near your user profile dropdown -->
+    
+
+<!-- Include CSS -->
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/notifications.css">
+
+<!-- Include JavaScript -->
+<script src="<?php echo URLROOT; ?>/js/notifications.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 <?php if (isset($_SESSION['user_role'])): ?>
 <?php else: ?>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
@@ -39,7 +49,7 @@ if (!isset($_SESSION['user_role'])) {
             'Rating' => 'Rating'
             ]; ?>
             <?php require APPROOT . '/views/components/searchBarComp.php'; ?>
-
+            <?php require APPROOT . '/views/components/notification_dropdown.php'; ?>
             <div class="cards-container">
                 <?php if(empty($data['posts'])): ?>
                     <div class="no-results">No results found.</div>
