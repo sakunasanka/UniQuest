@@ -67,3 +67,79 @@ function sendNotification($userId, $message, $title, $type = 'info', $link = nul
         return false;
     }
 }
+
+// Admin approves a User
+function notifyUserApproval($userId) {
+    try {
+        $message = "Congratulations! Your account has been approved.";
+        $title = "Account Approved";
+        $type = 'success';
+        
+        return sendNotification(
+            $userId,
+            $message,
+            $title,
+            $type,
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send user approval notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Admin rejects a User
+function notifyUserRejection($userId, $reason) {
+    try {
+        $message = "Your account has been rejected. Reason: {$reason}";
+        $title = "Account Rejected";
+        $type = 'danger';
+        
+        return sendNotification(
+            $userId,
+            $message,
+            $title,
+            $type,
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send user rejection notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Account acticated
+function notifyAccountActivation($userId) {
+    try {
+        $message = "Congratulations! Your account has been activated.";
+        $title = "Account Activated";
+        $type = 'success';
+        
+        return sendNotification(
+            $userId,
+            $message,
+            $title,
+            $type,
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send account activation notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Account deactivated
+function notifyAccountDeactivation($userId, $reason) {
+    try {
+        $message = "Sorry! Your account has been deactivated. Reason: {$reason}";
+        $title = "Account Deactivated";
+        $type = 'warning';
+        
+        return sendNotification(
+            $userId,
+            $message,
+            $title,
+            $type,
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send account deactivation notification: " . $e->getMessage());
+        return false;
+    }
+}
