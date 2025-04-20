@@ -1,5 +1,5 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/contact_form.css">
+
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/chat.css">
 
 <div class="main-container">
@@ -7,23 +7,12 @@
 
     <div class="content-area">
         <div class="container">
-        <span>Chat with 
-            <?php 
-            if ($_SESSION['user_role'] == 'Admin' || $_SESSION['user_role'] == 'VT-Member' || $_SESSION['user_role'] == 'Student') {
-                if ($data['user']['Role'] == 'Company') {
-                    echo $data['user']['CompanyName'];
-                } else {
-                    echo $data['user']['FirstName'];
-                }
-            }
-            else {
-                echo $data['user']['FirstName'];
-            }
-            ?>
-        </span>
-        <button id="closePopupBtn" class="chat-close-btn"><i class="fa fa-times"></i></button>
+        <div class="chat-header">
+                        Chat with Admin
+        </div>
+        
     </div>
-    <div class="popup-content">
+    
         <div class="messages">
         <?php
         $previousDate = null;
@@ -59,7 +48,9 @@
         <form id="messageForm" class="message-form" method="post" action="
             <?php
             if ($_SESSION['user_role'] == 'VT-Member' ) {
-                echo URLROOT . '/verification_team/sendMessage/' . $data['user']['UserID'];
+                echo URLROOT . '/verification_team/contact_admin/' . $data['user']['UserID'];
+            }elseif ($_SESSION['user_role'] == 'Admin' ) {
+                    echo URLROOT . '/admin/sendMessage/' . $data['user']['UserID'];
             } elseif ($_SESSION['user_role'] == 'Student') {
                 echo URLROOT . '/jobs/sendMessage/' . $data['post']->JobID;
             }
@@ -78,8 +69,11 @@
 
             
         </div>    
-    </div>
+    
 </div>
+
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/chat.js"></script>
 
 <script>
 document.getElementById("contactForm").addEventListener("submit", function(event) {

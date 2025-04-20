@@ -18,10 +18,6 @@
             "Actions" => "Actions"
         ];
         ?>
-        <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/service_provider/messages_stu">Students</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/service_provider/messages_add">Admin</button>
-        </div>
 
         <div class="table-block">
             <div class="content-header">
