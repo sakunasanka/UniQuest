@@ -31,7 +31,7 @@
         ?>
         <?php
         $searcher = MainSearcher::getInstance();
-        echo $searcher->renderSearchBar('Search for Jobs Title...');
+        echo $searcher->renderSearchBar('Search for Jobs Title, Industry, Location, Salary...');
         ?>
     </div>
 

@@ -14,7 +14,10 @@
         $months = round($seconds / 2600640);
         $years = round($seconds / 31553280);
         // Seconds
-        if($seconds <= 60){
+        if($seconds <= 0) {
+            return "Not published yet";
+        }
+        elseif($seconds <= 60){
             return "just now";
         }
         //Minutes

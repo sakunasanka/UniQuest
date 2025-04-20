@@ -3,6 +3,7 @@
         <div class="logo">
             <img src="<?php echo URLROOT; ?>/images/UniQuest3.png" alt="UniQuest Logo">
         </div>
+
         <ul class="nav-links">
             <li><a href="/UniQuest/home" class="hov">Home</a></li>
             <li><a href="/UniQuest/jobs" class="hov">Part-time Jobs</a></li>
@@ -16,16 +17,10 @@
                         <a href="/UniQuest/companies">Companies</a>
                     </div>
                 </li> -->
-            <!-- <li><a href="/UniQuest/about" class="hov">About Us</a></li> -->
-            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
-                <li><a href="/UniQuest/student/contact_admin" class="hov">Contact Us</a></li>
         </ul>
-        <div class="nav-icons">
-            <a href="/UniQuest/student/notifications"><span class="material-symbols-outlined">notifications</span></a>
-            <span class="notification-badge">1</span>
+
+        <div class="nav-button">
+            <a href="/UniQuest/login" class="get-started">Get Started</a>
         </div>
-        <?php require APPROOT . '/views/components/navProfile.php'; ?>
-    <?php else: ?>
-    <?php endif; ?>
     </div>
 </nav>

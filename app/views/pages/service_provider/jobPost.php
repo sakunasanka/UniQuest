@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/jobPost.css">
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <div class="main-container">
     <!-- Sidebar -->

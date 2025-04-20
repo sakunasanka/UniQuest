@@ -39,18 +39,25 @@ class Model
         // Loop through each condition in the conditions array
         foreach ($conditions as $condition) {
             // Extract column, operator, and value from the condition
-            $column = $condition[0]; // The column name (e.g., 'Status', 'Role')
-            $operator = $condition[1]; // The SQL operator (e.g., '=', 'IN')
+            $column = $condition[0]; // The column name or expression
+            $operator = $condition[1]; // The SQL operator (e.g., '=', 'IN', 'LIKE')
             $value = $condition[2]; // The value to compare against
 
+            // Handle special case for SQL functions in column (like CONCAT_WS)
+            if (strpos($column, '(') !== false) {
+                // For SQL functions, use the expression directly without parameter binding
+                $conditionStrings[] = "$column $operator " . $this->db->quote($value);
+                continue;
+            }
+
             if ($operator === 'IN' || $operator === 'NOT IN') {
-                // Special handling for the 'IN' operator (e.g., WHERE column IN (values))
+                // Special handling for the 'IN' operator
 
                 // Array to store placeholders for the 'IN' values
                 $placeholders = [];
 
                 // Loop through each value in the 'IN' clause
-                foreach ($value as $v) {
+                foreach ((array)$value as $v) {
                     // Create a unique placeholder for each value
                     $placeholder = "{$column}_{$index}";
                     $placeholders[] = ":$placeholder";
@@ -65,7 +72,7 @@ class Model
                 // Add the condition string for the 'IN' operator to the array
                 $conditionStrings[] = "$column $operator (" . implode(', ', $placeholders) . ")";
             } else {
-                // For regular operators (e.g., '=', '<>', '<', '>')
+                // For regular operators (e.g., '=', '<>', '<', '>', 'LIKE')
 
                 // Create a unique placeholder for the value
                 $placeholder = "{$column}_{$index}";
@@ -214,7 +221,7 @@ class Model
                 'totalRows' => $totalRows,
                 'totalPages' => ($limit > 0) ? ceil($totalRows / $limit) : 1,
                 'isLastPage' => ($limit > 0) ? ($pageNumber >= ceil($totalRows / $limit)) : true
-            ];  
+            ];
             return $data;
         } else {
             return $this->db->single();
