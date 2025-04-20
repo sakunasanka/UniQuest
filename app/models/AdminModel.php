@@ -159,6 +159,16 @@ class AdminModel extends Model {
         }
     }
 
+    public function getReasonByType($reasonType) {
+        try {
+            // retrieve a single reason by type
+            $reason = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName, Reason', 'AND', '', '', 0, 1, false);
+            return $reason;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function updateReason($reasonID, $reasonName, $reason) {
         try {
             $reason = [
@@ -319,6 +329,21 @@ class AdminModel extends Model {
             return $cities;
         } catch (Exception $e) {
             return $e->getMessage();
+        }
+    }
+
+    //restrict posting for a company
+    public function restrictPosting($companyID)
+    {
+        try {
+            $this->update('company', ['can_post' => 'N'], ['CompanyID' => $companyID]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
         }
     }
 

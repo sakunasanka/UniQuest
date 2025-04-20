@@ -57,9 +57,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search, $searchBy);
+            $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
 
@@ -93,13 +92,12 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
             // $page = $_GET['page'] ?? 1;
             // $limit = $_GET['limit'] ?? 2;
             // $sort = $_GET['sort'] ?? 'UserID';
             // $order = $_GET['order'] ?? 'ASC';
 
-            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search, $searchBy);
+            $companies = $this->model->getVerifiedUsersByRole('Company', $page, $limit, $sort, $order, $search);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
 
@@ -133,9 +131,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search, $searchBy);
+            $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search);
             $deactReasons = $this->model('AdminModel')->getReasonsByType('user_deactivate');
             $actReasons = $this->model('AdminModel')->getReasonsByType('user_activate');
 
@@ -217,18 +214,17 @@ class Admin extends Controller
         }
     }
 
-    public function job_complaint($queryParam = [])
+    public function all_complaints($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'ComplaintID';
 
-            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order, $search, $searchBy);
+            $complaints_job = $this->model('ComplaintModel')->getAllComplaints($page, $limit, $sort, $order, $search);
 
             $data = [
                 'complaints_job' => $complaints_job['data'],
@@ -239,24 +235,50 @@ class Admin extends Controller
                 'isLastPage' => $complaints_job['isLastPage'] ? 'yes' : 'no',
             ];
 
-            $this->view('pages/admin/job_complaint', $data);
+            $this->view('pages/admin/all_complaints', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function company_complaint($queryParam = [])
+    public function job_complaints($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'LastComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyID';
 
-            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order, $search, $searchBy);
+            $complaints_job = $this->model('ComplaintModel')->getComplaintsGroupedByJob($page, $limit, $sort, $order, $search);
+
+            $data = [
+                'complaints_job' => $complaints_job['data'],
+                'currentPage' => $complaints_job['currentPage'],
+                'rowsPerPage' => $complaints_job['limit'],
+                'totalRows' => $complaints_job['totalRows'],
+                'totalPages' => $complaints_job['totalPages'],
+                'isLastPage' => $complaints_job['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/job_complaints', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function company_complaints($queryParam = [])
+    {
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'LastComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+
+            $complaints_com = $this->model('ComplaintModel')->getComplaintsGroupedByCompany($page, $limit, $sort, $order, $search);
 
             $data = [
                 'complaints_com' => $complaints_com['data'],
@@ -267,20 +289,44 @@ class Admin extends Controller
                 'isLastPage' => $complaints_com['isLastPage'] ? 'yes' : 'no',
             ];
 
-            $this->view('pages/admin/company_complaint', $data);
+            $this->view('pages/admin/company_complaints', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function complaint_detail($complaintID)
+    protected function prepareComplaintData($complaintID)
     {
         $complaint = $this->model('ComplaintModel')->getComplaintDetails($complaintID);
+        $complaintStatus = $complaint->Status;
+        //load reasons with respect to status
+        switch ($complaintStatus) {
+            case 'Pending':
+                $reasons = [
+                    'start' => $this->model('AdminModel')->getReasonsByType('complaint_in_review')['data']
+                ];
+                break;
+            case 'In-Review':
+                $reasons = [
+                    'resolve' => $this->model('AdminModel')->getReasonsByType('complaint_resolved')['data'],
+                    'reject' => $this->model('AdminModel')->getReasonsByType('complaint_rejected')['data']
+                ];
+                break;
+            default:
+                $reasons = null; // Handle unexpected status
+        }
 
         $data = [
-            'complaint' => $complaint
+            'complaint' => $complaint,
+            'reasons' => $reasons ?? [],
         ];
 
+        return $data;
+    }
+
+    public function complaint_detail($complaintID)
+    {
+        $data = $this->prepareComplaintData($complaintID);
         $this->view('pages/admin/complaint_detail', $data);
     }
 
@@ -290,12 +336,11 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplaintID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'ComplaintID';
 
-            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order, $search, $searchBy);
+            $complaints = $this->model('ComplaintModel')->getComplaintsByCompany($company, $page, $limit, $sort, $order, $search);
 
             $data = [
                 'complaints' => $complaints['data'],
@@ -312,21 +357,135 @@ class Admin extends Controller
         }
     }
 
-    public function resolve_complaint($complaintID)
+    public function complaint_job($company, $queryParam = [])
     {
         try {
-            $this->model('ComplaintModel')->resolveComplaint($complaintID);
-            Redirect::to(URLROOT . '/admin/job_complaint');
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ComplainedDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
+
+            $complaints = $this->model('ComplaintModel')->getComplaintsByJob($company, $page, $limit, $sort, $order, $search);
+
+            $data = [
+                'complaints' => $complaints['data'],
+                'currentPage' => $complaints['currentPage'],
+                'rowsPerPage' => $complaints['limit'],
+                'totalRows' => $complaints['totalRows'],
+                'totalPages' => $complaints['totalPages'],
+                'isLastPage' => $complaints['isLastPage'] ? 'yes' : 'no',
+            ];
+
+            $this->view('pages/admin/complaint_job', $data);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
     }
 
-    public function reject_complaint($complaintID)
+    public function start_review($complaintID)
     {
         try {
-            $this->model('ComplaintModel')->rejectComplaint($complaintID);
-            Redirect::to(URLROOT . '/admin/job_complaint');
+            $reason = $this->model('AdminModel')->getReasonByType('complaint_in_review');
+            $data = [
+                'complaintID' => $complaintID,
+                'note' => '',
+                'reasonID' => $reason->ReasonID,
+                'statusAfter' => 'In-Review',
+                'reasonID_err' => ''
+            ];
+            //add complaint log
+            $this->model('ComplaintModel')->addComplaintLog($data);
+            //update complaint status to in-review
+            $this->model('ComplaintModel')->startReview($complaintID);
+            Redirect::to(URLROOT . '/admin/complaint_detail/' . $complaintID);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    public function handle_complaint_action($complaintID)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $data = [
+                'complaintID' => $complaintID,
+                'note' => trim($_POST['note']) ?? null,
+                'reasonID' => trim($_POST['reasonID']) ?? null,
+                'jobID' => trim($_POST['jobID']) ?? null,
+                'companyID' => trim($_POST['companyID']) ?? null,
+                'companyEmail' => trim($_POST['companyEmail']) ?? null,
+                'studentID' => trim($_POST['studentID']) ?? null,
+                'deactivate_job' => isset($_POST['deactivate_job']) ? 1 : 0,
+                'deactivate_company' => isset($_POST['deactivate_company']) ? 1 : 0,
+                'send_warning' => isset($_POST['send_warning']) ? 1 : 0,
+                'restrict_posting' => isset($_POST['restrict_posting']) ? 1 : 0,
+                'statusAfter' => '',
+                'reasonID_err' => ''
+            ];
+
+            if (isset($_POST['resolve_submit'])) {
+                // call resolve_complaint method
+                $this->resolve_complaint($data);
+            } elseif (isset($_POST['reject_submit'])) {
+                // call reject_complaint method
+                $this->reject_complaint($data);
+            } else {
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $complaintID);
+            }
+        } else {
+            Redirect::to(URLROOT . '/admin/complaint_detail/' . $complaintID);
+        }
+    }
+
+    protected function reject_complaint($data)
+    {
+        try {
+            //set statusAfter to rejected
+            $data['statusAfter'] = 'Rejected';
+            //add complaint log
+            $this->model('ComplaintModel')->addComplaintLog($data);
+            //update complaint status to in-review
+            $this->model('ComplaintModel')->rejectComplaint($data['complaintID']);
+            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
+    }
+
+    protected function resolve_complaint($data)
+    {
+        try {
+            //check if reasonID is not empty
+
+            //check secondary actions are selected
+            if ($data['deactivate_job'] == 1) {
+                $this->model('jobModel')->deactivateJob($data['jobID']);
+                //todo : get correct reason by type
+                //add job log
+                //todo : send notification to company about job deactivation
+            }
+            if ($data['deactivate_company'] == 1) {
+                $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
+                $this->model->deactivateAccount($data['companyID']);
+                $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
+                MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
+            }
+            if ($data['send_warning'] == 1) {
+                // $this->model('ComplaintModel')->sendWarning($data['complaintID']);
+                //todo : send warning notification to company
+            }
+            if ($data['restrict_posting'] == 1) {
+                $this->model('AdminModel')->restrictPosting($data['companyID']);
+            }
+            //set statusAfter to resolved
+            $data['statusAfter'] = 'Resolved';
+            //add complaint log
+            $this->model('ComplaintModel')->addComplaintLog($data);
+            //update complaint status to resolved
+            $this->model('ComplaintModel')->resolveComplaint($data['complaintID']);
+            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -341,9 +500,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search, $searchBy);
+            $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search);
             $data = [
                 'ptjobs' => $ptjobs['data'],
                 'currentPage' => $ptjobs['currentPage'],
@@ -367,9 +525,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search, $searchBy);
+            $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search);
             $data = [
                 'interns' => $interns['data'],
                 'currentPage' => $interns['currentPage'],
@@ -467,9 +624,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -493,9 +649,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -553,7 +708,7 @@ class Admin extends Controller
                 'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
                 'messageInput' => trim($_POST['messageInput'] ?? ''),
                 'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
                 'messageInput_err' => '',
@@ -587,7 +742,7 @@ class Admin extends Controller
                 'verifyDetails' => $this->model('AdminModel')->getLastVerificationLog($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
-                'messages' => $this->model('chatModel')->getMessagesForAdmin($_SESSION['user_id'], $userID),
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
                 'messageInput' => '',
                 'messageInput_err' => '',
                 'topic' => '', // Default to empty until a message is sent
@@ -641,9 +796,11 @@ class Admin extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailCompAccountApproved($email, $name);
+                notifyUserApproval($userID);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
+                notifyUserApproval($userID);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', 10);
@@ -664,9 +821,11 @@ class Admin extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
@@ -684,6 +843,7 @@ class Admin extends Controller
             $this->model->activateAccount($userID);
             $this->model('AdminModel')->addUserAccountLog($userID, 'Activate', $reasonID);
             MailHelper::sendEmailAccountReactivatedByAdmin($email, $reason);
+            notifyAccountActivation($userID);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -704,6 +864,7 @@ class Admin extends Controller
             $this->model->deactivateAccount($userID);
             $this->model('AdminModel')->addUserAccountLog($userID, 'Deactivate', $reasonID);
             MailHelper::sendEmailAccountDeactivatedByAdmin($email, $reason);
+            notifyAccountDeactivation($userID, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -747,9 +908,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search, $searchBy);
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -790,9 +950,8 @@ class Admin extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search, $searchBy);
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -998,7 +1157,7 @@ class Admin extends Controller
 
         $this->view('pages/admin/messages_com', $data);
     }
-    
+
 
     public function messages_ver($userID = null)
     {
@@ -1031,7 +1190,7 @@ class Admin extends Controller
 
         $this->view('pages/admin/messages_ver', $data);
     }
-   
+
     // In AdminController.php
     public function fetchMessageDetails($id)
     {
@@ -1370,6 +1529,38 @@ class Admin extends Controller
             echo json_encode(['success' => false, 'message' => 'An error occurred while deleting the industry.']);
         }
 
+        exit;
+    }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
         exit;
     }
 }

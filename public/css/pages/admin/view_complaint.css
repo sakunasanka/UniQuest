@@ -1,3 +1,7 @@
+/* ==================== */
+/* BASE STYLES */
+/* ==================== */
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f8f9fa;
@@ -43,47 +47,58 @@ body {
     display: flex;
     align-items: center;
 }
-
 .back-btn:hover {
     background-color: #f5f5f5;
 }
+
+/* ==================== */
+/* LAYOUT STYLES */
+/* ==================== */
 
 .user-layout {
     display: flex;
     gap: 20px;
     margin-top: 20px;
-    flex-wrap: wrap; /* Ensures responsiveness */
+    flex-wrap: wrap;
 }
 
 .user-details,
 .file-previews {
-    flex: 1; /* Equal width for both sections */
+    flex: 1;
     background-color: #ffffff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 20px;
-    min-width: 300px; /* Ensures a minimum width for small screens */
+    min-width: 300px;
 }
 
 .user-details {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Ensure spacing between elements */
-    background-color: #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 450px; /* Limits width on larger screens */
-    min-height: 100%; /* Ensure it takes up full height */
+    justify-content: space-between;
+    max-width: 520px;
+    min-height: 100%;
 }
 
 .file-previews iframe {
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
-    height: 450px;
+    height: 93%;
     margin-bottom: 10px;
     border: none;
+}
+
+.file-previews .no-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #666;
+    text-align: center;
+    padding: 20px;
 }
 
 .user-details h2,
@@ -96,9 +111,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px;
-    margin-top: 20px;
-    gap: 20px;
+    margin: 20px 0 40px 0;
+    gap: 40px;
 }
 
 .user-details .profile-pic img {
@@ -121,42 +135,73 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
 }
-
 .user-details .profile-card:hover {
     background-color: #e5e5e5;
 }
 
+.user-details .complaint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.user-details .complaint-header h2 {
+    font-size: 24px;
+    margin: 0;
+}
 
-.user-details .detail-row,
-.file-previews .detail-row {
+/* ==================== */
+/* STATUS BADGES */
+/* ==================== */
+
+.status {
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+.status.Pending {
+    color: #E9992F;
+    background-color: #E9992F50;
+}
+.status.Resolved {
+    color: #32a852;
+    background-color: #32a85250;
+}
+.status.Rejected {
+    color: #ff4d4d;
+    background-color: #ff4d4d50;
+}
+.status.In-Review {
+    color: #007bff;
+    background-color: #007bff50;
+}
+
+/* ==================== */
+/* DETAIL ROWS */
+/* ==================== */
+
+.detail-row {
     display: flex;
     justify-content: start;
     align-items: start;
     width: 100%;
     gap: 5px;
     margin-bottom: 10px;
-    padding: 0 10px;
 }
-
 .detail-row .col {
-    padding: 0 10px;
     display: inline-block;
 }
-
 .detail-row span {
     font-size: 16px;
     display: inline-block;
 }
-
 .detail-row span a {
     color: #007bff;
     text-decoration: none;
 }
-
 .detail-row span a:hover {
     text-decoration: underline;
 }
-
 .detail-row strong {
     font-size: 16px;
     font-weight: 600;
@@ -164,38 +209,184 @@ body {
     min-width: 110px;
 }
 
-.user-details .btn-row {
-    margin-top: auto; /* Push the buttons to the bottom */
+/* ==================== */
+/* FORM & BUTTONS */
+/* ==================== */
+
+.user-details .form-row {
+    display: block;
+    width: 100%;
+    padding: 0px;
+}
+
+.form-row .btn-row {
     display: flex;
-    justify-content: space-between; /* Spread the buttons evenly */
+    justify-content: flex-end;
     align-items: center;
     gap: 10px;
-    padding: 10px 0; /* Add some padding for better spacing */
+    padding: 5px 0;
+    margin: 0px;
 }
 
-.user-details .btn-row button {
-    padding: 10px 20px;
-    border: none;
+.btn-row .action-group {
+    display: flex;
+    width: 350px;
+    gap: 10px;
+}
+.btn-row .action-group select {
+    flex: 1;
+    min-width: 0;
+}
+.btn-row .action-group button {
+    width: 100px;
+    flex-shrink: 1;
+}
+
+.btn-row select,
+.btn-row textarea {
+    padding: 8px 10px;
+    border: 2px solid #ccc;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
+    background-color: #ffffff;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.btn-row textarea {
+    width: 100%;
+    resize: vertical;
+}
+.btn-row select.reject:focus {
+    border-color: #dc3545;
+}
+.btn-row select.approve:focus {
+    border-color: #32a852;
+}
+.btn-row textarea:focus {
+    border-color: #038a27;
 }
 
+.btn-row select::-ms-expand {
+    display: none;
+}
+.btn-row select option {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
+}
+
+/* Visual indicators for selects */
+select.reason-select.reject {
+    border-left: 4px solid #dc3545;
+}
+select.reason-select.approve {
+    border-left: 4px solid #28a745;
+}
+
+/* ==================== */
+/* BUTTON STYLES */
+/* ==================== */
+ 
+button {
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    outline: none;
+    border: none;
+}
+
+/* Solid Buttons */
 button.approve-btn {
     background-color: #32a852;
     color: #ffffff;
+}
+button.approve-btn:hover {
+    background-color: #038a27;
 }
 
 button.reject-btn {
     background-color: #dc3545;
     color: #ffffff;
 }
-
-button.approve-btn:hover {
-    background-color: #038a27;
-}
-
-button.reject-btn:hover {
+button.reject-btn:hover:not(:disabled) {
     background-color: #c82333;
 }
+
+/* Disabled State */
+button:disabled,
+.btn-row select:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.check-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border: 2px solid;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 10px;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.check-btn:hover {
+    box-shadow: inset 0 0 0 1px #ccc; /* subtle inner highlight */
+    border-color: #ccc;
+}
+
+
+.check-btn input[type="checkbox"] {
+    /* margin-bottom: 6px; */
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
+.check-btn label {
+    font-size: 14px;
+    font-weight: 600;
+    /* line-height: 1.3; */
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Variants */
+.check-btn {
+    color: #333;
+    border-color: #ccc;
+}
+
+.check-btn.approve {
+    color: #32a852;
+    border-color: #32a852;
+}
+.check-btn.reject {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+.check-btn.warn {
+    color: #ffbf00;
+    border-color: #ffbf00;
+}
+
+/* Disabled State */
+.check-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+

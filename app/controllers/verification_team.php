@@ -28,9 +28,8 @@ class Verification_team extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search, $searchBy);
+            $users = $this->model->getVerifiedUsersByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -54,9 +53,8 @@ class Verification_team extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search, $searchBy);
+            $jobs = $this->model('jobModel')->getVerifiedJobsByMe($_SESSION['user_id'], $page, $limit, $sort, $order, $search);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -80,9 +78,8 @@ class Verification_team extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
+            $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -106,9 +103,8 @@ class Verification_team extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'UserID';
 
-            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search, $searchBy);
+            $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search);
             $data = [
                 'users' => $users['data'],
                 'currentPage' => $users['currentPage'],
@@ -148,8 +144,10 @@ class Verification_team extends Controller
     {
         try {
             $user = $this->model->getUserDetails($userID);
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($userID);
             $data = [
-                'user' => $user
+                'user' => $user,
+                'verifyDetails' => $verifyDetails,
             ];
 
             if ($user['Role'] == 'Student') {
@@ -172,9 +170,11 @@ class Verification_team extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailCompAccountApproved($email, $name);
+                notifyUserApproval($userID);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
+                notifyUserApproval($userID);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
@@ -195,9 +195,11 @@ class Verification_team extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
@@ -216,9 +218,8 @@ class Verification_team extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search, $searchBy);
+            $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -254,8 +255,10 @@ class Verification_team extends Controller
     {
         try {
             $job = $this->model('jobModel')->getJobDetails($jobID);
+            $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($jobID);
             $data = [
-                'job' => $job
+                'job' => $job,
+                'verifyDetails' => $verifyDetails,
             ];
             $this->view('pages/verification_team/job_detail', $data);
         } catch (Exception $e) {
@@ -272,9 +275,8 @@ class Verification_team extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-            $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'JobID';
 
-            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search, $searchBy);
+            $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search);
             $data = [
                 'jobs' => $jobs['data'],
                 'currentPage' => $jobs['currentPage'],
@@ -387,5 +389,37 @@ class Verification_team extends Controller
 
             $this->view('pages/verification_team/contact_admin', $data);
         }
+    }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
     }
 }

@@ -260,7 +260,6 @@ class Jobs extends Controller
         $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
         // get filter data from query params
         $filters = [
@@ -274,7 +273,7 @@ class Jobs extends Controller
         ];
 
         // Fetch part-time job posts
-        $post_data = $this->model('M_jobpost')->getPartTimeJobs($page, $limit, $sort, $order, $search, $searchBy, $filters);
+        $post_data = $this->model('M_jobpost')->getPartTimeJobs($page, $limit, $sort, $order, $search, $filters);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -322,7 +321,6 @@ class Jobs extends Controller
         $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
 
         // get filter data from query params
         $filters = [
@@ -336,7 +334,7 @@ class Jobs extends Controller
         ];
 
         // Retrieve internship jobs
-        $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit, $sort, $order, $search, $searchBy, $filters);
+        $post_data = $this->model('M_jobpost')->getInternshipJobs($page, $limit, $sort, $order, $search, $filters);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -382,7 +380,6 @@ class Jobs extends Controller
         $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
         $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
         $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyName';
 
         // get filter data from query params
         $filters = [
@@ -396,7 +393,7 @@ class Jobs extends Controller
         ];
 
         // Retrieve companies
-        $post_data = $this->model('userModel')->getcompany($page, $limit, $sort, $order, $search, $searchBy, $filters);
+        $post_data = $this->model('userModel')->getcompany($page, $limit, $sort, $order, $search, $filters);
         $posts = $post_data['data'];
         $displayRatings = [];
 
@@ -626,7 +623,7 @@ class Jobs extends Controller
         }
         $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
         $jobs = $this->model('M_jobpost')->getJobsByCompanyId($id);
-        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->UserID);
 
         foreach ($reviews as $review) {
             $review->StudentName = $this->model('RateAndReviewModel')->getAnonymousName($review->StudentID);
@@ -636,7 +633,7 @@ class Jobs extends Controller
             $review->is_disliked = $this->model('RateAndReviewModel')->checkIfDisliked($review->ReviewID, $userId);
         }
 
-        $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->CompanyID);
+        $existingReview = $this->model('RateAndReviewModel')->getReviewByStudentAndCompany($userId, $posts->UserID);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);

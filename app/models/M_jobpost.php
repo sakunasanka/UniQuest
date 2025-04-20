@@ -69,15 +69,23 @@ class M_jobpost extends Model
     //     return $results;
     // }
 
-    public function getPendingPost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
+    public function getPendingPost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '')
     {
         try {
+            // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                [$searchBy, 'LIKE', $search . '%'],
                 ['Status', '=', 'Pending']
             ];
 
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, CompanyName, Email, Industry, DATE_FORMAT(PublishDate, '%Y-%m-%d'), Status, Category, City)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+
             $posts = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $posts;
         } catch (PDOException $e) {
@@ -89,15 +97,23 @@ class M_jobpost extends Model
         }
     }
 
-    public function getActivePost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
+    public function getActivePost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '')
     {
         try {
+            // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                [$searchBy, 'LIKE', $search . '%'],
                 ['Status', '=', 'Active']
             ];
 
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, CompanyName, Email, Industry, DATE_FORMAT(PublishDate, '%Y-%m-%d'), Status, Category, City)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+
             $posts = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $posts;
         } catch (PDOException $e) {
@@ -109,14 +125,22 @@ class M_jobpost extends Model
         }
     }
 
-    public function getDeactivePost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title')
+    public function getDeactivePost($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "DESC", $search = '')
     {
         try {
+            // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                [$searchBy, 'LIKE', $search . '%'],
                 ['Status', '=', 'Deactive']
             ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, CompanyName, Email, Industry, DATE_FORMAT(PublishDate, '%Y-%m-%d'), Status, Category, City)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
 
             $posts = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $posts;
@@ -142,7 +166,7 @@ class M_jobpost extends Model
     {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, District, City, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
+            (Title, Description, DistrictID, CityID, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
             VALUES 
             (:job_name, :Description, :job_district, :job_city, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
         ');
@@ -258,6 +282,9 @@ class M_jobpost extends Model
 
             if (!empty($filters['minSalary']) && !empty($filters['maxSalary'])) {
                 $conditions[] = [$salaryField, 'BETWEEN', [$filters['minSalary'], $filters['maxSalary']]];
+                // $conditions[] = [$salaryField, '>=', $filters['minSalary']];
+                // $conditions[] = [$salaryField, '<=', $filters['maxSalary']];
+
             } elseif (!empty($filters['minSalary'])) {
                 $conditions[] = [$salaryField, '>=', $filters['minSalary']];
             } elseif (!empty($filters['maxSalary'])) {
@@ -273,7 +300,7 @@ class M_jobpost extends Model
         return $conditions;
     }
 
-    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             // Base conditions
@@ -282,9 +309,12 @@ class M_jobpost extends Model
                 ['Category', '=', 'Part-time']
             ];
 
-            // Add search condition if search term exists
+            // Add search condition if a search term is provided
             if (!empty($search)) {
-                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, CompanyName, Email, Industry, DATE_FORMAT(PublishDate, '%Y-%m-%d'), SalaryRange, SalaryType, Status, Category, City)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
 
             // Add filter conditions
@@ -304,7 +334,7 @@ class M_jobpost extends Model
         }
     }
 
-    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             $conditions = [
@@ -312,9 +342,12 @@ class M_jobpost extends Model
                 ['Category', '=', 'Internship']
             ];
 
-            // Add search condition if search term exists
+            // Add search condition if a search term is provided
             if (!empty($search)) {
-                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, CompanyName, Email, Industry, DATE_FORMAT(PublishDate, '%Y-%m-%d'), SalaryRange, SalaryType, Status, Category, City)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
 
             // Add filter conditions
@@ -342,9 +375,12 @@ class M_jobpost extends Model
                 ['StudentID', '=', $studentId]
             ];
 
-            // Add search condition if search term exists
+            // Add search condition if a search term is provided
             if (!empty($search)) {
-                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, CompanyName, Email, Status, Category, Location)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
 
             // Add filter conditions
@@ -364,7 +400,7 @@ class M_jobpost extends Model
         }
     }
 
-    public function getSaveInternships($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    public function getSaveInternships($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             // Base conditions
@@ -374,9 +410,12 @@ class M_jobpost extends Model
                 ['StudentID', '=', $studentId]
             ];
 
-            // Add search condition if search term exists
+            // Add search condition if a search term is provided
             if (!empty($search)) {
-                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, CompanyName, Email, Status, Category, Location)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
 
             // Add filter conditions
@@ -405,9 +444,12 @@ class M_jobpost extends Model
                 ['StudentID', '=', $studentId]
             ];
 
-            // Add search condition if search term exists
+            // Add search condition if a search term is provided
             if (!empty($search)) {
-                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', CompanyName, Industry, City)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
 
             // Add filter conditions

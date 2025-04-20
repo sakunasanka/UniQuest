@@ -9,7 +9,7 @@ class Student extends Controller
         AuthMiddleware::requireAuth();
         // Check if user has the required role
         AuthMiddleware::requireRole('Student');
-        
+
         // Load model
         $this->model = $this->model('userModel');
     }
@@ -58,9 +58,9 @@ class Student extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        
-             // Data for the contact form
-             $data = [
+
+            // Data for the contact form
+            $data = [
                 'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
@@ -86,7 +86,7 @@ class Student extends Controller
 
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
-                if($this->model('ContactModel')->sendMessage($data)){
+                if ($this->model('ContactModel')->sendMessage($data)) {
                     flash('contact-msg', 'Your message has been sent successfully.');
                     redirect('student/contact_admin');
                 } else {
@@ -105,8 +105,8 @@ class Student extends Controller
                 'topic_err' => '',
                 'message_err' => ''
             ];
-    
-        $this->view('pages/student/contact_admin', $data);
+
+            $this->view('pages/student/contact_admin', $data);
         }
     }
 
@@ -195,7 +195,7 @@ class Student extends Controller
             $this->view('pages/student/edit_profile', $data);
         }
     }
-    
+
     public function delete_account()
     {
         $this->view('popups/student/deactivate_account');
@@ -228,11 +228,11 @@ class Student extends Controller
                     $data['user_id'],
                     $data['company_id']
                 );
-                
+
                 if ($existingReview) {
                     $data['review_id'] = $existingReview->ReviewID;
                 } else {
-                    $data['existingReview'] = 'false'; 
+                    $data['existingReview'] = 'false';
                 }
             }
 
@@ -252,16 +252,15 @@ class Student extends Controller
                     if ($this->model('RateAndReviewModel')->updateReview($data)) {
                         Redirect::to(URLROOT . '/student/myreviews');
                     } else {
-                        die('Something went wrong'); 
+                        die('Something went wrong');
                     }
                 } else {
                     if ($this->model('RateAndReviewModel')->addReview($data)) {
                         Redirect::to(URLROOT . '/student/myreviews');
                     } else {
-                        die('Something went wrong'); 
+                        die('Something went wrong');
                     }
                 }
-
             } else {
                 // Load view with errors
                 $this->view('pages/student/rate_review_company', $data);
@@ -281,7 +280,7 @@ class Student extends Controller
             $this->view('pages/student/rate_review_company', $data);
         }
     }
-   
+
     public function updateReview($id)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -312,7 +311,7 @@ class Student extends Controller
                 $this->view('pages/student/edit_review', $data);
             }
         } else {
-            
+
             $review = $this->model('RateAndReviewModel')->getReviewById($id);
 
             // if (!$review) {
@@ -327,12 +326,12 @@ class Student extends Controller
             // }
 
             $data = [
-            'review_id' => $id,
-            'review' => $review,
-            'rating' => $review->rating,
-            'comment' => $review->comment,
-            'rating_err' => '',
-            'comment_err' => ''
+                'review_id' => $id,
+                'review' => $review,
+                'rating' => $review->rating,
+                'comment' => $review->comment,
+                'rating_err' => '',
+                'comment_err' => ''
             ];
 
             $this->view('pages/student/edit_review', $data);
@@ -351,7 +350,7 @@ class Student extends Controller
             // }
 
             // Ensure the review belongs to the logged-in student
-            
+
 
             // Attempt to delete the review
             if ($this->model('RateAndReviewModel')->deleteReviewById($id)) {
@@ -364,7 +363,7 @@ class Student extends Controller
         }
     }
 
-    
+
     public function rate_review_company()
     {
         $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId();
@@ -379,7 +378,7 @@ class Student extends Controller
             'rating_err' => '',
             'comment_err' => ''
         ];
-        
+
         $this->view('pages/student/rate_review_company', $data);
     }
 
@@ -461,49 +460,47 @@ class Student extends Controller
     }
 
     public function saveJobs($queryParam = [])
-    {   
+    {
 
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
             // Get the requested data from query params
-        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
-        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
-        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // get filter data from query params
-        $filters = [
-            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
-            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
-            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
-            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
-            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
-            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
-            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
-        ];
+            // get filter data from query params
+            $filters = [
+                'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+                'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+                'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+                'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+                'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+                'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+                'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
+            ];
 
-          // Get bookmarked jobs for the user
-          $post_data = $this->model('M_jobpost')->getSaveJobs($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
-          $posts = $post_data['data'];
-          $displayRatings = [];
+            // Get bookmarked jobs for the user
+            $post_data = $this->model('M_jobpost')->getSaveJobs($userId, $page, $limit, $sort, $order, $search, $filters);
+            $posts = $post_data['data'];
+            $displayRatings = [];
 
             // Loop through each job post to get the display rating for the associated company
             foreach ($posts as $post) {
                 $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
                 $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
             }
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        } 
-        else {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
 
-           $data =[
+        $data = [
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
@@ -524,28 +521,27 @@ class Student extends Controller
             $userId = $_SESSION['user_id']; // Get user ID from session
 
             // Get the requested data from query params
-        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
-        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
-        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'Title';
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // get filter data from query params
-        $filters = [
-            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
-            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
-            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
-            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
-            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
-            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
-            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
-        ];
+            // get filter data from query params
+            $filters = [
+                'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+                'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+                'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+                'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+                'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+                'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+                'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
+            ];
 
-          // Get bookmarked jobs for the user
-          $post_data = $this->model('M_jobpost')->getSaveInternships($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
-          $posts = $post_data['data'];
-          $displayRatings = [];
+            // Get bookmarked jobs for the user
+            $post_data = $this->model('M_jobpost')->getSaveInternships($userId, $page, $limit, $sort, $order, $search, $filters);
+            $posts = $post_data['data'];
+            $displayRatings = [];
 
             // Loop through each job post to get the display rating for the associated company
             foreach ($posts as $post) {
@@ -561,7 +557,7 @@ class Student extends Controller
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
 
-           $data =[
+        $data = [
             'posts' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
@@ -581,45 +577,43 @@ class Student extends Controller
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id']; // Get user ID from session
 
-        // Get the requested data from query params
-        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
-        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
-        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
-        $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-        $searchBy = isset($queryParam['searchBy']) ? $queryParam['searchBy'] : 'CompanyName';
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 12;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'CompanyID';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // get filter data from query params
-        $filters = [
-            'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
-            'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
-            'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
-            'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
-            'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
-            'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
-            'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
-        ];
+            // get filter data from query params
+            $filters = [
+                'district' => isset($queryParam['district']) ? $queryParam['district'] : null,
+                'city' => isset($queryParam['city']) ? $queryParam['city'] : null,
+                'industry' => isset($queryParam['industry']) ? $queryParam['industry'] : null,
+                'rating' => isset($queryParam['rating']) ? $queryParam['rating'] : null,
+                'minSalary' => isset($queryParam['minSalary']) ? $queryParam['minSalary'] : null,
+                'maxSalary' => isset($queryParam['maxSalary']) ? $queryParam['maxSalary'] : null,
+                'salaryType' => isset($queryParam['salaryType']) ? $queryParam['salaryType'] : null
+            ];
 
-        // Retrieve companies
-        $post_data = $this->model('M_jobpost')->getSaveCompanies($userId, $page, $limit, $sort, $order, $search, $searchBy, $filters);
-        $posts = $post_data['data'];
-        $displayRatings = [];
+            // Retrieve companies
+            $post_data = $this->model('M_jobpost')->getSaveCompanies($userId, $page, $limit, $sort, $order, $search, $filters);
+            $posts = $post_data['data'];
+            $displayRatings = [];
 
-        // Loop through each job post to get the display rating for the associated company
-        foreach ($posts as $post) {
-            $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
-            $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
-        }
+            // Loop through each job post to get the display rating for the associated company
+            foreach ($posts as $post) {
+                $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
+                $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+            }
 
-        $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
-        $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
-        } 
-        else {
+            $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
+            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+        } else {
             $userId = null;
             $bookmarkedCompanies = []; // No bookmarks if not logged in
         }
 
-           $data =[
+        $data = [
             'posts' => $posts,
             'bookmarkedCompanies' => $bookmarkedCompanies,
             'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
@@ -634,44 +628,74 @@ class Student extends Controller
         $this->view('pages/student/saveCompanies', $data);
     }
 
-    public function make_complain($id = null)
+    public function make_complain($jobID)
     {
-        $posts = $this->model('M_jobpost')->getpostbyid($id);
-
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
             $data = [
-                'complaint' => trim($_POST['complaint']),
-                'posts' => $posts
+                'jobID' => $jobID,
+                'title' => $_POST['title'] ?? '',
+                'complaint' => trim($_POST['complaint'] ?? ''),
+                'proof' => $_FILES['proof'] ?? '',
+                'studentID' => $_SESSION['user_id'],
+                'complaint_err' => '',
+                'proof_err' => ''
             ];
-            $this->model('ComplaintModel')->createComplaint($data);
-            
-            Redirect::to(URLROOT . '/student/make_complain/'.$id);
-              
-        }
 
-        else {
+            // Validate complaint and proof
+            if (empty($data['complaint'])) {
+                $data['complaint_err'] = 'Please provide a complaint.';
+            }
+
+            // Validate proof file
+            if (empty($data['proof']['name'])) {
+                $data['proof_err'] = 'Please upload a proof file.';
+            } 
+            
+            // Check for errors
+            if (empty($data['complaint_err']) && empty($data['proof_err'])) {
+                // Handle file upload for proof
+                $proofResponse = FileUploadHelper::uploadFile($data['proof'], PUBROOT . '/uploads/proofs');
+                if ($proofResponse['success']) {
+                    $data['proofName'] = $proofResponse['file_name'];
+                } else {
+                    $data['proof_err'] = $proofResponse['error'];
+                    $this->view('pages/student/make_complain', $data);
+                    return;
+                }
+                if ($this->model('ComplaintModel')->createComplaint($data)) {
+                    Redirect::to(URLROOT . '/jobs'); // Adjust the redirect URL as needed
+                } else {
+                    die('Something went wrong'); // Improved error handling suggested
+                }
+            } else {
+                // Load view with errors
+                $this->view('pages/student/make_complain', $data);
+            }
+        } else {
+            $post = $this->model('M_jobpost')->getpostbyid($jobID);
             $data = [
+                'jobID' => $jobID,
+                'title' => $post->Title,
                 'complaint' => '',
-                'posts' => $posts
+                'proof' => '',
+                'complaint_err' => '',
+                'proof_err' => ''
             ];
             $this->view('pages/student/make_complain', $data);
         }
-        
     }
 
     public function companyDescription($id)
     {
         if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; 
+            $userId = $_SESSION['user_id'];
 
-        $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
-        $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
-        $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
-        } 
-        else {
+            $bookmarkedCompanies = $this->model('companyModel')->getBookmarkedCompanies($userId);
+            $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+            $posts = $this->model('M_jobpost')->getpostbycompanyid($id);
+            $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
+        } else {
             $userId = null;
             $bookmarkedCompanies = []; // No bookmarks if not logged in
         }
@@ -703,7 +727,7 @@ class Student extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']); //To be corrected
+                    Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']); //To be corrected
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
                 }
@@ -728,31 +752,30 @@ class Student extends Controller
             $this->view('pages/student/companyDescription', $data);
         }
     }
- 
+
     public function internshipDescription($id)
     {
         if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; 
-        }
-        else {
+            $userId = $_SESSION['user_id'];
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
             $posts = [];
             $posts_com_id = [];
             $reviews = [];
-        }    
-    
+        }
+
         // Get bookmarked jobs for the user
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         $posts = $this->model('M_jobpost')->getpostbyid($id);
         $posts_com_id = $this->model('M_jobpost')->getpostbycompanyid($id);
-        $reviews = $this->model('RateAndReviewModel')-> getReviewsByCompanyId($id);
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    
-            $data =[
+
+            $data = [
                 'post' => $posts,
                 'post_com' => $posts_com_id,
                 'bookmarkedJobs' => $bookmarkedJobs,
@@ -765,7 +788,7 @@ class Student extends Controller
                 'rating_err' => '',
                 'comment_err' => ''
             ];
-        
+
             if (empty($data['rating'])) {
                 $data['rating_err'] = 'Please provide a rating.';
             }
@@ -776,7 +799,7 @@ class Student extends Controller
             // Check for errors
             if (empty($data['rating_err']) && empty($data['comment_err'])) {
                 if ($this->model('RateAndReviewModel')->addReview($data)) {
-                    Redirect::to(URLROOT . '/student/addReview/'.$data['company_id']);  //To be corrected
+                    Redirect::to(URLROOT . '/student/addReview/' . $data['company_id']);  //To be corrected
                 } else {
                     die('Something went wrong'); // Improved error handling suggested
                 }
@@ -800,10 +823,11 @@ class Student extends Controller
             ];
 
             $this->view('pages/student/internshipDescription', $data);
-        }    
+        }
     }
 
-    public function jobsApplyform($jobId) {
+    public function jobsApplyform($jobId)
+    {
 
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
@@ -817,7 +841,7 @@ class Student extends Controller
 
         // Load model and get application fields
         $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
-    
+
         // Fetch job details3
         $job = $this->model('M_jobpost')->getpostbyid($jobId);
 
@@ -831,10 +855,10 @@ class Student extends Controller
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         }
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-    
+
         $data = [
             'fields' => $applicationFields,
-            'job' => $job, 
+            'job' => $job,
             'post' => $posts,
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
@@ -842,7 +866,7 @@ class Student extends Controller
         ];
         // Check if the user has already applied for this job
         if ($isApplied) {
-            if($data['job']->Category == 'Part-time'){ 
+            if ($data['job']->Category == 'Part-time') {
                 $_SESSION['show_job_apply_error'] = true;
                 $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
                 Redirect::to($previousURL);
@@ -851,22 +875,21 @@ class Student extends Controller
                 $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
                 Redirect::to($previousURL);
             }
-        }
-        else {
-            $this->view('pages/student/jobsApply', $data); 
+        } else {
+            $this->view('pages/student/jobsApply', $data);
         }
     }
     public function jobsApply($jobId)
     {
-        if($_SERVER['REQUEST_METHOD']=='POST'){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
 
             // Initialize data array and validation
-        $data = [
-            'job_id' => $jobId,
-            'fields' => [],
-            'errors' => []
-        ];
+            $data = [
+                'job_id' => $jobId,
+                'fields' => [],
+                'errors' => []
+            ];
 
             // Process each field based on its type
         foreach ($applicationFields as $fieldName => $fieldConfig) {
@@ -879,6 +902,7 @@ class Student extends Controller
                         } else {
                             $data['errors'][$fieldName] = $uploadResult['error'];
                         }
+
                     } elseif (isset($fieldConfig['required']) && $fieldConfig['required']) {
                         $data['errors'][$fieldName] = 'File upload is required';
                     }
@@ -886,6 +910,7 @@ class Student extends Controller
 
                 default:
                     $value = trim($_POST[$fieldName] ?? '');
+
                     if (empty($value) && isset($fieldConfig['required']) && $fieldConfig['required']) {
                         $data['errors'][$fieldName] = 'This field is required';
                     } else {
@@ -905,38 +930,34 @@ class Student extends Controller
                 flash('application_success', 'Your application has been submitted successfully');
                 redirect('student/all_app');
             } else {
-                flash('application_error', 'Something went wrong with your application', 'alert alert-danger');
-                
+                // Return to form with errors
                 $this->view('pages/student/jobsApply', $data);
             }
         } else {
-            // Return to form with errors
+            // GET request - show the application form
+            $jobModel = $this->model('M_jobpost');
+            $job = $jobModel->getJobById($jobId);
+
+            if (!$job) {
+                redirect('pages/error');
+            }
+
+            $data = [
+                'job' => $job,
+                'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
+            ];
+
             $this->view('pages/student/jobsApply', $data);
         }
-    } else {
-        // GET request - show the application form
-        $jobModel = $this->model('M_jobpost');
-        $job = $jobModel->getJobById($jobId);
-        
-        if (!$job) {
-            redirect('pages/error');
-        }
-
-        $data = [
-            'job' => $job,
-            'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
-        ];
-
-        $this->view('pages/student/jobsApply', $data);
     }
-    }
-    private function handleFileUpload($file, $fieldName) {
+    private function handleFileUpload($file, $fieldName)
+    {
         $result = [
             'success' => false,
             'path' => '',
             'error' => ''
         ];
-    
+
         // Define allowed file types based on field
         $allowedTypes = [
             'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -946,34 +967,34 @@ class Student extends Controller
             'other2' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
             'other3' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
         ];
-    
+
         // Validate file type
         if (!in_array($file['type'], $allowedTypes[$fieldName] ?? [])) {
             $result['error'] = 'Invalid file type';
             return $result;
         }
-    
+
         // Generate unique filename
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = uniqid() . '_' . time() . '.' . $extension;
-        
+
         // Set upload directory based on field type
         $uploadDir = PUBROOT . '/uploads/' . $fieldName . '/';
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-    
+
         $targetPath = $uploadDir . $filename;
-    
+
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
             $result['success'] = true;
             $result['path'] = 'uploads/' . $fieldName . '/' . $filename;
         } else {
             $result['error'] = 'Failed to upload file';
         }
-    
+
         return $result;
-     }
+    }
 
     // public function jobsApply()
     // {
@@ -989,11 +1010,11 @@ class Student extends Controller
     {
         $this->view('pages/login/deactivate_stu');
     }
-  
+
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -1002,7 +1023,7 @@ class Student extends Controller
 
         // Access the first element of the $application array
         $application = $application[0];
-        
+
         // Prepare the application data
         $applicationData = [
             'jobID' => $application->JobID ?? null,
@@ -1045,12 +1066,11 @@ class Student extends Controller
     public function myreviews()
     {
         if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id']; 
-        } 
-        else {
+            $userId = $_SESSION['user_id'];
+        } else {
             $userId = null;
         }
-        
+
         $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
 
         foreach ($reviews as $review) {
@@ -1068,7 +1088,52 @@ class Student extends Controller
         ];
 
         $this->view('pages/student/myreviews', $data);
+    }
 
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/student/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
     }
 
 }

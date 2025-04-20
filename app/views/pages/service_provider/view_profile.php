@@ -1,10 +1,11 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/deactivate_account.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
-<?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/studentPopups.css">
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/student/review_popup.css">
 
 <?php
 if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subscription_plan'] == 'enterprise')) {
@@ -110,7 +111,10 @@ if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subs
                     <?php foreach ($data['reviews'] as $index => $review): ?>
                         <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
-                                <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                <div class="review-header">
+                                    <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                    <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
+                                </div>
                                 <div class="review-details">
                                     <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
                                     <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
@@ -135,10 +139,11 @@ if (($data['user']['subscription_plan'] == 'professional' || $data['user']['subs
                     <p>No reviews available.</p>
                 <?php endif; ?>
             </div>
-            <div class="buttons">
-                <button class="seemore">
-                    <p onclick="toggleMoreReviews()">See more reviews...</p>
-                </button>
+            <div class="buttons btn-space-between">
+                <div></div>
+                <?php if (count($data['reviews']) >= 3): ?> 
+                        <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                <?php endif; ?>
             </div>
         </div>
     </div>

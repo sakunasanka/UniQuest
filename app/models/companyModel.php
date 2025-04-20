@@ -15,7 +15,7 @@ class companyModel extends Model
         $this->db->bind(':companyId', $_SESSION['user_id']);
         return $this->db->single();
     }
-
+    
     public function addUserPostBookmark($companyId)
     {
         try {

@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->
@@ -13,7 +13,7 @@
             "Title" => "Title",
             "Location" => "Location",
             "Category" => "Category",
-            "jobs_create_at" => "Date Posted",
+            "jobs_create_at" => "Publish Date",
             "Views" => "Views",
             "Applicants" => "Applicants",
             "Actions" => "Actions"
@@ -41,7 +41,7 @@
                                 <td><?php echo $post->Title; ?></td>
                                 <td><?php echo $post->City; ?></td>
                                 <td><?php echo $post->Category; ?></td>
-                                <td><?php echo date('Y-m-d', strtotime($post->jobs_create_at)); ?></td>
+                                <td><?php echo date('Y-m-d', strtotime($post->PublishDate)); ?></td>
                                 <td>35</td>
                                 <td>18</td>
                                 <td class="action">
