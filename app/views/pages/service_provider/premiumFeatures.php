@@ -99,10 +99,10 @@
         }
 
         if (plan == 'professional' && status == 'active') {
-            Flash.show("You are currently on the Professional plan. " + remainingDays +" until your plan expires.", "error");
+            Flash.show("You are currently on the Professional plan.<br>" + remainingDays +" until your plan expires.", "error");
         }
         else if (plan == 'enterprise' && status == 'active') {
-            Flash.show("You are currently on the Enterprise plan. " + remainingDays +" until your plan expires.", "error");
+            Flash.show("You are currently on the Enterprise plan.<br>" + remainingDays +" until your plan expires.", "error");
         }
         else {
             initiatePayment(req_plan, planPrice, <?php echo $_SESSION['user_id']; ?>);
