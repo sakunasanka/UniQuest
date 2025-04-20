@@ -20,9 +20,9 @@
             <!-- <li><a href="/UniQuest/about" class="hov">About Us</a></li> -->
         </ul>
         <div class="nav-icons">
-            <a href="/UniQuest/admin/notifications"><span class="material-symbols-outlined">notifications</span></a>
-            <span class="notification-badge">1</span>
+            <?php require APPROOT . '/views/components/notification_dropdown.php'; ?>           
         </div>
+        
         <?php require APPROOT . '/views/components/navProfile.php'; ?>
     </div>
 </nav>

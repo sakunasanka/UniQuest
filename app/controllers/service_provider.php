@@ -252,7 +252,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/offered_applications', $data);
@@ -315,7 +315,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/new_applications', $data);
@@ -323,7 +323,7 @@ class Service_provider extends Controller
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -383,7 +383,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/rejected_applications', $data);
@@ -407,7 +407,7 @@ class Service_provider extends Controller
                     'title' => $application->JobTitle,
                     'jobID' => $jobId,
                     'location' => $application->JobLocation,
-                    'posted' => date('M d, Y', strtotime($application->JobCreatedAt)),
+                    'posted' => date('M d, Y', strtotime($application->PublishDate)),
                     'stats' => [
                         'total' => 0,
                         'accepted' => 0,
@@ -1101,7 +1101,22 @@ class Service_provider extends Controller
     public function approve_application($applicationID, $jobID)
     {
         try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
             $this->model('M_applicationFields')->approveApplication($applicationID);
+            
+            //Send notification to student
+            notifyStudentApplicationAccepted(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+            
             Redirect::to(URLROOT . '/service_provider/offered_applications/'.$jobID);
         } catch (Exception $e) {
             die($e->getMessage()); 
@@ -1111,10 +1126,59 @@ class Service_provider extends Controller
     public function reject_application($applicationID, $jobID)
     {
         try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
             $this->model('M_applicationFields')->rejectApplication($applicationID);
+
+            //Send notification to student
+            notifyStudentApplicationRejected(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+            
             Redirect::to(URLROOT . '/service_provider/rejected_applications/'.$jobID);
         } catch (Exception $e) {
             die($e->getMessage()); 
         }
+    }
+
+    public function markAllRead() {
+        if (!isset($_SESSION['user_id'])) {
+            redirect('users/login');
+        }
+
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
     }
 }

@@ -170,9 +170,11 @@ class Verification_team extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailCompAccountApproved($email, $name);
+                notifyUserApproval($userID);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
+                notifyUserApproval($userID);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
@@ -193,9 +195,11 @@ class Verification_team extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
@@ -385,5 +389,37 @@ class Verification_team extends Controller
 
             $this->view('pages/verification_team/contact_admin', $data);
         }
+    }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
     }
 }

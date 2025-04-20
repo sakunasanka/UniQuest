@@ -21,9 +21,9 @@
                 <li><a href="/UniQuest/student/contact_admin" class="hov">Contact Us</a></li>
         </ul>
         <div class="nav-icons">
-            <a href="/UniQuest/student/notifications"><span class="material-symbols-outlined">notifications</span></a>
-            <span class="notification-badge">1</span>
+            <?php require APPROOT . '/views/components/notification_dropdown.php'; ?>           
         </div>
+            
         <?php require APPROOT . '/views/components/navProfile.php'; ?>
     <?php else: ?>
     <?php endif; ?>
