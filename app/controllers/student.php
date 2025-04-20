@@ -878,14 +878,14 @@ class Student extends Controller
                         } else {
                             $data['errors'][$fieldName] = $uploadResult['error'];
                         }
-                    } else {
+                    } elseif ($fieldConfig['required']){
                         $data['errors'][$fieldName] = 'File upload is required';
                     }
                     break;
 
                 default:
                     $value = trim($_POST[$fieldName] ?? '');
-                    if (empty($value)) {
+                    if (empty($value) && $fieldConfig['required']) {
                         $data['errors'][$fieldName] = 'This field is required';
                     } else {
                         $data['fields'][$fieldName] = $value;
