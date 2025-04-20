@@ -448,4 +448,79 @@ class Service_provider extends Controller
             }
         }
     }
+
+    public function messages_stu($userID = null)
+    {
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
+        $messages_stu = $this->model('ContactModel')->getMessagesStuCom();
+
+        // Initialize data with the message list
+        $data = [
+            'messages_stu' => $messages_stu,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+
+        $this->view('pages/service_provider/messages_stu', $data);
+    }
+
+    public function messages_add($userID = null)
+    { 
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
+        $messages_add = $this->model('ContactModel')->getMessagesAddCom();
+
+        // Initialize data with the message list
+        $data = [
+            'messages_add' => $messages_add,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+        
+        $this->view('pages/service_provider/messages_add', $data);
+    }
+    
 }
