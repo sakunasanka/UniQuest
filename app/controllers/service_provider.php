@@ -1136,7 +1136,7 @@ class Service_provider extends Controller
             $this->model('M_applicationFields')->rejectApplication($applicationID);
 
             //Send notification to student
-            notifyStudentApplicationAccepted(
+            notifyStudentApplicationRejected(
                 $applicationID,
                 $application->StudentID,
                 $application->JobTitle

@@ -45,24 +45,25 @@ function sendNotification($userId, $message, $title, $type = 'info', $link = nul
         error_log("Failed to send application acceptance notification: " . $e->getMessage());
         return false;
     }
+}
 
-    function notifyStudentApplicationRejected($applicationId, $studentId, $jobTitle) {
-        try {
-            $message = "We're sorry to inform you that your application for '{$jobTitle}' has been rejected";
-            $link = "/student/view_application/{$applicationId}";
-            $title = "Application Rejected";
-            $type = 'warning';
-            
-            return sendNotification(
-                $studentId,
-                $message,
-                $title,
-                $type,
-                $link
-            );
-        } catch (Exception $e) {
-            error_log("Failed to send application rejection notification: " . $e->getMessage());
-            return false;
-        }
+ // Notify a student that their application has been rejected
+ function notifyStudentApplicationRejected($applicationId, $studentId, $jobTitle) {
+    try {
+        $message = "Unfortunately, your application for '{$jobTitle}' has been rejected";
+        $link = "/student/view_application/{$applicationId}";
+        $title = "Application Rejected";
+        $type = 'danger';
+        
+        return sendNotification(
+            $studentId,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
     }
 }
