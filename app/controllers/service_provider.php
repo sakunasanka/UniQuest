@@ -923,6 +923,28 @@ class Service_provider extends Controller
 
     public function jobPost()
     {
+        $companyPosts = $this->model('M_jobpost')->getJobsByCompanyId($_SESSION['user_id']);
+        $companyInfo = $this->model('M_jobpost')->getpostbycompanyid($_SESSION['user_id']);
+        $NewPostCount = count($companyPosts);
+
+        //Current date - subscription end date
+        $currentDate = date('Y-m-d');
+        $subscriptionEndDate = $companyInfo->subscription_end_date;
+        $remainingDays = waitForTime(strtotime($subscriptionEndDate) - strtotime($currentDate));
+
+        if ($companyInfo->subscription_plan == 'free' && $NewPostCount >= 2) {
+            $_SESSION['show_job_post_error_free'] = true;
+            $_SESSION['remaining_days'] = $remainingDays;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
+            Redirect::to($previousURL);
+        }
+        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 20) {
+            $_SESSION['show_job_post_error_pro'] = true;
+            $_SESSION['remaining_days'] = $remainingDays;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
+            Redirect::to($previousURL);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 

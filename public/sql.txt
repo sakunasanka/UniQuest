@@ -1034,3 +1034,28 @@ CREATE TABLE `notifications` (
   KEY `UserID` (`UserID`),
   CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Create a new event that runs every 30 minutes
+DELIMITER //
+
+CREATE EVENT IF NOT EXISTS ev_update_expired_subscriptions
+ON SCHEDULE EVERY 30 MINUTE
+DO
+BEGIN
+    UPDATE company
+    SET
+        subscription_plan = 'free',
+        subscription_start_date = NOW(),
+        subscription_end_date = DATE_ADD(NOW(), INTERVAL 30 DAY)
+    WHERE
+        subscription_end_date <= NOW();
+END;
+//
+
+DELIMITER ;
+
+
+ALTER TABLE company
+MODIFY COLUMN subscription_start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+MODIFY COLUMN subscription_end_date DATETIME DEFAULT (CURRENT_TIMESTAMP + INTERVAL 30 DAY);
