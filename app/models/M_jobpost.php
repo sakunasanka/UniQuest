@@ -282,6 +282,9 @@ class M_jobpost extends Model
 
             if (!empty($filters['minSalary']) && !empty($filters['maxSalary'])) {
                 $conditions[] = [$salaryField, 'BETWEEN', [$filters['minSalary'], $filters['maxSalary']]];
+                // $conditions[] = [$salaryField, '>=', $filters['minSalary']];
+                // $conditions[] = [$salaryField, '<=', $filters['maxSalary']];
+
             } elseif (!empty($filters['minSalary'])) {
                 $conditions[] = [$salaryField, '>=', $filters['minSalary']];
             } elseif (!empty($filters['maxSalary'])) {
