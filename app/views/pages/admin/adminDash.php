@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/adminDash.css">
 
 <!-- Sidebar and Content Layout -->
@@ -90,7 +90,7 @@
     }
 
     function goToComplaintMng() {
-        window.location.href = "<?php echo URLROOT; ?>/admin/job_complaint";
+        window.location.href = "<?php echo URLROOT; ?>/admin/job_complaints";
     }
 
     function goToUserVer() {

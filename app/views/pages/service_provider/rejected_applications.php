@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/application_table.css">
 
 <!-- Sidebar and Content Layout -->
@@ -21,7 +21,7 @@
                 Location: <?php echo $data['post']->City; ?>
             </p>
             <p>
-                Posted: <?php echo $data['posted']; ?>
+                Published On: <?php echo $data['posted']; ?>
             </p>
         </div>
         <div class="table-block">

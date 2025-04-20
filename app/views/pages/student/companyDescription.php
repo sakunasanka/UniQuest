@@ -1,16 +1,4 @@
-<?php
-if (!isset($_SESSION['user_role'])) {
-    require APPROOT . '/views/components/header.php';
-} else if ($_SESSION['user_role'] == 'Student') {
-    require APPROOT . '/views/components/stu_header.php';
-} else if ($_SESSION['user_role'] == 'Company') {
-    require APPROOT . '/views/components/ser_header.php';
-} else if ($_SESSION['user_role'] == 'Admin') {
-    require APPROOT . '/views/components/adm_header.php';
-} else if ($_SESSION['user_role'] == 'VT-Member') {
-    require APPROOT . '/views/components/ver_header.php';
-}
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
@@ -153,7 +141,7 @@ if (!isset($_SESSION['user_role'])) {
                                 <p>Salary: Rs.<?php echo ($job->SalaryRange); ?> <?php echo ($job->SalaryType); ?></p>
                             </div>
                             <div>
-                                <p>Posted: <?php echo converttimetoreadableformat($job->jobs_create_at); ?></p>
+                                <p>Published On: <?php echo converttimetoreadableformat($job->PublishDate); ?></p>
                             </div>
                             </br>
                             <div class="job-actions">

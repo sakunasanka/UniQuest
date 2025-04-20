@@ -50,7 +50,7 @@ class userModel extends Model
         return $conditions;
     }
 
-    public function getcompany($pageNumber = 1, $rowsPerPage = 12, $sort = "UserID", $order = "DESC", $search = '', $searchBy = 'CompanyName', array $filters = [])
+    public function getcompany($pageNumber = 1, $rowsPerPage = 12, $sort = "UserID", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             // Base conditions
@@ -58,9 +58,12 @@ class userModel extends Model
                 ['Status', '=', 'Active']
             ];
 
-            // Add search condition if search term exists
+            // Add search condition if a search term is provided
             if (!empty($search)) {
-                $conditions[] = [$searchBy, 'LIKE', $search . '%'];
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', CompanyName, Address, Industry, Email)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
             }
 
             // Add filter conditions
@@ -487,15 +490,22 @@ class userModel extends Model
         }
     }
 
-    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
+    public function getPendingStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '')
     {
         try {
-            // Use grouped conditions for more complex queries
+            // Define base conditions
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
-                ['Status', '=', 'Pending'],
-                [$searchBy, 'LIKE', $search . '%']
+                ['Status', '=', 'Pending']
             ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', UserID, Email, Role, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
@@ -507,14 +517,23 @@ class userModel extends Model
         }
     }
 
-    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
+    public function getNotVerifiedStudentsAndCompanies($pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '')
     {
         try {
+            // Define base conditions
             $conditions = [
                 ['Role', 'IN', ['Student', 'Company']],
-                ['Status', '=', 'Not Approved'],
-                [$searchBy, 'LIKE', $search . '%']
+                ['Status', '=', 'Not Approved']
             ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', UserID, Email, Role, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+
             $users = $this->select('User', $conditions, 'UserID, Email, Role, RegisterDate, Status', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
@@ -590,7 +609,7 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
+    public function getVerifiedUsersByRole($role, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '')
     {
         try {
             // Define view and columns per role
@@ -601,17 +620,26 @@ class userModel extends Model
                 'Admin'      => ['view' => 'v_admin',      'columns' => 'UserID, FullName, Email, ContactNo, RegisterDate, Status, Role'],
             ];
 
+            // Define base conditions
+            $conditions = [
+                ['Status', 'IN', ['Active', 'Deactive']],
+                ['Role', '=', $role]
+            ];
+
             // Check if role is valid
             if (!isset($roleMap[$role])) {
                 throw new Exception("Invalid role specified: " . $role);
             }
 
-            // Define conditions
-            $conditions = [
-                ['Status', 'IN', ['Active', 'Deactive']],
-                // ['Role', '=', $role],
-                [$searchBy, 'LIKE', $search . '%']
-            ];
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField = ($role === 'Company')
+                    ? "CONCAT_WS(' ', CompanyName, Email, ContactNo, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status, Role)"
+                    : "CONCAT_WS(' ', FullName, Email, ContactNo, Status, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Role)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
 
             // Perform select
             return $this->select(
@@ -673,11 +701,24 @@ class userModel extends Model
         }
     }
 
-    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "ASC", $search = '', $searchBy = 'UserID')
+    public function getVerifiedUsersByMe($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "UserID", $order = "DESC", $search = '')
     {
         try {
+            // Define base conditions
+            $conditions = [
+                ['ActionBy', '=', $userId]
+            ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Name, Email, DATE_FORMAT(ActionDate, '%Y-%m-%d'), Status, Role)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedUsers', [['ActionBy', '=', $userId], [$searchBy, 'LIKE', $search . '%']], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $verifiedEntities = $this->select('v_verifiedUsers', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -798,5 +839,20 @@ class userModel extends Model
             FROM user
             GROUP BY gender");
         return $this->db->resultSet();
+    }
+
+    public function getAdminIds() 
+    {
+        $this->db->query("SELECT AdminID FROM Admin");
+        $admins = $this->db->resultSet();
+    }
+
+    public function getAllUserIds() 
+    {
+        $this->db->query("SELECT UserID FROM User");
+        $users = $this->db->resultSet();
+        return array_map(function($user) {
+            return $user->UserID;
+        }, $users);
     }
 }

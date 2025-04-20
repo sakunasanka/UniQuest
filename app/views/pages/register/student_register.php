@@ -89,7 +89,7 @@
                                 <div class="file-content">
                                     <span>Drag & Drop to Upload NIC Scanned copy</span>
                                     <button type="button" class="browse-btn">Browse File
-                                        <input type="file" id="nicCopy" name="nicCopy" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" id="nicCopy" name="nicCopy" accept=".pdf,.doc,.docx">
                                     </button>
                                     <span class="file-name">No file selected</span>
                                 </div>
@@ -160,7 +160,7 @@
                                 <div class="file-content">
                                     <span>Drag & Drop to Upload University ID Scanned Copy</span>
                                     <button type="button" class="browse-btn">Browse File
-                                        <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".pdf,.doc,.docx">
                                     </button>
                                     <span class="file-name">No file selected</span>
                                 </div>

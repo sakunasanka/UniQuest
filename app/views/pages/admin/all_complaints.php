@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -19,8 +19,9 @@
         ];
         ?>
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/job_complaint">Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/company_complaint">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/all_complaints">All Complaints</button>
+            <button class="tab"  data-path="/UniQuest/admin/job_complaints">Complaints for Jobs</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/company_complaints">Complaints for Companies</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -45,9 +46,12 @@
                                     <td><span class="status inactive"><?php echo $complaints_job->Status ?></span></td>
                                 <?php endif; ?>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaints_job->ComplaintID; ?>'">
-                                        preview
-                                    </span>
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaints_job->ComplaintID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View Complaint</span>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

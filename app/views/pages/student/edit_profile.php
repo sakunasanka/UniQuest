@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/changePassword.php'; ?>
 <?php require APPROOT . '/views/popups/student/deactivate_account.php'; ?>
 

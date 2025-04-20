@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/application_dashboard.css">
 
 <div class="main-container">
@@ -25,7 +25,7 @@
                             <p>
                                 
                                 <?php echo $job['location']; ?> •
-                                Posted: <?php echo $job['posted']; ?>
+                                Published On: <?php echo $job['posted']; ?>
                             </p>
                         </div>
                         <div class="job-stats">

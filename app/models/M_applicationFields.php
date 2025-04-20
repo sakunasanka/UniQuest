@@ -575,7 +575,7 @@ public function getAllApplications($userId) {
         // }
     
     }
-    public function getApplicationsByID($applicationID)
+    public function getApplicationByID($applicationID)
     {
         // try {
             // Prepare the SQL query
