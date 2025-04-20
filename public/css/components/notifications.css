@@ -288,3 +288,29 @@
     transition: color 0.3s !important;
     border: none !important;
 }
+
+/* Expanded notification dropdown */
+.notification-dropdown.expanded {
+    max-height: 80vh; 
+    overflow-y: auto; 
+    width: 400px; 
+}
+
+/* Prevent body scrolling when dropdown is expanded */
+body.dropdown-open {
+    overflow: hidden;
+}
+
+.notification-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.notification-link:hover {
+    text-decoration: none;
+}
+
+.notification-content {
+    pointer-events: auto; /* Ensure clicks work on the content */
+}

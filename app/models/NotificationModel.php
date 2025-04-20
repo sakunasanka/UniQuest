@@ -14,13 +14,12 @@ class NotificationModel extends Model {
         return $this->db->execute();
     }
 
-    public function getByUser($userId, $limit = 5) {
+    public function getAllNotifications($userId) {
         $this->db->query('SELECT * FROM notifications 
                          WHERE UserID = :user_id 
-                         ORDER BY created_at DESC 
-                         LIMIT :limit');
+                         ORDER BY created_at DESC');
+        
         $this->db->bind(':user_id', $userId);
-        $this->db->bind(':limit', $limit);
         
         return $this->db->resultSet();
     }

@@ -6,11 +6,25 @@ document.addEventListener('DOMContentLoaded', function() {
     notificationBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         const isVisible = dropdownContent.style.display === 'block';
+        
+        // Toggle display
         dropdownContent.style.display = isVisible ? 'none' : 'block';
         
+        // Reset to normal view when opening
         if (!isVisible) {
+            dropdownContent.classList.remove('expanded');
+            document.getElementById('viewAllNotificationsBtn').textContent = 'View all notifications';
             loadNotifications();
+            document.body.classList.add('dropdown-open');
+        } else {
+            document.body.classList.remove('dropdown-open');
         }
+    });
+
+    // Also update the document click handler
+    document.addEventListener('click', function() {
+        dropdownContent.style.display = 'none';
+        document.body.classList.remove('dropdown-open');
     });
     
     // Close when clicking outside
@@ -20,15 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load notifications
     function loadNotifications() {
-        fetch(`/UniQuest/${role}/getRecentNotifications`, {
+        fetch(`/UniQuest/${userRole}/getRecentNotifications`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         })
         .then(data => {
@@ -60,8 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <small>${timeAgo}</small>
                     </div>
                     ${notification.is_read ? '' : `
-                    <button class="mark-read" data-id="${notification.id}" data-role="${role}">
-                        <span class="material-symbols-outlined">check_circle</span>
+                    <button class="mark-read" data-id="${notification.id}" data-role="${userRole}">
+                        <span class="mark-as-read">Mark As Read</span>
                     </button>`}
                 </div>`;
             });
@@ -75,11 +87,40 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Mark as read handler
     document.addEventListener('click', function(e) {
+        // Handle explicit "Mark as Read" button clicks
         if (e.target.closest('.mark-read')) {
             const button = e.target.closest('.mark-read');
             const id = button.dataset.id;
             const role = button.dataset.role;
             markAsRead(id, role);
+        }
+        
+        // Handle notification content clicks
+        const notificationContent = e.target.closest('.notification-content');
+        if (notificationContent) {
+            const notificationItem = notificationContent.closest('.notification-link');
+            if (notificationItem && notificationItem.classList.contains('unread')) {
+                const id = notificationItem.dataset.id;
+                
+                // Mark as read but don't immediately apply visual changes
+                fetch(`/UniQuest/${userRole}/markAsRead/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateBadge(data.unreadCount);
+                        // Don't change appearance here
+                    }
+                })
+                .catch(error => {
+                    console.error('Error marking notification as read:', error);
+                });
+            }
         }
     });
     
@@ -149,4 +190,69 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Poll for new notifications every 30 seconds
     setInterval(loadNotifications, 30000);
+
+    // Handle "View all notifications" click
+    document.getElementById('viewAllNotificationsBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Get the dropdown
+        const dropdown = document.getElementById('notificationDropdownContent');
+        
+        // Toggle between expanded and normal view
+        if (dropdown.classList.contains('expanded')) {
+            dropdown.classList.remove('expanded');
+            this.textContent = 'View all notifications';
+            loadNotifications(); // Load only the recent notifications
+        } else {
+            dropdown.classList.add('expanded');
+            this.textContent = 'Show less';
+            loadAllNotifications(); // Load all notifications
+        }
+    });
+
+    // Function to load all notifications
+    function loadAllNotifications() {
+        fetch(`/UniQuest/${userRole}/getAllNotifications`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                renderNotifications(data.notifications, data.unreadCount);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading all notifications:', error);
+        });
+    }
 });
+
+function handleNotificationClick(event, notificationId, role) {
+    // First mark as read
+    fetch(`/UniQuest/${role}/markAsRead/${notificationId}`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(response => {
+        if (response.ok) {
+            // After marking as read, proceed with navigation
+            window.location.href = event.currentTarget.href;
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        // Still proceed with navigation even if marking read fails
+        window.location.href = event.currentTarget.href;
+    });
+    
+    // Prevent default to wait for mark-as-read to complete
+    event.preventDefault();
+}

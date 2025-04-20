@@ -2,7 +2,7 @@
 // Load notification data if user is logged in
 if (isset($_SESSION['user_id'])) {
     $notificationModel = model('NotificationModel');
-    $notifications = $notificationModel->getRecentNotifications($_SESSION['user_id'], 5); // Get 5 most recent
+    $notifications = $notificationModel->getRecentNotifications($_SESSION['user_id'], 5);
     $unreadCount = $notificationModel->getUnreadCount($_SESSION['user_id']);
 }
 ?>
@@ -20,6 +20,17 @@ if (isset($_SESSION['user_id'])) {
 ?>
 <script>
     const userRole = "<?= $role ?>";
+    function handleNotificationClick(event, notificationId, role) {
+        event.preventDefault();
+        fetch(`/UniQuest/${role}/markAsRead/${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).finally(() => {
+            window.location.href = event.currentTarget.href;
+        });
+    }
 </script>
 
 <button class="notification-btn" id="notificationDropdown">
@@ -47,7 +58,7 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                     <div class="notification-content">
                         <?php if (!empty($notification->related_url)): ?>
-                            <a href="<?= URLROOT . $notification->related_url ?>" class="notification-link">
+                            <a href="<?= URLROOT . $notification->related_url ?>" class="notification-link" onclick="handleNotificationClick(event, <?= $notification->id ?>, '<?= $role ?>')">
                                 <div class="notification-message">
                                     <?= htmlspecialchars($notification->message) ?>
                                 </div>
@@ -82,6 +93,6 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
     </div>
     <div class="notification-footer">
-        <a href="<?= URLROOT . '/' . $role ?>/notifications">View all notifications</a>
+        <a href="#" id="viewAllNotificationsBtn">View all notifications</a>
     </div>
 </div>
