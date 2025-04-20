@@ -323,7 +323,7 @@ class Service_provider extends Controller
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -1101,7 +1101,22 @@ class Service_provider extends Controller
     public function approve_application($applicationID, $jobID)
     {
         try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
             $this->model('M_applicationFields')->approveApplication($applicationID);
+            
+            //Send notification to student
+            notifyStudentApplicationAccepted(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+            
             Redirect::to(URLROOT . '/service_provider/offered_applications/'.$jobID);
         } catch (Exception $e) {
             die($e->getMessage()); 

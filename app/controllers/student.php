@@ -989,7 +989,7 @@ class Student extends Controller
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
