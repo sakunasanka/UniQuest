@@ -154,13 +154,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Helper functions
     function updateBadge(count) {
         const badge = document.querySelector('.notification-badge');
+        const displayCount = count > 99 ? '99+' : count;
+        
         if (count > 0) {
             if (badge) {
-                badge.textContent = count;
+                badge.textContent = displayCount;
             } else {
                 const newBadge = document.createElement('span');
                 newBadge.className = 'notification-badge';
-                newBadge.textContent = count;
+                newBadge.textContent = displayCount;
                 notificationBtn.appendChild(newBadge);
             }
         } else if (badge) {
