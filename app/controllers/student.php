@@ -548,6 +548,7 @@ class Student extends Controller
                 $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
                 $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
             }
+
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         } 
@@ -901,14 +902,16 @@ class Student extends Controller
                         } else {
                             $data['errors'][$fieldName] = $uploadResult['error'];
                         }
-                    } elseif ($fieldConfig['required']){
+
+                    } elseif (isset($fieldConfig['required']) && $fieldConfig['required']) {
                         $data['errors'][$fieldName] = 'File upload is required';
                     }
                     break;
 
                 default:
                     $value = trim($_POST[$fieldName] ?? '');
-                    if (empty($value) && $fieldConfig['required']) {
+
+                    if (empty($value) && isset($fieldConfig['required']) && $fieldConfig['required']) {
                         $data['errors'][$fieldName] = 'This field is required';
                     } else {
                         $data['fields'][$fieldName] = $value;
@@ -917,20 +920,15 @@ class Student extends Controller
             }
         }
 
-            // If no errors, save application
-            if (empty($data['errors'])) {
-                $applicationModel = $this->model('M_applicationFields');
-
-
-                $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
-                if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
-                    flash('application_success', 'Your application has been submitted successfully');
-                    redirect('student/all_app');
-                } else {
-                    flash('application_error', 'Something went wrong with your application', 'alert alert-danger');
-
-                    $this->view('pages/student/jobsApply', $data);
-                }
+        // If no errors, save application
+        if (empty($data['errors'])) {
+            $applicationModel = $this->model('M_applicationFields');
+            
+             
+           $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
+            if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
+                flash('application_success', 'Your application has been submitted successfully');
+                redirect('student/all_app');
             } else {
                 // Return to form with errors
                 $this->view('pages/student/jobsApply', $data);

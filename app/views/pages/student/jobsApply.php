@@ -18,7 +18,6 @@
             method="POST" 
             enctype="multipart/form-data"
             class="application-form">
-
             <?php 
             $fields = $data['fields'];
             if ($fields): 
