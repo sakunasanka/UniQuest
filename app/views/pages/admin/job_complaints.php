@@ -9,17 +9,17 @@
     <main class="content-area">
         <?php
         $columns = [
-            "CompanyID" => "CompanyID",
+            "JobTitle" => "Title",
             "CompanyName" => "Company Name",
-            "Email" => "Company Email",
             "ComplaintCount" => "No of complaints",
             "LastComplainedDate" => "Most recent complaint date",
             "Actions" => "Actions"
         ];
         ?>
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/job_complaint">Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/company_complaint">Companies</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/all_complaints">All Complaints</button>
+            <button class="tab"  data-path="/UniQuest/admin/job_complaints">Complaints for Jobs</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/company_complaints">Complaints for Companies</button>
         </div>
         <div class="table-block">
             <div class="content-header">
@@ -28,18 +28,20 @@
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php if ($data['complaints_com']) : ?>
-                        <?php foreach ($data['complaints_com'] as $complaint) : ?>
+                    <?php if ($data['complaints_job']) : ?>
+                        <?php foreach ($data['complaints_job'] as $complaint) : ?>
                             <tr>
-                                <td><?php echo $complaint->CompanyID; ?></td>
+                                <td><?php echo $complaint->JobTitle; ?></td>
                                 <td><?php echo $complaint->CompanyName; ?></td>
-                                <td><?php echo $complaint->CompanyEmail; ?></td>
                                 <td><?php echo $complaint->ComplaintCount; ?></td>
                                 <td><?php echo substr($complaint->LastComplainedDate, 0, 10); ?></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_company/<?php echo $complaint->CompanyID; ?>'">
-                                        preview
-                                    </span>
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_job/<?php echo $complaint->JobID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View Complaints</span>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -53,6 +55,7 @@
         </div>
     </main>
 </div>
+
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 

@@ -25,7 +25,7 @@
             Jobs Verification
         </button>
 
-        <button class="nav-btn" data-paths="/UniQuest/admin/job_complaint,/UniQuest/admin/company_complaint">
+        <button class="nav-btn" data-paths="/UniQuest/admin/all_complaints,/UniQuest/admin/job_complaints,/UniQuest/admin/company_complaints">
             <span class="material-symbols-outlined"> problem </span>
             Complaints
         </button>
