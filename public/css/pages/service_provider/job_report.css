@@ -81,7 +81,7 @@ h2 {
 }
 
 .demographic-grid {
-    display: flex;
+    display: flex !important; 
     gap: 30px;
 }
 
