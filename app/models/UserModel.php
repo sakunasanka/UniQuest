@@ -850,8 +850,8 @@ class userModel extends Model
 
     public function getAdminIds() 
     {
-        $this->db->query("SELECT AdminID FROM Admin");
-        $admins = $this->db->resultSet();
+        $this->db->query("SELECT AdminID FROM admin");
+        return $this->db->resultSet();
     }
 
     public function getAllUserIds() 

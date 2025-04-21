@@ -87,7 +87,14 @@ class Student extends Controller
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
-                    flash('contact-msg', 'Your message has been sent successfully.');
+
+                    //send notification for each admin
+                    $admins = $this->model('userModel')->getAdminIds();
+                    foreach ($admins as $admin) {
+                        notifyMessageToAdminFromStudent($admin->AdminID, $data['message']);
+                    }
+                    $_SESSION['show_contact_us_success'] = true;
+                    
                     redirect('student/contact_admin');
                 } else {
                     die('Something went wrong. Please try again.');
@@ -103,9 +110,9 @@ class Student extends Controller
                 'message' => '',
                 'email_err' => '',
                 'topic_err' => '',
-                'message_err' => ''
+                'message_err' => '',
             ];
-
+            
             $this->view('pages/student/contact_admin', $data);
         }
     }

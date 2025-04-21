@@ -32,7 +32,7 @@
                     <?php $previousDate = $messageDate; 
                     endif; ?>
                 <div class="message-container">
-                    <div class="message <?php echo $message->sender_id == $_SESSION['user_id'] ? 'sent' : 'received'; ?>">
+                    <div class="message1 <?php echo $message->sender_id == $_SESSION['user_id'] ? 'sent' : 'received'; ?>">
                         <?php echo htmlspecialchars($message->message); ?>
                         <span class="message-time"> <?php echo $messageTime; ?> </span>
 

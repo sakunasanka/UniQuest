@@ -76,3 +76,11 @@ function flash($name) {
 <?php unset($_SESSION['show_job_edit_error']); ?>
 <?php endif; ?>
 
+<?php if(isset($_SESSION['show_contact_us_success'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Your message has been sent successfully.", "success");
+    });
+</script>
+<?php unset($_SESSION['show_contact_us_success']); ?>
+<?php endif; ?>
