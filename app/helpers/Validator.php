@@ -215,15 +215,13 @@ class Validator
                 $errors['addressLine1_err'] = 'Address line 1 is required';
             }
 
-            // if (self::isEmpty($data['city'])) {
-            //     $errors['city_err'] = 'City is required';
-            // }
+            if (self::isEmpty($data['cityID'])) {
+                $errors['city_err'] = 'City is required';
+            }
 
-            // if (self::isEmpty($data['industry'])) {
-            //     $errors['industry_err'] = 'Industry is required';
-            // } else if (!self::isValidName($data['industry'])) {
-            //     $errors['industry_err'] = 'Industry can only contain letters and spaces';
-            // }
+            if (self::isEmpty($data['industryID'])) {
+                $errors['industry_err'] = 'Industry is required';
+            }
 
             if (self::isEmpty($data['terms'])) {
                 $errors['terms_err'] = 'You must accept the terms and conditions';
@@ -303,9 +301,9 @@ class Validator
                 $errors['addressLine1_err'] = 'Address line 1 is required';
             }
 
-            // if (self::isEmpty($data['city'])) {
-            //     $errors['city_err'] = 'City is required';
-            // }
+            if (self::isEmpty($data['cityID'])) {
+                $errors['city_err'] = 'City is required';
+            }
         }
 
         // If there are no errors, return true; otherwise, return the errors
