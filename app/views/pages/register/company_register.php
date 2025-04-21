@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/register/reg_form.css">
+    <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
 </head>
 
 <body>
@@ -58,7 +59,12 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="industry">Industry<span class="req"> *</span></label>
-                            <input type="text" id="industry" name="industry" value="<?php echo $data['industry']; ?>" placeholder="Enter Industry" required>
+                            <select id="industryID" name="industryID" required>
+                                <option value="" disabled selected>Select Industry</option>
+                                <?php foreach ($data['industries'] as $industry) : ?>
+                                    <option value="<?php echo $industry->IndustryID; ?>" <?php echo ($data['industryID'] == $industry->IndustryID) ? 'selected' : ''; ?>><?php echo $industry->IndustryName; ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <span class="error-msg"><?php echo !empty($data['industry_err']) ? $data['industry_err'] : '' ?></span>
                         </div>
                         <div class="input-container">
@@ -73,6 +79,43 @@
                             <label for="description">Description</label>
                             <textarea id="description" name="description" placeholder="Enter Description"><?php echo $data['description']; ?></textarea>
                             <span class="error-msg"><?php echo !empty($data['description_err']) ? $data['description_err'] : '' ?></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-container">
+                            <label for="linkedin">LinkedIn</label>
+                            <input type="text" id="linkedin" name="linkedin" value="<?php echo $data['linkedin']; ?>" placeholder="Enter LinkedIn Profile Link">
+                            <span class="error-msg"><?php echo !empty($data['linkedin_err']) ? $data['linkedin_err'] : '' ?></span>
+                        </div>
+                        <div class="input-container">
+                            <label for="facebook">Facebook</label>
+                            <input type="text" id="facebook" name="facebook" value="<?php echo $data['facebook']; ?>" placeholder="Enter Facebook Page Link">
+                            <span class="error-msg"><?php echo !empty($data['facebook_err']) ? $data['facebook_err'] : '' ?></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-container" style="flex-basis: 100%;">
+                            <label for="brCertificate">Business Registration Copy</label>
+                            <div class="file-drop-area">
+                                <div class="file-content">
+                                    <span>Drag & Drop to Upload Business Registration Copy</span>
+                                    <button type="button" class="browse-btn">Browse File
+                                        <input type="file" id="brCertificate" name="brCertificate" accept=".pdf,.doc,.docx">
+                                    </button>
+                                    <span class="file-name">No file selected</span>
+                                </div>
+                            </div>
+                            <span class="req-msg">Only PDF, DOC, DOCX files are allowed, and maximum file size is 5MB</span>
+                            <span class="error-msg"><?php echo !empty($data['brCertificate_err']) ? $data['brCertificate_err'] : ''; ?></span>
+                        </div>
+                        <!-- <div class="input-container"></div> -->
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-container" style="flex-basis: 100%;">
+                            <span class="note-msg">Help us get to know your company! Upload your BR certificate and share your website or social media page so we can verify your profile and activate your account.</span>
                         </div>
                     </div>
 
@@ -97,7 +140,20 @@
                         </div>
                         <div class="input-container">
                             <label for="city">City<span class="req"> *</span></label>
-                            <input type="text" id="city" name="city" value="<?php echo $data['city']; ?>" placeholder="Enter City" required>
+                            <div style="display: flex; justify-content: space-between; gap: 10px;">
+                                <select id="districtID" name="districtID" required style="width: 50%;">
+                                    <option value="" disabled selected>Select District</option>
+                                    <?php foreach ($data['districts'] as $district) : ?>
+                                        <option value="<?php echo $district->DistrictID; ?>" <?php echo ($data['districtID'] == $district->DistrictID) ? 'selected' : ''; ?>><?php echo $district->DistrictName; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <select id="cityID" name="cityID" required style="width: 50%;">
+                                    <option value="" disabled selected>Select City</option>
+                                    <?php foreach ($data['cities'] as $city) : ?>
+                                        <option value="<?php echo $city->CityID; ?>" <?php echo ($data['cityID'] == $city->CityID) ? 'selected' : ''; ?>><?php echo $city->CityName; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                             <span class="error-msg"><?php echo !empty($data['city_err']) ? $data['city_err'] : ''; ?></span>
                         </div>
                     </div>
@@ -157,5 +213,6 @@
 </body>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/register/fileUpload.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/register/citiesForDistrict.js"></script>
 
 </html>

@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_Profile.css">
 
@@ -44,13 +44,25 @@
                     <span class="kk"><?php echo $data['user']['ContactNo'] ?></span>
                 </div>
                 <div class="btn-row">
-                    <div></div>
+                    <?php if ($data['user']['Status'] == 'Deactive' || $data['user']['Status'] == 'Pendind Deletion' && $data['acc_log'] != NULL): ?>
+                        <div class="status-deact">
+                            <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                            <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>
+                            <span>Deactivated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php elseif ($data['user']['Status'] == 'Active' && $data['acc_log'] != NULL): ?>
+                        <div class="status-act">
+                            <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                            <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>
+                            <span>Activated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php endif; ?>
                     <?php require APPROOT . '/views/components/chat-sent.php'; ?>
-                </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 </div>
 

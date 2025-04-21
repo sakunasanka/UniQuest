@@ -187,7 +187,7 @@ class RateAndReviewModel
 
                 // Fetch additional company details (CompanyLogo and City) from the companies table
                 $this->db->query('
-                    SELECT CompanyLogo, CompanyName, City
+                    SELECT CompanyLogo, CompanyName, City, Website, Facebook, LinkedIn
                     FROM companyreviews
                     WHERE CompanyID = :companyID
                 ');
@@ -208,6 +208,9 @@ class RateAndReviewModel
                     'CompanyLogo' => $companyDetails->CompanyLogo,
                     'CompanyName' => $companyDetails->CompanyName,
                     'City' => $companyDetails->City,
+                    'Website' => $companyDetails->Website,
+                    'Facebook' => $companyDetails->Facebook,
+                    'LinkedIn' => $companyDetails->LinkedIn,
                     'display_rating' => $displayRating
                 ];
             }
@@ -244,6 +247,186 @@ class RateAndReviewModel
         $index = abs($hash) % count($this->anonymousNames);
 
         return $this->anonymousNames[$index];
+    }
+
+    public function get_likes_dislikes()
+    {
+        $this->db->query("SELECT * FROM review_likes");
+        return $this->db->resultSet();
+    }
+
+    public function getLikesByReviewID($reviewId) 
+    {
+        $this->db->query("SELECT likeCount FROM review_likes WHERE ReviewID = :reviewId");
+        $this->db->bind(':reviewId', $reviewId);
+        $row = $this->db->single();
+        return $row ? $row->likeCount : 0; 
+    }
+
+    public function getDislikesByReviewID($reviewId) 
+    {
+        $this->db->query("SELECT dislikeCount FROM review_likes WHERE ReviewID = :reviewId");
+        $this->db->bind(':reviewId', $reviewId);
+        $row = $this->db->single();
+        return $row ? $row->dislikeCount : 0; 
+    }
+
+    // Add a like to a review
+    public function addLike($reviewId, $userId)
+    {
+        // First, check if a dislike exists and remove it
+        $this->removeDislike($reviewId, $userId);
+        
+        // Check if like already exists
+        $this->db->query('SELECT * FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId');
+        $this->db->bind(':reviewId', $reviewId);
+        $this->db->bind(':userId', $userId);
+        
+        $existingLike = $this->db->single();
+
+        // Check if any like exist in the review_likes table
+        $this->db->query('SELECT * FROM review_likes WHERE ReviewID = :reviewId');
+        $this->db->bind(':reviewId', $reviewId);
+        $existingRow = $this->db->single();
+        
+        if (!$existingLike) {
+            // Insert new like
+            $this->db->query('INSERT INTO is_liked (ReviewID, UserID) VALUES (:reviewId, :userId)');
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->bind(':userId', $userId);
+            
+            $inserted = $this->db->execute();
+            
+            if (!$existingRow) {
+                // If no like exists, create a new entry in review_likes
+                $this->db->query('INSERT INTO review_likes (ReviewID, likeCount, dislikeCount) VALUES (:reviewId, 1, 0)');
+            } else {
+                // If a like exists, just update the count
+                $this->db->query('UPDATE review_likes SET likeCount = likeCount + 1 WHERE ReviewID = :reviewId');
+            }
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->execute();
+            
+            return $inserted;
+        }
+        
+        return false;
+    }
+
+    // Remove a like from a review
+    public function removeLike($reviewId, $userId)
+    {
+        // Check if like exists
+        $this->db->query('SELECT * FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId');
+        $this->db->bind(':reviewId', $reviewId);
+        $this->db->bind(':userId', $userId);
+        
+        $existingLike = $this->db->single();
+        
+        if ($existingLike) {
+            // Delete the like
+            $this->db->query('DELETE FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId');
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->bind(':userId', $userId);
+            
+            $deleted = $this->db->execute();
+            
+            // Update like count
+            $this->db->query('UPDATE review_likes SET likeCount = GREATEST(likeCount - 1, 0) WHERE ReviewID = :reviewId');
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->execute();
+            
+            return $deleted;
+        }
+        
+        return false;
+    }
+
+    // Add a dislike to a review
+    public function addDislike($reviewId, $userId)
+    {
+        // First, check if a like exists and remove it
+        $this->removeLike($reviewId, $userId);
+        
+        // Check if dislike already exists
+        $this->db->query('SELECT * FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId');
+        $this->db->bind(':reviewId', $reviewId);
+        $this->db->bind(':userId', $userId);
+        
+        $existingDislike = $this->db->single();
+
+        // Check if any dislike exist in the review_likes table
+        $this->db->query('SELECT * FROM review_likes WHERE ReviewID = :reviewId');
+        $this->db->bind(':reviewId', $reviewId);
+        $existingRow = $this->db->single();
+        
+        if (!$existingDislike) {
+            // Insert new dislike
+            $this->db->query('INSERT INTO is_disliked (ReviewID, UserID) VALUES (:reviewId, :userId)');
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->bind(':userId', $userId);
+            
+            $inserted = $this->db->execute();
+
+            if (!$existingRow) {
+                // If no dislike exists, create a new entry in review_likes
+                $this->db->query('INSERT INTO review_likes (ReviewID, likeCount, dislikeCount) VALUES (:reviewId, 0, 1)');
+            } else {
+                // If a dislike exists, just update the count
+                $this->db->query('UPDATE review_likes SET dislikeCount = dislikeCount + 1 WHERE ReviewID = :reviewId');
+            }
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->execute();
+            
+            return $inserted;
+        }
+        
+        return false;
+    }
+
+    // Remove a dislike from a review
+    public function removeDislike($reviewId, $userId)
+    {
+        // Check if dislike exists
+        $this->db->query('SELECT * FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId');
+        $this->db->bind(':reviewId', $reviewId);
+        $this->db->bind(':userId', $userId);
+        
+        $existingDislike = $this->db->single();
+        
+        if ($existingDislike) {
+            // Delete the dislike
+            $this->db->query('DELETE FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId');
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->bind(':userId', $userId);
+            
+            $deleted = $this->db->execute();
+            
+            // Update dislike count
+            $this->db->query('UPDATE review_likes SET dislikeCount = GREATEST(dislikeCount - 1, 0) WHERE ReviewID = :reviewId');
+            $this->db->bind(':reviewId', $reviewId);
+            $this->db->execute();
+            
+            return $deleted;
+        }
+        
+        return false;
+    }
+
+    public function checkIfLiked($reviewId, $userId) 
+    {
+        $this->db->query("SELECT * FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId");
+        $this->db->bind(':reviewId', $reviewId);
+        $this->db->bind(':userId', $userId);
+        return $this->db->single();
+    }
+    
+    public function checkIfDisliked($reviewId, $userId) 
+    {
+        $this->db->query("SELECT * FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId");
+        $this->db->bind(':reviewId', $reviewId);
+        $this->db->bind(':userId', $userId);
+        return $this->db->single();
     }
 
 }

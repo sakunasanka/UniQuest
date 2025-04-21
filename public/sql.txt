@@ -142,30 +142,36 @@ CREATE TABLE IF NOT EXISTS uniquest.Jobs (
     ON UPDATE CASCADE
 )
 ENGINE = InnoDB;
+
+ALTER TABLE Jobs
+ADD COLUMN PublishDate DATE AFTER create_at,
+ADD COLUMN SalaryType ENUM('Per Hour', 'Per Day', 'Per Week', 'Per Month') NOT NULL DEFAULT 'Per Month' AFTER SalaryRange;
 -- ---------------------------------------------------
 
-CREATE VIEW v_jobs AS 
-    SELECT 
-        jobs.JobID AS JobID,
-        company.CompanyID AS CompanyID,
-        jobs.Title AS Title,
-        company.CompanyLogo AS CompanyLogo,
-        company.CompanyName AS CompanyName,
-        jobs.Description AS Description,
-        jobs.Location AS Location,
-        jobs.Category AS Category,
-        jobs.Status AS Status,
-        jobs.JobBenefits AS JobBenefits,
-        jobs.RequiredQualifications AS RequiredQualifications,
-        jobs.SalaryRange AS SalaryRange,
-        user.Email AS Email,
-        user.ContactNo AS ContactNo,
-        jobs.Create_at AS jobs_create_at,         -- Use correct capitalization
-        company.Create_at AS company_create_at    -- Use correct capitalization
-    FROM jobs 
-    INNER JOIN company ON jobs.CompanyID = company.CompanyID
-    INNER JOIN user ON company.CompanyID = user.UserID
-    ORDER BY jobs.Create_at DESC;
+CREATE OR REPLACE VIEW v_jobs AS 
+SELECT 
+    jobs.JobID AS JobID,
+    company.CompanyID AS CompanyID,
+    jobs.Title AS Title,
+    company.CompanyLogo AS CompanyLogo,
+    company.CompanyName AS CompanyName,
+    jobs.Description AS Description,
+    jobs.Location AS Location,
+    jobs.Category AS Category,
+    jobs.Status AS Status,
+    jobs.JobBenefits AS JobBenefits,
+    jobs.RequiredQualifications AS RequiredQualifications,
+    jobs.SalaryRange AS SalaryRange,
+    jobs.SalaryType AS SalaryType,
+    jobs.PublishDate AS PublishDate,
+    user.Email AS Email,
+    user.ContactNo AS ContactNo,
+    jobs.Create_at AS jobs_create_at,
+    company.Create_at AS company_create_at
+FROM jobs 
+INNER JOIN company ON jobs.CompanyID = company.CompanyID
+INNER JOIN user ON company.CompanyID = user.UserID
+ORDER BY jobs.Create_at DESC;
 
 CREATE VIEW v_companies AS
 SELECT 
@@ -356,6 +362,7 @@ SELECT
     j.Status,
     j.RequiredQualifications,       -- Job qualifications
     j.SalaryRange,                  -- Salary range
+    j.SalaryType,                  -- Salary type
     u.Email,        -- Company's email from User table
     u.ContactNo,  -- Company's contact number from User table
     j.create_at AS jobs_create_at,    -- Job creation timestamp
@@ -372,6 +379,10 @@ INNER JOIN
 ORDER BY 
     bj.bookmark_create_at DESC;
 
+-- -----------------------------------------------------
+-- View uniquest.v_bookmarkedCompanies
+-- -----------------------------------------------------
+
 CREATE VIEW v_bookmarkedCompanies AS
 SELECT 
     bc.StudentID,                   -- Student who bookmarked the company
@@ -382,17 +393,25 @@ SELECT
     c.StreetNo,                    -- Street number of the company
     c.AddressLine1,                -- First address line
     c.AddressLine2,                -- Second address line
-    c.City,                        -- City
-    c.Industry,                    -- Industry
+    ci.CityName AS City,           -- City
+    i.IndustryName AS Industry,                    -- Industry
     c.Website,                     -- Company website
+    u.Status,
     c.create_at AS company_create_at,  -- Company creation timestamp
     bc.bookmark_create_at          -- When the bookmark was created
 FROM 
     BookmarkCompanies bc
 INNER JOIN 
     company c ON bc.CompanyID = c.CompanyID
+INNER JOIN 
+    user u ON bc.CompanyID = u.UserID   
+INNER JOIN 
+    cities ci ON ci.CityID = c.CityID  
+INNER JOIN 
+    industry i ON i.IndustryID = c.IndustryID      
 ORDER BY 
     bc.bookmark_create_at DESC;    -- Ordered by bookmark creation timestamp
+
 
 -- -----------------------------------------------------
 -- View uniquest.StudentJobComplaints
@@ -422,7 +441,6 @@ JOIN
 -- -----------------------------------------------------
 -- View uniquest.CompanyReviews
 -- -----------------------------------------------------
-
 CREATE VIEW CompanyReviews AS
 SELECT 
     c.CompanyID,
@@ -432,7 +450,10 @@ SELECT
     c.StreetNo AS StreetNo,
     c.AddressLine1 AS AddressLine1,
     c.AddressLine2 AS AddressLine2,
-    c.City AS City,
+    ci.CityName AS City,
+    c.Website,
+    c.Facebook,
+    c.LinkedIn,
     r.ReviewID,
     r.Rating,
     r.Comment,
@@ -446,6 +467,10 @@ JOIN
     Review r
 ON 
     c.CompanyID = r.CompanyID
+JOIN 
+    cities ci
+ON 
+    ci.CityID = c.CityID    
 JOIN 
     student s
 ON 
@@ -503,6 +528,40 @@ ALTER TABLE application_fields
   ADD CONSTRAINT application_fields_ibfk_1 FOREIGN KEY (job_id) REFERENCES jobs (JobID) ON DELETE CASCADE;
 COMMIT;
 
+--
+-- Table structure for table application_fields_req
+--
+
+CREATE TABLE application_fields_req (
+    id INT PRIMARY KEY,
+	job_id INT,
+    fullname_req BOOLEAN DEFAULT FALSE,
+    photo_req BOOLEAN DEFAULT FALSE,
+    email_req BOOLEAN DEFAULT FALSE,
+    contact_req BOOLEAN DEFAULT FALSE,
+    address_req BOOLEAN DEFAULT FALSE,
+    nic_req BOOLEAN DEFAULT FALSE,
+    nic_copy_req BOOLEAN DEFAULT FALSE,
+    gender_req BOOLEAN DEFAULT FALSE,
+    dob_req BOOLEAN DEFAULT FALSE,
+    qualifications_req BOOLEAN DEFAULT FALSE,
+    experience_req BOOLEAN DEFAULT FALSE,
+    skills_req BOOLEAN DEFAULT FALSE,
+    cv_req BOOLEAN DEFAULT FALSE,
+    linkedin_req BOOLEAN DEFAULT FALSE,
+    other1_req BOOLEAN DEFAULT FALSE,
+    other2_req BOOLEAN DEFAULT FALSE,
+    other3_req BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT fk_application_fields_req_job
+        FOREIGN KEY (job_id) REFERENCES Jobs(jobID)
+        ON DELETE CASCADE
+);
+ALTER TABLE application_fields
+ADD COLUMN other1_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL,
+ADD COLUMN other2_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL,
+ADD COLUMN other3_type ENUM('text', 'file', 'date', 'textarea') DEFAULT NULL;
+
 -- -----------------------------------------------------
 -- View uniquest.messages_with_roles
 -- -----------------------------------------------------
@@ -525,6 +584,481 @@ FROM messages m
 JOIN User u1 ON m.sender_id = u1.UserID
 JOIN User u2 ON m.receiver_id = u2.UserID;
 
+--------------------------create application table----------------------------------------------
+
+
+CREATE TABLE `applications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(50) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `nic` varchar(50) DEFAULT NULL,
+  `nic_copy` varchar(255) DEFAULT NULL,
+  `gender` enum('Male','Female','Other') DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `qualifications` text DEFAULT NULL,
+  `experience` text DEFAULT NULL,
+  `skills` text DEFAULT NULL,
+  `cv` varchar(255) DEFAULT NULL,
+  `linkedin` varchar(255) DEFAULT NULL,
+  `status` enum('Pending','Shortlisted','Rejected','Hired') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `job_id` (`job_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `applications_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`jobID`) ON DELETE CASCADE,
+  CONSTRAINT `applications_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`userID`) ON DELETE CASCADE,
+  CONSTRAINT `unique_application` UNIQUE (`job_id`, `user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE applications
+ADD COLUMN other1 TEXT AFTER linkedin,
+ADD COLUMN other2 TEXT AFTER other1,
+ADD COLUMN other3 TEXT AFTER other2;
+
+---------------------------------------------------
+CREATE VIEW v_allapplications AS
+SELECT
+    a.id AS ApplicationID,
+    a.job_id AS JobID,
+    j.Title AS JobTitle,
+    j.Location AS JobLocation,
+    j.Category AS JobCategory,
+    j.SalaryRange AS SalaryRange,
+    c.CompanyID AS CompanyID,
+    c.CompanyName AS CompanyName,
+    c.CompanyLogo AS CompanyLogo,
+    a.user_id AS StudentID,
+    CONCAT(s.FirstName, ' ', s.LastName) AS StudentName,
+    a.email AS StudentEmail,
+    a.contact AS StudentContact,
+    a.cv AS StudentResume,
+    a.photo AS StudentProfileImage,
+    a.status AS ApplicationStatus,
+    a.qualifications AS Qualifications,
+    a.experience AS Experience,
+    a.skills AS Skills,
+    a.address AS address,
+    a.gender AS gender,
+    a.dob AS dob,
+    a.nic AS nic,
+    a.nic_copy AS nic_copy,
+    a.linkedin AS linkedin,
+    a.other1 AS other1,
+    a.other2 AS other2,
+    a.other3 AS other3,
+    a.status AS status,
+    af.other1_type,
+    af.other2_type,
+    af.other3_type,
+    a.created_at AS SubmissionDate,
+    a.updated_at AS LastUpdated,
+    j.create_at AS JobCreatedAt,
+    j.PublishDate,
+    c.create_at AS company_create_at
+FROM
+    applications a
+INNER JOIN
+    jobs j ON a.job_id = j.JobID
+INNER JOIN
+    company c ON j.CompanyID = c.CompanyID
+INNER JOIN
+    student s ON a.user_id = s.StudentID
+INNER JOIN
+    application_fields af ON af.job_id = a.job_id    
+ORDER BY
+    a.created_at DESC;
+
+-- Add subscription fields to the company table
+ALTER TABLE uniquest.company 
+ADD COLUMN subscription_plan ENUM('free', 'professional', 'enterprise') NOT NULL DEFAULT 'free',
+ADD COLUMN subscription_start_date DATETIME NULL DEFAULT NULL,
+ADD COLUMN subscription_end_date DATETIME NULL DEFAULT NULL,
+ADD COLUMN subscription_status ENUM('active', 'expired', 'cancelled') NULL DEFAULT NULL;
+
+
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `order_id` varchar(100) NOT NULL,
+  `payment_id` varchar(100) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `currency` varchar(10) NOT NULL DEFAULT 'LKR',
+  `plan` varchar(50) NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'pending',
+  `payhere_status_code` varchar(10) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_id` (`order_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS payments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    order_id VARCHAR(255) NOT NULL,
+    payment_id VARCHAR(255) NOT NULL,
+    plan VARCHAR(50) DEFAULT 'professional',
+    amount DECIMAL(10,2) DEFAULT 0.00,
+    currency VARCHAR(10) DEFAULT 'LKR',
+    payment_date DATETIME NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY (order_id),
+    INDEX (user_id),
+    INDEX (payment_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Table uniquest.review_likes
+-- -----------------------------------------------------
+
+CREATE TABLE review_likes (
+    ReviewID INT NOT NULL,
+    likeCount INT DEFAULT 0,
+    dislikeCount INT DEFAULT 0,
+    PRIMARY KEY (ReviewID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE
+);
+
+-- Create is_liked table
+CREATE TABLE uniquest.is_liked (
+    ReviewID INT NOT NULL,
+    UserID INT NOT NULL,
+    CONSTRAINT pk_is_liked PRIMARY KEY (ReviewID, UserID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);
+
+-- Create is_disliked table
+CREATE TABLE uniquest.is_disliked (
+    ReviewID INT NOT NULL,
+    UserID INT NOT NULL,
+    CONSTRAINT pk_is_disliked PRIMARY KEY (ReviewID, UserID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);
+
+-- Create is_viewed_job table
+CREATE TABLE is_viewed_job (
+    JobID INT NOT NULL,
+    UserID INT NOT NULL,
+    ViewedAt DATETIME DEFAULT CURRENT_TIMESTAMP, 
+
+    PRIMARY KEY (JobID, UserID),
+
+    FOREIGN KEY (JobID) REFERENCES Jobs(JobID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE
+);
+
+-- Create districts table
+CREATE TABLE districts (
+    DistrictID INT AUTO_INCREMENT PRIMARY KEY,
+    DistrictName VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Create cities table
+CREATE TABLE cities (
+    CityID INT AUTO_INCREMENT PRIMARY KEY,
+    CityName VARCHAR(100) NOT NULL,
+    DistrictID INT NOT NULL,
+    FOREIGN KEY (DistrictID) REFERENCES districts(DistrictID) ON DELETE CASCADE
+);
+
+-- Insert districts
+INSERT INTO districts (DistrictName) VALUES
+('Colombo'),
+('Gampaha'),
+('Kalutara'),
+('Kandy'),
+('Matale'),
+('Nuwara Eliya'),
+('Galle'),
+('Matara'),
+('Hambantota'),
+('Jaffna'),
+('Kilinochchi'),
+('Mannar'),
+('Vavuniya'),
+('Mullaitivu'),
+('Batticaloa'),
+('Ampara'),
+('Trincomalee'),
+('Anuradhapura'),
+('Polonnaruwa'),
+('Puttalam'),
+('Kurunegala'),
+('Kegalle'),
+('Ratnapura'),
+('Badulla'),
+('Monaragala');
+
+-- Insert cities
+INSERT INTO cities (CityName, DistrictID) VALUES
+-- Colombo
+('Colombo', 1), ('Dehiwala', 1), ('Nugegoda', 1), ('Kotte', 1), ('Wellawatte', 1), ('Moratuwa', 1), ('Mount Lavinia', 1), ('Kolonnawa', 1),
+
+-- Gampaha
+('Gampaha', 2), ('Negombo', 2), ('Ja-Ela', 2), ('Ragama', 2), ('Wattala', 2), ('Kiribathgoda', 2), ('Kadawatha', 2), ('Minuwangoda', 2),
+
+-- Kalutara
+('Kalutara', 3), ('Panadura', 3), ('Beruwala', 3), ('Aluthgama', 3), ('Matugama', 3), ('Horana', 3),
+
+-- Kandy
+('Kandy', 4), ('Peradeniya', 4), ('Gampola', 4), ('Katugastota', 4), ('Pilimathalawa', 4), ('Digana', 4), ('Nawalapitiya', 4),
+
+-- Matale
+('Matale', 5), ('Dambulla', 5), ('Rattota', 5), ('Ukuwela', 5), ('Galewela', 5),
+
+-- Nuwara Eliya
+('Nuwara Eliya', 6), ('Hatton', 6), ('Talawakelle', 6), ('Nanu Oya', 6), ('Ragala', 6),
+
+-- Galle
+('Galle', 7), ('Hikkaduwa', 7), ('Ambalangoda', 7), ('Elpitiya', 7), ('Karapitiya', 7), ('Unawatuna', 7),
+
+-- Matara
+('Matara', 8), ('Weligama', 8), ('Dikwella', 8), ('Akuressa', 8), ('Hakmana', 8), ('Kamburupitiya', 8),
+
+-- Hambantota
+('Hambantota', 9), ('Tangalle', 9), ('Tissamaharama', 9), ('Ambalantota', 9), ('Beliatta', 9),
+
+-- Jaffna
+('Jaffna', 10), ('Nallur', 10), ('Chavakachcheri', 10), ('Point Pedro', 10), ('Kopay', 10), ('Vavuniya North', 10),
+
+-- Kilinochchi
+('Kilinochchi', 11), ('Paranthan', 11), ('Pooneryn', 11), ('Murasumoddai', 11), ('Iyakachchi', 11),
+
+-- Mannar
+('Mannar', 12), ('Pesalai', 12), ('Murunkan', 12), ('Madhu', 12), ('Thalaimannar', 12),
+
+-- Vavuniya
+('Vavuniya', 13), ('Cheddikulam', 13), ('Nedunkeni', 13), ('Omanthai', 13), ('Settikulam', 13),
+
+-- Mullaitivu
+('Mullaitivu', 14), ('Puthukkudiyiruppu', 14), ('Oddusuddan', 14), ('Thunukkai', 14), ('Vattapalai', 14),
+
+-- Batticaloa
+('Batticaloa', 15), ('Eravur', 15), ('Kattankudy', 15), ('Kalkudah', 15), ('Valachchenai', 15),
+
+-- Ampara
+('Ampara', 16), ('Kalmunai', 16), ('Sammanthurai', 16), ('Akkaraipattu', 16), ('Addalaichenai', 16), ('Pottuvil', 16),
+
+-- Trincomalee
+('Trincomalee', 17), ('Kinniya', 17), ('Kantale', 17), ('Mutur', 17), ('China Bay', 17),
+
+-- Anuradhapura
+('Anuradhapura', 18), ('Mihintale', 18), ('Kekirawa', 18), ('Medawachchiya', 18), ('Thambuttegama', 18), ('Nochchiyagama', 18),
+
+-- Polonnaruwa
+('Polonnaruwa', 19), ('Hingurakgoda', 19), ('Minneriya', 19), ('Medirigiriya', 19), ('Kaduruwela', 19),
+
+-- Puttalam
+('Puttalam', 20), ('Chilaw', 20), ('Wennappuwa', 20), ('Anamaduwa', 20), ('Nattandiya', 20), ('Mundel', 20),
+
+-- Kurunegala
+('Kurunegala', 21), ('Kuliyapitiya', 21), ('Nikaweratiya', 21), ('Wariyapola', 21), ('Polgahawela', 21), ('Pannala', 21),
+
+-- Kegalle
+('Kegalle', 22), ('Mawanella', 22), ('Rambukkana', 22), ('Warakapola', 22), ('Dehiowita', 22),
+
+-- Ratnapura
+('Ratnapura', 23), ('Balangoda', 23), ('Embilipitiya', 23), ('Eheliyagoda', 23), ('Kuruwita', 23), ('Pelmadulla', 23),
+
+-- Badulla
+('Badulla', 24), ('Bandarawela', 24), ('Ella', 24), ('Hali-Ela', 24), ('Haputale', 24), ('Welimada', 24),
+
+-- Monaragala
+('Monaragala', 25), ('Wellawaya', 25), ('Bibile', 25), ('Siyambalanduwa', 25), ('Medagama', 25);
+
+
+CREATE TABLE `jobs` (
+	`JobID` INT(11) NOT NULL AUTO_INCREMENT,
+	`Title` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`Description` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`DistrictID` INT(11) NOT NULL,
+	`CityID` INT(11) NOT NULL DEFAULT '0',
+	`Category` ENUM('Part-time','Internship') NOT NULL COLLATE 'utf8mb4_general_ci',
+	`JobBenefits` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`RequiredQualifications` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`SalaryRange` DECIMAL(10,2) NOT NULL,
+	`SalaryType` ENUM('Per Month','Per Week','Per Day','Per Hour') NOT NULL COLLATE 'utf8mb4_general_ci',
+	`CompanyID` INT(11) NULL DEFAULT NULL,
+	`create_at` TIMESTAMP NULL DEFAULT NULL,
+	`Status` ENUM('Active','Deactive','Pending','Not Approved') NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`VerifiedBy` INT(11) NULL DEFAULT NULL,
+	`VerifiedDate` TIMESTAMP NULL DEFAULT NULL,
+	`PublishDate` TIMESTAMP NULL DEFAULT NULL,
+	PRIMARY KEY (`JobID`) USING BTREE,
+	INDEX `fk_Jobs_ServiceProvider1_idx` (`CompanyID`) USING BTREE,
+	INDEX `fk_verified` (`VerifiedBy`) USING BTREE,
+	INDEX `fk_district` (`DistrictID`) USING BTREE,
+	INDEX `fk_city` (`CityID`) USING BTREE,
+	CONSTRAINT `fk_Jobs_ServiceProvider1` FOREIGN KEY (`CompanyID`) REFERENCES `company` (`CompanyID`) ON UPDATE CASCADE ON DELETE SET NULL,
+	CONSTRAINT `fk_city` FOREIGN KEY (`CityID`) REFERENCES `cities` (`CityID`) ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT `fk_district` FOREIGN KEY (`DistrictID`) REFERENCES `districts` (`DistrictID`) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT `fk_verified` FOREIGN KEY (`VerifiedBy`) REFERENCES `user` (`UserID`) ON UPDATE RESTRICT ON DELETE SET NULL
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=7
+;
+
+
+CREATE VIEW `v_jobs` AS SELECT 
+    j.JobID AS JobID,
+    c.CompanyID AS CompanyID,
+    j.Title AS Title,
+    c.CompanyLogo AS CompanyLogo,
+    c.CompanyName AS CompanyName,
+    i.IndustryName AS Industry,
+    c.Website AS Website,
+    c.Facebook,
+    c.LinkedIn,
+    j.Description AS Description,
+    TRIM(REGEXP_REPLACE(CONCAT_WS(', ', c.StreetNo, c.AddressLine1, c.AddressLine2, ci.CityName), ', ,+', ',')) AS CompanyAddress,
+    j.Category AS Category,
+    j.Status AS Status,
+    d.DistrictName AS District,
+    ci.CityName AS City,
+    j.JobBenefits AS JobBenefits,
+    j.RequiredQualifications AS RequiredQualifications,
+    j.SalaryRange AS SalaryRange,
+    j.SalaryType AS SalaryType,
+    j.PublishDate AS PublishDate,
+    u.Email AS Email,
+    u.ContactNo AS ContactNo,
+    j.create_at AS jobs_create_at,
+    c.create_at AS company_create_at
+FROM 
+    jobs j
+    JOIN company c ON j.CompanyID = c.CompanyID
+    JOIN user u ON c.CompanyID = u.UserID
+    JOIN districts d ON j.DistrictID = d.DistrictID
+    JOIN cities ci ON j.CityID = ci.CityID
+    LEFT JOIN industry i ON c.IndustryID = i.IndustryID
+ORDER BY 
+    j.create_at DESC  ;
+
+
+
+CREATE TABLE `company` (
+	`CompanyID` INT(11) NOT NULL AUTO_INCREMENT,
+	`CompanyName` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`Description` TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`CompanyLogo` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`StreetNo` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`AddressLine1` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`AddressLine2` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`DistrictID` INT(11) NULL DEFAULT NULL,
+	`CityID` INT(11) NULL DEFAULT NULL,
+	`IndustryID` INT(11) NULL DEFAULT NULL,
+	`Website` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`Facebook` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`LinkedIn` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`BRCertificate` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`create_at` TIMESTAMP NULL DEFAULT current_timestamp(),
+	`subscription_plan` ENUM('free','professional','enterprise') NOT NULL DEFAULT 'free' COLLATE 'utf8mb4_general_ci',
+	`subscription_start_date` DATETIME NULL DEFAULT NULL,
+	`subscription_end_date` DATETIME NULL DEFAULT NULL,
+	`subscription_status` ENUM('active','expired','cancelled') NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	PRIMARY KEY (`CompanyID`) USING BTREE,
+	INDEX `fk_company_district` (`DistrictID`) USING BTREE,
+	INDEX `fk_company_city` (`CityID`) USING BTREE,
+	INDEX `FK_industry` (`IndustryID`) USING BTREE,
+	CONSTRAINT `fk_ServiceProvider_User1` FOREIGN KEY (`CompanyID`) REFERENCES `user` (`UserID`) ON UPDATE RESTRICT ON DELETE CASCADE,
+	CONSTRAINT `fk_company_city` FOREIGN KEY (`CityID`) REFERENCES `cities` (`CityID`) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT `fk_company_district` FOREIGN KEY (`DistrictID`) REFERENCES `districts` (`DistrictID`) ON UPDATE CASCADE ON DELETE RESTRICT,
+	CONSTRAINT `fk_company_industry` FOREIGN KEY (`IndustryID`) REFERENCES `industry` (`IndustryID`) ON UPDATE CASCADE ON DELETE RESTRICT
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=7
+;
+
+
+
+
+CREATE VIEW `v_company` AS SELECT 
+    c.CompanyID,
+    c.CompanyName,
+    c.Description,
+    c.CompanyLogo,
+    CONCAT_WS(', ',
+        CONCAT(c.StreetNo, ' ', c.AddressLine1),
+        c.AddressLine2,
+        ci.CityName
+    ) AS Address,
+    d.DistrictName AS District,
+    ci.CityName AS City,
+    i.IndustryName AS Industry,
+    c.Website,
+    c.Facebook,
+    c.LinkedIn,
+    u.Email,
+    u.ContactNo,
+    u.Role,
+    u.Status,
+    c.create_at AS company_create_at,
+    (SELECT COUNT(*) FROM review r WHERE r.CompanyID = c.CompanyID) AS ReviewCount,
+    (SELECT COUNT(*) FROM jobs j WHERE j.CompanyID = c.CompanyID AND j.Status = 'Active') AS ActiveJobsCount
+FROM 
+    company c
+    JOIN user u ON c.CompanyID = u.UserID
+    LEFT JOIN districts d ON c.DistrictID = d.DistrictID
+    LEFT JOIN cities ci ON c.CityID = ci.CityID
+    LEFT JOIN industry i ON c.IndustryID = i.IndustryID  ;
+
+-- notifications
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL,
+  `type` enum('info','success','warning','danger') NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `related_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `UserID` (`UserID`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `notifications` 
+MODIFY COLUMN `type` ENUM('info', 'success', 'warning', 'danger', 'message') NOT NULL;
+
+
+-- Create a new event that runs every 30 minutes
+DELIMITER //
+
+CREATE EVENT IF NOT EXISTS ev_update_expired_subscriptions
+ON SCHEDULE EVERY 30 MINUTE
+DO
+BEGIN
+    UPDATE company
+    SET
+        subscription_plan = 'free',
+        subscription_start_date = NOW(),
+        subscription_end_date = DATE_ADD(NOW(), INTERVAL 30 DAY)
+    WHERE
+        subscription_end_date <= NOW();
+END;
+//
+
+DELIMITER ;
+
+
+ALTER TABLE company
+MODIFY COLUMN subscription_start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+MODIFY COLUMN subscription_end_date DATETIME DEFAULT (CURRENT_TIMESTAMP + INTERVAL 30 DAY);

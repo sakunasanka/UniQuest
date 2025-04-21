@@ -24,8 +24,45 @@ class Register extends Controller
         }
     }
 
+    public function getCitiesByDistrict() {
+        try {
+            // Get the district ID from POST data
+            $districtID = $_POST['districtID'] ?? null;
+            
+            if (!$districtID) {
+                throw new Exception('District ID is required');
+            }
+            
+            // Fetch cities based on the district ID
+            $cities = $this->model('AdminModel')->getCitiesByDistrict($districtID)['data'];
+            
+            if (!$cities) {
+                throw new Exception('No cities found for the given district ID');
+            }
+            
+            // Return JSON response
+            echo json_encode([
+                'success' => true,
+                'cities' => $cities
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        exit; // Important to prevent any additional output
+    }
+
     private function prepareDataCompany($post = [], $files = [])
     {
+        // Normalize and validate URLs using the helper class
+        $urlResults = URLNormalizer::validateAndNormalizeUrls([
+            'website' => $post['website'] ?? '',
+            'facebook' => $post['facebook'] ?? '',
+            'linkedin' => $post['linkedin'] ?? '',
+        ]);
+
         return [
             'companyName' => ucfirst(trim($post['companyName'] ?? '')),
             'email' => strtolower(trim($post['email'] ?? '')),
@@ -35,17 +72,26 @@ class Register extends Controller
             'streetNo' => trim($post['streetNo'] ?? ''),
             'addressLine1' => ucfirst(trim($post['addressLine1'] ?? '')),
             'addressLine2' => ucfirst(trim($post['addressLine2'] ?? '')),
-            'city' => ucfirst(trim($post['city'] ?? '')),
-            'terms' => trim($post['terms'] ?? ''),
-            'companyLogo' => $files['companyLogo'] ?? '',
-            'companyLogoName' => '',
+            'districtID' => trim($post['districtID'] ?? ''),
+            'cityID' => trim($post['cityID'] ?? ''),
             'description' => ucfirst(trim($post['description'] ?? '')),
-            'website' => trim($post['website'] ?? ''),
-            'industry' => trim($post['industry'] ?? ''),
+            'industryID' => trim($post['industryID'] ?? ''),
+            'terms' => trim($post['terms'] ?? ''),
+            'website' => $urlResults['website'] ?: trim($post['website'] ?? ''),
+            'facebook' => $urlResults['facebook'] ?: trim($post['facebook'] ?? ''),
+            'linkedin' => $urlResults['linkedin'] ?: trim($post['linkedin'] ?? ''),
+            'companyLogo' => $files['companyLogo'] ?? '',
+            'companyLogoName' => $files['companyLogo']['name'] ?? '',
+            'brCertificate' => $files['brCertificate'] ?? '',
+            'brCertificateName' => $files['brCertificate']['name'] ?? '',
             'role' => 'Company',
             'date' => date('Y-m-d H:i:s'),
             'status' => 'Pending',
+            'industries' => $this->model('AdminModel')->getIndustries()['data'],
+            'districts' => $this->model('AdminModel')->getDistricts()['data'],
+            'cities' => [],
 
+            // Error fields
             'companyName_err' => '',
             'email_err' => '',
             'password_err' => '',
@@ -56,14 +102,18 @@ class Register extends Controller
             'addressLine2_err' => '',
             'city_err' => '',
             'description_err' => '',
-            'website_err' => '',
+            'website_err' => $urlResults['website_err'],
             'industry_err' => '',
+            'facebook_err' => $urlResults['facebook_err'],
+            'linkedin_err' => $urlResults['linkedin_err'],
+            'brCertificate_err' => '',
             'companyLogo_err' => '',
             'terms_err' => '',
             'role_err' => '',
             'status_err' => ''
         ];
     }
+
 
     private function prepareDataStudent($post = [], $files = [])
     {
@@ -80,13 +130,13 @@ class Register extends Controller
             'city' => ucfirst(trim($post['city'] ?? '')),
             'gender' => ucfirst(trim($post['gender'] ?? '')),
             'dob' => trim($post['dob'] ?? ''),
-            'profilePic' => $files['profilePic'] ?? '',
+            'profilePic' => $files['profilePic'] ?? null,
             'nicNo' => trim($post['nicNo'] ?? ''),
-            'nicCopy' => $files['nicCopy'] ?? '',
-            'cv' => $files['cv'] ?? '',
+            'nicCopy' => $files['nicCopy'] ?? null,
+            'cv' => $files['cv'] ?? null,
             'university' => ucfirst(trim($post['university'] ?? '')),
             'universityID' => trim($post['universityID'] ?? ''),
-            'universityIDCopy' => $files['universityIDCopy'] ?? '',
+            'universityIDCopy' => $files['universityIDCopy'] ?? null,
             'terms' => trim($post['terms'] ?? ''),
             'role' => 'Student',
             'status' => 'Pending',
@@ -331,9 +381,19 @@ class Register extends Controller
                 $data = array_merge($data, $validationResponse['error']);
             }
 
-            $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
-            if (!$logoValidationResponse['is_valid']) {
-                $data['companyLogo_err'] = $logoValidationResponse['error'];
+            // $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
+            // if (!$logoValidationResponse['is_valid']) {
+            //     $data['companyLogo_err'] = $logoValidationResponse['error'];
+            // }
+
+            //vallidate files
+            $fileValidationResponse = FileUploadHelper::validateFiles([
+                'companyLogo' => ['file' => $data['companyLogo'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                'brCertificate' => ['file' => $data['brCertificate'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
+            ]);
+
+            if (!$fileValidationResponse['is_valid']) {
+                $data = array_merge($data, $fileValidationResponse['error']);
             }
 
             // Check if there are no errors
@@ -342,11 +402,29 @@ class Register extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
                 // Upload company logo
-                $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
-                if ($companyLogoResponse['success']) {
-                    $data['companyLogoName'] = $companyLogoResponse['file_name'];
+                // $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
+                // if ($companyLogoResponse['success']) {
+                //     $data['companyLogoName'] = $companyLogoResponse['file_name'];
+                // } else {
+                //     $data['companyLogo_err'] = $companyLogoResponse['error'];
+                //     $this->view('pages/register/company_register', $data);
+                //     return;
+                // }
+
+                //upload each file
+                $uploadedFilesResponse = FileUploadHelper::uploadFiles([
+                    'companyLogo' => ['file' => $data['companyLogo'], 'path' => PUBROOT . '/uploads/profile_pictures/company'],
+                    'brCertificate' => ['file' => $data['brCertificate'], 'path' => PUBROOT . '/uploads/br_certificates']
+                ]);
+
+                //check if all files are uploaded successfully
+                if ($uploadedFilesResponse['success']) {
+                    //set file names to data array
+                    $data = array_merge($data, $uploadedFilesResponse['file_name']);
                 } else {
-                    $data['companyLogo_err'] = $companyLogoResponse['error'];
+                    //merge data with errors
+                    $data = array_merge($data, $uploadedFilesResponse['error']);
+                    // Load view with errors
                     $this->view('pages/register/company_register', $data);
                     return;
                 }
@@ -393,6 +471,14 @@ class Register extends Controller
             $validationResponse = Validator::isValidRegistrationData($data);
             if (!$validationResponse['is_valid']) {
                 $data = array_merge($data, $validationResponse['error']);
+            }
+
+            //validate required files
+            if (empty($data['nicCopy']['name'])) {
+                $data['nicCopy_err'] = 'Please upload a NIC copy';
+            }
+            if (empty($data['universityIDCopy']['name'])) {
+                $data['universityIDCopy_err'] = 'Please upload a university ID copy';
             }
 
             //vallidate files

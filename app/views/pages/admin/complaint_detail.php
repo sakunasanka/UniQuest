@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_complaint.css">
 
@@ -11,7 +11,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
-            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_complaint'">
+            <button class="back-btn" onclick="window.history.back()">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
                 <h1>Complaint Management</h1>
             </button>
@@ -21,7 +21,10 @@
         <div class="user-layout">
             <!-- Left Side: User Details -->
             <div class="user-details">
-                <h2>Complaint Details</h2>
+                <div class="complaint-header">
+                    <h2>Complaint Details</h2>
+                    <span class="status <?php echo $data['complaint']->Status; ?>"><?php echo $data['complaint']->Status; ?></span>
+                </div>
                 <div class="profile-pic">
                     <div class="profile-card" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['complaint']->StudentID; ?>'">
                         <img
@@ -48,9 +51,9 @@
                         </a></span>
                 </div>
                 <div class="detail-row">
-                    <strong>Complaint Date </strong>
+                    <strong>Complained Date </strong>
                     <span class="col">:</span>
-                    <span><?php echo $data['complaint']->ComplainedDate ?></span>
+                    <span><?php echo substr($data['complaint']->ComplainedDate, 0, 10); ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Complaint Discription </strong>
@@ -61,16 +64,83 @@
                         <?php echo $data['complaint']->Complaint ?>
                     </span>
                 </div>
-                <div class="btn-row">
-                    <button class="reject-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/reject_complaint/<?php echo $data['complaint']->ComplaintID; ?>'">Reject</button>
-                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/resolve_complaint/<?php echo $data['complaint']->ComplaintID; ?>'">Resolve</button>
+                <div class="form-row">
+                    <?php if ($data['complaint']->Status == 'Pending') : ?>
+                        <div class="btn-row">
+                            <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/start_review/<?php echo $data['complaint']->ComplaintID; ?>'" style="width: auto;">Start Review</button>
+                        </div>
+                    <?php elseif ($data['complaint']->Status == 'In-Review') : ?>
+                        <form action="<?php echo URLROOT; ?>/admin/handle_complaint_action/<?php echo $data['complaint']->ComplaintID; ?>" method="POST" class="complaint-action-form">
+                            <div class="btn-row">
+                                <!-- hidden inputs for jobid and company id -->
+                                <input type="hidden" name="jobID" value="<?php echo $data['complaint']->JobID; ?>">
+                                <input type="hidden" name="companyID" value="<?php echo $data['complaint']->CompanyID; ?>">
+                                <input type="hidden" name="companyEmail" value="<?php echo $data['complaint']->CompanyEmail; ?>">
+                                <input type="hidden" name="studentID" value="<?php echo $data['complaint']->StudentID; ?>">
+                            </div>
+                            <div class="btn-row">
+                                <textarea id="note" name="note" rows="1" placeholder="Add Note" class="note-field"></textarea>
+                            </div>
+                            <div class="btn-row" style="justify-content: space-between;">
+                                <label class="check-btn" for="deactivate_job">
+                                    <input type="checkbox" name="deactivate_job" id="deactivate_job" value="1">
+                                    Deactivate <br> Job
+                                </label>
+                                <label class="check-btn" for="deactivate_company">
+                                    <input type="checkbox" name="deactivate_company" id="deactivate_company" value="1">
+                                    Deactivate <br> Company
+                                </label>
+                                <label class="check-btn" for="send_warning">
+                                    <input type="checkbox" name="send_warning" id="send_warning" value="1">
+                                    Send <br> Warning
+                                </label>
+                                <label class="check-btn" for="restrict_posting">
+                                    <input type="checkbox" name="restrict_posting" id="restrict_posting" value="1">
+                                    Restrict <br> Posting
+                                </label>
+                            </div>
+                            <div class="btn-row">
+                                <div class="action-group">
+                                    <select class="reason-select approve" name="reasonID">
+                                        <option value="" disabled selected>Select Reason</option>
+                                        <?php foreach ($data['reasons']['resolve'] as $reason) : ?>
+                                            <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="submit" name="resolve_submit" class="approve-btn">Resolve</button>
+                                </div>
+                            </div>
+                            <div class="btn-row">
+                                <div class="action-group">
+                                    <select class="reason-select reject" name="reasonID">
+                                        <option value="" disabled selected>Select Reason</option>
+                                        <?php foreach ($data['reasons']['reject'] as $reason) : ?>
+                                            <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="submit" name="reject_submit" class="reject-btn">Reject</button>
+                                </div>
+                            </div>
+                            <div class="btn-row">
+                                <span class="error-msg"><?php echo $data['reasonID_err'] ?? ''; ?></span>
+                            </div>
+                        </form>
+                    <?php endif; ?>
                 </div>
             </div>
 
             <!-- Right Side: File Previews -->
             <div class="file-previews">
                 <h2>Proof Previews</h2>
-                <iframe src="" frameborder="0"></iframe>
+                <?php if (empty($data['complaint']->Proof)) : ?>
+                    <span class="no-file">Not available</span>
+                <?php elseif (pathinfo($data['complaint']->Proof, PATHINFO_EXTENSION) == 'pdf') : ?>
+                    <iframe class="file-preview" src="<?php echo UPLOADROOT . '/proofs/' . $data['complaint']->Proof; ?>" frameborder="0"></iframe>
+                <?php elseif (in_array(pathinfo($data['complaint']->Proof, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png'])) : ?>
+                    <img class="file-preview" src="<?php echo UPLOADROOT . '/proofs/' . $data['complaint']->Proof; ?>" alt="Proof Image">
+                <?php else : ?>
+                    <span class="no-file">Unsupported file type</span>
+                <?php endif; ?>
             </div>
         </div>
     </main>

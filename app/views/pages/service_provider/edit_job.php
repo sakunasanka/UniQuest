@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/edit_job.css">
 
@@ -11,7 +11,6 @@
         <div class="date">
             <h2>Job Post Date: <?php echo date('M-d-Y'); ?></h2>
         </div>
-
         <div class="form-container">
             <form action="<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $data['job_id']; ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-column">

@@ -1,19 +1,4 @@
-<?php 
-    if (!isset($_SESSION['user_role'])) {
-        require APPROOT . '/views/components/header.php';
-    }
-    else if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/stu_header.php';
-    } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/ser_header.php';
-    } 
-    else if ($_SESSION['user_role'] == 'Admin') {
-        require APPROOT . '/views/components/adm_header.php';
-    }
-    else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ver_header.php';
-    }
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <?php require APPROOT . '/views/components/chat-sent.php'; ?>
@@ -38,8 +23,13 @@
     
     <div class="content-area">
         <div class="job-description">
-            <h2><?php echo $data['post']->Title; ?></h2>
-            <p><?php echo $data['post']->Location; ?></p>
+            <div class="title-container">
+                <h2><?php echo $data['post']->Title; ?></h2>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company'): ?>
+                    <button onclick="goToApplications(<?php echo $post->JobID; ?>)" class="apply-btn">View Applications</button>
+                <?php endif; ?>
+            </div>
+            <p><?php echo $data['post']->City; ?></p>
             <h3>Description:</h3>
             <ul>
             <?php
@@ -100,7 +90,7 @@
                 <p class="note">Please apply only if you are able to work in the mentioned locations in the advert</p>
 
                 <div class="buttons">
-                    <button onclick="goToApplyPage()" class="apply-btn">Apply</button>
+                    <button onclick="goToApplyPage(<?php echo $post->JobID; ?>)" class="apply-btn">Apply</button>
                     <button id="openPopupBtn" class="contact-btn">Contact</button>
                 </div>
             <?php else: ?>    
@@ -112,22 +102,26 @@
                     <?php foreach ($data['reviews'] as $index => $review): ?>
                         <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
-                                <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                <div class="review-header">
+                                    <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                    <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
+                                </div>
+
                                 <div class="review-details">
                                     <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
                                     <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
                                 </div>
                                 <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
                                     <div class="review-actions">
-                                        <button class="like-btn" data-id="<?php echo $index; ?>">
+                                        <button class="like-btn <?php echo $review->is_liked ? 'liked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined like-icon">thumb_up</span>
                                         </button>
-                                        <span class="like-count" data-id="<?php echo $index; ?>">0 likes</span>
+                                        <span class="like-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                                        <button class="dislike-btn" data-id="<?php echo $index; ?>">
+                                        <button class="dislike-btn <?php echo $review->is_disliked ? 'disliked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
                                             <span class="material-symbols-outlined dislike-icon">thumb_down</span>
                                         </button>
-                                        <span class="dislike-count" data-id="<?php echo $index; ?>">0 dislikes</span>
+                                        <span class="dislike-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -143,10 +137,17 @@
                     <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
                     
                     <?php if (count($data['reviews']) >= 3): ?> 
-                        <button class="seemore"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                        <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                     <?php endif; ?>
                     
-                <?php else: ?>
+                <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $data['post']->Status != 'Pending'): ?>
+                    <button onclick="goToReport(<?php echo $post->JobID; ?>)" class="apply-btn">Generate Report</button>
+
+                    <?php if (count($data['reviews']) >= 3): ?> 
+                        <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
+                    <?php endif; ?>
+                    
+                <?php else:?>    
                     <div></div>
 
                     <?php if (count($data['reviews']) >= 3): ?> 
@@ -165,10 +166,12 @@
         <div class="job-card">
             <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                 <div class="card-icons">
-                    <i class="fa-regular fa-heart" onclick="toggleFavorite(this)"></i>
-                    <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                    
+                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>                     
                     <i class="<?php echo in_array($post->JobID, $data['bookmarkedJobIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkJob(<?php echo $post->JobID; ?>, this)"></i>
+                </div>
+            <?php else:?>
+                <div class="card-icons">
+                <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->JobID; ?>, '<?php echo $post->Category; ?>')"></i>
                 </div>
             <?php endif;?> 
             <div class="job-logo">
@@ -180,20 +183,46 @@
             <div class="job-details">
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
-                <p><?php echo $data['post']->SalaryRange; ?></p>
-                <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+                
+                <p><?php echo converttimetoreadableformat($post->PublishDate); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
-                <p><?php echo $data['post']->Location; ?></p>
+                <p><?php echo $data['post']->City; ?></p>
                 <table class="table">
-                    <tr><td>Experience:</td><td>No Experience</td></tr>
+                    <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
+                    <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
                     <tr><td>Applicants:</td><td>26</td></tr>
                 </table>
 
                 <div class="social-media-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <?php if (!empty($post->Website)): ?>
+                        <?php $website = (strpos($post->Website, 'http') === 0) ? $post->Website : 'https://' . $post->Website; ?>
+                        <a href="<?php echo htmlspecialchars($website); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Company website">
+                            <i class="fas fa-globe"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if (!empty($post->LinkedIn)): ?>
+                        <?php $linkedin = (strpos($post->LinkedIn, 'http') === 0) ? $post->LinkedIn : 'https://www.linkedin.com/' . ltrim($post->LinkedIn, '/'); ?>
+                        <a href="<?php echo htmlspecialchars($linkedin); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn profile">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if (!empty($post->Facebook)): ?>
+                        <?php $facebook = (strpos($post->Facebook, 'http') === 0) ? $post->Facebook : 'https://www.facebook.com/' . ltrim($post->Facebook, '/'); ?>
+                        <a href="<?php echo htmlspecialchars($facebook); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook page">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="buttons">
@@ -206,24 +235,20 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/student/myreviews.js"></script>
 
 <script>
-    function goToMakeComplaint(jobId) {
-        window.location.href = "/uniquest/student/make_complain/" + jobId;
-    }
-</script>
+    
+function goToMakeComplaint(jobId) {
+    window.location.href = "/UniQuest/student/make_complain/" + jobId;
+}
 
-<script>
-    function goToApplyPage(jobId) {
-        window.location.href = "/UniQuest/student/jobsApplyform/" + jobId;
-    }
-</script>
+function goToApplyPage(jobId) {
+    window.location.href = "/UniQuest/student/jobsApplyform/" + jobId;
+}
 
-<script>
-    function toggleFavorite(icon) {
-    icon.classList.toggle("fa-regular");
-    icon.classList.toggle("fa-solid");
-    icon.classList.toggle("icon-active");
+function goToReport(jobId) {
+    window.location.href = "/UniQuest/service_provider/report/" + jobId;
 }
 
 function toggleBookmark(icon, jobId) {
@@ -256,7 +281,27 @@ function bookmarkJob(jobId, iconElement) {
     xhr.send(formData);
 }
 
+function shareJob(jobId, jobType) {
+    const jobURL = `${window.location.origin}/UniQuest/jobs/jobsdescription/${jobId}`;
+    
+    navigator.clipboard.writeText(jobURL).then(() => {
+        if (jobType === 'Part-time') {
+            Flash.show('Job link copied to clipboard!', 'success');
+        } else if (jobType === 'Internship') {
+            Flash.show('Internship link copied to clipboard!', 'success');
+        } else {
+            Flash.show('Link copied to clipboard!', 'success');
+        }
+    }).catch(err => {
+        Flash.show('Failed to copy link', 'error');
+    });
+}
+
 function goToCompanyDescription($companyID) {
-    window.location.href = "/uniquest/jobs/companydescription/"+$companyID;
+    window.location.href = "/UniQuest/jobs/companydescription/"+$companyID;
+}
+
+function goToApplications(jobId) {
+    window.location.href = "/UniQuest/service_provider/new_applications/" + jobId;
 }
 </script>

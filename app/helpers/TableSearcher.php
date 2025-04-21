@@ -10,7 +10,6 @@ class TableSearcher
     private function __construct()
     {
         $this->searchTerm = isset($_GET['search']) ? $_GET['search'] : "";
-        $this->searchBy = isset($_GET['searchBy']) ? $_GET['searchBy'] : "";
         $this->baseUrl = $this->generateBaseUrl();
     }
 
@@ -35,34 +34,27 @@ class TableSearcher
         }
 
         unset($queryParams['search']); // Remove 'search' param to add dynamically
-        unset($queryParams['searchBy']); // Remove 'searchBy' param to add dynamically
+        unset($queryParams['page']); // Remove 'page' param to add dynamically
+        unset($queryParams['sort']); // Remove 'sort' param to add dynamically
+        unset($queryParams['order']); // Remove 'order' param to add dynamically
+        unset($queryParams['limit']); // Remove 'limit' param to add dynamically
+        unset($queryParams['offset']); // Remove 'offset' param to add dynamically
 
         return $parsedUrl['path'] . '?' . http_build_query($queryParams);
     }
 
     // Render search bar
-    public function renderSearchBar($columns)
+    public function renderSearchBar()
     {
         $baseUrlEscaped = htmlspecialchars($this->baseUrl, ENT_QUOTES, 'UTF-8');
 
         // Get current search values
         $searchTermEscaped = htmlspecialchars($this->searchTerm, ENT_QUOTES, 'UTF-8');
-        $searchByEscaped = htmlspecialchars($this->searchBy, ENT_QUOTES, 'UTF-8');
 
+        // Search Bar form
         $searchBarHtml = "<form class='search-bar' method='GET' action='$baseUrlEscaped'>";
         $searchBarHtml .= "<span class='material-symbols-outlined icon'>search</span>";
         $searchBarHtml .= "<input type='text' class='search' name='search' placeholder='Search...' value='$searchTermEscaped'>";
-
-        // Dropdown for selecting search fields
-        $searchBarHtml .= "<select class='column-select' name='searchBy'>";
-        // $searchBarHtml .= "<option value=''>All</option>";
-        foreach ($columns as $key => $column) {
-            $keyEscaped = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
-            $columnEscaped = htmlspecialchars($column, ENT_QUOTES, 'UTF-8');
-            $selected = ($searchByEscaped === $keyEscaped) ? "selected" : "";
-            $searchBarHtml .= "<option value='$keyEscaped' $selected>$columnEscaped</option>";
-        }
-        $searchBarHtml .= "</select>";
 
         // Search Button
         $searchBarHtml .= "<button type='submit' class='search-button'>Search</button>";

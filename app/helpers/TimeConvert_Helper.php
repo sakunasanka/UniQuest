@@ -14,7 +14,10 @@
         $months = round($seconds / 2600640);
         $years = round($seconds / 31553280);
         // Seconds
-        if($seconds <= 60){
+        if($seconds <= 0) {
+            return "Not published yet";
+        }
+        elseif($seconds <= 60){
             return "just now";
         }
         //Minutes
@@ -70,6 +73,101 @@
             else{
                 return "$years years ago";
             }
+        }
+    }
+
+    function converttimetodays($seconds){
+        
+        $minutes = round($seconds / 60);
+        $hours = round($seconds / 3600);
+        $days = round($seconds / 86400);
+        $weeks = round($seconds / 604800);
+        $months = round($seconds / 2600640);
+        $years = round($seconds / 31553280);
+        
+        // Seconds
+        if($seconds <= 60){
+            return "less than a minute remaining";
+        }
+        //Minutes
+        else if($minutes <=60){
+            if($minutes==1){
+                return "1 minute remaining";
+            }
+            else{
+                return "$minutes minutes remaining";
+            }
+        }
+        //Hours
+        else if($hours <=24){
+            if($hours==1){
+                return "1 hour remaining";
+            }
+            else{
+                return "$hours hours remaining";
+            }
+        }
+        //Days
+        else if($days <= 60){
+            if($days==1){
+                return "1 day remaining";
+            }
+            else{
+                return "$days days remaining";
+            }
+        }
+        // For longer periods
+        else {
+            return "more than 60 days remaining";
+        }
+    }
+
+    function waitForTime($seconds){
+        if($seconds <= 0) {
+            return "few seconds";
+        }
+        
+        $minutes = round($seconds / 60);
+        $hours = round($seconds / 3600);
+        $days = round($seconds / 86400);
+        $weeks = round($seconds / 604800);
+        $months = round($seconds / 2600640);
+        $years = round($seconds / 31553280);
+        
+        // Seconds
+        if($seconds <= 60){
+            return "less than a minute";
+        }
+        //Minutes
+        else if($minutes <=60){
+            if($minutes==1){
+                return "1 minute";
+            }
+            else{
+                return "$minutes minutes";
+            }
+        }
+        //Hours
+        else if($hours <=24){
+            if($hours==1){
+                return "1 hour";
+            }
+            else{
+                return "$hours hours";
+            }
+        }
+        //Days
+        else if($days <= 60){
+            if($days==1){
+                return "1 day";
+            }
+            else{
+                return "$days days";
+            }
+        }
+        // For longer periods
+        else {
+            return "more than 60 days";
         }
     }
 
