@@ -2,4 +2,6 @@
 .DS_STORE
 uploads
 logs
-# vendor
+vendor
+composer.lock
+composer.json

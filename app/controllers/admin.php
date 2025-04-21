@@ -1082,37 +1082,191 @@ class Admin extends Controller
         }
     }
 
+    public function reports()
+    {
+        try {
+            // System Overview Reports
+            $systemHealthMetrics = $this->model('reportModel')->getSystemHealthData();
+            $revenueSubscriptionStats = $this->model('reportModel')->getRevenueData();
+            // $executiveSummary = $this->model('reportModel')->getExecutiveSummaryData();
+
+            // User Activity Reports
+            $userGrowthTrends = $this->model('reportModel')->getUserGrowthData();
+            // $userActivityByRole = $this->model('reportModel')->getUserActivityByRoleData();
+            $verificationTeamPerformance = $this->model('reportModel')->getVerificationPerformanceData();
+
+            // Job Market Reports
+            $jobPostingPerformance = $this->model('reportModel')->getJobPerformanceDataAdmin();
+            // $jobActivityByCategory = $this->model('reportModel')->getJobActivityByCategoryData();
+            $studentPlacementStats = $this->model('reportModel')->getStudentPlacementData();
+
+            // Complaint & Engagement Reports
+            $complaintResolutionMetrics = $this->model('reportModel')->getComplaintData();
+            $userEngagementBookmarks = $this->model('reportModel')->getBookmarkAnalysisData();
+
+            $data = [
+                // System Overview
+                'systemHealth' => $systemHealthMetrics,
+                'revenueStats' => $revenueSubscriptionStats,
+                // 'executiveSummary' => $executiveSummary,
+
+                // User Analytics
+                'userGrowth' => $userGrowthTrends,
+                // 'userActivityByType' => $userActivityByRole,
+                'verificationPerformance' => $verificationTeamPerformance,
+
+                // Job Analytics
+                'jobPerformance' => $jobPostingPerformance,
+                // 'jobsByCategory' => $jobActivityByCategory,
+                'placementStats' => $studentPlacementStats,
+
+                // Complaint & Engagement
+                'complaintResolution' => $complaintResolutionMetrics,
+                'bookmarkAnalysis' => $userEngagementBookmarks
+            ];
+
+            $this->view('pages/admin/reports', $data);
+        } catch (Exception $e) {
+            // TODO: Implement proper error handling
+            error_log("Reports Error: " . $e->getMessage());
+            $this->view('pages/error', ['message' => 'Failed to generate reports. Please try again later.']);
+        }
+    }
+
+    // View specific report
+    public function viewReport($reportName)
+    {
+        try {
+            $model = $this->model('ReportModel');
+            $method = 'get' . ucfirst($reportName) . 'Data';
+
+            if (!method_exists($model, $method)) {
+                throw new Exception("Report not found");
+            }
+
+            $data = [
+                'reportData' => $model->$method(),
+                'reportName' => ucwords(str_replace('-', ' ', $reportName)),
+                'reportSlug' => $reportName
+            ];
+
+            $this->view('pages/admin/report_view', $data);
+        } catch (Exception $e) {
+            $this->view('pages/error', ['message' => $e->getMessage()]);
+        }
+    }
+
+    // Download report
+    public function downloadReport($reportName)
+    {
+        try {
+            $model = $this->model('ReportModel');
+            $method = 'get' . ucfirst($reportName) . 'Data';
+
+            if (!method_exists($model, $method)) {
+                throw new Exception("Report not found");
+            }
+
+            $data = $model->$method();
+            $filename = $reportName . '_report_' . date('Y-m-d') . '.csv';
+
+            $this->generateCSV($data, $filename);
+        } catch (Exception $e) {
+            header('Content-Type: text/plain');
+            echo "Error generating report: " . $e->getMessage();
+        }
+    }
+
+    private function generateCSV($data, $filename)
+    {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+
+        // Write headers
+        if (!empty($data)) {
+            fputcsv($output, array_keys((array)$data[0]));
+        }
+
+        // Write data
+        foreach ($data as $row) {
+            fputcsv($output, (array)$row);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+   public function downloadPdf($reportSlug)
+{
+    try {
+        // Load report data
+        $model = $this->model('ReportModel');
+        $method = 'get' . ucfirst($reportSlug) . 'Data';
+
+        if (!method_exists($model, $method)) {
+            throw new Exception("Report not found");
+        }
+
+        $reportData = $model->$method();
+        $reportName = ucwords(str_replace('-', ' ', $reportSlug));
+
+        // Render HTML manually
+        $data = [
+            'reportName' => $reportName,
+            'reportData' => $reportData
+        ];
+
+        // Render the view into a string
+        ob_start();
+        extract($data);
+        require TEMPLATEROOT . '/pdf/report_view.php'; // Adjust the path as necessary
+        $html = ob_get_clean();
+
+        // Call the helper
+        require_once APPROOT . '/helpers/PDFHelper.php'; // Ensure this is loaded
+        PDFHelper::generate($html, "{$reportName}_Report_" . date('Y-m-d'));
+
+    } catch (Exception $e) {
+        error_log("PDF Generation Error: " . $e->getMessage());
+        redirect('admin/reports');
+    }
+}
+
+
     public function jobPost()
     {
         $this->view('pages/admin/jobPost');
     }
     // Add this method to your Admin controller class
 
-public function analytics() {
-    try {
-        $months = 5; // Number of months to show in charts
-        
-        $registrationStats = $this->model('AdminModel')->getRegistrationStats($months);
-        $jobStats = $this->model('AdminModel')->getJobListingStats($months);
-        $revenueStats = $this->model('AdminModel')->getRevenueStats($months);
-        $loginStats = $this->model('AdminModel')->getLoginStats();
-        $activeCounts = $this->model('AdminModel')->getActiveCounts();
-        
-        $data = [
-            'registrationStats' => $registrationStats,
-            'jobStats' => $jobStats,
-            'revenueStats' => $revenueStats,
-            'loginStats' => $loginStats,
-            'activeCounts' => $activeCounts
-        ];
-        
-        $this->view('pages/admin/analytics', $data);
-    } catch (Exception $e) {
-        // Handle error appropriately
-        error_log("Error in analytics: " . $e->getMessage());
-        $this->view('pages/admin/analytics', []);
+    public function analytics()
+    {
+        try {
+            $months = 5; // Number of months to show in charts
+
+            $registrationStats = $this->model('AdminModel')->getRegistrationStats($months);
+            $jobStats = $this->model('AdminModel')->getJobListingStats($months);
+            $revenueStats = $this->model('AdminModel')->getRevenueStats($months);
+            $loginStats = $this->model('AdminModel')->getLoginStats();
+            $activeCounts = $this->model('AdminModel')->getActiveCounts();
+
+            $data = [
+                'registrationStats' => $registrationStats,
+                'jobStats' => $jobStats,
+                'revenueStats' => $revenueStats,
+                'loginStats' => $loginStats,
+                'activeCounts' => $activeCounts
+            ];
+
+            $this->view('pages/admin/analytics', $data);
+        } catch (Exception $e) {
+            // Handle error appropriately
+            error_log("Error in analytics: " . $e->getMessage());
+            $this->view('pages/admin/analytics', []);
+        }
     }
-}
 
     public function notifications()
     {
@@ -1147,7 +1301,7 @@ public function analytics() {
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
-        
+
         // Fetch all student messages
         $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
@@ -1155,10 +1309,10 @@ public function analytics() {
         $data = [
             'messages_stu' => $messages_stu,
         ];
-        
+
         // Check if we need to load chat data only if userID is valid AND form was submitted
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
+
         // If we should load chat data, add the additional info
         if ($loadChatData) {
             // Ensure session user ID exists before accessing
@@ -1179,12 +1333,12 @@ public function analytics() {
     }
 
     public function messages_com($userID = null)
-    { 
+    {
         // Check if a user ID was submitted via POST
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
-        
+
         // Fetch all student messages
         $messages_com = $this->model('ContactModel')->getMessagesCom();
 
@@ -1192,10 +1346,10 @@ public function analytics() {
         $data = [
             'messages_com' => $messages_com,
         ];
-        
+
         // Check if we need to load chat data only if userID is valid AND form was submitted
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
+
         // If we should load chat data, add the additional info
         if ($loadChatData) {
             // Ensure session user ID exists before accessing
@@ -1211,7 +1365,7 @@ public function analytics() {
             $data['messageInput'] = '';
             $data['messageInput_err'] = '';
         }
-        
+
         $this->view('pages/admin/messages_com', $data);
     }
 
@@ -1222,7 +1376,7 @@ public function analytics() {
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
-        
+
         // Fetch all student messages
         $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
@@ -1230,10 +1384,10 @@ public function analytics() {
         $data = [
             'messages_ver' => $messages_ver,
         ];
-        
+
         // Check if we need to load chat data only if userID is valid AND form was submitted
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
+
         // If we should load chat data, add the additional info
         if ($loadChatData) {
             // Ensure session user ID exists before accessing
@@ -1594,14 +1748,16 @@ public function analytics() {
         exit;
     }
 
-    public function markAllRead() {
+    public function markAllRead()
+    {
 
         $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
         $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/notifications';
         Redirect::to($previousURL);
     }
 
-    public function markAsRead($notificationId) {
+    public function markAsRead($notificationId)
+    {
         if ($this->model('NotificationModel')->markAsRead($notificationId)) {
             $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
             header('Content-Type: application/json');
@@ -1613,13 +1769,14 @@ public function analytics() {
         exit;
     }
 
-    public function getRecentNotifications() {
+    public function getRecentNotifications()
+    {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
-        
+
         header('Content-Type: application/json');
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'notifications' => $notifications,
             'unreadCount' => $unreadCount
         ]);
