@@ -691,6 +691,10 @@ class Jobs extends Controller
         } else {
             $data = [
                 'post' => $posts,
+                'user' => $this->model('userModel')->getUserDetails($posts->UserID),
+                'receiver_id' => $posts->UserID,
+                'messageInput' => '',
+                'messageInput_err' => '',
                 'jobs' => $jobs,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
@@ -703,6 +707,12 @@ class Jobs extends Controller
                 'comment_err' => '',
                 'existingReview' => $existingReview
             ];
+
+            if (isset($_SESSION['user_id'])) {
+                $data['sender_id'] = $_SESSION['user_id'];
+                $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->UserID);
+
+            }
 
             $this->view('pages/student/companyDescription', $data);
         }

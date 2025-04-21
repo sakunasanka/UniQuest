@@ -209,7 +209,7 @@ function notifyMessageToCompanyFromStudent($companyID, $messageFromStudent, $stu
         $message = "From: {$studentName}<br>{$messageFromStudent}";
         $title = "Message from Student";
         $type = 'message';
-        $link = "";
+        $link = "/service_provider/messages_stu?userID={$studentID}";
         
         return sendNotification(
             $companyID,
@@ -229,7 +229,7 @@ function notifyMessageToStudentFromCompany($studentID, $messageFromCompany, $com
         $message = "From: {$companyName}<br>{$messageFromCompany}";
         $title = "Message from Company";
         $type = 'message';
-        $link = "";
+        $link = "/jobs/companydescription/{$companyID}";
         
         return sendNotification(
             $studentID,
