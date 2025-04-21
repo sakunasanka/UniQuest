@@ -87,9 +87,17 @@ class Student extends Controller
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
-                    flash('contact-msg', 'Your message has been sent successfully.');
+
+                    //send notification for each admin
+                    $admins = $this->model('userModel')->getAdminIds();
+                    foreach ($admins as $admin) {
+                        notifyMessageToAdminFromStudent($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
+                    }
+                    $_SESSION['show_contact_us_success'] = true;
+                    
                     redirect('student/contact_admin');
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong. Please try again.');
                 }
             } else {
@@ -98,14 +106,14 @@ class Student extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'email' => '',
+                'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
                 'email_err' => '',
                 'topic_err' => '',
-                'message_err' => ''
+                'message_err' => '',
             ];
-
+            
             $this->view('pages/student/contact_admin', $data);
         }
     }
@@ -548,6 +556,7 @@ class Student extends Controller
                 $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
                 $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
             }
+
         $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
         } 
@@ -891,67 +900,66 @@ class Student extends Controller
             ];
 
             // Process each field based on its type
-        foreach ($applicationFields as $fieldName => $fieldConfig) {
-            switch ($fieldConfig['type']) {
-                case 'file':
-                    if (isset($_FILES[$fieldName]) && $_FILES[$fieldName]['error'] === UPLOAD_ERR_OK) {
-                        $uploadResult = $this->handleFileUpload($_FILES[$fieldName], $fieldName);
-                        if ($uploadResult['success']) {
-                            $data['fields'][$fieldName] = $uploadResult['path'];
-                        } else {
-                            $data['errors'][$fieldName] = $uploadResult['error'];
-                        }
-                    } elseif ($fieldConfig['required']){
-                        $data['errors'][$fieldName] = 'File upload is required';
-                    }
-                    break;
+            foreach ($applicationFields as $fieldName => $fieldConfig) {
+                switch ($fieldConfig['type']) {
+                    case 'file':
+                        if (isset($_FILES[$fieldName]) && $_FILES[$fieldName]['error'] === UPLOAD_ERR_OK) {
+                            $uploadResult = $this->handleFileUpload($_FILES[$fieldName], $fieldName);
+                            if ($uploadResult['success']) {
+                                $data['fields'][$fieldName] = $uploadResult['path'];
+                            } else {
+                                $data['errors'][$fieldName] = $uploadResult['error'];
+                            }
 
-                default:
-                    $value = trim($_POST[$fieldName] ?? '');
-                    if (empty($value) && $fieldConfig['required']) {
-                        $data['errors'][$fieldName] = 'This field is required';
-                    } else {
-                        $data['fields'][$fieldName] = $value;
-                    }
-                    break;
+                        } elseif (isset($fieldConfig['required']) && $fieldConfig['required']) {
+                            $data['errors'][$fieldName] = 'File upload is required';
+                        }
+                        break;
+
+                    default:
+                        $value = trim($_POST[$fieldName] ?? '');
+
+                        if (empty($value) && isset($fieldConfig['required']) && $fieldConfig['required']) {
+                            $data['errors'][$fieldName] = 'This field is required';
+                        } else {
+                            $data['fields'][$fieldName] = $value;
+                        }
+                        break;
+                }
             }
-        }
 
             // If no errors, save application
             if (empty($data['errors'])) {
                 $applicationModel = $this->model('M_applicationFields');
-
-
-                $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
+                
+                
+            $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
                 if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
                     flash('application_success', 'Your application has been submitted successfully');
                     redirect('student/all_app');
                 } else {
-                    flash('application_error', 'Something went wrong with your application', 'alert alert-danger');
-
+                    // Return to form with errors
                     $this->view('pages/student/jobsApply', $data);
                 }
             } else {
-                // Return to form with errors
+                // GET request - show the application form
+                $jobModel = $this->model('M_jobpost');
+                $job = $jobModel->getJobById($jobId);
+
+                if (!$job) {
+                    redirect('pages/error');
+                }
+
+                $data = [
+                    'job' => $job,
+                    'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
+                ];
+
                 $this->view('pages/student/jobsApply', $data);
             }
-        } else {
-            // GET request - show the application form
-            $jobModel = $this->model('M_jobpost');
-            $job = $jobModel->getJobById($jobId);
-
-            if (!$job) {
-                redirect('pages/error');
-            }
-
-            $data = [
-                'job' => $job,
-                'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
-            ];
-
-            $this->view('pages/student/jobsApply', $data);
         }
     }
+    
     private function handleFileUpload($file, $fieldName)
     {
         $result = [

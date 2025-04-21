@@ -4,7 +4,7 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
     <!-- Content Area -->
     <main class="content-area">
@@ -18,11 +18,6 @@
             "Actions" => "Actions"
         ];
         ?>
-        <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/messages_stu">Students</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/admin/messages_com">Companies</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/messages_ver">Verification Team</button>
-        </div>
 
         <div class="table-block">
             <div class="content-header">
@@ -65,7 +60,7 @@
 </div>
 
 <!-- Create a hidden form to submit the user ID -->
-<form id="chatForm" action="<?php echo URLROOT; ?>/admin/messages_stu" method="post" style="display: none;">
+<form id="chatForm" action="<?php echo URLROOT; ?>/service_provider/messages_stu" method="post" style="display: none;">
     <input type="hidden" name="selectedUserID" id="selectedUserID" value="">
 </form>
 
@@ -102,12 +97,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //Refresh the page when the popup is closed
 closePopupBtn?.addEventListener("click", function () {
-    window.location.href = "/UniQuest/admin/messages_stu";
+    window.location.href = "/UniQuest/service_provider/messages_stu";
 });
 
 backgroundOverlay?.addEventListener("click", function () {
-    window.location.href = "/UniQuest/admin/messages_stu";
+    window.location.href = "/UniQuest/service_provider/messages_stu";
 });
 
 </script>
+
 <?php require APPROOT . '/views/components/footer.php'; ?>

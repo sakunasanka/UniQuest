@@ -77,9 +77,6 @@
     }
 
     function converttimetodays($seconds){
-        if($seconds <= 0) {
-            return "0 days remaining (expired)";
-        }
         
         $minutes = round($seconds / 60);
         $hours = round($seconds / 3600);
@@ -87,17 +84,13 @@
         $weeks = round($seconds / 604800);
         $months = round($seconds / 2600640);
         $years = round($seconds / 31553280);
-        
-        // Seconds
-        if($seconds <= 60){
-            return "less than a minute remaining";
-        }
+
         //Minutes
-        else if($minutes <=60){
-            if($minutes==1){
-                return "1 minute remaining";
+        if($minutes <=60){
+            if($minutes<=30){
+                return "Less than 30 minutes remaining";
             }
-            else{
+            elseif ($minutes<=60){
                 return "$minutes minutes remaining";
             }
         }
@@ -122,6 +115,48 @@
         // For longer periods
         else {
             return "more than 60 days remaining";
+        }
+    }
+
+    function waitForTime($seconds){
+        
+        $minutes = round($seconds / 60);
+        $hours = round($seconds / 3600);
+        $days = round($seconds / 86400);
+        $weeks = round($seconds / 604800);
+        $months = round($seconds / 2600640);
+        $years = round($seconds / 31553280);
+        
+        //Minutes
+        if($minutes <=60){
+            if($minutes<=30){
+                return "less than 30 minutes";
+            }
+            elseif($minutes<=60){
+                return "$minutes minutes";
+            }
+        }
+        //Hours
+        else if($hours <=24){
+            if($hours==1){
+                return "1 hour";
+            }
+            else{
+                return "$hours hours";
+            }
+        }
+        //Days
+        else if($days <= 60){
+            if($days==1){
+                return "1 day";
+            }
+            else{
+                return "$days days";
+            }
+        }
+        // For longer periods
+        else {
+            return "more than 60 days";
         }
     }
 

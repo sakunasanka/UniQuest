@@ -316,10 +316,21 @@ class Admin extends Controller
                 $reasons = null; // Handle unexpected status
         }
 
+        // get last complaint log
+        $lastComplaintLog = $this->model('ComplaintModel')->getLastComplaintLog($complaintID);
+
         $data = [
             'complaint' => $complaint,
             'reasons' => $reasons ?? [],
+            'reasonID_err' => '',
+            'actionDetail' => $lastComplaintLog,
         ];
+
+        // Check for session error
+        if (isset($_SESSION['reasonID_err'])) {
+            $data['reasonID_err'] = $_SESSION['reasonID_err'];
+            unset($_SESSION['reasonID_err']);
+        }
 
         return $data;
     }
@@ -412,11 +423,11 @@ class Admin extends Controller
             $data = [
                 'complaintID' => $complaintID,
                 'note' => trim($_POST['note']) ?? null,
-                'reasonID' => trim($_POST['reasonID']) ?? null,
-                'jobID' => trim($_POST['jobID']) ?? null,
-                'companyID' => trim($_POST['companyID']) ?? null,
+                'reasonID' => ($_POST['reasonID']) ?? null,
+                'jobID' => ($_POST['jobID']) ?? null,
+                'companyID' => ($_POST['companyID']) ?? null,
                 'companyEmail' => trim($_POST['companyEmail']) ?? null,
-                'studentID' => trim($_POST['studentID']) ?? null,
+                'studentID' => ($_POST['studentID']) ?? null,
                 'deactivate_job' => isset($_POST['deactivate_job']) ? 1 : 0,
                 'deactivate_company' => isset($_POST['deactivate_company']) ? 1 : 0,
                 'send_warning' => isset($_POST['send_warning']) ? 1 : 0,
@@ -442,13 +453,21 @@ class Admin extends Controller
     protected function reject_complaint($data)
     {
         try {
-            //set statusAfter to rejected
-            $data['statusAfter'] = 'Rejected';
-            //add complaint log
-            $this->model('ComplaintModel')->addComplaintLog($data);
-            //update complaint status to in-review
-            $this->model('ComplaintModel')->rejectComplaint($data['complaintID']);
-            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            //check if reasonID is not empty
+            if (!empty($data['reasonID'])) {
+                //set statusAfter to rejected
+                $data['statusAfter'] = 'Rejected';
+                //add complaint log
+                $this->model('ComplaintModel')->addComplaintLog($data);
+                //update complaint status to in-review
+                $this->model('ComplaintModel')->rejectComplaint($data['complaintID']);
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            } else {
+                //set error message for reasonID
+                $_SESSION['reasonID_err'] = 'Please select a reason for rejecting the complaint';
+                // Redirect to the complaint detail page with error message
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            }
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -458,34 +477,39 @@ class Admin extends Controller
     {
         try {
             //check if reasonID is not empty
-
-            //check secondary actions are selected
-            if ($data['deactivate_job'] == 1) {
-                $this->model('jobModel')->deactivateJob($data['jobID']);
-                //todo : get correct reason by type
-                //add job log
-                //todo : send notification to company about job deactivation
+            if (!empty($data['reasonID'])) {
+                //check secondary actions are selected
+                if ($data['deactivate_job'] == 1) {
+                    $this->model('jobModel')->deactivateJob($data['jobID']);
+                    //todo : get correct reason by type
+                    //add job log
+                    //todo : send notification to company about job deactivation
+                }
+                if ($data['deactivate_company'] == 1) {
+                    $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
+                    $this->model->deactivateAccount($data['companyID']);
+                    $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
+                    MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
+                }
+                if ($data['send_warning'] == 1) {
+                    //todo : send warning notification to company
+                }
+                if ($data['restrict_posting'] == 1) {
+                    $this->model('AdminModel')->restrictPosting($data['companyID']);
+                }
+                //set statusAfter to resolved
+                $data['statusAfter'] = 'Resolved';
+                //add complaint log
+                $this->model('ComplaintModel')->addComplaintLog($data);
+                //update complaint status to resolved
+                $this->model('ComplaintModel')->resolveComplaint($data['complaintID']);
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            } else {
+                //set error message for reasonID
+                $_SESSION['reasonID_err'] = 'Please select a reason for resolving the complaint';
+                // Redirect to the complaint detail page with error message
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
             }
-            if ($data['deactivate_company'] == 1) {
-                $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
-                $this->model->deactivateAccount($data['companyID']);
-                $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
-                MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
-            }
-            if ($data['send_warning'] == 1) {
-                // $this->model('ComplaintModel')->sendWarning($data['complaintID']);
-                //todo : send warning notification to company
-            }
-            if ($data['restrict_posting'] == 1) {
-                $this->model('AdminModel')->restrictPosting($data['companyID']);
-            }
-            //set statusAfter to resolved
-            $data['statusAfter'] = 'Resolved';
-            //add complaint log
-            $this->model('ComplaintModel')->addComplaintLog($data);
-            //update complaint status to resolved
-            $this->model('ComplaintModel')->resolveComplaint($data['complaintID']);
-            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -550,6 +574,7 @@ class Admin extends Controller
             // Fetch previous messages to determine the last topic if not provided
             $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
             $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+            $userRole = $this->model->getUserRoleByID($userID)->Role;
 
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
@@ -588,7 +613,19 @@ class Admin extends Controller
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
-                    redirect('admin/user_detail/' . $userID);
+                    if($_SESSION['user_role'] == 'Admin') {
+                        notifyMessageFromAdmin($data['receiver_id'], $data['messageInput']);
+                        if($userRole == 'Student') {
+                            Redirect::to(URLROOT . '/admin/messages_stu');
+                        } elseif ($userRole == 'Company') {
+                            Redirect::to(URLROOT . '/admin/messages_com');
+                        } elseif ($userRole == 'VT-Member') {
+                            Redirect::to(URLROOT . '/admin/messages_ver');
+                        }
+                    else{
+                        die('Something went wrong');
+                    }    
+                    }
                 } else {
                     die('Something went wrong while sending the message.');
                 }
@@ -1062,10 +1099,33 @@ class Admin extends Controller
     {
         $this->view('pages/admin/jobPost');
     }
-    public function analytics()
-    {
-        $this->view('pages/admin/analytics');
+    // Add this method to your Admin controller class
+
+public function analytics() {
+    try {
+        $months = 5; // Number of months to show in charts
+        
+        $registrationStats = $this->model('AdminModel')->getRegistrationStats($months);
+        $jobStats = $this->model('AdminModel')->getJobListingStats($months);
+        $revenueStats = $this->model('AdminModel')->getRevenueStats($months);
+        $loginStats = $this->model('AdminModel')->getLoginStats();
+        $activeCounts = $this->model('AdminModel')->getActiveCounts();
+        
+        $data = [
+            'registrationStats' => $registrationStats,
+            'jobStats' => $jobStats,
+            'revenueStats' => $revenueStats,
+            'loginStats' => $loginStats,
+            'activeCounts' => $activeCounts
+        ];
+        
+        $this->view('pages/admin/analytics', $data);
+    } catch (Exception $e) {
+        // Handle error appropriately
+        error_log("Error in analytics: " . $e->getMessage());
+        $this->view('pages/admin/analytics', []);
     }
+}
 
     public function notifications()
     {
@@ -1096,96 +1156,111 @@ class Admin extends Controller
 
     public function messages_stu($userID = null)
     {
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
         // Fetch all student messages
         $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_stu' => $messages_stu,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_stu' => $messages_stu,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_stu' => $messages_stu,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
 
         $this->view('pages/admin/messages_stu', $data);
     }
 
     public function messages_com($userID = null)
-    {
-        // Fetch all company messages
+    { 
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
         $messages_com = $this->model('ContactModel')->getMessagesCom();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_com' => $messages_com,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_com' => $messages_com,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_com' => $messages_com,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
-
+        
         $this->view('pages/admin/messages_com', $data);
     }
 
 
     public function messages_ver($userID = null)
     {
-        // Fetch all verification team messages
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
         $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_ver' => $messages_ver,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_ver' => $messages_ver,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_ver' => $messages_ver,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
 
         $this->view('pages/admin/messages_ver', $data);
