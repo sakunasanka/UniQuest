@@ -70,14 +70,14 @@ body {
 .submit-button {
     background-color:#299b63 ;
     color: #fff;
-    padding: 10px 30px;
+    padding: 10px 20px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     margin-top: 15px;
     margin-left:auto;
     display: block;
-    font-size: 1.5m;
+    font-size: 1.3em;
 }
 
 .submit-button:hover {
@@ -248,4 +248,24 @@ body {
     color: red;
     font-size: 0.9em;
     margin-top: 5px;
+}
+
+.apply-btn2 {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+}
+
+.apply-btn2{
+    background-color: #299b63;
+    color: #fff;
+}
+
+.apply-btn2:hover {
+    background-color: #137d4a;
 }

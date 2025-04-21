@@ -72,18 +72,20 @@ textarea {
 
 
 .review-form button {
-    display: block; /* Full width button */
-    width: 100%;
-    padding: 10px; /* Padding inside button */
-    background-color: #28a745; /* Green background */
-    color: white; /* White text */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
+    background-color: #299b63;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
 }
 
 .review-form button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #137d4a; 
 }
 
 /* Student reviews grid layout */
