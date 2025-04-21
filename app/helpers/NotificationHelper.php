@@ -301,3 +301,23 @@ function notifyJobsApply($companyID, $jobTitle, $jobID) {
         return false;
     }
 }
+
+function notifyComplaintToAdmin($adminID, $jobName, $studentName) {
+    try {
+        $message = "A new complaint has been received from {$studentName} regarding job: {$jobName}";
+        $title = "New Complaint Received";
+        $type = 'complaint';
+        $link = "/admin/all_complaints";
+        
+        return sendNotification(
+            $adminID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}    

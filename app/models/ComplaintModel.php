@@ -255,4 +255,22 @@ class ComplaintModel extends Model
             return false;
         }
     }
+
+    public function getExistingComplaint($studentID, $jobID) {
+        try {
+            $conditions = [
+                ['StudentID', '=', $studentID],
+                ['JobID', '=', $jobID],
+                ['Status', 'IN', ['Pending', 'In-Review']]
+            ];
+            $complaint = $this->select('complaint_jobs', $conditions, '*', 'AND', '', '', 0, 1, false);
+            return $complaint;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
