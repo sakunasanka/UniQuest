@@ -190,7 +190,8 @@ document.addEventListener('DOMContentLoaded', function() {
             'success': 'fa-check-circle text-success',
             'warning': 'fa-exclamation-triangle text-warning',
             'danger': 'fa-times-circle text-danger',
-            'info': 'fa-info-circle text-info'
+            'info': 'fa-info-circle text-info',
+            'message': 'fa-envelope text-primary'
         };
         return icons[type] || 'fa-bell';
     }
