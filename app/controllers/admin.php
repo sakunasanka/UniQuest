@@ -319,7 +319,14 @@ class Admin extends Controller
         $data = [
             'complaint' => $complaint,
             'reasons' => $reasons ?? [],
+            'reasonID_err' => ''
         ];
+
+        // Check for session error
+        if (isset($_SESSION['reasonID_err'])) {
+            $data['reasonID_err'] = $_SESSION['reasonID_err'];
+            unset($_SESSION['reasonID_err']);
+        }
 
         return $data;
     }
@@ -412,11 +419,11 @@ class Admin extends Controller
             $data = [
                 'complaintID' => $complaintID,
                 'note' => trim($_POST['note']) ?? null,
-                'reasonID' => trim($_POST['reasonID']) ?? null,
-                'jobID' => trim($_POST['jobID']) ?? null,
-                'companyID' => trim($_POST['companyID']) ?? null,
+                'reasonID' => ($_POST['reasonID']) ?? null,
+                'jobID' => ($_POST['jobID']) ?? null,
+                'companyID' => ($_POST['companyID']) ?? null,
                 'companyEmail' => trim($_POST['companyEmail']) ?? null,
-                'studentID' => trim($_POST['studentID']) ?? null,
+                'studentID' => ($_POST['studentID']) ?? null,
                 'deactivate_job' => isset($_POST['deactivate_job']) ? 1 : 0,
                 'deactivate_company' => isset($_POST['deactivate_company']) ? 1 : 0,
                 'send_warning' => isset($_POST['send_warning']) ? 1 : 0,
@@ -442,13 +449,21 @@ class Admin extends Controller
     protected function reject_complaint($data)
     {
         try {
-            //set statusAfter to rejected
-            $data['statusAfter'] = 'Rejected';
-            //add complaint log
-            $this->model('ComplaintModel')->addComplaintLog($data);
-            //update complaint status to in-review
-            $this->model('ComplaintModel')->rejectComplaint($data['complaintID']);
-            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            //check if reasonID is not empty
+            if (!empty($data['reasonID'])) {
+                //set statusAfter to rejected
+                $data['statusAfter'] = 'Rejected';
+                //add complaint log
+                $this->model('ComplaintModel')->addComplaintLog($data);
+                //update complaint status to in-review
+                $this->model('ComplaintModel')->rejectComplaint($data['complaintID']);
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            } else {
+                //set error message for reasonID
+                $_SESSION['reasonID_err'] = 'Please select a reason for rejecting the complaint';
+                // Redirect to the complaint detail page with error message
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            }
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -458,34 +473,40 @@ class Admin extends Controller
     {
         try {
             //check if reasonID is not empty
-
-            //check secondary actions are selected
-            if ($data['deactivate_job'] == 1) {
-                $this->model('jobModel')->deactivateJob($data['jobID']);
-                //todo : get correct reason by type
-                //add job log
-                //todo : send notification to company about job deactivation
+            if (!empty($data['reasonID'])) {
+                //check secondary actions are selected
+                if ($data['deactivate_job'] == 1) {
+                    $this->model('jobModel')->deactivateJob($data['jobID']);
+                    //todo : get correct reason by type
+                    //add job log
+                    //todo : send notification to company about job deactivation
+                }
+                if ($data['deactivate_company'] == 1) {
+                    $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
+                    $this->model->deactivateAccount($data['companyID']);
+                    $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
+                    MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
+                }
+                if ($data['send_warning'] == 1) {
+                    // $this->model('ComplaintModel')->sendWarning($data['complaintID']);
+                    //todo : send warning notification to company
+                }
+                if ($data['restrict_posting'] == 1) {
+                    $this->model('AdminModel')->restrictPosting($data['companyID']);
+                }
+                //set statusAfter to resolved
+                $data['statusAfter'] = 'Resolved';
+                //add complaint log
+                $this->model('ComplaintModel')->addComplaintLog($data);
+                //update complaint status to resolved
+                $this->model('ComplaintModel')->resolveComplaint($data['complaintID']);
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            } else {
+                //set error message for reasonID
+                $_SESSION['reasonID_err'] = 'Please select a reason for resolving the complaint';
+                // Redirect to the complaint detail page with error message
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
             }
-            if ($data['deactivate_company'] == 1) {
-                $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
-                $this->model->deactivateAccount($data['companyID']);
-                $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
-                MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
-            }
-            if ($data['send_warning'] == 1) {
-                // $this->model('ComplaintModel')->sendWarning($data['complaintID']);
-                //todo : send warning notification to company
-            }
-            if ($data['restrict_posting'] == 1) {
-                $this->model('AdminModel')->restrictPosting($data['companyID']);
-            }
-            //set statusAfter to resolved
-            $data['statusAfter'] = 'Resolved';
-            //add complaint log
-            $this->model('ComplaintModel')->addComplaintLog($data);
-            //update complaint status to resolved
-            $this->model('ComplaintModel')->resolveComplaint($data['complaintID']);
-            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }

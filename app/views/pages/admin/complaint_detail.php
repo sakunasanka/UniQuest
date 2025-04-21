@@ -102,7 +102,7 @@
                             <div class="btn-row">
                                 <div class="action-group">
                                     <select class="reason-select approve" name="reasonID">
-                                        <option value="" disabled selected>Select Reason</option>
+                                        <option disabled selected>Select Reason</option>
                                         <?php foreach ($data['reasons']['resolve'] as $reason) : ?>
                                             <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
                                         <?php endforeach; ?>

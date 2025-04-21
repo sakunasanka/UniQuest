@@ -44,6 +44,8 @@
                                     <td><span class="status active"><?php echo $complaints_job->Status ?></span></td>
                                 <?php elseif ($complaints_job->Status == 'Rejected') : ?>
                                     <td><span class="status inactive"><?php echo $complaints_job->Status ?></span></td>
+                                <?php elseif ($complaints_job->Status == 'In-Review') : ?>
+                                    <td><span class="status in-review"><?php echo $complaints_job->Status ?></span></td>
                                 <?php endif; ?>
                                 <td class="action">
                                     <div class="tooltip">
