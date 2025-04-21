@@ -33,7 +33,7 @@
                 <hr class="option-bar">
                 <ul>
                     <li>✓ Post up to 2 job listings</li>
-                    <li>✓ 20 candidate applications</li>
+                    <li>✓ 20 candidate applications per job</li>
                 </ul>
                 <hr class="option-bar">
                 <div class="plan-price">Free</div>
@@ -49,7 +49,7 @@
                 <p class="plan-subtitle">For growing businesses</p>
                 <hr class="option-bar">
                 <ul>
-                    <li>✓ Post up to 20 job listings</li>
+                    <li>✓ Post up to 5 job listings</li>
                     <li>✓ 50 candidate applications</li>
                     <li>✓ Generate Job Report</li>
                     <li>✓ Edit Active Jobs</li>

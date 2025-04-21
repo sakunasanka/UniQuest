@@ -948,7 +948,7 @@ class Service_provider extends Controller
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
             Redirect::to($previousURL);
         }
-        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 20) {
+        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 5) {
             $_SESSION['show_job_post_error_pro'] = true;
             $_SESSION['remaining_days'] = $remainingDays;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
