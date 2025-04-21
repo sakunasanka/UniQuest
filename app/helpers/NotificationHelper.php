@@ -143,3 +143,22 @@ function notifyAccountDeactivation($userId, $reason) {
         return false;
     }
 }
+
+// Notify a student about a new message from admin
+function notifyMessageFromAdmin($userID, $messageFromAdmin) {
+    try {
+        $message = $messageFromAdmin;
+        $title = "Message from Admin";
+        $type = 'message';
+        
+        return sendNotification(
+            $userID,
+            $message,
+            $title,
+            $type
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}

@@ -110,5 +110,4 @@ backgroundOverlay?.addEventListener("click", function () {
 });
 
 </script>
-
 <?php require APPROOT . '/views/components/footer.php'; ?>
