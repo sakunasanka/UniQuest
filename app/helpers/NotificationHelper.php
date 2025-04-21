@@ -162,3 +162,24 @@ function notifyMessageFromAdmin($userID, $messageFromAdmin) {
         return false;
     }
 }
+
+// Notify a admin about a new message from student
+function notifyMessageToAdminFromStudent($userID, $messageFromAdmin) {
+    try {
+        $message = $messageFromAdmin;
+        $title = "Message from Student";
+        $type = 'message';
+        $link = "/admin/messages_ver";
+        
+        return sendNotification(
+            $userID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
