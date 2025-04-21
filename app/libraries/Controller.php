@@ -36,4 +36,6 @@ class Controller
             require_once '../app/views/pages/404_not_found/page_not_found.php';
         }
     }
+
+    
 }

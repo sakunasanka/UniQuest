@@ -1,3 +1,4 @@
+
 <?php
 class Service_provider extends Controller
 {
@@ -154,7 +155,7 @@ class Service_provider extends Controller
 
         $data = [];
 
-        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/job_report', $data);
         } else {
             $_SESSION['show_report_error'] = true;
@@ -252,7 +253,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/offered_applications', $data);
@@ -315,7 +316,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/new_applications', $data);
@@ -323,7 +324,7 @@ class Service_provider extends Controller
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -383,7 +384,7 @@ class Service_provider extends Controller
             'jobID' => $jobID,
             'post' => $this->model('M_jobpost')->getpostbyid($jobID),
         ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
+        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
 
         // Load the view
         $this->view('pages/service_provider/rejected_applications', $data);
@@ -407,7 +408,7 @@ class Service_provider extends Controller
                     'title' => $application->JobTitle,
                     'jobID' => $jobId,
                     'location' => $application->JobLocation,
-                    'posted' => date('M d, Y', strtotime($application->JobCreatedAt)),
+                    'posted' => date('M d, Y', strtotime($application->PublishDate)),
                     'stats' => [
                         'total' => 0,
                         'accepted' => 0,
@@ -739,7 +740,7 @@ class Service_provider extends Controller
             // 'userLoginsData' => $userLoginsData,
         ];
 
-        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/ser_analytics', $data);
         } else {
             $_SESSION['show_premium_error'] = true;
@@ -820,11 +821,13 @@ class Service_provider extends Controller
             }
         } else {
             $post = $this->model('M_jobpost')->getpostbyid($postId);
+            $subscription = $this->model('companyModel')->getSubscriptionPlan($_SESSION['user_id']);
 
             //check the owner
-            if ($post->CompanyID != $_SESSION['user_id']) {
+            if ($post->CompanyID != $_SESSION['user_id'] && $subscription == 'free') {
                 redirect('student/jobs');
             }
+             
             $data = [
                 'job_name' => $post->Title,
                 'job_id' => $postId,
@@ -833,6 +836,7 @@ class Service_provider extends Controller
                 'required_skills' => $post->RequiredQualifications,
                 'salary_range' => $post->SalaryRange,
                 'Description' => $post->Description,
+                'subscription' => $subscription,
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -841,6 +845,11 @@ class Service_provider extends Controller
                 'salary_range_err' => '',
                 'Description_err' => ''
             ];
+            if($post->Status != 'Pending' && $data['subscription'] == 'free'){ 
+                $_SESSION['show_job_edit_error'] = true;
+                $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                Redirect::to($previousURL);
+            }   
             // echo json_encode($data);
             $this->view('pages/service_provider/edit_job', $data);
         }
@@ -915,6 +924,28 @@ class Service_provider extends Controller
 
     public function jobPost()
     {
+        $companyPosts = $this->model('M_jobpost')->getJobsByCompanyId($_SESSION['user_id']);
+        $companyInfo = $this->model('M_jobpost')->getpostbycompanyid($_SESSION['user_id']);
+        $NewPostCount = count($companyPosts);
+
+        //Current date - subscription end date
+        $currentDate = date('Y-m-d');
+        $subscriptionEndDate = $companyInfo->subscription_end_date;
+        $remainingDays = waitForTime(strtotime($subscriptionEndDate) - strtotime($currentDate));
+
+        if ($companyInfo->subscription_plan == 'free' && $NewPostCount >= 2) {
+            $_SESSION['show_job_post_error_free'] = true;
+            $_SESSION['remaining_days'] = $remainingDays;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
+            Redirect::to($previousURL);
+        }
+        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 20) {
+            $_SESSION['show_job_post_error_pro'] = true;
+            $_SESSION['remaining_days'] = $remainingDays;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
+            Redirect::to($previousURL);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
@@ -1097,4 +1128,242 @@ class Service_provider extends Controller
             }
         }
     }
-}
+
+    public function approve_application($applicationID, $jobID)
+    {
+        try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
+            $this->model('M_applicationFields')->approveApplication($applicationID);
+            
+            //Send notification to student
+            notifyStudentApplicationAccepted(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+            
+            Redirect::to(URLROOT . '/service_provider/offered_applications/'.$jobID);
+        } catch (Exception $e) {
+            die($e->getMessage()); 
+        }
+    }
+
+    public function reject_application($applicationID, $jobID)
+    {
+        try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
+            $this->model('M_applicationFields')->rejectApplication($applicationID);
+
+            //Send notification to student
+            notifyStudentApplicationRejected(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+            
+            Redirect::to(URLROOT . '/service_provider/rejected_applications/'.$jobID);
+        } catch (Exception $e) {
+            die($e->getMessage()); 
+        }
+    }
+
+    public function messages_stu($userID = null)
+    {
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
+        $messages_stu = $this->model('ContactModel')->getMessagesStuCom();
+
+        // Initialize data with the message list
+        $data = [
+            'messages_stu' => $messages_stu,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+
+        $this->view('pages/service_provider/messages_stu', $data);
+    }
+
+    public function messages_add($userID = null)
+    { 
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
+        $messages_add = $this->model('ContactModel')->getMessagesAddCom();
+
+        // Initialize data with the message list
+        $data = [
+            'messages_add' => $messages_add,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+        
+        $this->view('pages/service_provider/messages_add', $data);
+    }
+    
+    public function sendMessage($userID)
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
+            $data = [
+                'userID' => $userID,
+                'email' => $email, 
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
+            ];
+
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
+            }
+
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('service_provider/messages_stu/' . $userID);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with errors
+                $this->loadUserDetailView($data);
+            }
+        } else {
+            // Load initial view without POST request
+            
+            $data = [
+                'userID' => $userID,
+                'email' => '',
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
+        }
+    }
+    private function loadUserDetailView($data)
+    {
+        // Load the view with the provided data
+        $this->view('pages/service_provider/messages_stu', $data);
+        $this->view('pages/service_provider/messages_add', $data);
+    }
+
+    public function markAllRead() {
+        if (!isset($_SESSION['user_id'])) {
+            redirect('users/login');
+        }
+
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+}    

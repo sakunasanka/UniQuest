@@ -15,7 +15,7 @@ class companyModel extends Model
         $this->db->bind(':companyId', $_SESSION['user_id']);
         return $this->db->single();
     }
-
+    
     public function addUserPostBookmark($companyId)
     {
         try {
@@ -159,6 +159,18 @@ class companyModel extends Model
             return $this->db->single();
         } catch (Exception $e) {
             error_log("Database error in getPaymentByOrderId: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getSubscriptionPlan($user_id) {
+        try {
+            $this->db->query('SELECT subscription_plan FROM company WHERE CompanyID = :user_id LIMIT 1');
+            $this->db->bind(':user_id', $user_id);
+            $result = $this->db->single();
+            return $result ? $result->subscription_plan : null;
+        } catch (Exception $e) {
+            error_log("Database error in getSubscriptionPlan: " . $e->getMessage());
             return false;
         }
     }

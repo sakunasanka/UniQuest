@@ -659,6 +659,7 @@ SELECT
     a.created_at AS SubmissionDate,
     a.updated_at AS LastUpdated,
     j.create_at AS JobCreatedAt,
+    j.PublishDate,
     c.create_at AS company_create_at
 FROM
     applications a
@@ -922,6 +923,8 @@ CREATE VIEW `v_jobs` AS SELECT
     c.CompanyName AS CompanyName,
     i.IndustryName AS Industry,
     c.Website AS Website,
+    c.Facebook,
+    c.LinkedIn,
     j.Description AS Description,
     TRIM(REGEXP_REPLACE(CONCAT_WS(', ', c.StreetNo, c.AddressLine1, c.AddressLine2, ci.CityName), ', ,+', ',')) AS CompanyAddress,
     j.Category AS Category,
@@ -1016,3 +1019,46 @@ FROM
     LEFT JOIN cities ci ON c.CityID = ci.CityID
     LEFT JOIN industry i ON c.IndustryID = i.IndustryID  ;
 
+-- notifications
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL,
+  `type` enum('info','success','warning','danger') NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `related_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `UserID` (`UserID`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `notifications` 
+MODIFY COLUMN `type` ENUM('info', 'success', 'warning', 'danger', 'message') NOT NULL;
+
+
+-- Create a new event that runs every 30 minutes
+DELIMITER //
+
+CREATE EVENT IF NOT EXISTS ev_update_expired_subscriptions
+ON SCHEDULE EVERY 30 MINUTE
+DO
+BEGIN
+    UPDATE company
+    SET
+        subscription_plan = 'free',
+        subscription_start_date = NOW(),
+        subscription_end_date = DATE_ADD(NOW(), INTERVAL 30 DAY)
+    WHERE
+        subscription_end_date <= NOW();
+END;
+//
+
+DELIMITER ;
+
+
+ALTER TABLE company
+MODIFY COLUMN subscription_start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+MODIFY COLUMN subscription_end_date DATETIME DEFAULT (CURRENT_TIMESTAMP + INTERVAL 30 DAY);

@@ -820,9 +820,11 @@ class Admin extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailCompAccountApproved($email, $name);
+                notifyUserApproval($userID);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
+                notifyUserApproval($userID);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', 10);
@@ -843,9 +845,11 @@ class Admin extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
@@ -863,6 +867,7 @@ class Admin extends Controller
             $this->model->activateAccount($userID);
             $this->model('AdminModel')->addUserAccountLog($userID, 'Activate', $reasonID);
             MailHelper::sendEmailAccountReactivatedByAdmin($email, $reason);
+            notifyAccountActivation($userID);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -883,6 +888,7 @@ class Admin extends Controller
             $this->model->deactivateAccount($userID);
             $this->model('AdminModel')->addUserAccountLog($userID, 'Deactivate', $reasonID);
             MailHelper::sendEmailAccountDeactivatedByAdmin($email, $reason);
+            notifyAccountDeactivation($userID, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -1114,96 +1120,111 @@ class Admin extends Controller
 
     public function messages_stu($userID = null)
     {
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
         // Fetch all student messages
         $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_stu' => $messages_stu,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_stu' => $messages_stu,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_stu' => $messages_stu,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
 
         $this->view('pages/admin/messages_stu', $data);
     }
 
     public function messages_com($userID = null)
-    {
-        // Fetch all company messages
+    { 
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
         $messages_com = $this->model('ContactModel')->getMessagesCom();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_com' => $messages_com,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_com' => $messages_com,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_com' => $messages_com,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
-
+        
         $this->view('pages/admin/messages_com', $data);
     }
 
 
     public function messages_ver($userID = null)
     {
-        // Fetch all verification team messages
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
         $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_ver' => $messages_ver,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_ver' => $messages_ver,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_ver' => $messages_ver,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
 
         $this->view('pages/admin/messages_ver', $data);
@@ -1547,6 +1568,38 @@ class Admin extends Controller
             echo json_encode(['success' => false, 'message' => 'An error occurred while deleting the industry.']);
         }
 
+        exit;
+    }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
         exit;
     }
 }

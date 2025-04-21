@@ -548,9 +548,11 @@ class Student extends Controller
                 $companyID = $post->CompanyID; // Assuming each job post has a CompanyID field
                 $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
             }
-            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
-            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        } else {
+
+        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } 
+        else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
@@ -900,14 +902,16 @@ class Student extends Controller
                             } else {
                                 $data['errors'][$fieldName] = $uploadResult['error'];
                             }
-                        } else {
+
+                        } elseif (isset($fieldConfig['required']) && $fieldConfig['required']) {
                             $data['errors'][$fieldName] = 'File upload is required';
                         }
                         break;
 
                     default:
                         $value = trim($_POST[$fieldName] ?? '');
-                        if (empty($value)) {
+
+                        if (empty($value) && isset($fieldConfig['required']) && $fieldConfig['required']) {
                             $data['errors'][$fieldName] = 'This field is required';
                         } else {
                             $data['fields'][$fieldName] = $value;
@@ -919,38 +923,35 @@ class Student extends Controller
             // If no errors, save application
             if (empty($data['errors'])) {
                 $applicationModel = $this->model('M_applicationFields');
-
-
-                $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
+                
+                
+            $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
                 if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
                     flash('application_success', 'Your application has been submitted successfully');
                     redirect('student/all_app');
                 } else {
-                    flash('application_error', 'Something went wrong with your application', 'alert alert-danger');
-
+                    // Return to form with errors
                     $this->view('pages/student/jobsApply', $data);
                 }
             } else {
-                // Return to form with errors
+                // GET request - show the application form
+                $jobModel = $this->model('M_jobpost');
+                $job = $jobModel->getJobById($jobId);
+
+                if (!$job) {
+                    redirect('pages/error');
+                }
+
+                $data = [
+                    'job' => $job,
+                    'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
+                ];
+
                 $this->view('pages/student/jobsApply', $data);
             }
-        } else {
-            // GET request - show the application form
-            $jobModel = $this->model('M_jobpost');
-            $job = $jobModel->getJobById($jobId);
-
-            if (!$job) {
-                redirect('pages/error');
-            }
-
-            $data = [
-                'job' => $job,
-                'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
-            ];
-
-            $this->view('pages/student/jobsApply', $data);
         }
     }
+    
     private function handleFileUpload($file, $fieldName)
     {
         $result = [
@@ -1015,7 +1016,7 @@ class Student extends Controller
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -1090,4 +1091,51 @@ class Student extends Controller
 
         $this->view('pages/student/myreviews', $data);
     }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/student/notifications';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
 }

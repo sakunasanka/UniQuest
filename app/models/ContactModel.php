@@ -155,6 +155,35 @@ class ContactModel
         return $this->db->resultSet();
     }
 
+    public function getMessagesAdmin()
+    {
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT 
+                        CASE 
+                            WHEN sender_role = 'Admin' THEN sender_id
+                            WHEN receiver_role = 'Admin' THEN receiver_id
+                        END AS admin_id,
+                        MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE (sender_role = 'Admin' AND receiver_role = 'VT-Member') 
+                    OR (sender_role = 'VT-Member' AND receiver_role = 'Admin')
+                    GROUP BY 
+                        CASE 
+                            WHEN sender_role = 'Admin' THEN sender_id
+                            WHEN receiver_role = 'Admin' THEN receiver_id
+                        END
+                ) m2 
+                ON (m1.sender_id = m2.student_id OR m1.receiver_id = m2.student_id) 
+                AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role = 'Admin' OR m1.receiver_role = 'Admin'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
+    }
+
     public function updateReadStatus($id)
     {
         $this->db->query("UPDATE contact_messages SET read_status = 1 WHERE id = :id");
@@ -169,6 +198,64 @@ class ContactModel
         $this->db->bind(':id', $id);
 
         return $this->db->single(); // Fetch single result
+    }
+
+    public function getMessagesStuCom()
+    {
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT 
+                        CASE 
+                            WHEN sender_role = 'Student' THEN sender_id
+                            WHEN receiver_role = 'Student' THEN receiver_id
+                        END AS student_id,
+                        MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE (sender_role = 'Student' AND receiver_role = 'Company') 
+                    OR (sender_role = 'Company' AND receiver_role = 'Student')
+                    GROUP BY 
+                        CASE 
+                            WHEN sender_role = 'Student' THEN sender_id
+                            WHEN receiver_role = 'Student' THEN receiver_id
+                        END
+                ) m2 
+                ON (m1.sender_id = m2.student_id OR m1.receiver_id = m2.student_id) 
+                AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role = 'Student' OR m1.receiver_role = 'Student'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
+    }
+
+    public function getMessagesAddCom()
+    {
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT 
+                        CASE 
+                            WHEN sender_role = 'Admin' THEN sender_id
+                            WHEN receiver_role = 'Admin' THEN receiver_id
+                        END AS student_id,
+                        MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE (sender_role = 'Admin' AND receiver_role = 'Company') 
+                    OR (sender_role = 'Company' AND receiver_role = 'Admin')
+                    GROUP BY 
+                        CASE 
+                            WHEN sender_role = 'Admin' THEN sender_id
+                            WHEN receiver_role = 'Admin' THEN receiver_id
+                        END
+                ) m2 
+                ON (m1.sender_id = m2.admin_id OR m1.receiver_id = m2.admin_id) 
+                AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role = 'Admin' OR m1.receiver_role = 'Admin'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
     }
 
 }

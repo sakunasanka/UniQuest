@@ -840,4 +840,19 @@ class userModel extends Model
             GROUP BY gender");
         return $this->db->resultSet();
     }
+
+    public function getAdminIds() 
+    {
+        $this->db->query("SELECT AdminID FROM Admin");
+        $admins = $this->db->resultSet();
+    }
+
+    public function getAllUserIds() 
+    {
+        $this->db->query("SELECT UserID FROM User");
+        $users = $this->db->resultSet();
+        return array_map(function($user) {
+            return $user->UserID;
+        }, $users);
+    }
 }

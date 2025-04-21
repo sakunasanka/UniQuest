@@ -24,7 +24,7 @@ class M_jobpost extends Model
 
     public function getJobsByCompanyId($id)
     {
-        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY jobs_create_at DESC');
+        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY PublishDate DESC');
         $this->db->bind(':company_id', $id);
         return $this->db->resultSet();
     }
@@ -155,7 +155,7 @@ class M_jobpost extends Model
 
     public function getPosts()
     {
-        $this->db->query('SELECT * FROM v_jobs');
+        $this->db->query('SELECT * FROM v_jobs ORDER BY PublishDate DESC');
         $results = $this->db->resultSet();
         return $results;
     }
@@ -300,13 +300,14 @@ class M_jobpost extends Model
         return $conditions;
     }
 
-    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
+    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             // Base conditions
             $conditions = [
                 ['Status', '=', 'Active'],
-                ['Category', '=', 'Part-time']
+                ['Category', '=', 'Part-time'],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -334,12 +335,13 @@ class M_jobpost extends Model
         }
     }
 
-    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
+    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             $conditions = [
                 ['Status', '=', 'Active'],
-                ['Category', '=', 'Internship']
+                ['Category', '=', 'Internship'],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -365,14 +367,15 @@ class M_jobpost extends Model
         }
     }
 
-    public function getSaveJobs($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    public function getSaveJobs($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
     {
         try {
             // Base conditions
             $conditions = [
                 ['Status', '=', 'Active'],
                 ['Category', '=', 'Part-time'],
-                ['StudentID', '=', $studentId]
+                ['StudentID', '=', $studentId],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -400,14 +403,15 @@ class M_jobpost extends Model
         }
     }
 
-    public function getSaveInternships($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
+    public function getSaveInternships($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             // Base conditions
             $conditions = [
                 ['Status', '=', 'Active'],
                 ['Category', '=', 'Internship'],
-                ['StudentID', '=', $studentId]
+                ['StudentID', '=', $studentId],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -435,7 +439,7 @@ class M_jobpost extends Model
         }
     }
 
-    public function getSaveCompanies($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    public function getSaveCompanies($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
     {
         try {
             // Base conditions

@@ -21,7 +21,7 @@
                 Location: <?php echo $data['post']->City; ?>
             </p>
             <p>
-                Posted: <?php echo $data['posted']; ?>
+                Published On: <?php echo $data['posted']; ?>
             </p>
         </div>
         <div class="table-block">
