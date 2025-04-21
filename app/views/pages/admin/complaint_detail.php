@@ -11,7 +11,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
-            <button class="back-btn" onclick="window.history.back()">
+            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/all_complaints'">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
                 <h1>Complaint Management</h1>
             </button>
@@ -125,6 +125,34 @@
                                 <span class="error-msg"><?php echo $data['reasonID_err'] ?? ''; ?></span>
                             </div>
                         </form>
+                    <?php else: ?>
+                        <?php if ($data['actionDetail']): ?>
+                            <?php if ($data['actionDetail']->CurrentStatus == 'Resolved'): ?>
+                                <div class="status-act" style="width: 100%;">
+                                    <?php if (!empty($data['actionDetail']->Reason)): ?>
+                                        <span>Reason: <?php echo $data['actionDetail']->Reason ?></span><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($data['actionDetail']->ActionTimestamp)): ?>
+                                        <span>Resolved On: <?php echo substr($data['actionDetail']->ActionTimestamp, 0, 10); ?></span><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($data['actionDetail']->AdminNote)): ?>
+                                        <span>Note: <?php echo $data['actionDetail']->AdminNote ?></span><br>
+                                    <?php endif; ?>
+                                </div>
+                            <?php elseif ($data['actionDetail']->CurrentStatus == 'Rejected'): ?>
+                                <div class="status-deact" style="width: 100%;">
+                                    <?php if (!empty($data['actionDetail']->Reason)): ?>
+                                        <span>Reason: <?php echo $data['actionDetail']->Reason ?></span><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($data['actionDetail']->ActionTimestamp)): ?>
+                                        <span>Rejected On: <?php echo substr($data['actionDetail']->ActionTimestamp, 0, 10); ?></span><br>
+                                    <?php endif; ?>
+                                    <?php if (!empty($data['actionDetail']->AdminNote)): ?>
+                                        <span>Note: <?php echo $data['actionDetail']->AdminNote ?></span><br>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>

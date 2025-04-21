@@ -316,10 +316,14 @@ class Admin extends Controller
                 $reasons = null; // Handle unexpected status
         }
 
+        // get last complaint log
+        $lastComplaintLog = $this->model('ComplaintModel')->getLastComplaintLog($complaintID);
+
         $data = [
             'complaint' => $complaint,
             'reasons' => $reasons ?? [],
-            'reasonID_err' => ''
+            'reasonID_err' => '',
+            'actionDetail' => $lastComplaintLog,
         ];
 
         // Check for session error
@@ -488,7 +492,6 @@ class Admin extends Controller
                     MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
                 }
                 if ($data['send_warning'] == 1) {
-                    // $this->model('ComplaintModel')->sendWarning($data['complaintID']);
                     //todo : send warning notification to company
                 }
                 if ($data['restrict_posting'] == 1) {

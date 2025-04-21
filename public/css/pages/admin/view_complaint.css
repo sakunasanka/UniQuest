@@ -390,3 +390,21 @@ button:disabled,
     opacity: 0.6;
 }
 
+
+.form-row .status-deact{
+    color: #ff4d4d;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ff4d4d50;
+    line-height: 1.3;
+}
+
+.form-row .status-act{
+    color: #32a852;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #32a85250;
+    line-height: 1.3;
+}
