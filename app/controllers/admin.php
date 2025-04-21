@@ -876,10 +876,33 @@ class Admin extends Controller
     {
         $this->view('pages/admin/jobPost');
     }
-    public function analytics()
-    {
-        $this->view('pages/admin/analytics');
+    // Add this method to your Admin controller class
+
+public function analytics() {
+    try {
+        $months = 5; // Number of months to show in charts
+        
+        $registrationStats = $this->model('AdminModel')->getRegistrationStats($months);
+        $jobStats = $this->model('AdminModel')->getJobListingStats($months);
+        $revenueStats = $this->model('AdminModel')->getRevenueStats($months);
+        $loginStats = $this->model('AdminModel')->getLoginStats();
+        $activeCounts = $this->model('AdminModel')->getActiveCounts();
+        
+        $data = [
+            'registrationStats' => $registrationStats,
+            'jobStats' => $jobStats,
+            'revenueStats' => $revenueStats,
+            'loginStats' => $loginStats,
+            'activeCounts' => $activeCounts
+        ];
+        
+        $this->view('pages/admin/analytics', $data);
+    } catch (Exception $e) {
+        // Handle error appropriately
+        error_log("Error in analytics: " . $e->getMessage());
+        $this->view('pages/admin/analytics', []);
     }
+}
 
     public function notifications()
     {

@@ -1,256 +1,245 @@
-// Chart configuration constants
-const CHART_CONFIG = {
-    type: 'pie',
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { position: 'top' },
-            title: { 
-                display: true,
-                font: { size: 18 }
-            },
-            tooltip: {
-                callbacks: {
-                    label: (context) => {
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        return `${context.label}: ${((context.raw / total) * 100).toFixed(1)}%`;
-                    }
-                }
-            },
-            datalabels: {
-                formatter: (value, ctx) => {
-                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                    return total > 0 ? `${((value / total) * 100).toFixed(1)}%` : '0%';
-                },
-                color: '#fff',
-                font: { size: 11, weight: 'bold' }
-            }
-        }
-    },
-    colors: {
-        gender: ['#2f2d92', '#e89611', '#17616e'],
-        age: ['#2f2d92', '#e89611', '#17616e', '#e36c14', '#666667'],
-        location: ['#2f2d92', '#e89611', '#17616e', '#e36c14', '#666667']
-    }
-};
-
+// Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
-    // Ensure reportData is defined and log it for debugging
-    console.log(reportData.totalApplicants);
-    if (typeof reportData === 'undefined' || !reportData) {
-        console.error('reportData is not defined or invalid');
-        hideAllChartCards();
-        return;
-    }
-    console.debug('Demographic Data:', reportData);
-
-    // Hide all charts if no applicants
-    if (!reportData.totalApplicants || parseInt(reportData.totalApplicants) === 0) {
-        hideAllChartCards();
-        return; // Prevent further chart initialization
+    // Ensure analyticsData exists and has proper structure
+    if (!window.analyticsData) {
+        window.analyticsData = {
+            registrationStats: [],
+            jobStats: [],
+            revenueStats: [],
+            loginStats: []
+        };
     }
 
-    try {
-        // Initialize all charts
-        initChart('gender', processGenderData);
-        initChart('age', processAgeData);
-        initChart('location', processLocationData);
-    } catch (error) {
-        console.error('Chart initialization failed:', error);
-    }
-});
+    // Process data for charts
+    const months = processMonthLabels(analyticsData.registrationStats);
+    const registrationData = processRegistrationData(analyticsData.registrationStats);
+    const jobData = processJobData(analyticsData.jobStats);
+    const revenueData = processRevenueData(analyticsData.revenueStats);
+    const loginData = processLoginData(analyticsData.loginStats);
 
-// Function to hide all chart cards
-function hideAllChartCards() {
-    const chartContainers = document.querySelectorAll('.demographic-card');
-    chartContainers.forEach(container => {
-        container.style.display = 'none';
-    });
+    // Initialize charts only if their containers exist
+    if (document.getElementById('registrationsChart')) {
+        initializeRegistrationsChart(months, registrationData);
+    }
     
-    // Optional: Show a message
-    const demographicsSection = document.querySelector('.applicant-demographics');
-    if (demographicsSection) {
-        const noDataMessage = document.createElement('p');
-        noDataMessage.textContent = 'No applicant data available';
-        noDataMessage.style.textAlign = 'center';
-        noDataMessage.style.padding = '20px';
-        noDataMessage.style.fontStyle = 'italic';
-        noDataMessage.style.color = '#666';
-        demographicsSection.appendChild(noDataMessage);
+    if (document.getElementById('jobListingsChart')) {
+        initializeJobListingsChart(months, jobData);
     }
-}
-
-// Function to hide gender distribution chart
-function hideGenderDistribution() {
-    const genderChartCard = document.querySelector('.gender-distribution-card');
-    if (genderChartCard) {
-        genderChartCard.style.display = 'none';
-    }
-}
-// Generic chart initialization
-function initChart(type, dataProcessor) {
-    const canvasId = `${type}Chart`;
-    const canvas = document.getElementById(canvasId);
     
-    if (!canvas) {
-        console.error(`Canvas element not found: ${canvasId}`);
-        return;
+    if (document.getElementById('revenueChart')) {
+        initializeRevenueChart(months, revenueData);
+    }
+    
+    if (document.getElementById('loginsChart')) {
+        initializeLoginsChart(loginData);
     }
 
-    const rawData = reportData[type];
-    if (!rawData || Object.keys(rawData).length === 0) {
-        showChartError(canvasId, `No ${type} data available`);
-        return;
-    }
-
-    // Remove any existing no-data message when showing charts
-    const demographicSection = document.querySelector('.applicant-demographics');
-    if (demographicSection) {
-        const msg = demographicSection.querySelector('.no-data-message');
-        if (msg) msg.style.display = 'none';
+    // Helper functions
+    function processMonthLabels(stats) {
+        if (!stats || stats.length === 0) return getDefaultMonths(5);
         
-        // Ensure the grid is visible
-        const grid = demographicSection.querySelector('.demographic-grid');
-        if (grid) grid.style.display = 'grid';
-        
-        // Show all cards
-        const cards = demographicSection.querySelectorAll('.demographic-card, .card');
-        cards.forEach(card => {
-            card.style.display = 'block';
+        return stats.map(item => {
+            const date = new Date(item.month + '-01');
+            return date.toLocaleString('default', { month: 'short' });
         });
     }
 
-    const processedData = dataProcessor(rawData);
-    if (processedData.labels.length === 0) {
-        showChartError(canvasId, `No ${type} data available`);
-        return;
-    }
-
-    renderPieChart(
-        canvasId,
-        processedData.labels,
-        processedData.values,
-        CHART_CONFIG.colors[type],
-        `${type.charAt(0).toUpperCase() + type.slice(1)} Distribution`
-    );
-}
-
-// Data processors
-function processGenderData(data) {
-    return {
-        labels: Object.keys(data),
-        values: Object.values(data)
-    };
-}
-
-function processAgeData(data) {
-    const ranges = {
-        '18-21': 0, '22-25': 0, '26-30': 0, 
-        '31-35': 0, '36+': 0
-    };
-
-    Object.entries(data).forEach(([age, percent]) => {
-        const ageNum = parseInt(age);
-        if (ageNum <= 21) ranges['18-21'] += percent;
-        else if (ageNum <= 25) ranges['22-25'] += percent;
-        else if (ageNum <= 30) ranges['26-30'] += percent;
-        else if (ageNum <= 35) ranges['31-35'] += percent;
-        else ranges['36+'] += percent;
-    });
-
-    // Filter empty ranges
-    const result = { labels: [], values: [] };
-    Object.entries(ranges).forEach(([range, percent]) => {
-        if (percent > 0) {
-            result.labels.push(range);
-            result.values.push(percent);
+    function processRegistrationData(stats) {
+        if (!stats || stats.length === 0) {
+            return {
+                students: Array(5).fill(0),
+                companies: Array(5).fill(0)
+            };
         }
-    });
-
-    return result;
-}
-
-function processLocationData(data) {
-    const sorted = Object.entries(data)
-        .map(([city, percent]) => ({ city, percent }))
-        .sort((a, b) => b.percent - a.percent);
-
-    const top3 = sorted.slice(0, 3);
-    const other = sorted.slice(3).reduce((sum, loc) => sum + loc.percent, 0);
-
-    const result = {
-        labels: top3.map(loc => loc.city),
-        values: top3.map(loc => loc.percent)
-    };
-
-    if (other > 0) {
-        result.labels.push('Other');
-        result.values.push(other);
+        
+        return {
+            students: stats.map(item => parseInt(item.students) || 0),
+            companies: stats.map(item => parseInt(item.companies) || 0)
+        };
     }
 
-    return result;
-}
+    function processJobData(stats) {
+        if (!stats || stats.length === 0) {
+            return {
+                partTime: Array(5).fill(0),
+                internships: Array(5).fill(0)
+            };
+        }
+        
+        return {
+            partTime: stats.map(item => parseInt(item.part_time) || 0),
+            internships: stats.map(item => parseInt(item.internships) || 0)
+        };
+    }
 
-// Chart rendering
-function renderPieChart(canvasId, labels, data, colors, title) {
-    try {
-        const ctx = document.getElementById(canvasId).getContext('2d');
+    function processRevenueData(stats) {
+        if (!stats || stats.length === 0) return Array(5).fill(0);
         
-        // Destroy existing chart if it exists
-        const existingChart = Chart.getChart(canvasId);
-        if (existingChart) existingChart.destroy();
+        return stats.map(item => parseFloat(item.revenue) || 0);
+    }
+
+    function processLoginData(stats) {
+        if (!stats || stats.length === 0) {
+            return {
+                labels: ['Students', 'Companies'],
+                data: [0, 0]
+            };
+        }
         
+        let studentCount = 0;
+        let companyCount = 0;
+        
+        stats.forEach(item => {
+            if (item.Role === 'Student') {
+                studentCount = parseInt(item.count) || 0;
+            } else if (item.Role === 'Company') {
+                companyCount = parseInt(item.count) || 0;
+            }
+        });
+        
+        return {
+            labels: ['Students', 'Companies'],
+            data: [studentCount, companyCount]
+        };
+    }
+
+    function getDefaultMonths(count) {
+        const months = [];
+        const date = new Date();
+        
+        for (let i = count - 1; i >= 0; i--) {
+            const tempDate = new Date();
+            tempDate.setMonth(date.getMonth() - i);
+            months.push(tempDate.toLocaleString('default', { month: 'short' }));
+        }
+        
+        return months;
+    }
+
+    function initializeRegistrationsChart(months, data) {
+        var ctx = document.getElementById('registrationsChart').getContext('2d');
         new Chart(ctx, {
-            ...CHART_CONFIG,
+            type: 'bar',
             data: {
-                labels,
-                datasets: [{
-                    label: title,
-                    data,
-                    backgroundColor: colors,
-                    borderColor: '#fff',
-                    borderWidth: 1
-                }]
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Students',
+                        backgroundColor: 'rgba(72, 207, 173, 0.6)',
+                        data: data.students,
+                    },
+                    {
+                        label: 'Companies',
+                        backgroundColor: 'rgba(45, 156, 128, 0.6)',
+                        data: data.companies,
+                    }
+                ]
+            },
+            options: getChartOptions('Monthly User Registrations')
+        });
+    }
+
+    function initializeJobListingsChart(months, data) {
+        var ctx = document.getElementById('jobListingsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Part Time Jobs',
+                        backgroundColor: 'rgba(72, 207, 173, 0.6)',
+                        data: data.partTime,
+                    },
+                    {
+                        label: 'Internships',
+                        backgroundColor: 'rgba(45, 156, 128, 0.6)',
+                        data: data.internships,
+                    }
+                ]
+            },
+            options: getChartOptions('Job Listings by Type')
+        });
+    }
+
+    function initializeRevenueChart(months, data) {
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Revenue',
+                        backgroundColor: 'rgba(45, 156, 128, 0.6)',
+                        borderColor: 'rgba(45, 156, 128, 0.8)',
+                        data: data,
+                        fill: false,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(72, 207, 173, 1)',
+                        pointBorderColor: 'rgba(45, 156, 128, 0.8)',
+                        pointHoverBackgroundColor: 'rgba(72, 207, 173, 1)',
+                        pointHoverBorderColor: 'rgba(45, 156, 128, 1)',
+                    }
+                ]
+            },
+            options: getChartOptions('Revenue Over the Months', true)
+        });
+    }
+
+    function initializeLoginsChart(data) {
+        var ctx = document.getElementById('loginsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'User Logins',
+                        backgroundColor: ['rgba(72, 207, 173, 0.6)', 'rgba(45, 156, 128, 0.6)'],
+                        data: data.data,
+                    }
+                ]
             },
             options: {
-                ...CHART_CONFIG.options,
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    ...CHART_CONFIG.options.plugins,
                     title: {
-                        ...CHART_CONFIG.options.plugins.title,
-                        text: title
+                        display: true,
+                        text: 'User Logins Breakdown',
+                        font: {
+                            size: 22
+                        }
                     }
                 }
             }
         });
-    } catch (error) {
-        console.error(`Failed to render ${canvasId}:`, error);
-        showChartError(canvasId, 'Chart rendering failed');
     }
-}
 
-// Error handling
-function showChartError(canvasId, message) {
-    const canvas = document.getElementById(canvasId);
-    if (canvas) {
-        const existingChart = Chart.getChart(canvasId);
-        if (existingChart) existingChart.destroy();
-        
-        // Clear any existing content
-        canvas.innerHTML = '';
-        
-        // Create error message element
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'chart-error';
-        errorDiv.innerHTML = `
-            <span class="material-icons">error_outline</span>
-            <p>${message}</p>
-        `;
-        
-        // Append to canvas container
-        canvas.parentNode.appendChild(errorDiv);
+    function getChartOptions(title, isLineChart = false) {
+        return {
+            responsive: true,
+            maintainAspectRatio: false, 
+            plugins: {
+                title: {
+                    display: true,
+                    text: title,
+                    font: {
+                        size: 22
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: isLineChart ? function(value) {
+                            return '$' + value.toLocaleString();
+                        } : undefined
+                    }
+                }
+            }
+        };
     }
-    console.warn(`Chart Error [${canvasId}]: ${message}`);
-}
-// Add this function to handle PDF generation
+});
