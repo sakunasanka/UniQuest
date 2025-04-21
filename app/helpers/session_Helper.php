@@ -66,3 +66,13 @@ function flash($name) {
 <?php unset($_SESSION['show_job_post_error_pro']); 
     unset($_SESSION['remaining_days']); ?>
 <?php endif; ?>
+
+<?php if(isset($_SESSION['show_job_edit_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Please upgrade to a premium plan to access this feature.", "error");
+    });
+</script>
+<?php unset($_SESSION['show_job_edit_error']); ?>
+<?php endif; ?>
+
