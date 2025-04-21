@@ -145,14 +145,14 @@ function notifyAccountDeactivation($userId, $reason) {
 }
 
 // Notify a student about a new message from admin
-function notifyNewMessage($messageFromAdmin, $studentId, $jobTitle) {
+function notifyMessageFromAdmin($userID, $messageFromAdmin) {
     try {
         $message = $messageFromAdmin;
         $title = "Message from Admin";
-        $type = 'danger';
+        $type = 'message';
         
         return sendNotification(
-            $studentId,
+            $userID,
             $message,
             $title,
             $type

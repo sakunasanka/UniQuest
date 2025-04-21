@@ -590,6 +590,7 @@ class Admin extends Controller
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
                     if($_SESSION['user_role'] == 'Admin') {
+                        notifyMessageFromAdmin($data['receiver_id'], $data['messageInput']);
                         if($userRole == 'Student') {
                             Redirect::to(URLROOT . '/admin/messages_stu');
                         } elseif ($userRole == 'Company') {
