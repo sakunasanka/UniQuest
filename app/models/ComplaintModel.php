@@ -1,5 +1,6 @@
 <?php
-class ComplaintModel extends Model {
+class ComplaintModel extends Model
+{
 
     public function createComplaint($data)
     {
@@ -167,7 +168,7 @@ class ComplaintModel extends Model {
     public function getCountPendingComplaints()
     {
         try {
-            $complaints = $this->select('v_complaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, 1, false);
+            $complaints = $this->select('v_complaints', [['Status', 'IN', ['Pending', 'In-Review']]], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, 1, false);
             return $complaints->PendingCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -177,7 +178,7 @@ class ComplaintModel extends Model {
             return false;
         }
     }
-    
+
 
     public function startReview($complaintId)
     {
@@ -240,5 +241,18 @@ class ComplaintModel extends Model {
             return false;
         }
     }
+
+    public function getLastComplaintLog($complaintId)
+    {
+        try {
+            $log = $this->select('v_complaint_logs', [['ComplaintID', '=', $complaintId]], 'ComplaintID, CurrentStatus, ReasonID, Reason, ReasonName, ReasonType, AdminNote, ActionTimestamp', 'AND', '', 'ActionTimestamp DESC', 0, 1, false);
+            return $log;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
-?>
