@@ -84,17 +84,13 @@
         $weeks = round($seconds / 604800);
         $months = round($seconds / 2600640);
         $years = round($seconds / 31553280);
-        
-        // Seconds
-        if($seconds <= 60){
-            return "less than a minute remaining";
-        }
+
         //Minutes
-        else if($minutes <=60){
-            if($minutes==1){
-                return "1 minute remaining";
+        if($minutes <=60){
+            if($minutes<=30){
+                return "Less than 30 minutes remaining";
             }
-            else{
+            elseif ($minutes<=60){
                 return "$minutes minutes remaining";
             }
         }
@@ -123,9 +119,6 @@
     }
 
     function waitForTime($seconds){
-        if($seconds <= 0) {
-            return "few seconds";
-        }
         
         $minutes = round($seconds / 60);
         $hours = round($seconds / 3600);
@@ -134,16 +127,12 @@
         $months = round($seconds / 2600640);
         $years = round($seconds / 31553280);
         
-        // Seconds
-        if($seconds <= 60){
-            return "less than a minute";
-        }
         //Minutes
-        else if($minutes <=60){
-            if($minutes==1){
-                return "1 minute";
+        if($minutes <=60){
+            if($minutes<=30){
+                return "less than 30 minutes";
             }
-            else{
+            elseif($minutes<=60){
                 return "$minutes minutes";
             }
         }

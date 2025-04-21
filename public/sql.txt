@@ -1039,24 +1039,50 @@ ALTER TABLE `notifications`
 MODIFY COLUMN `type` ENUM('info', 'success', 'warning', 'danger', 'message') NOT NULL;
 
 
--- Create a new event that runs every 30 minutes
+-- Create the trigger for automatic date updates
 DELIMITER //
 
-CREATE EVENT IF NOT EXISTS ev_update_expired_subscriptions
-ON SCHEDULE EVERY 30 MINUTE
-DO
+CREATE TRIGGER IF NOT EXISTS update_subscription_dates
+BEFORE UPDATE ON company
+FOR EACH ROW
 BEGIN
-    UPDATE company
-    SET
-        subscription_plan = 'free',
-        subscription_start_date = NOW(),
-        subscription_end_date = DATE_ADD(NOW(), INTERVAL 30 DAY)
-    WHERE
-        subscription_end_date <= NOW();
-END;
-//
+    -- Only execute when subscription_plan is being changed to a different non-null value
+    IF NEW.subscription_plan IS NOT NULL AND 
+       NEW.subscription_plan <> OLD.subscription_plan THEN
+        
+        -- Update start date to current timestamp
+        SET NEW.subscription_start_date = CURRENT_TIMESTAMP;
+        
+        -- Update end date to 30 days from now
+        SET NEW.subscription_end_date = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY);
+    END IF;
+END//
 
 DELIMITER ;
+
+-- Create the event to check subscriptions every 30 minutes
+DELIMITER //
+
+CREATE EVENT IF NOT EXISTS check_subscription_expiry
+ON SCHEDULE EVERY 30 MINUTE
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN
+    -- Only update non-free plans that have expired
+    UPDATE company
+    SET 
+        subscription_plan = 'free',
+        subscription_start_date = CURRENT_TIMESTAMP,
+        subscription_end_date = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY)
+    WHERE 
+        subscription_end_date <= CURRENT_TIMESTAMP
+        AND subscription_plan != 'free';
+END//
+
+DELIMITER ;
+
+-- Enable the event scheduler if not already enabled
+SET GLOBAL event_scheduler = ON;
 
 
 ALTER TABLE company
