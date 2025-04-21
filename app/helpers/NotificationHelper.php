@@ -263,3 +263,61 @@ function notifyMessageToAdminFromVt($adminID, $messageFromVt, $VtID, $VtName) {
         return false;
     }
 }
+
+function notifyPremiumPlanActive($companyID, $plan) {
+    try {
+        $message = "Your {$plan} plan is now active.";
+        $title = "Plan Activated";
+        $type = 'success';
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $type
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyJobsApply($companyID, $jobTitle, $jobID) {
+    try {
+        $message = "A new application has been received for the job: {$jobTitle}";
+        $title = "New Job Application";
+        $type = 'info';
+        $link = "/service_provider/new_applications/{$jobID}";
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyComplaintToAdmin($adminID, $jobName, $studentName) {
+    try {
+        $message = "A new complaint has been received from {$studentName} regarding job: {$jobName}";
+        $title = "New Complaint Received";
+        $type = 'complaint';
+        $link = "/admin/all_complaints";
+        
+        return sendNotification(
+            $adminID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}    

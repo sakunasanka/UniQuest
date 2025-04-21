@@ -638,6 +638,13 @@ class Student extends Controller
 
     public function make_complain($jobID)
     {
+        $existingComplaint = $this->model('ComplaintModel')->getExistingComplaint($_SESSION['user_id'], $jobID);
+        if ($existingComplaint) {
+            $_SESSION['existing_complaint'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+            Redirect::to($previousURL);
+        }
+        
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
             $data = [
@@ -672,8 +679,15 @@ class Student extends Controller
                     return;
                 }
                 if ($this->model('ComplaintModel')->createComplaint($data)) {
+                    $admins = $this->model->getAdminIds();
+                    $job = $this->model('M_jobpost')->getpostbyid($jobID);
+                    foreach ($admins as $admin) {
+                        notifyComplaintToAdmin($admin->AdminID, $job->Title, $_SESSION['user_name']);
+                    }
+                    $_SESSION['complaint_submit_success'] = true;                 
                     Redirect::to(URLROOT . '/jobs'); // Adjust the redirect URL as needed
                 } else {
+                    $_SESSION['complaint_submit_error'] = true;   
                     die('Something went wrong'); // Improved error handling suggested
                 }
             } else {
@@ -889,6 +903,7 @@ class Student extends Controller
     }
     public function jobsApply($jobId)
     {
+        $posts = $this->model('M_jobpost')->getpostbyid($jobId);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
 
@@ -935,10 +950,19 @@ class Student extends Controller
                 
             $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
                 if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
-                    flash('application_success', 'Your application has been submitted successfully');
+                    // Notify the user about the successful application
+                    $_SESSION['application_success'] = true;
+
+                    notifyJobsApply(
+                        $posts->CompanyID,
+                        $posts->Title,
+                        $jobId
+                        
+                    );
                     redirect('student/all_app');
                 } else {
                     // Return to form with errors
+                    $_SESSION['application_error'] = true;
                     $this->view('pages/student/jobsApply', $data);
                 }
             } else {
