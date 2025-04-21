@@ -106,7 +106,14 @@ class Service_provider extends Controller
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
-                    flash('contact-msg', 'Your message has been sent successfully.');
+                    
+                    //send notification for each admin
+                    $admins = $this->model('userModel')->getAdminIds();
+                    foreach ($admins as $admin) {
+                        notifyMessageToAdminFromCompany($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
+                    }
+                    $_SESSION['show_contact_us_success'] = true;
+
                     Redirect::to(URLROOT . '/service_provider/contact_admin');
                 } else {
                     die('Something went wrong. Please try again.');
@@ -117,7 +124,7 @@ class Service_provider extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'email' => '',
+                'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
                 'email_err' => '',

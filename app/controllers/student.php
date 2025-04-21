@@ -91,7 +91,7 @@ class Student extends Controller
                     //send notification for each admin
                     $admins = $this->model('userModel')->getAdminIds();
                     foreach ($admins as $admin) {
-                        notifyMessageToAdminFromStudent($admin->AdminID, $data['message']);
+                        notifyMessageToAdminFromStudent($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
                     }
                     $_SESSION['show_contact_us_success'] = true;
                     
@@ -105,7 +105,7 @@ class Student extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'email' => '',
+                'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
                 'email_err' => '',
