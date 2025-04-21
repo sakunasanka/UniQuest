@@ -1,42 +1,79 @@
 <?php require APPROOT . '/views/components/ser_header.php'; ?>
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/contact_form.css">
+
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/chat.css">
 
 <div class="main-container">
 <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
 
     <div class="content-area">
         <div class="container">
-            <div class="contact-left">
-                <h1>Contact Us</h1>
-                <form id="contactForm" action="<?php echo URLROOT; ?>/vertification_team/contact_admin" method="POST">
-                    
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" required>
-                    <span class="error-message"><?php echo $data['email_err']; ?></span>
+        <div class="chat-header">
+                        Chat with Admin
+        </div>
         
-                    <label for="topic">Topic:</label>
-                    <select id="topic" name="topic" required>
-                        <option value="job" <?php echo ($data['topic'] == 'job') ? 'selected' : ''; ?>>Job</option>
-                        <option value="internship"<?php echo ($data['topic'] == 'internship') ? 'selected' : ''; ?>>Internship</option>
-                        <option value="general"<?php echo ($data['topic'] == 'general') ? 'selected' : ''; ?>>General Information</option>
-                    </select>
-                    
-                    <span class="error-message"><?php echo $data['topic_err']; ?></span>
-
-                    <label for="message">Message:</label>
-                    <textarea id="message" name="message" placeholder="Message" required><?php echo $data['message']; ?></textarea>
-                    <span class="error-message"><?php echo $data['message_err']; ?></span>
-
-                    <button type="submit">Send</button>
-                </form>
-            </div>
-
-            <div class="contact-right">
-                <img src="<?php echo URLROOT; ?>/images/Contact-us.png" alt="Contact Us Image">
-            </div>
-        </div>    
     </div>
+    
+        <div class="messages">
+        <?php
+        $previousDate = null;
+            foreach ($data['messages'] as $message): 
+                $messageDate = date('d M Y', strtotime($message->created_at));
+                $messageTime = date('H:i', strtotime($message->created_at)); 
+                
+                if ($messageDate !== $previousDate): ?>
+                    <div class="date-header"> <?php echo $messageDate; ?> </div>
+                    <?php $previousDate = $messageDate; 
+                    endif; ?>
+                <div class="message-container">
+                    <div class="message <?php echo $message->sender_id == $_SESSION['user_id'] ? 'sent' : 'received'; ?>">
+                        <?php echo htmlspecialchars($message->message); ?>
+                        <span class="message-time"> <?php echo $messageTime; ?> </span>
+
+                        <?php if ($message->sender_id == $_SESSION['user_id']): ?>
+                            <span class="message-actions">
+                                <?php 
+                                $timeDiff = time() - strtotime($message->created_at); 
+                                if ($timeDiff <= 600): ?>
+                                    <i class="fa fa-edit edit-message" data-message-id="<?php echo $message->id; ?>" title="Edit"></i>
+                                <?php endif; 
+                                if ($timeDiff <= 3600): ?>
+                                    <i class="fa fa-trash delete-message" data-message-id="<?php echo $message->id; ?>" title="Delete"></i>
+                                <?php endif; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <form id="messageForm" class="message-form" method="post" action="
+            <?php
+            if ($_SESSION['user_role'] == 'VT-Member' ) {
+                echo URLROOT . '/verification_team/contact_admin/' . $data['user']['UserID'];
+            }elseif ($_SESSION['user_role'] == 'Admin' ) {
+                    echo URLROOT . '/admin/sendMessage/' . $data['user']['UserID'];
+            } elseif ($_SESSION['user_role'] == 'Student') {
+                echo URLROOT . '/jobs/sendMessage/' . $data['post']->JobID;
+            }
+            ?>
+        ">
+            <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id']; ?>" />
+            <input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $data['user']['UserID']; ?>" />
+            
+            <!-- Ensure topic and email is always set -->
+            <input type="hidden" name="topic" id="topic" value="<?php echo htmlspecialchars($data['topic'] ?? 'General Information'); ?>" />
+            <input type="hidden" name="email" id="email" value="<?php echo htmlspecialchars($data['email'] ?? null); ?>" />
+
+            <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo htmlspecialchars($data['message_details'] ?? ''); ?>" />
+            <button type="submit" class="send-btn">Send</button>
+        </form> 
+
+            
+        </div>    
+    
 </div>
+
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/chat.js"></script>
 
 <script>
 document.getElementById("contactForm").addEventListener("submit", function(event) {

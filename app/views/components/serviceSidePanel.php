@@ -52,6 +52,12 @@
             Trending Companies
         </button>
 
+        <!-- Messages -->
+        <button class="nav-btn" data-paths="/UniQuest/service_provider/messages_stu">
+        <span class="material-symbols-outlined">sms</span>
+            Messages
+        </button>
+
         <!-- Premium -->
         <button class="nav-btn" data-path="/UniQuest/service_provider/premium">
         <span class="material-symbols-outlined">workspace_premium</span>
