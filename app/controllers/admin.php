@@ -550,6 +550,7 @@ class Admin extends Controller
             // Fetch previous messages to determine the last topic if not provided
             $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
             $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+            $userRole = $this->model->getUserRoleByID($userID)->Role;
 
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
@@ -588,7 +589,18 @@ class Admin extends Controller
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
-                    redirect('admin/user_detail/' . $userID);
+                    if($_SESSION['user_role'] == 'Admin') {
+                        if($userRole == 'Student') {
+                            Redirect::to(URLROOT . '/admin/messages_stu');
+                        } elseif ($userRole == 'Company') {
+                            Redirect::to(URLROOT . '/admin/messages_com');
+                        } elseif ($userRole == 'VT-Member') {
+                            Redirect::to(URLROOT . '/admin/messages_ver');
+                        }
+                    else{
+                        die('Something went wrong');
+                    }    
+                    }
                 } else {
                     die('Something went wrong while sending the message.');
                 }

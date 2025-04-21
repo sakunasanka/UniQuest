@@ -81,16 +81,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="notification-icon">
                         <i class="fas ${getIcon(notification.type)}"></i>
                     </div>
-                    <div class="notification-content">
-                        ${notification.related_url ? `
-                            <a href="/UniQuest${notification.related_url}" class="notification-link mark-read" data-id="${notification.id}" data-role="${userRole}">
-                                ${notification.message}
-                            </a>` 
-                            : 
-                            `<span class="notification-link mark-read" data-id="${notification.id}" data-role="${userRole}">
-                                ${notification.message}
-                            </span>`}
-                        <small>${timeAgo}</small>
+                    <div class="notification-content-wrapper">
+                        <div class="notification-title ${notification.type}">
+                            ${notification.title}
+                        </div>
+                        <div class="notification-content">
+                            ${notification.related_url ? `
+                                <a href="/UniQuest${notification.related_url}" class="notification-link mark-read" data-id="${notification.id}" data-role="${userRole}">
+                                    ${notification.message}
+                                </a>` 
+                                : 
+                                `<span class="notification-link mark-read" data-id="${notification.id}" data-role="${userRole}">
+                                    ${notification.message}
+                                </span>`}
+                            <small class="notification-time">${timeAgo}</small>
+                        </div>
                     </div>
                     ${notification.is_read ? '' : `
                     <span class="mark-read" data-id="${notification.id}" data-role="${userRole}">
