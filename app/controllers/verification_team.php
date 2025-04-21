@@ -336,58 +336,77 @@ class Verification_team extends Controller
         $this->view('pages/verification_team/notification_alerts');
     }
 
-    public function contact_admin()
+    public function contact_admin($userID)
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            // Data for the contact form
-            $data = [
-                'email' => trim($_POST['email'] ?? ''),
-                'topic' => trim($_POST['topic'] ?? ''),
-                'message' => trim($_POST['message'] ?? ''),
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
 
-                'email_err' => '',
-                'topic_err' => '',
-                'message_err' => ''
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
+            $data = [
+                'userID' => $userID,
+                'email' => $email, 
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
             ];
 
-            // Validation checks
-            if (empty($data['email'])) {
-                $data['name_err'] = 'Please enter your email';
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
             }
 
-            if (empty($data['topic'])) {
-                $data['topic_err'] = 'Please select a topic';
-            }
-
-            if (empty($data['message'])) {
-                $data['message_err'] = 'Please enter your message';
-            }
-
-            // Ensure no errors before submitting
-            if (empty($data['email_err']) && empty($data['topic_err']) && empty($data['message_err'])) {
-                if ($this->model('ContactModel')->sendMessage($data)) {
-                    flash('contact-msg', 'Your message has been sent successfully.');
-                    redirect('verification_team/contact_admin');
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('admin/user_detail/' . $userID);
                 } else {
-                    die('Something went wrong. Please try again.');
+                    die('Something went wrong while sending the message.');
                 }
             } else {
+                // Reload view with errors
                 $this->view('pages/verification_team/contact_admin', $data);
             }
         } else {
-            // Initialize default data for the view on GET request
+            // Load initial view without POST request
+            
             $data = [
+                'userID' => $userID,
                 'email' => '',
-                'topic' => '',
-                'message' => '',
-                'email_err' => '',
-                'topic_err' => '',
-                'message_err' => ''
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
             ];
 
-            $this->view('pages/verification_team/contact_admin', $data);
+            $this->view('pages/verification_team/contact_admin', $data);;
         }
     }
 
@@ -422,4 +441,5 @@ class Verification_team extends Controller
         ]);
         exit;
     }
+
 }
