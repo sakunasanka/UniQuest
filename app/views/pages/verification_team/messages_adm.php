@@ -4,7 +4,7 @@
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
 
     <!-- Content Area -->
     <main class="content-area">
@@ -26,8 +26,8 @@
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php if ($data['messages_stu']) : ?>
-                        <?php foreach ($data['messages_stu'] as $message): ?>
+                    <?php if ($data['messages_adm']) : ?>
+                        <?php foreach ($data['messages_adm'] as $message): ?>
                             <tr>
                                 <td><?php echo $message->topic ?></td>
                                 <td><?php echo $message->user_email ?></td>
@@ -35,10 +35,10 @@
                                 <td><?php echo $message->created_at ?></td>
                                 <td><span class="status active"><?php echo $message->read_status ?></span></td>
                                 <td class="action">
-                                <?php if ($message->sender_role == 'Student') : ?>
+                                <?php if ($message->sender_role == 'Admin') : ?>
                                     <button class="open-btn-2 material-symbols-outlined action-btn view" 
                                             onclick="openChatPopup('<?php echo $message->sender_id; ?>')">preview</button>
-                                <?php elseif ($message->receiver_role == 'Student'):?>
+                                <?php elseif ($message->receiver_role == 'Admin'):?>
                                     <button class="open-btn-2 material-symbols-outlined action-btn view" 
                                             onclick="openChatPopup('<?php echo $message->receiver_id; ?>')">preview</button>
                                 <?php endif; ?>
@@ -60,7 +60,7 @@
 </div>
 
 <!-- Create a hidden form to submit the user ID -->
-<form id="chatForm" action="<?php echo URLROOT; ?>/service_provider/messages_stu" method="post" style="display: none;">
+<form id="chatForm" action="<?php echo URLROOT; ?>/verification_team/messages_adm" method="post" style="display: none;">
     <input type="hidden" name="selectedUserID" id="selectedUserID" value="">
 </form>
 
@@ -97,11 +97,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //Refresh the page when the popup is closed
 closePopupBtn?.addEventListener("click", function () {
-    window.location.href = "/UniQuest/service_provider/messages_stu";
+    window.location.href = "/UniQuest/verification_team/messages_adm";
 });
 
 backgroundOverlay?.addEventListener("click", function () {
-    window.location.href = "/UniQuest/service_provider/messages_stu";
+    window.location.href = "/UniQuest/verification_team/messages_adm";
 });
 
 </script>

@@ -113,6 +113,9 @@ class companyModel extends Model
 
     public function updateSubscription($user_id, $plan, $start_date, $end_date, $status) {
         try {
+            $this->db->beginTransaction();
+            
+            // Update subscription
             $this->db->query('UPDATE company 
                              SET subscription_plan = :plan,
                                  subscription_start_date = :start_date,
@@ -126,10 +129,52 @@ class companyModel extends Model
             $this->db->bind(':end_date', $end_date);
             $this->db->bind(':status', $status);
             
-            return $this->db->execute();
+            if (!$this->db->execute()) {
+                throw new Exception("Failed to update subscription");
+            }
+            
+            // Add notifications
+            $this->addSubscriptionNotification(
+                $user_id,
+                'Subscription Expiry Warning',
+                'Your subscription plan will expire in 2 days.',
+                date('Y-m-d H:i:s', strtotime($end_date . ' -2 days'))
+            );
+            
+            $this->addSubscriptionNotification(
+                $user_id,
+                'Subscription Expiry Warning',
+                'Your subscription plan will expire in 1 day.',
+                date('Y-m-d H:i:s', strtotime($end_date . ' -1 day'))
+            );
+            
+            $this->addSubscriptionNotification(
+                $user_id,
+                'Subscription Expiry Warning',
+                'Your subscription plan has expired.',
+                $end_date
+            );
+            
+            $this->db->commit();
+            return true;
         } catch (Exception $e) {
+            $this->db->rollBack();
             error_log("Database error in updateSubscription: " . $e->getMessage());
             return false;
+        }
+    }
+    
+    private function addSubscriptionNotification($user_id, $title, $message, $date) {
+        $this->db->query('INSERT INTO notifications (UserID, type, title, message, created_at) 
+              VALUES (:user_id, "Warning", :title, :message, :date)');
+        
+        $this->db->bind(':user_id', $user_id);
+        $this->db->bind(':title', $title);
+        $this->db->bind(':message', $message);
+        $this->db->bind(':date', $date);
+        
+        if (!$this->db->execute()) {
+            throw new Exception("Failed to create notification");
         }
     }
 

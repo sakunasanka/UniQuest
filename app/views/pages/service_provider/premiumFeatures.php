@@ -98,10 +98,10 @@
             planPrice = 5000;
         }
 
-        if (plan == 'professional' && status == 'active') {
+        if (plan == 'professional') {
             Flash.show("You are currently on the Professional plan.<br>" + remainingDays +" until your plan expires.", "error");
         }
-        else if (plan == 'enterprise' && status == 'active') {
+        else if (plan == 'enterprise') {
             Flash.show("You are currently on the Enterprise plan.<br>" + remainingDays +" until your plan expires.", "error");
         }
         else {

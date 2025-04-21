@@ -84,3 +84,12 @@ function flash($name) {
 </script>
 <?php unset($_SESSION['show_contact_us_success']); ?>
 <?php endif; ?>
+
+<?php if(isset($_SESSION['show_contact_us_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("An error occurred while sending your message. Please try again later.", "error");
+    });
+</script>
+<?php unset($_SESSION['show_contact_us_error']); ?>
+<?php endif; ?>

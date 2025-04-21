@@ -203,3 +203,63 @@ function notifyMessageToAdminFromCompany($adminID, $messageFromAdmin, $companyID
         return false;
     }
 }
+
+function notifyMessageToCompanyFromStudent($companyID, $messageFromStudent, $studentID, $studentName) {
+    try {
+        $message = "From: {$studentName}<br>{$messageFromStudent}";
+        $title = "Message from Student";
+        $type = 'message';
+        $link = "/service_provider/messages_stu?userID={$studentID}";
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyMessageToStudentFromCompany($studentID, $messageFromCompany, $companyID, $companyName) {
+    try {
+        $message = "From: {$companyName}<br>{$messageFromCompany}";
+        $title = "Message from Company";
+        $type = 'message';
+        $link = "/jobs/companydescription/{$companyID}";
+        
+        return sendNotification(
+            $studentID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyMessageToAdminFromVt($adminID, $messageFromVt, $VtID, $VtName) {
+    try {
+        $message = "From: {$VtName}<br>{$messageFromVt}";
+        $title = "Message from VT-Member";
+        $type = 'message';
+        $link = "/admin/messages_ver";
+        
+        return sendNotification(
+            $adminID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}

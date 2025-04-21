@@ -35,19 +35,6 @@
                     <div class="message1 <?php echo $message->sender_id == $_SESSION['user_id'] ? 'sent' : 'received'; ?>">
                         <?php echo htmlspecialchars($message->message); ?>
                         <span class="message-time"> <?php echo $messageTime; ?> </span>
-
-                        <?php if ($message->sender_id == $_SESSION['user_id']): ?>
-                            <span class="message-actions">
-                                <?php 
-                                $timeDiff = time() - strtotime($message->created_at); 
-                                if ($timeDiff <= 600): ?>
-                                    <i class="fa fa-edit edit-message" data-message-id="<?php echo $message->id; ?>" title="Edit"></i>
-                                <?php endif; 
-                                if ($timeDiff <= 3600): ?>
-                                    <i class="fa fa-trash delete-message" data-message-id="<?php echo $message->id; ?>" title="Delete"></i>
-                                <?php endif; ?>
-                            </span>
-                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -59,7 +46,7 @@
             }elseif ($_SESSION['user_role'] == 'Company') {
                     echo URLROOT . '/service_provider/sendMessage/' . $data['user']['UserID'];
             }elseif ($_SESSION['user_role'] == 'VT-Member') {
-                    echo URLROOT . '/verification_team/contact_admin/' . $data['user']['UserID'];
+                    echo URLROOT . '/verification_team/sendMessage/' . $data['user']['UserID'];
             } elseif ($_SESSION['user_role'] == 'Student') {
                 echo URLROOT . '/jobs/sendMessage/' . $data['post']->JobID;
             }
