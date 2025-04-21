@@ -1,3 +1,4 @@
+
 <?php
 class Service_provider extends Controller
 {
@@ -11,7 +12,7 @@ class Service_provider extends Controller
         AuthMiddleware::requireRole('Company');
 
         // Load model
-        $this->model = $this->model('userModel');
+        $this->model = $this->model('UserModel');
     }
 
     private function prepareEditProfileData($post = [], $files = [])
@@ -105,9 +106,17 @@ class Service_provider extends Controller
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
-                    flash('contact-msg', 'Your message has been sent successfully.');
+                    
+                    //send notification for each admin
+                    $admins = $this->model->getAdminIds();
+                    foreach ($admins as $admin) {
+                        notifyMessageToAdminFromCompany($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
+                    }
+                    $_SESSION['show_contact_us_success'] = true;
+
                     Redirect::to(URLROOT . '/service_provider/contact_admin');
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong. Please try again.');
                 }
             } else {
@@ -116,7 +125,7 @@ class Service_provider extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'email' => '',
+                'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
                 'email_err' => '',
@@ -683,6 +692,7 @@ class Service_provider extends Controller
             );
 
             echo json_encode(['status' => 'success']);
+            notifyPremiumPlanActive($user_id, $plan);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Database update failed']);
         }
@@ -938,7 +948,7 @@ class Service_provider extends Controller
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
             Redirect::to($previousURL);
         }
-        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 20) {
+        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 5) {
             $_SESSION['show_job_post_error_pro'] = true;
             $_SESSION['remaining_days'] = $remainingDays;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
@@ -1178,6 +1188,163 @@ class Service_provider extends Controller
         }
     }
 
+    public function messages_stu($userID = null)
+    {
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
+        $messages_stu = $this->model('ContactModel')->getMessagesStuCom();
+
+        // Initialize data with the message list
+        $data = [
+            'messages_stu' => $messages_stu,
+            
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+
+        $this->view('pages/service_provider/messages_stu', $data);
+    }
+
+    public function messages_add($userID = null)
+    { 
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
+        $messages_add = $this->model('ContactModel')->getMessagesAddCom();
+
+        // Initialize data with the message list
+        $data = [
+            'messages_add' => $messages_add,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+        
+        $this->view('pages/service_provider/messages_add', $data);
+    }
+    
+    public function sendMessage($userID)
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
+            $data = [
+                'userID' => $userID,
+                'email' => $email, 
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
+            ];
+
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
+            }
+
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    $_SESSION['show_contact_us_success'] = true;
+                    notifyMessageToStudentFromCompany($data['receiver_id'], $data['messageInput'], $data['sender_id'], $_SESSION['user_name']);
+                    redirect('service_provider/messages_stu/' . $userID);
+                } else {
+                    $_SESSION['show_contact_us_error'] = true;
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with errors
+                $this->loadUserDetailView($data);
+            }
+        } else {
+            // Load initial view without POST request
+            
+            $data = [
+                'userID' => $userID,
+                'email' => '',
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
+        }
+    }
+    private function loadUserDetailView($data)
+    {
+        // Load the view with the provided data
+        $this->view('pages/service_provider/messages_stu', $data);
+        $this->view('pages/service_provider/messages_add', $data);
+    }
+
     public function markAllRead() {
         if (!isset($_SESSION['user_id'])) {
             redirect('users/login');
@@ -1211,4 +1378,4 @@ class Service_provider extends Controller
         ]);
         exit;
     }
-}
+}    

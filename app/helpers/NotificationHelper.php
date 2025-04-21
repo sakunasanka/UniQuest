@@ -143,3 +143,181 @@ function notifyAccountDeactivation($userId, $reason) {
         return false;
     }
 }
+
+// Notify a student about a new message from admin
+function notifyMessageFromAdmin($userID, $messageFromAdmin) {
+    try {
+        $message = $messageFromAdmin;
+        $title = "Message from Admin";
+        $type = 'message';
+        
+        return sendNotification(
+            $userID,
+            $message,
+            $title,
+            $type
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Notify a admin about a new message from student
+function notifyMessageToAdminFromStudent($adminID, $messageFromAdmin, $studentID, $studentName) {
+    try {
+        $message = "From: {$studentName}<br>{$messageFromAdmin}";
+        $title = "Message from Student";
+        $type = 'message';
+        $link = "/admin/messages_stu?userID={$studentID}";
+        
+        return sendNotification(
+            $adminID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyMessageToAdminFromCompany($adminID, $messageFromAdmin, $companyID, $companyName) {
+    try {
+        $message = "From: {$companyName}<br>{$messageFromAdmin}";
+        $title = "Message from Company";
+        $type = 'message';
+        $link = "/admin/messages_com?userID={$companyID}";
+        
+        return sendNotification(
+            $adminID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyMessageToCompanyFromStudent($companyID, $messageFromStudent, $studentID, $studentName) {
+    try {
+        $message = "From: {$studentName}<br>{$messageFromStudent}";
+        $title = "Message from Student";
+        $type = 'message';
+        $link = "/service_provider/messages_stu?userID={$studentID}";
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyMessageToStudentFromCompany($studentID, $messageFromCompany, $companyID, $companyName) {
+    try {
+        $message = "From: {$companyName}<br>{$messageFromCompany}";
+        $title = "Message from Company";
+        $type = 'message';
+        $link = "/jobs/companydescription/{$companyID}";
+        
+        return sendNotification(
+            $studentID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyMessageToAdminFromVt($adminID, $messageFromVt, $VtID, $VtName) {
+    try {
+        $message = "From: {$VtName}<br>{$messageFromVt}";
+        $title = "Message from VT-Member";
+        $type = 'message';
+        $link = "/admin/messages_ver";
+        
+        return sendNotification(
+            $adminID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyPremiumPlanActive($companyID, $plan) {
+    try {
+        $message = "Your {$plan} plan is now active.";
+        $title = "Plan Activated";
+        $type = 'success';
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $type
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyJobsApply($companyID, $jobTitle, $jobID) {
+    try {
+        $message = "A new application has been received for the job: {$jobTitle}";
+        $title = "New Job Application";
+        $type = 'info';
+        $link = "/service_provider/new_applications/{$jobID}";
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyComplaintToAdmin($adminID, $jobName, $studentName) {
+    try {
+        $message = "A new complaint has been received from {$studentName} regarding job: {$jobName}";
+        $title = "New Complaint Received";
+        $type = 'complaint';
+        $link = "/admin/all_complaints";
+        
+        return sendNotification(
+            $adminID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send application acceptance notification: " . $e->getMessage());
+        return false;
+    }
+}    

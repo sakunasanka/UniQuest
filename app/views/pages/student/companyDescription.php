@@ -1,6 +1,7 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
@@ -110,6 +111,11 @@
                         </div>
                     <?php endif; ?>
                 </div>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
+                    <div class="buttons">
+                        <button id="openPopupBtn" class="contact-btn-2">Contact</button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 

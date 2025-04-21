@@ -539,6 +539,7 @@ class Jobs extends Controller
             if (isset($_SESSION['user_id'])) {
                 $data['sender_id'] = $_SESSION['user_id'];
                 $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID);
+
             }
 
             $this->view('pages/student/jobsDescription', $data);
@@ -584,8 +585,11 @@ class Jobs extends Controller
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    notifyMessageToCompanyFromStudent($data['receiver_id'], $data['messageInput'], $data['sender_id'], $_SESSION['user_name']);
+                    $_SESSION['show_contact_us_success'] = true;
                     Redirect::to(URLROOT . '/jobs/jobsdescription/' . $id);
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong while sending the message.');
                 }
             } else {
@@ -687,6 +691,10 @@ class Jobs extends Controller
         } else {
             $data = [
                 'post' => $posts,
+                'user' => $this->model('userModel')->getUserDetails($posts->UserID),
+                'receiver_id' => $posts->UserID,
+                'messageInput' => '',
+                'messageInput_err' => '',
                 'jobs' => $jobs,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
@@ -699,6 +707,12 @@ class Jobs extends Controller
                 'comment_err' => '',
                 'existingReview' => $existingReview
             ];
+
+            if (isset($_SESSION['user_id'])) {
+                $data['sender_id'] = $_SESSION['user_id'];
+                $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->UserID);
+
+            }
 
             $this->view('pages/student/companyDescription', $data);
         }
