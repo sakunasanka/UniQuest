@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
@@ -9,7 +9,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <?php $columns = [
-            "UserID" => "UserID",
+            "FullName" => "Full Name",
             "Email" => "Email",
             "ContactNo" => "Mobile Number",
             "RegisterDate" => "Registered Date",
@@ -37,7 +37,7 @@
                     <?php if ($data['vtMembers']) : ?>
                         <?php foreach ($data['vtMembers'] as $user) : ?>
                             <tr>
-                            <td><?php echo $user->UserID; ?></td>
+                            <td><?php echo $user->FullName; ?></td>
                             <td><?php echo $user->Email; ?></td>
                             <td><?php echo $user->ContactNo; ?></td>
                             <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>

@@ -57,5 +57,21 @@ class Sorter {
         $headerHtml .= "</tr>";
         return $headerHtml;
     }
+
+    public function renderMainSort($columns) {
+        $sortHtml = "<select class='filter' name='sortBy'onchange='window.location.href=this.value'>";
+        $sortHtml .= "<option value=''>Sort By</option>";
+        
+        foreach ($columns as $key => $column) {
+            // $newOrder = ($this->currentSort === $key && $this->currentOrder === "ASC") ? "DESC" : "ASC";
+            $sortUrl = $this->baseUrl . "&sort=$key&order=DESC";
+            $selected = $this->currentSort === $key ? "selected" : "";
+            
+            $sortHtml .= "<option value='$sortUrl' $selected>$column</option>";
+        }
+
+        $sortHtml .= "</select>";
+        return $sortHtml;
+    }
 }
 

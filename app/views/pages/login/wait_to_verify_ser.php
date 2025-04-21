@@ -44,22 +44,22 @@
 
 <script>
     function goToJobs() {
-        window.location.href = "/uniquest/service_provider/ongoing_jobs";
+        window.location.href = "/UniQuest/service_provider/active_jobs";
     }
 
     function goToApplications() {
-        window.location.href = "/uniquest/service_provider/new_applications";
+        window.location.href = "/UniQuest/service_provider/new_applications";
     }
 
     function goToAnalytics() {
-        window.location.href = "/uniquest/service_provider/analytics";
+        window.location.href = "/UniQuest/service_provider/analytics";
     }
 
     function goToReviews() {
-        window.location.href = "/uniquest/service_provider/reviews";
+        window.location.href = "/UniQuest/service_provider/reviews";
     }
 
     function goToPremiums() {
-        window.location.href = "/uniquest/service_provider/premium";
+        window.location.href = "/UniQuest/service_provider/premium";
     }
 </script>

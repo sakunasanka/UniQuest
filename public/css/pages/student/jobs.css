@@ -226,3 +226,14 @@ body {
     overflow: hidden;
     position: absolute; /* Ensures it doesn't affect the layout */
 }
+
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #555;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}

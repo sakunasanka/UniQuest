@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
@@ -9,7 +9,7 @@
     <!-- Content Area -->
     <main class="content-area">
         <?php $columns = [
-            "UserID" => "UserID",
+            "FullName" => "Full Name",
             "Email" => "Email",
             "ContactNo" => "Mobile Number",
             "RegisterDate" => "Registered Date",
@@ -25,7 +25,7 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <!-- <button class="add-btn" data-path="/uniquest/admin/add_student">
+                <!-- <button class="add-btn" data-path="/UniQuest/admin/add_student">
                     <span class="material-symbols-outlined">person_add</span>
                     <span class="add-btn-text">Add Student</span>
                 </button> -->
@@ -36,7 +36,7 @@
                     <?php if ($data['students']) : ?>
                         <?php foreach ($data['students'] as $student) : ?>
                             <tr>
-                            <td><?php echo $student->UserID; ?></td>
+                            <td><?php echo $student->FullName; ?></td>
                             <td><?php echo $student->Email; ?></td>
                             <td><?php echo $student->ContactNo; ?></td>
                             <td><?php echo substr($student->RegisterDate, 0, 10); ?></td>

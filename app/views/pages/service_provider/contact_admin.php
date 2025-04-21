@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/contact_form.css">
 
 <div class="main-container">
@@ -9,7 +9,6 @@
             <div class="contact-left">
                 <h1>Contact Us</h1>
                 <form id="contactForm" action="<?php echo URLROOT; ?>/service_provider/contact_admin" method="POST">
-                    
                     <label for="email">Email:</label>
                     <input type="text" id="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" required>
                     <span class="error-message"><?php echo $data['email_err']; ?></span>
@@ -17,16 +16,16 @@
                     <label for="topic">Topic:</label>
                     <select id="topic" name="topic" required>
                         <option value="job" <?php echo ($data['topic'] == 'job') ? 'selected' : ''; ?>>Job</option>
-                        <option value="internship"<?php echo ($data['topic'] == 'internship') ? 'selected' : ''; ?>>Internship</option>
-                        <option value="general"<?php echo ($data['topic'] == 'general') ? 'selected' : ''; ?>>General Information</option>
+                        <option value="internship" <?php echo ($data['topic'] == 'internship') ? 'selected' : ''; ?>>Internship</option>
+                        <option value="general information" <?php echo ($data['topic'] == 'general information') ? 'selected' : ''; ?>>General Information</option>
                     </select>
-                    
+
                     <span class="error-message"><?php echo $data['topic_err']; ?></span>
 
                     <label for="message">Message:</label>
                     <textarea id="message" name="message" placeholder="Message" required><?php echo $data['message']; ?></textarea>
                     <span class="error-message"><?php echo $data['message_err']; ?></span>
-
+                    
                     <button type="submit">Send</button>
                 </form>
             </div>
@@ -36,6 +35,9 @@
             </div>
         </div>    
     </div>
+</div>
+
+<script type="module" src="<?php echo URLROOT; ?>/public/js/components/chat.js"></script>
 </div>
 
 <script>

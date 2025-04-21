@@ -1,19 +1,4 @@
-<?php 
-    if (!isset($_SESSION['user_role'])) {
-        require APPROOT . '/views/components/header.php';
-    }
-    else if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/stu_header.php';
-    } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/ser_header.php';
-    } 
-    else if ($_SESSION['user_role'] == 'Admin') {
-        require APPROOT . '/views/components/adm_header.php';
-    }
-    else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ver_header.php';
-    }
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
 <?php require APPROOT . '/views/components/chat-sent.php'; ?>
@@ -44,7 +29,7 @@
                     <button onclick="goToApplications(<?php echo $post->JobID; ?>)" class="apply-btn">View Applications</button>
                 <?php endif; ?>
             </div>
-            <p><?php echo $data['post']->Location; ?></p>
+            <p><?php echo $data['post']->City; ?></p>
             <h3>Description:</h3>
             <ul>
             <?php
@@ -117,7 +102,11 @@
                     <?php foreach ($data['reviews'] as $index => $review): ?>
                         <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
-                                <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                <div class="review-header">
+                                    <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                    <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
+                                </div>
+
                                 <div class="review-details">
                                     <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
                                     <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
@@ -151,7 +140,7 @@
                         <button class="seemore" style="margin-top: 1px;"><p onclick="toggleMoreReviews()">See more reviews...</p></button>
                     <?php endif; ?>
                     
-                <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company'): ?>
+                <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $data['post']->Status != 'Pending'): ?>
                     <button onclick="goToReport(<?php echo $post->JobID; ?>)" class="apply-btn">Generate Report</button>
 
                     <?php if (count($data['reviews']) >= 3): ?> 
@@ -195,9 +184,9 @@
                 <h3><?php echo $data['post']->Title; ?></h3>
                 <p><b>@<span><?php echo $data['post']->CompanyName; ?></b></span></p>
                 
-                <p><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
+                <p><?php echo converttimetoreadableformat($post->PublishDate); ?></p>
                 <p class="job-rating"><i class="fa fa-star"></i> <?php echo $data['displayRating']; ?></p>
-                <p><?php echo $data['post']->Location; ?></p>
+                <p><?php echo $data['post']->City; ?></p>
                 <table class="table">
                     <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                     <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
@@ -205,10 +194,35 @@
                 </table>
 
                 <div class="social-media-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <?php if (!empty($post->Website)): ?>
+                        <?php $website = (strpos($post->Website, 'http') === 0) ? $post->Website : 'https://' . $post->Website; ?>
+                        <a href="<?php echo htmlspecialchars($website); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Company website">
+                            <i class="fas fa-globe"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if (!empty($post->LinkedIn)): ?>
+                        <?php $linkedin = (strpos($post->LinkedIn, 'http') === 0) ? $post->LinkedIn : 'https://www.linkedin.com/' . ltrim($post->LinkedIn, '/'); ?>
+                        <a href="<?php echo htmlspecialchars($linkedin); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn profile">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if (!empty($post->Facebook)): ?>
+                        <?php $facebook = (strpos($post->Facebook, 'http') === 0) ? $post->Facebook : 'https://www.facebook.com/' . ltrim($post->Facebook, '/'); ?>
+                        <a href="<?php echo htmlspecialchars($facebook); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook page">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="buttons">
@@ -226,7 +240,7 @@
 <script>
     
 function goToMakeComplaint(jobId) {
-    window.location.href = "/uniquest/student/make_complain/" + jobId;
+    window.location.href = "/UniQuest/student/make_complain/" + jobId;
 }
 
 function goToApplyPage(jobId) {
@@ -234,7 +248,7 @@ function goToApplyPage(jobId) {
 }
 
 function goToReport(jobId) {
-    window.location.href = "/uniquest/report/JobReport/" + jobId;
+window.location.href = "/uniquest/report/JobReport/" + jobId;
 }
 
 function toggleBookmark(icon, jobId) {
@@ -284,7 +298,7 @@ function shareJob(jobId, jobType) {
 }
 
 function goToCompanyDescription($companyID) {
-    window.location.href = "/uniquest/jobs/companydescription/"+$companyID;
+    window.location.href = "/UniQuest/jobs/companydescription/"+$companyID;
 }
 
 function goToApplications(jobId) {

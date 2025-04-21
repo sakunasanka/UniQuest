@@ -575,7 +575,7 @@ public function getAllApplications($userId) {
         // }
     
     }
-    public function getApplicationsByID($applicationID)
+    public function getApplicationByID($applicationID)
     {
         // try {
             // Prepare the SQL query
@@ -625,6 +625,28 @@ public function getAllApplications($userId) {
 
         // Execute the query and return the results
         return $this->db->resultSet();
+    }
+
+    public function approveApplication($applicationID) {
+        try {
+            $this->db->query("UPDATE applications SET status = 'Accepted' WHERE id = :applicationID");
+            $this->db->bind(':applicationID', $applicationID);
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function rejectApplication($applicationID) {
+        try {
+            $this->db->query("UPDATE applications SET status = 'Rejected' WHERE id = :applicationID");
+            $this->db->bind(':applicationID', $applicationID);
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
     }
     
 }

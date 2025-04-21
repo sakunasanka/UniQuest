@@ -50,7 +50,7 @@
                     <div class="form-row">
                         <!-- <div class="input-center">
                             <div class="reg">
-                                <span>Do not have an account?</span> <a href="/uniquest/register"> Register now</a>
+                                <span>Do not have an account?</span> <a href="/UniQuest/register"> Register now</a>
                             </div>
                         </div> -->
                     </div>

@@ -159,6 +159,16 @@ class AdminModel extends Model {
         }
     }
 
+    public function getReasonByType($reasonType) {
+        try {
+            // retrieve a single reason by type
+            $reason = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName, Reason', 'AND', '', '', 0, 1, false);
+            return $reason;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function updateReason($reasonID, $reasonName, $reason) {
         try {
             $reason = [
@@ -217,7 +227,7 @@ class AdminModel extends Model {
     }
 
     //add verificationlogs 
-    public function addVerificationLog($entityID, $entityType, $action, $reasonID = 10) {
+    public function addVerificationLog($entityID, $entityType, $action, $reasonID) {
         try {
             $log = [
                 'EntityID' => $entityID,
@@ -235,7 +245,7 @@ class AdminModel extends Model {
     //retrieve log for last verification log by entityID order by date desc
     public function getLastVerificationLog($entityID) {
         try {
-            $log = $this->select('v_verification_logs', [['EntityID', '=', $entityID]], 'Action, ActionDate, ActionByID, ActionByName, Reason', 'AND', '', 'ActionDate DESC', 0, 1, false);
+            $log = $this->select('v_verification_logs', [['EntityID', '=', $entityID]], 'Action, ActionDate, ActionByID, ActionByName, ActionByRole, Reason', 'AND', '', 'ActionDate DESC', 0, 1, false);
             if ($log) {
                 $log->ActionDate = date('Y-m-d H:i:s', strtotime($log->ActionDate));
                 return $log;
@@ -301,7 +311,42 @@ class AdminModel extends Model {
             return $e->getMessage();
         }
     }
-    // Add these methods to your AdminModel class
+
+    // get all districts
+    public function getDistricts() {
+        try {
+            $districts = $this->select('districts', [], 'DistrictID, DistrictName', 'AND', '', '', 0, 1, true);
+            return $districts;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    //get all cities for a district
+    public function getCitiesByDistrict($districtID) {
+        try {
+            $cities = $this->select('cities', [['DistrictID', '=', $districtID]], 'CityID, CityName', 'AND', '', '', 0, 1, true);
+            return $cities;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    //restrict posting for a company
+    public function restrictPosting($companyID)
+    {
+        try {
+            $this->update('company', ['can_post' => 'N'], ['CompanyID' => $companyID]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
     public function getRegistrationStats($months = 5) {
         try {
             $query = "SELECT 
@@ -433,6 +478,7 @@ class AdminModel extends Model {
             return [];
         }
     }
+
 }
 
 ?>

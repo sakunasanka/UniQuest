@@ -14,8 +14,9 @@
                 <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
             </button>
             <div class="dropdown-menu">
-                <button class="nav-btn" data-path="/UniQuest/service_provider/ongoing_jobs">Ongoing Jobs</button>
-                <button class="nav-btn" data-path="/UniQuest/service_provider/offered_jobs">Offered Jobs</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/pending_jobs">Pending Jobs</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/active_jobs">Active Jobs</button>
+                <button class="nav-btn" data-path="/UniQuest/service_provider/deactive_jobs">Deactive Jobs</button>
                 <button class="nav-btn" data-path="/UniQuest/service_provider/jobpost">Publish a Job</button>
             </div>
         </div>
@@ -33,15 +34,21 @@
         </button>
 
         <!-- Reviews -->
-        <button class="nav-btn" data-path="/UniQuest/service_provider/reviews">
+        <!-- <button class="nav-btn" data-path="/UniQuest/user/profile#reviews-section">
             <span class="material-symbols-outlined"> rate_review </span>
             Reviews
-        </button>
+        </button> -->
 
         <!-- Trending companies -->
-        <button class="nav-btn" data-path="/uniquest/jobs/trendyCompany">
+        <button class="nav-btn" data-path="/UniQuest/jobs/trendyCompany">
             <span class="material-symbols-outlined"> trending_up </span>
             Trending Companies
+        </button>
+
+        <!-- Messages -->
+        <button class="nav-btn" data-paths="/UniQuest/service_provider/messages_stu">
+        <span class="material-symbols-outlined">sms</span>
+            Messages
         </button>
 
         <!-- Premium -->

@@ -1,19 +1,4 @@
-<?php 
-    if (!isset($_SESSION['user_role'])) {
-        require APPROOT . '/views/components/header.php';
-    }
-    else if ($_SESSION['user_role'] == 'Student') {
-        require APPROOT . '/views/components/stu_header.php';
-    } else if ($_SESSION['user_role'] == 'Company') {
-        require APPROOT . '/views/components/ser_header.php';
-    } 
-    else if ($_SESSION['user_role'] == 'Admin') {
-        require APPROOT . '/views/components/adm_header.php';
-    }
-    else if ($_SESSION['user_role'] == 'VT-Member') {
-        require APPROOT . '/views/components/ver_header.php';
-    }
-?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -42,12 +27,17 @@
                     </div>
                 </div>
             </div> -->
-        
+
             <h1 class= "H1">Trending Companies</h1>
             <h2 class= "H2">Check out the top-rated companies based on the student reviews</h2>
 
             <div class="cards-container">
-                <?php foreach($data['trendy_companies'] as $post): ?>
+                <?php if(empty($data['trendy_companies'])): ?>
+                    <div class="no-results">No results found.</div>
+                <?php endif; ?>
+                
+                <?php foreach($data['trendy_companies'] as $index=>$post): ?>
+
                     <div class="card">
                         <div class="card-logo" onclick="goToCompanyDescription(<?php echo $post['CompanyID']; ?>)">
                             <img
@@ -57,44 +47,69 @@
                                 alt="Profile Picture">
                         </div>
                         <div class="card-content">
-                            <div class="content-hover-class" onclick="goToCompanyDescription()">
+                            <div class="content-hover-class" onclick="goToCompanyDescription(<?php echo $post['CompanyID']; ?>)">
                                 <div class="title-content">
                                     <h3 class="company-title"><?php echo $post['CompanyName']; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i><?php echo $post['display_rating']; ?>
+                                        <i class="fa fa-star"></i>
+                                        <?php
+                                        if (isset($data['displayRatings'][$post['CompanyID']]) && $data['displayRatings'][$post['CompanyID']] != 0) {
+                                            echo round($data['displayRatings'][$post['CompanyID']], 2);
+                                        } else {
+                                            echo 'N/A';
+                                        }
+                                        ?>
                                     </div>
                                 </div>
-                                <p class="review-count">Based on <span><?php echo $post['total_reviews']; ?></span> 
-                                   <?php 
-                                        if ($post['total_reviews'] == 1) {
-                                            echo 'review';
-                                        } else {
-                                            echo 'reviews';
-                                        }
-                                   ;?>
-                                </p>
-                                
+
+
                                 <div class="job-location-details">
                                     <?php echo $post['City']; ?>
                                 </div>
                             </div>
-                            
-                            <?php  if ($_SESSION['user_role'] == 'Student'):?>
+
+                            <?php if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] == 'Student')): ?>
                                 <div class="card-icons">
-                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>  
-                                    <i class="<?php echo in_array($post['CompanyID'], $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post['CompanyID']; ?>, this);"></i>  
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>
+                                    <i class="<?php echo in_array($post['CompanyID'], $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post['CompanyID']; ?>, this);"></i>
                                 </div>
-                            <?php else: ?>  
+                            <?php else: ?>
                                 <div class="card-icons">
-                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>  
-                                </div>  
-                            <?php endif;?>    
+                                    <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post['CompanyID']; ?>)"></i>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="social-media-icons">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            
+                            <?php if (!empty(($post['Website']))): ?>
+                                <?php $website = (strpos($post['Website'], 'http') === 0) ? $post['Website'] : 'https://' . $post['Website']; ?>
+                                <a href="<?php echo htmlspecialchars($website); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Company website">
+                                    <i class="fas fa-globe"></i>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($post['LinkedIn'])): ?>
+                                <?php $linkedin = (strpos($post['LinkedIn'], 'http') === 0) ? $post['LinkedIn'] : 'https://www.linkedin.com/' . ltrim($post['LinkedIn'], '/'); ?>
+                                <a href="<?php echo htmlspecialchars($linkedin); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="LinkedIn profile">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if (!empty($post['Facebook'])): ?>
+                                <?php $facebook = (strpos($post['Facebook'], 'http') === 0) ? $post['Facebook'] : 'https://www.facebook.com/' . ltrim($post['Facebook'], '/'); ?>
+                                <a href="<?php echo htmlspecialchars($facebook); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Facebook page">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

@@ -1,8 +1,8 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/premiumFeatures.css">
 
 <?php 
-    if(($data['companyInfo']-> subscription_plan == 'professional' || $data['companyInfo']-> subscription_plan == 'enterprise') && $data['companyInfo']-> subscription_status == 'active') {
+    if(($data['companyInfo']-> subscription_plan == 'professional' || $data['companyInfo']-> subscription_plan == 'enterprise')) {
         $currentDateTime = date('Y-m-d H:i:s');
         $remainingDays = converttimetodays(strtotime($data['companyInfo']->subscription_end_date) - strtotime($currentDateTime));
     }
@@ -40,7 +40,7 @@
                 <?php if($data['companyInfo']->subscription_plan == 'free'):?>
                 <button class="current-plan-btn">Current Plan</button>
                 <?php else:?>
-                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', '<?php echo ($data['companyInfo']->subscription_status)?>')">Upgrade to Starter</button>
+                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>')">Upgrade to Starter</button>
                 <?php endif;?>
             </div>
             
@@ -52,13 +52,14 @@
                     <li>✓ Post up to 20 job listings</li>
                     <li>✓ 50 candidate applications</li>
                     <li>✓ Generate Job Report</li>
+                    <li>✓ Edit Active Jobs</li>
                 </ul>
                 <hr class="option-bar">
                 <div class="plan-price">LKR 3000 <span>per month</span></div>
                 <?php if($data['companyInfo']->subscription_plan == 'professional'):?>
                 <button class="current-plan-btn">Current Plan</button>
                 <?php else:?>
-                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', '<?php echo ($data['companyInfo']->subscription_status)?>', 'professional')", onclick="initiatePayment('professional', 3000, <?php echo $_SESSION['user_id']; ?>);">Upgrade to Professional</button>
+                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', 'professional')", onclick="initiatePayment('professional', 3000, <?php echo $_SESSION['user_id']; ?>);">Upgrade to Professional</button>
                 <?php endif;?>
             </div>
             
@@ -70,6 +71,7 @@
                     <li>✓ Unlimited job listings</li>
                     <li>✓ Unlimited candidate applications</li>
                     <li>✓ Generate Job Report</li>
+                    <li>✓ Edit Active Jobs</li>
                     <li>✓ Prioritize Posts</li>
                 </ul>
                 <hr class="option-bar">
@@ -77,7 +79,7 @@
                 <?php if($data['companyInfo']->subscription_plan == 'enterprise'):?>
                 <button class="current-plan-btn">Current Plan</button>
                 <?php else:?>
-                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', '<?php echo ($data['companyInfo']->subscription_status)?>', 'enterprise')">Upgrade to Enterprise</button>
+                <button class="upgrade-btn" onclick="RemainingDaysAlert('<?php echo $data['companyInfo']->subscription_plan?>', 'enterprise')">Upgrade to Enterprise</button>
                 <?php endif;?>
             </div>
         </div>
@@ -85,7 +87,7 @@
 </div>
 
 <script>
-    function RemainingDaysAlert(plan, status, req_plan) {
+    function RemainingDaysAlert(plan, req_plan) {
 
         const remainingDays = <?php echo json_encode($remainingDays); ?>;
         let planPrice;
@@ -97,10 +99,10 @@
         }
 
         if (plan == 'professional' && status == 'active') {
-            Flash.show("You are currently on the Professional plan. " + remainingDays +" until your plan expires.", "error");
+            Flash.show("You are currently on the Professional plan.<br>" + remainingDays +" until your plan expires.", "error");
         }
         else if (plan == 'enterprise' && status == 'active') {
-            Flash.show("You are currently on the Enterprise plan. " + remainingDays +" until your plan expires.", "error");
+            Flash.show("You are currently on the Enterprise plan.<br>" + remainingDays +" until your plan expires.", "error");
         }
         else {
             initiatePayment(req_plan, planPrice, <?php echo $_SESSION['user_id']; ?>);

@@ -187,7 +187,7 @@ class RateAndReviewModel
 
                 // Fetch additional company details (CompanyLogo and City) from the companies table
                 $this->db->query('
-                    SELECT CompanyLogo, CompanyName, City
+                    SELECT CompanyLogo, CompanyName, City, Website, Facebook, LinkedIn
                     FROM companyreviews
                     WHERE CompanyID = :companyID
                 ');
@@ -208,6 +208,9 @@ class RateAndReviewModel
                     'CompanyLogo' => $companyDetails->CompanyLogo,
                     'CompanyName' => $companyDetails->CompanyName,
                     'City' => $companyDetails->City,
+                    'Website' => $companyDetails->Website,
+                    'Facebook' => $companyDetails->Facebook,
+                    'LinkedIn' => $companyDetails->LinkedIn,
                     'display_rating' => $displayRating
                 ];
             }

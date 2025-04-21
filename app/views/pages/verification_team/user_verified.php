@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ver_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -9,10 +9,10 @@
     <main class="content-area">
         <?php
         $columns = [
-            "UserID" => "UserID",
+            "Name" => "Name",
             "Email" => "Email",
             "Role" => "Account Type",
-            "RegisterDate" => "Registered Date",
+            "ActionDate" => "Verified Date",
             "Status" => "Status",
             "Actions" => "Actions"
         ];
@@ -31,13 +31,13 @@
                     <?php if ($data['users']) : ?>
                         <?php foreach ($data['users'] as $user) : ?>
                             <tr>
-                                <td><?php echo $user->UserID; ?></td>
+                                <td><?php echo $user->Name; ?></td>
                                 <td><?php echo $user->Email; ?></td>
                                 <td><?php echo $user->Role; ?></td>
                                 <td><?php echo substr($user->ActionDate, 0, 10); ?></td>
                                 <?php if ($user->Status == 'Active') : ?>
                                     <td><span class="status active">Active</span></td>
-                                <?php elseif ($user->Status == 'Deactive') : ?>
+                                <?php elseif ($user->Status == 'Deactive' || $user->Status == 'Pending Deletion') : ?>
                                     <td><span class="status inactive">Deactive</span></td>
                                 <?php endif; ?>
                                 <td class="action">
