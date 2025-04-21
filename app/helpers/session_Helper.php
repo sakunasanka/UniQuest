@@ -93,3 +93,21 @@ function flash($name) {
 </script>
 <?php unset($_SESSION['show_contact_us_error']); ?>
 <?php endif; ?>
+
+<?php if(isset($_SESSION['application_success'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Your application has been submitted successfully.", "success");
+    });
+</script>
+<?php unset($_SESSION['application_success']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['application_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("An error occurred while submitting your application. Please try again later.", "error");
+    });
+</script>
+<?php unset($_SESSION['application_error']); ?>
+<?php endif; ?>

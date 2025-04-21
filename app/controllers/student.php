@@ -889,6 +889,7 @@ class Student extends Controller
     }
     public function jobsApply($jobId)
     {
+        $posts = $this->model('M_jobpost')->getpostbyid($jobId);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
 
@@ -935,10 +936,19 @@ class Student extends Controller
                 
             $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
                 if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
-                    flash('application_success', 'Your application has been submitted successfully');
+                    // Notify the user about the successful application
+                    $_SESSION['application_success'] = true;
+
+                    notifyJobsApply(
+                        $posts->CompanyID,
+                        $posts->Title,
+                        $jobId
+                        
+                    );
                     redirect('student/all_app');
                 } else {
                     // Return to form with errors
+                    $_SESSION['application_error'] = true;
                     $this->view('pages/student/jobsApply', $data);
                 }
             } else {

@@ -692,6 +692,7 @@ class Service_provider extends Controller
             );
 
             echo json_encode(['status' => 'success']);
+            notifyPremiumPlanActive($user_id, $plan);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Database update failed']);
         }
