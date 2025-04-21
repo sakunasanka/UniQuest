@@ -329,3 +329,15 @@ body.dropdown-open {
 .notification-content {
     margin-top: 4px;
 }
+
+.notification-item.complaint {
+    border-left: 4px solid #ff851b; 
+}
+
+.notification-item.complaint .notification-icon {
+    color: #ff851b; 
+}
+
+.notification-title.complaint {
+    color: #ff851b; 
+}

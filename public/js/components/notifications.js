@@ -197,7 +197,8 @@ document.addEventListener('DOMContentLoaded', function() {
             'warning': 'fa-exclamation-triangle text-warning',
             'danger': 'fa-times-circle text-danger',
             'info': 'fa-info-circle text-info',
-            'message': 'fa-envelope text-primary'
+            'message': 'fa-envelope text-primary',
+            'complaint': 'fa-exclamation-circle text-complaint' 
         };
         return icons[type] || 'fa-bell';
     }

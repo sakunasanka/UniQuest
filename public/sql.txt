@@ -1036,7 +1036,9 @@ CREATE TABLE `notifications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `notifications` 
-MODIFY COLUMN `type` ENUM('info', 'success', 'warning', 'danger', 'message') NOT NULL;
+MODIFY COLUMN `type` ENUM('info', 'success', 'warning', 'danger', 'message', 'complaint') NOT NULL;
+
+
 
 
 -- Create the trigger for automatic date updates
