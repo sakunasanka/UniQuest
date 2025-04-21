@@ -260,6 +260,36 @@ class userModel extends Model
         }
     }
 
+    //add login log
+    public function addLoginLog($userId, $status, $reason, $role)
+    {
+        try {
+            $this->insert('user_login_activity', [
+                'UserId' => $userId,
+                'LoginStatus' => $status,
+                'Reason' => $reason,
+                'Role' => $role,
+                'LoginTime' => date('Y-m-d H:i:s')
+            ]);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+        }
+    }
+
+    //update user last login time
+    public function updateLastLogin($userId)
+    {
+        try {
+            $this->update('user', ['LastLogin' => date('Y-m-d H:i:s')], ['UserId' =>  $userId]);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+        }
+    }
+
     public function getUserDetails($userId)
     {
         try {
@@ -841,17 +871,17 @@ class userModel extends Model
         return $this->db->resultSet();
     }
 
-    public function getAdminIds() 
+    public function getAdminIds()
     {
         $this->db->query("SELECT AdminID FROM Admin");
         $admins = $this->db->resultSet();
     }
 
-    public function getAllUserIds() 
+    public function getAllUserIds()
     {
         $this->db->query("SELECT UserID FROM User");
         $users = $this->db->resultSet();
-        return array_map(function($user) {
+        return array_map(function ($user) {
             return $user->UserID;
         }, $users);
     }

@@ -1,6 +1,7 @@
 <?php
-class AdminModel extends Model {
-    
+class AdminModel extends Model
+{
+
     public function storeToken($email, $token, $expiration)
     {
         try {
@@ -124,7 +125,8 @@ class AdminModel extends Model {
         }
     }
 
-    public function getReasonsByType($reasonType) {
+    public function getReasonsByType($reasonType)
+    {
         try {
             $reasonNames = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName, Reason', 'AND', '', '', 0, 1, true);
             return $reasonNames;
@@ -133,7 +135,8 @@ class AdminModel extends Model {
         }
     }
 
-    public function getReasonByID($reasonID) {
+    public function getReasonByID($reasonID)
+    {
         try {
             $reason = $this->select('reason', [['ReasonID', '=', $reasonID]], 'Reason', 'AND', '', '', 0, 1, false);
             return $reason;
@@ -142,7 +145,8 @@ class AdminModel extends Model {
         }
     }
 
-    public function addReason($reasonName, $reason, $reasonType) {
+    public function addReason($reasonName, $reason, $reasonType)
+    {
         try {
             $reason = [
                 'ReasonName' => $reasonName,
@@ -159,7 +163,8 @@ class AdminModel extends Model {
         }
     }
 
-    public function getReasonByType($reasonType) {
+    public function getReasonByType($reasonType)
+    {
         try {
             // retrieve a single reason by type
             $reason = $this->select('reason', [['ReasonType', '=', $reasonType]], 'ReasonID, ReasonName, Reason', 'AND', '', '', 0, 1, false);
@@ -169,7 +174,8 @@ class AdminModel extends Model {
         }
     }
 
-    public function updateReason($reasonID, $reasonName, $reason) {
+    public function updateReason($reasonID, $reasonName, $reason)
+    {
         try {
             $reason = [
                 'ReasonName' => $reasonName,
@@ -185,7 +191,8 @@ class AdminModel extends Model {
         }
     }
 
-    public function deleteReason($reasonID) {
+    public function deleteReason($reasonID)
+    {
         try {
             if ($this->delete('reason', ['ReasonID' => $reasonID])) {
                 return true;
@@ -197,7 +204,8 @@ class AdminModel extends Model {
         }
     }
 
-    public function addUserAccountLog($userID, $action, $reasonID) {
+    public function addUserAccountLog($userID, $action, $reasonID)
+    {
         try {
             $log = [
                 'UserID' => $userID,
@@ -212,7 +220,8 @@ class AdminModel extends Model {
     }
 
     //retrieve reason for last account log by userID for a specific action order by date desc
-    public function getLastAccountLogReason($userID) {
+    public function getLastAccountLogReason($userID)
+    {
         try {
             $log = $this->select('v_account_logs', [['UserID', '=', $userID], ['Action', 'NOT IN', ['ChangePass', 'ResetPass']]], 'Reason, ActionDate, ActionByID', 'AND', '', 'ActionDate DESC', 0, 1, false);
             if ($log) {
@@ -227,7 +236,8 @@ class AdminModel extends Model {
     }
 
     //add verificationlogs 
-    public function addVerificationLog($entityID, $entityType, $action, $reasonID) {
+    public function addVerificationLog($entityID, $entityType, $action, $reasonID)
+    {
         try {
             $log = [
                 'EntityID' => $entityID,
@@ -243,7 +253,8 @@ class AdminModel extends Model {
     }
 
     //retrieve log for last verification log by entityID order by date desc
-    public function getLastVerificationLog($entityID) {
+    public function getLastVerificationLog($entityID)
+    {
         try {
             $log = $this->select('v_verification_logs', [['EntityID', '=', $entityID]], 'Action, ActionDate, ActionByID, ActionByName, ActionByRole, Reason', 'AND', '', 'ActionDate DESC', 0, 1, false);
             if ($log) {
@@ -258,7 +269,8 @@ class AdminModel extends Model {
     }
 
     //retrieve all industries
-    public function getIndustries() {
+    public function getIndustries()
+    {
         try {
             $industries = $this->select('industry', [], 'IndustryID, IndustryName', 'AND', '', '', 0, 1, true);
             return $industries;
@@ -268,7 +280,8 @@ class AdminModel extends Model {
     }
 
     // add industry
-    public function addIndustry($industryName) {
+    public function addIndustry($industryName)
+    {
         try {
             $industry = [
                 'IndustryName' => $industryName
@@ -284,7 +297,8 @@ class AdminModel extends Model {
     }
 
     // update industry
-    public function updateIndustry($industryID, $industryName) {
+    public function updateIndustry($industryID, $industryName)
+    {
         try {
             $industry = [
                 'IndustryName' => $industryName
@@ -300,7 +314,8 @@ class AdminModel extends Model {
     }
 
     // delete industry
-    public function deleteIndustry($industryID) {
+    public function deleteIndustry($industryID)
+    {
         try {
             if ($this->delete('industry', ['IndustryID' => $industryID])) {
                 return true;
@@ -313,7 +328,8 @@ class AdminModel extends Model {
     }
 
     // get all districts
-    public function getDistricts() {
+    public function getDistricts()
+    {
         try {
             $districts = $this->select('districts', [], 'DistrictID, DistrictName', 'AND', '', '', 0, 1, true);
             return $districts;
@@ -323,7 +339,8 @@ class AdminModel extends Model {
     }
 
     //get all cities for a district
-    public function getCitiesByDistrict($districtID) {
+    public function getCitiesByDistrict($districtID)
+    {
         try {
             $cities = $this->select('cities', [['DistrictID', '=', $districtID]], 'CityID, CityName', 'AND', '', '', 0, 1, true);
             return $cities;
@@ -346,84 +363,108 @@ class AdminModel extends Model {
             return false;
         }
     }
-    
-    public function getRegistrationStats($months = 5) {
+
+    public function getRegistrationStats($months = 5)
+    {
         try {
-            $query = "SELECT 
-                        DATE_FORMAT(RegisterDate, '%Y-%m') AS month,
-                        COUNT(CASE WHEN Role = 'Student' THEN UserID END) AS students,
-                        COUNT(CASE WHEN Role = 'Company' THEN UserID END) AS companies
-                      FROM user
-                      WHERE RegisterDate >= DATE_SUB(NOW(), INTERVAL ? MONTH)
-                      AND Verified = 'Y'
-                      GROUP BY DATE_FORMAT(RegisterDate, '%Y-%m')
-                      ORDER BY month ASC
-                      LIMIT ?";
-            
-            // Use the parent class's database access method
-            return $this->query($query, [$months, $months]);
+            $query = "
+            SELECT 
+                DATE_FORMAT(RegisterDate, '%Y-%m') AS month,
+                COUNT(CASE WHEN Role = 'Student' THEN UserID END) AS students,
+                COUNT(CASE WHEN Role = 'Company' THEN UserID END) AS companies
+            FROM user
+            WHERE RegisterDate >= DATE_SUB(NOW(), INTERVAL :months MONTH)
+            GROUP BY DATE_FORMAT(RegisterDate, '%Y-%m')
+            ORDER BY month ASC
+            LIMIT 12
+        ";
+            // Bind the parameter for months
+            $this->db->query($query);
+            $this->db->bind(':months', $months);
+
+            return $this->db->resultSet(); // or fetchAll(), depending on your DB wrapper method
         } catch (Exception $e) {
             error_log("Error getting registration stats: " . $e->getMessage());
             return [];
         }
     }
 
-    public function getJobListingStats($months = 5) {
+    public function getJobListingStats($months = 5)
+    {
         try {
-            $query = "SELECT 
-                        DATE_FORMAT(verifiedDate, '%Y-%m') AS month,
-                        COUNT(CASE WHEN JobCategory = 'Part-time' THEN JobID END) AS part_time,
-                        COUNT(CASE WHEN JobCategory = 'Internship' THEN JobID END) AS internships
-                      FROM jobs
-                      WHERE verifiedDate >= DATE_SUB(NOW(), INTERVAL ? MONTH)
-                      AND Verified = 'Y'
-                      GROUP BY DATE_FORMAT(verifiedDate, '%Y-%m')
-                      ORDER BY month ASC
-                      LIMIT ?";
-            
-            return $this->query($query, [$months, $months]);
+            $query = "
+            SELECT 
+                DATE_FORMAT(verifiedDate, '%Y-%m') AS month,
+                COUNT(CASE WHEN Category = 'Part-time' THEN JobID END) AS part_time,
+                COUNT(CASE WHEN Category = 'Internship' THEN JobID END) AS internships
+            FROM jobs
+            WHERE verifiedDate >= DATE_SUB(NOW(), INTERVAL :months MONTH)
+              AND Status NOT IN ('Not Approved')
+            GROUP BY DATE_FORMAT(verifiedDate, '%Y-%m')
+            ORDER BY month ASC
+            LIMIT :months
+        ";
+            // Bind the parameters for months and limit
+            $this->db->query($query);
+            $this->db->bind(':months', $months);
+
+            return $this->db->resultSet(); // or fetchAll()
         } catch (Exception $e) {
             error_log("Error getting job listing stats: " . $e->getMessage());
             return [];
         }
     }
 
-    public function getRevenueStats($months = 5) {
+    public function getRevenueStats($months = 5)
+    {
         try {
-            $query = "SELECT 
-                        DATE_FORMAT(Payment_date, '%Y-%m') AS month,
-                        SUM(Amount) AS revenue
-                      FROM payments
-                      WHERE Payment_date >= DATE_SUB(NOW(), INTERVAL ? MONTH)
-                      GROUP BY DATE_FORMAT(Payment_date, '%Y-%m')
-                      ORDER BY month ASC
-                      LIMIT ?";
-            
-            return $this->query($query, [$months, $months]);
+            $query = "
+            SELECT 
+                DATE_FORMAT(Payment_date, '%Y-%m') AS month,
+                SUM(Amount) AS revenue
+            FROM payments
+            WHERE Payment_date >= DATE_SUB(NOW(), INTERVAL :months MONTH)
+            GROUP BY DATE_FORMAT(Payment_date, '%Y-%m')
+            ORDER BY month ASC
+            LIMIT :months
+        ";
+            // Bind the parameters for months and limit
+            $this->db->query($query);
+            $this->db->bind(':months', $months);
+
+            return $this->db->resultSet(); // or fetchAll()
         } catch (Exception $e) {
             error_log("Error getting revenue stats: " . $e->getMessage());
             return [];
         }
     }
 
-    public function getLoginStats() {
+    public function getLoginStats($days = 30)
+    {
         try {
-            $query = "SELECT 
-                        Role,
-                        COUNT(*) AS count
-                      FROM login_logs
-                      WHERE LoginTime >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-                      AND Role IN ('Student', 'Company')
-                      GROUP BY Role";
-            
-            return $this->query($query);
+            $query = "
+            SELECT 
+                Role,
+                COUNT(*) AS count
+            FROM user_login_activity
+            WHERE LoginTime >= DATE_SUB(NOW(), INTERVAL :days DAY)
+              AND Role IN ('Student', 'Company')
+              AND LoginStatus = 'success'
+            GROUP BY Role
+        ";
+
+            $this->db->query($query);
+            $this->db->bind(':days', $days);
+
+            return $this->db->resultSet();
         } catch (Exception $e) {
             error_log("Error getting login stats: " . $e->getMessage());
             return [];
         }
     }
 
-    public function getActiveCounts() {
+    public function getActiveCounts()
+    {
         try {
             return [
                 'students' => $this->countActiveUsers('Student'),
@@ -437,48 +478,59 @@ class AdminModel extends Model {
         }
     }
 
-    private function countActiveUsers($role) {
-        $result = $this->select('user', 
-            [['Role', '=', $role], ['Status', '=', 'Active'], ['Verified', '=', 'Y']], 
-            'COUNT(*) AS count'
-        );
-        
-        // Handle both object and array return types
-        if (is_object($result)) {
-            return $result->count ?? 0;
-        } elseif (is_array($result)) {
-            return $result['count'] ?? ($result[0]->count ?? 0);
-        }
-        return 0;
-    }
-
-    private function countActiveJobs($category) {
-        $result = $this->select('job',  // Changed from 'jobs' to 'job' to match your other queries
-            [['JobCategory', '=', $category], ['Status', '=', 'Active'], ['Verified', '=', 'Y']], 
-            'COUNT(*) AS count'
-        );
-        
-        // Handle both object and array return types
-        if (is_object($result)) {
-            return $result->count ?? 0;
-        } elseif (is_array($result)) {
-            return $result['count'] ?? ($result[0]->count ?? 0);
-        }
-        return 0;
-    }
-    // Helper method for executing raw queries
-    protected function query($sql, $params = []) {
+    private function countActiveUsers($role)
+    {
         try {
-            // Use your framework's preferred query execution method
-            // This might vary based on your Database class implementation
-            $result = $this->db->query($sql, $params);
-            return $result['data'] ?? [];
+            $query = "
+            SELECT COUNT(*) AS count
+            FROM user
+            WHERE Role = :role AND Status = 'Active'
+        ";
+
+            $this->db->query($query);
+            $this->db->bind(':role', $role);
+
+            $result = $this->db->single(); // Assuming 'single()' returns a single row
+
+            return $result->count ?? 0;
         } catch (Exception $e) {
-            error_log("Query error: " . $e->getMessage());
-            return [];
+            error_log("Error counting active users: " . $e->getMessage());
+            return 0;
         }
     }
 
-}
+    private function countActiveJobs($category)
+    {
+        try {
+            $query = "
+            SELECT COUNT(*) AS count
+            FROM jobs
+            WHERE Category = :category AND Status = 'Active'
+        ";
 
-?>
+            $this->db->query($query);
+            $this->db->bind(':category', $category);
+
+            $result = $this->db->single(); // Assuming 'single()' returns a single row
+
+            return $result->count ?? 0;
+        } catch (Exception $e) {
+            error_log("Error counting active jobs: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    // Helper method for executing raw queries
+    // protected function query($sql, $params = [])
+    // {
+    //     try {
+    //         // Use your framework's preferred query execution method
+    //         // This might vary based on your Database class implementation
+    //         $result = $this->db->query($sql, $params);
+    //         return $result['data'] ?? [];
+    //     } catch (Exception $e) {
+    //         error_log("Query error: " . $e->getMessage());
+    //         return [];
+    //     }
+    // }
+}

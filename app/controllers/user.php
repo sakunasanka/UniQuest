@@ -64,6 +64,10 @@ class User extends Controller
                     $loggedInUser = $this->model->login($data['email'], $data['password']);
 
                     if ($loggedInUser && $loggedInUser->Status === 'Active') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Success', 'Login successful', $loggedInUser->Role);
+                        // Update last login time
+                        $this->model->updateLastLogin($loggedInUser->UserID);
                         // Create session
                         $this->createSession($loggedInUser->UserID);
                     } else if ($loggedInUser && $loggedInUser->Status === 'Pending Deletion') {
