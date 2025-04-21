@@ -12,7 +12,7 @@ class Service_provider extends Controller
         AuthMiddleware::requireRole('Company');
 
         // Load model
-        $this->model = $this->model('userModel');
+        $this->model = $this->model('UserModel');
     }
 
     private function prepareEditProfileData($post = [], $files = [])
@@ -108,7 +108,7 @@ class Service_provider extends Controller
                 if ($this->model('ContactModel')->sendMessage($data)) {
                     
                     //send notification for each admin
-                    $admins = $this->model('userModel')->getAdminIds();
+                    $admins = $this->model->getAdminIds();
                     foreach ($admins as $admin) {
                         notifyMessageToAdminFromCompany($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
                     }
@@ -116,6 +116,7 @@ class Service_provider extends Controller
 
                     Redirect::to(URLROOT . '/service_provider/contact_admin');
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong. Please try again.');
                 }
             } else {
@@ -1199,6 +1200,7 @@ class Service_provider extends Controller
         // Initialize data with the message list
         $data = [
             'messages_stu' => $messages_stu,
+            
         ];
         
         // Check if we need to load chat data only if userID is valid AND form was submitted
@@ -1306,9 +1308,11 @@ class Service_provider extends Controller
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
-                    // flash('message_sent', 'Message sent successfully');
+                    $_SESSION['show_contact_us_success'] = true;
+                    notifyMessageToStudentFromCompany($data['receiver_id'], $data['messageInput'], $data['sender_id'], $_SESSION['user_name']);
                     redirect('service_provider/messages_stu/' . $userID);
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong while sending the message.');
                 }
             } else {

@@ -97,6 +97,7 @@ class Student extends Controller
                     
                     redirect('student/contact_admin');
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong. Please try again.');
                 }
             } else {

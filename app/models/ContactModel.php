@@ -175,7 +175,7 @@ class ContactModel
                             WHEN receiver_role = 'Admin' THEN receiver_id
                         END
                 ) m2 
-                ON (m1.sender_id = m2.student_id OR m1.receiver_id = m2.student_id) 
+                ON (m1.sender_id = m2.admin_id OR m1.receiver_id = m2.admin_id) 
                 AND m1.created_at = m2.latest_time
                 WHERE m1.sender_role = 'Admin' OR m1.receiver_role = 'Admin'
                 ORDER BY m1.created_at DESC";
@@ -238,7 +238,7 @@ class ContactModel
                         CASE 
                             WHEN sender_role = 'Admin' THEN sender_id
                             WHEN receiver_role = 'Admin' THEN receiver_id
-                        END AS student_id,
+                        END AS company_id,
                         MAX(created_at) AS latest_time
                     FROM messages_with_roles
                     WHERE (sender_role = 'Admin' AND receiver_role = 'Company') 
@@ -249,9 +249,38 @@ class ContactModel
                             WHEN receiver_role = 'Admin' THEN receiver_id
                         END
                 ) m2 
-                ON (m1.sender_id = m2.admin_id OR m1.receiver_id = m2.admin_id) 
+                ON (m1.sender_id = m2.company_id OR m1.receiver_id = m2.company_id) 
                 AND m1.created_at = m2.latest_time
                 WHERE m1.sender_role = 'Admin' OR m1.receiver_role = 'Admin'
+                ORDER BY m1.created_at DESC";
+
+        $this->db->query($sql);
+        return $this->db->resultSet();
+    }
+
+    public function getMessagesVerAdm()
+    {
+        $sql = "SELECT m1.*
+                FROM messages_with_roles m1
+                INNER JOIN (
+                    SELECT 
+                        CASE 
+                            WHEN sender_role = 'VT-Member' THEN sender_id
+                            WHEN receiver_role = 'VT-Member' THEN receiver_id
+                        END AS admin_id,
+                        MAX(created_at) AS latest_time
+                    FROM messages_with_roles
+                    WHERE (sender_role = 'VT-Member' AND receiver_role = 'Admin') 
+                    OR (sender_role = 'Admin' AND receiver_role = 'VT-Member')
+                    GROUP BY 
+                        CASE 
+                            WHEN sender_role = 'VT-Member' THEN sender_id
+                            WHEN receiver_role = 'VT-Member' THEN receiver_id
+                        END
+                ) m2 
+                ON (m1.sender_id = m2.admin_id OR m1.receiver_id = m2.admin_id) 
+                AND m1.created_at = m2.latest_time
+                WHERE m1.sender_role = 'VT-Member' OR m1.receiver_role = 'VT-Member'
                 ORDER BY m1.created_at DESC";
 
         $this->db->query($sql);
