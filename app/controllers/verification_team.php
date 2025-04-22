@@ -302,6 +302,12 @@ class Verification_team extends Controller
             $this->model('jobModel')->approveJob($jobID);
             // Send email to user
             MailHelper::sendEmailJobApproved($email, $name, $title, $publishDate);
+
+            // Notify the user about the approval
+            notifyPostApproval($job->CompanyID, $job->Title);
+            notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
+
+
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
             Redirect::to(URLROOT . '/verification_team/job_ver_pending');
@@ -323,6 +329,10 @@ class Verification_team extends Controller
             $title = $job->Title;
             MailHelper::sendEmailJobRejected($email, $name, $title, $reason);
             //add verificationlogs
+
+            // Notify the user about the rejection
+            notifyPostRejection($job->CompanyID, $job->Title, $reason);
+
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/verification_team/job_ver_pending');
         } catch (Exception $e) {

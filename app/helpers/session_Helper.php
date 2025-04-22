@@ -76,3 +76,20 @@ function flash($name) {
 <?php unset($_SESSION['show_job_edit_error']); ?>
 <?php endif; ?>
 
+<?php if(isset($_SESSION['job_send_to_verify'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Your job post has been sent for verification.", "success");
+    });
+</script>
+<?php unset($_SESSION['job_send_to_verify']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['job_post_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Sorry, job post failed to publish.<br>Try again later.", "error");
+    });
+</script>
+<?php unset($_SESSION['job_post_error']); ?>
+<?php endif; ?>

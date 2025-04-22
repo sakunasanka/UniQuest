@@ -844,7 +844,13 @@ class userModel extends Model
     public function getAdminIds() 
     {
         $this->db->query("SELECT AdminID FROM Admin");
-        $admins = $this->db->resultSet();
+        return $this->db->resultSet();
+    }
+
+    public function getVtIds() 
+    {
+        $this->db->query("SELECT VT_MemberID FROM verificationteam");
+        return $this->db->resultSet();
     }
 
     public function getAllUserIds() 
