@@ -1023,8 +1023,8 @@ class Service_provider extends Controller
                     $job = $this->model('M_jobpost')->getpostbyid($jobId);
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
 
-                    $admins = $this->model('userModel')->getAdminIds();
-                    $vts = $this->model('userModel')->getVtIds();
+                    $admins = $this->model->getAdminIds();
+                    $vts = $this->model->getVtIds();
                     foreach ($admins as $admin) {
                         notifyAdminAboutJobPost($admin->AdminID, $jobId, $job->Title);
                     }

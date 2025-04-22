@@ -141,13 +141,13 @@
                         <div class="input-container">
                             <label for="city">City<span class="req"> *</span></label>
                             <div style="display: flex; justify-content: space-between; gap: 10px;">
-                                <select id="districtID" name="districtID"  style="width: 50%;">
+                                <select id="districtID" name="districtID"  style="width: 50%;" data-preselected-district="<?php echo htmlspecialchars($data['districtID']); ?>">
                                     <option value="" disabled selected>Select District</option>
                                     <?php foreach ($data['districts'] as $district) : ?>
                                         <option value="<?php echo $district->DistrictID; ?>" <?php echo ($data['districtID'] == $district->DistrictID) ? 'selected' : ''; ?>><?php echo $district->DistrictName; ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                <select id="cityID" name="cityID"  style="width: 50%;">
+                                <select id="cityID" name="cityID"  style="width: 50%;" data-preselected-city="<?php echo htmlspecialchars($data['cityID']); ?>">
                                     <option value="" disabled selected>Select City</option>
                                     <?php foreach ($data['cities'] as $city) : ?>
                                         <option value="<?php echo $city->CityID; ?>" <?php echo ($data['cityID'] == $city->CityID) ? 'selected' : ''; ?>><?php echo $city->CityName; ?></option>
