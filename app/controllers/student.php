@@ -420,9 +420,9 @@ class Student extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
@@ -444,9 +444,9 @@ class Student extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
