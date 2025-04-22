@@ -1,0 +1,84 @@
+/* Main popup structure - inherits from studentPopups.css */
+.popup .content {
+    max-width: 500px;
+    width: 90%;
+}
+
+.confirmation {
+    background-color: #e8f5e9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #2e7d32;
+    font-weight: bold;
+    border: 1px solid #c8e6c9;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.confirmation p {
+    font-size: 14px;
+    color: #2e7d32;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.activate-btn {
+    margin-top: 30px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.activate-btn:hover {
+    background-color: #388e3c;
+}
+
+/* Inherit button styles from delete_account.css */
+.buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: end;
+    margin-top: 20px;
+}
+
+.cancel-btn {
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #555;
+}
+
+/* Inherit label styles from delete_account.css */
+label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+    margin-top: 30px;
+}
+
+label input[type="checkbox"] {
+    width: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.label-text {
+    display: block;
+    white-space: nowrap;
+    font-size: 16px;
+}

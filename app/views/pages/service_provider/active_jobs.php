@@ -1,6 +1,6 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
+<?php require APPROOT . '/views/popups/service_provider/deactivatepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -66,7 +66,7 @@
                 </tbody>
             </table>
             <?php 
-            // require APPROOT . '/views/components/pagination.php'; 
+            require APPROOT . '/views/components/pagination.php'; 
             ?>
         </div>
     </main>
