@@ -555,8 +555,7 @@ class Service_provider extends Controller
             $payment->user_id,
             $payment->plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -621,8 +620,7 @@ class Service_provider extends Controller
                         $payment->user_id,
                         $payment->plan,
                         $start_date,
-                        $end_date,
-                        'active'
+                        $end_date
                     );
 
                     // Store payment success
@@ -674,8 +672,7 @@ class Service_provider extends Controller
             $user_id,
             $plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
