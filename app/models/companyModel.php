@@ -111,7 +111,7 @@ class companyModel extends Model
         }
     }
 
-    public function updateSubscription($user_id, $plan, $start_date, $end_date, $status) {
+    public function updateSubscription($user_id, $plan, $start_date, $end_date) {
         try {
             $this->db->beginTransaction();
             
@@ -119,15 +119,13 @@ class companyModel extends Model
             $this->db->query('UPDATE company 
                              SET subscription_plan = :plan,
                                  subscription_start_date = :start_date,
-                                 subscription_end_date = :end_date,
-                                 subscription_status = :status
+                                 subscription_end_date = :end_date
                              WHERE CompanyID = :user_id');
             
             $this->db->bind(':user_id', $user_id);
             $this->db->bind(':plan', $plan);
             $this->db->bind(':start_date', $start_date);
             $this->db->bind(':end_date', $end_date);
-            $this->db->bind(':status', $status);
             
             if (!$this->db->execute()) {
                 throw new Exception("Failed to update subscription");
