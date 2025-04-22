@@ -27,10 +27,10 @@
                     </div>
                 </div>
             </div> -->
-
-            <h1 class= "H1">Trending Companies</h1>
-            <h2 class= "H2">Check out the top-rated companies based on the student reviews</h2>
-
+            <div class="header-text">
+            <h1 >Trending Companies</h1>
+            <h3>Check out the top-rated companies based on the student reviews</h3>
+            </div>
             <div class="cards-container">
                 <?php if(empty($data['trendy_companies'])): ?>
                     <div class="no-results">No results found.</div>

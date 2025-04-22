@@ -10,7 +10,9 @@
 
         <!-- Content Area -->
         <div class="container">
-            <h2>Your Ratings and Reviews</h2>
+        <div class="header-text">
+            <h1>Your Ratings and Reviews</h1>
+        </div>
             <div class="view-card view-card-2">
                 <div class="reviews-section">
                     <!-- Reviews on Main Page -->
