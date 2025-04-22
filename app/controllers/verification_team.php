@@ -307,6 +307,12 @@ class Verification_team extends Controller
             notifyPostApproval($job->CompanyID, $job->Title);
             notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
 
+            // Notify students about the new job
+            $students = $this->model('jobModel')->getStudentIds();
+            foreach ($students as $student) {
+                notifyPostPublishStu($student->UserID, $jobID, $title, $publishDate);
+            }
+
 
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
