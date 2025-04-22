@@ -987,29 +987,37 @@ AUTO_INCREMENT=7
 ;
 
 
-
-
-CREATE VIEW `v_company` AS SELECT 
-    c.CompanyID,
+CREATE VIEW v_company AS 
+    u.UserID,
     c.CompanyName,
     c.Description,
     c.CompanyLogo,
     CONCAT_WS(', ',
-        CONCAT(c.StreetNo, ' ', c.AddressLine1),
-        c.AddressLine2,
-        ci.CityName
-    ) AS Address,
+    CONCAT(c.StreetNo, ' ', c.AddressLine1),
+    NULLIF(c.AddressLine2, ''),
+    ci.CityName
+) AS Address,
+    c.StreetNo,
+    c.AddressLine1,
+    c.AddressLine2,
+    c.DistrictID,
+    c.CityID,
+    c.BRCertificate,
     d.DistrictName AS District,
     ci.CityName AS City,
     i.IndustryName AS Industry,
+    i.IndustryID,
     c.Website,
     c.Facebook,
     c.LinkedIn,
+    c.subscription_plan,
+    c.subscription_start_date,
+    c.subscription_end_date,
     u.Email,
     u.ContactNo,
+    u.RegisterDate,
     u.Role,
     u.Status,
-    c.create_at AS company_create_at,
     (SELECT COUNT(*) FROM review r WHERE r.CompanyID = c.CompanyID) AS ReviewCount,
     (SELECT COUNT(*) FROM jobs j WHERE j.CompanyID = c.CompanyID AND j.Status = 'Active') AS ActiveJobsCount
 FROM 
@@ -1017,7 +1025,8 @@ FROM
     JOIN user u ON c.CompanyID = u.UserID
     LEFT JOIN districts d ON c.DistrictID = d.DistrictID
     LEFT JOIN cities ci ON c.CityID = ci.CityID
-    LEFT JOIN industry i ON c.IndustryID = i.IndustryID  ;
+    LEFT JOIN industry i ON c.IndustryID = i.IndustryID
+
 
 -- notifications
 
