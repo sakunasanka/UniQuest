@@ -13,7 +13,7 @@
                                 : UPLOADROOT . '/profile_pictures/' . lcfirst($_SESSION['user_role']) . '/' . $_SESSION['user_profile_pic']; ?>"
                     alt="Profile">
             </div>
-            <div class="user-details">
+            <div class="user-details1">
                 <strong><?php echo $_SESSION['user_name']; ?></strong>
                 <small><?php echo $_SESSION['user_email']; ?></small>
             </div>

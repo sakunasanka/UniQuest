@@ -1,6 +1,6 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
+<?php require APPROOT . '/views/popups/student/deletepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
