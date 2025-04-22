@@ -386,11 +386,12 @@ class jobModel extends Model
             return false;
         }
     }
-    public function addView($jobID) {
+    public function addView($jobID, $companyID) {
         try {
-            $this->db->query("INSERT IGNORE INTO is_viewed (studentId, jodId) VALUES (:studentId, :jobID)");
+            $this->db->query("INSERT IGNORE INTO is_viewed (CompanyID,studentId, jodId) VALUES (:CompanyID,:studentId, :jobID)");
             $this->db->bind(':studentId', $_SESSION['user_id']);
             $this->db->bind(':jobID', $jobID);
+            $this->db->bind(':jobID', $companyID);
             return $this->db->execute();
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());

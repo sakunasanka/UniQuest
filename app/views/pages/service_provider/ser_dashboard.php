@@ -33,7 +33,7 @@
                 <h2>Jobs</h2>
                 <p>View, Edit and manage your jobs.</p>
                 <div class="card-stats">
-                    <span>8</span>
+                    <span><?php $data['companyInfo']->TotalJobViewCount ?></span>
                     <span class="down">▼ 10.5%</span>
                 </div>
                 <p class="card-subtext">Job Clicks (Last month)</p>
@@ -45,16 +45,16 @@
                 <p>View applications for your jobs.</p>
                 <div class="applications-stats">
                     <div class="new">
-                        <span class="new-stat">3</span>
+                        <span class="new-stat"><?php $data['companyInfo']->PendingApplicationCount ?></span>
                         <span class="new-label">New</span>
                     </div>
                     <div class="active">
-                        <span class="active-stat">4</span>
+                        <span class="active-stat"><?php $data['companyInfo']->AcceptedApplicationCount ?></span>
                         <span class="active-label">Active</span>
                     </div>  
                 </div>
             </div>
-
+           
             <div class="card" onclick="goToAnalytics()">
                 <span class="material-symbols-outlined green-icon"> monitoring </span>
                 <h2>Analytics</h2>
@@ -71,7 +71,7 @@
                 <h2>Community Reviews</h2>
                 <p>View, respond to, and manage your reviews.</p>
                 <div class="card-stats">
-                    <span>4</span>
+                    <span><?php $data['companyInfo']-> ReviewCount ?></span>
                     <span class="up">▲ 3.5%</span>
                 </div>
                 <p class="card-subtext">Company Reviews (Last month)</p>

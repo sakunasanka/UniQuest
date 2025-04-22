@@ -433,7 +433,7 @@ class Jobs extends Controller
     public function jobsDescription($id)
     {
         //pass the every user in to the is_viewd table that is logged in to the page
-        $this->model('M_jobpost')->addView($id, $_SESSION['user_id']);
+        
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
         } else {
@@ -446,6 +446,7 @@ class Jobs extends Controller
 
         // Get bookmarked jobs for the user
         $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $this->model('jobModel')->addView($id, $posts->CompanyID);
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
         $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
 

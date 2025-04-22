@@ -12,7 +12,7 @@ class Service_provider extends Controller
         AuthMiddleware::requireRole('Company');
 
         // Load model
-        $this->model = $this->model('UserModel');
+        $this->model = $this->model('userModel');
     }
 
     private function prepareEditProfileData($post = [], $files = [])
@@ -108,7 +108,7 @@ class Service_provider extends Controller
                 if ($this->model('ContactModel')->sendMessage($data)) {
                     
                     //send notification for each admin
-                    $admins = $this->model->getAdminIds();
+                    $admins = $this->model('userModel')->getAdminIds();
                     foreach ($admins as $admin) {
                         notifyMessageToAdminFromCompany($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
                     }
@@ -116,7 +116,6 @@ class Service_provider extends Controller
 
                     Redirect::to(URLROOT . '/service_provider/contact_admin');
                 } else {
-                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong. Please try again.');
                 }
             } else {
@@ -144,7 +143,7 @@ class Service_provider extends Controller
         $data = [
             'companyInfo' => $companyInfo
         ];
-
+        
         $this->view('pages/service_provider/ser_dashboard', $data);
     }
     public function jobPostform()
@@ -156,6 +155,7 @@ class Service_provider extends Controller
     public function report()
     {
         if ($_SESSION['user_role'] == 'Company') {
+            //jobs Information 
             $companyInfo = $this->model('companyModel')->getCompanyInfo();
         } else {
             $companyInfo = null;
@@ -182,7 +182,7 @@ class Service_provider extends Controller
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search);
+            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, );
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -692,7 +692,6 @@ class Service_provider extends Controller
             );
 
             echo json_encode(['status' => 'success']);
-            notifyPremiumPlanActive($user_id, $plan);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Database update failed']);
         }
@@ -948,7 +947,7 @@ class Service_provider extends Controller
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
             Redirect::to($previousURL);
         }
-        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 5) {
+        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 20) {
             $_SESSION['show_job_post_error_pro'] = true;
             $_SESSION['remaining_days'] = $remainingDays;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
@@ -1023,23 +1022,9 @@ class Service_provider extends Controller
             ) {
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
-                    $job = $this->model('M_jobpost')->getpostbyid($jobId);
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
-
-                    $admins = $this->model('userModel')->getAdminIds();
-                    $vts = $this->model('userModel')->getVtIds();
-                    foreach ($admins as $admin) {
-                        notifyAdminAboutJobPost($admin->AdminID, $jobId, $job->Title);
-                    }
-                    foreach ($vts as $vt) {
-                        notifyVtAboutJobPost($vt->VT_MemberID, $jobId, $job->Title);
-                    }
-
-                    $_SESSION['job_send_to_verify'] = true;
-
                     redirect('service_provider/pending_jobs');
                 } else {
-                    $_SESSION['job_post_error'] = true;
                     die('something went wrong');
                 }
             } else {
@@ -1215,7 +1200,6 @@ class Service_provider extends Controller
         // Initialize data with the message list
         $data = [
             'messages_stu' => $messages_stu,
-            
         ];
         
         // Check if we need to load chat data only if userID is valid AND form was submitted
@@ -1323,11 +1307,9 @@ class Service_provider extends Controller
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
-                    $_SESSION['show_contact_us_success'] = true;
-                    notifyMessageToStudentFromCompany($data['receiver_id'], $data['messageInput'], $data['sender_id'], $_SESSION['user_name']);
+                    // flash('message_sent', 'Message sent successfully');
                     redirect('service_provider/messages_stu/' . $userID);
                 } else {
-                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong while sending the message.');
                 }
             } else {
