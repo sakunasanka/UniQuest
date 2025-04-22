@@ -29,7 +29,7 @@
         </div>
         <div class="grid-container">
             <div class="card" onclick="goToJobs()">
-                <span class="material-symbols-outlined green-icon"> work </span>
+                <span class="material-symbols-outlined yellow-icon"> work </span>
                 <h2>Jobs</h2>
                 <p>View, Edit and manage your jobs.</p>
                 <div class="card-stats">
@@ -40,7 +40,7 @@
             </div>
 
             <div class="card" onclick="goToApplications()">
-                <span class="material-symbols-outlined green-icon"> assignment </span>
+                <span class="material-symbols-outlined pink-icon"> assignment </span>
                 <h2>Applications</h2>
                 <p>View applications for your jobs.</p>
                 <div class="applications-stats">
@@ -56,7 +56,7 @@
             </div>
 
             <div class="card" onclick="goToAnalytics()">
-                <span class="material-symbols-outlined green-icon"> monitoring </span>
+                <span class="material-symbols-outlined indigo-icon"> monitoring </span>
                 <h2>Analytics</h2>
                 <p>View analytics and generate reports related to jobs.</p>
                 <div class="card-stats">
@@ -67,7 +67,7 @@
             </div>
 
             <div class="card" onclick="goToReviews()">
-                <span class="material-symbols-outlined green-icon"> rate_review </span>
+                <span class="material-symbols-outlined teal-icon"> rate_review </span>
                 <h2>Community Reviews</h2>
                 <p>View, respond to, and manage your reviews.</p>
                 <div class="card-stats">
