@@ -580,7 +580,7 @@ class M_applicationFields extends Model
             // }
 
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_allapplications', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $verifiedEntities = $this->select('v_allapplications', $conditions, '*', 'AND', '', $sort . ' ' . $order, 0, 1, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
