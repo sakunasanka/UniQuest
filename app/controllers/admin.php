@@ -1022,7 +1022,7 @@ class Admin extends Controller
             // Notify students about the new job
             $students = $this->model('jobModel')->getStudentIds();
             foreach ($students as $student) {
-                notifyPostPublishStu($student->UserID, $jobID, $title, $publishDate);
+                notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
             }
 
             //add verificationlogs
