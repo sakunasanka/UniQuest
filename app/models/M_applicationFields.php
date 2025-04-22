@@ -506,7 +506,7 @@ class M_applicationFields extends Model
     // }
 
     // Model: M_applicationFields.php
-    public function getAllApplications($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "SubmissionDate", $order = "ASC", $search = '')
+    public function getAllApplications($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "SubmissionDate", $order = "DESC", $search = '')
     {
         try {
             // Define base conditions
@@ -563,19 +563,34 @@ class M_applicationFields extends Model
             return [];
         }
     }
-    public function getAllApplicationsByCompanyId($companyId)
+    public function getAllApplicationsByCompanyId($companyId, $pageNumber = 1, $rowsPerPage = 10, $sort = "SubmissionDate", $order = "DESC", $search = '')
     {
         try {
-            $query = "SELECT * FROM v_allapplications WHERE CompanyID = :company_id";
-            $this->db->query($query);
-            $this->db->bind(':company_id', $companyId);
+            // Define base conditions
+            $conditions = [
+                ['CompanyID', '=', $companyId]
+            ];
 
-            return $this->db->resultSet();
+            // Add search condition if a search term is provided
+            // if (!empty($search)) {
+            //     $searchTerm = '%' . $search . '%';
+            //     $searchField =  "CONCAT_WS(' ', StudentName, StudentEmail, StudentContact, DATE_FORMAT(SubmissionDate, '%Y/%m/%d'), Status)";
+
+            //     $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            // }
+
+            // Get users verified by the current user
+            $verifiedEntities = $this->select('v_allapplications', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return [];
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return [];
         }
     }
+
     public function getApplicationsByJobID($jobID)
     {
         // try {
@@ -613,37 +628,91 @@ class M_applicationFields extends Model
 
     }
 
-    public function getPendnigApplicationsByJobID($jobID)
+    public function getPendnigApplicationsByJobID($jobID, $pageNumber = 1, $rowsPerPage = 10, $sort = "SubmissionDate", $order = "DESC", $search = '')
     {
-        $query = 'SELECT * FROM v_allapplications WHERE jobID = :jobID AND status = "Pending"';
-        $this->db->query($query);
-        // Bind the job ID parameter
-        $this->db->bind(':jobID', $jobID);
+        try {
+            // Define base conditions
+            $conditions = [
+                ['jobID', '=', $jobID],
+                ['Status', '=', 'Pending']
+            ];
 
-        // Execute the query and return the results
-        return $this->db->resultSet();
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', StudentName, StudentEmail, StudentContact, DATE_FORMAT(SubmissionDate, '%Y/%m/%d'), Status)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+
+            // Get users verified by the current user
+            $verifiedEntities = $this->select('v_allapplications', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $verifiedEntities;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return [];
+        }
     }
 
-    public function getOfferedApplicationsByJobID($jobID)
+    public function getOfferedApplicationsByJobID($jobID, $pageNumber = 1, $rowsPerPage = 10, $sort = "SubmissionDate", $order = "DESC", $search = '')
     {
-        $query = 'SELECT * FROM v_allapplications WHERE jobID = :jobID AND status = "Accepted"';
-        $this->db->query($query);
-        // Bind the job ID parameter
-        $this->db->bind(':jobID', $jobID);
+        try {
+            // Define base conditions
+            $conditions = [
+                ['jobID', '=', $jobID],
+                ['Status', '=', 'Accepted']
+            ];
 
-        // Execute the query and return the results
-        return $this->db->resultSet();
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "(' ', StudentName, StudentEmail, StudentContact, DATE_FORMAT(SubmissionDate, '%Y/%m/%d'), Status)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+
+            // Get users verified by the current user
+            $verifiedEntities = $this->select('v_allapplications', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $verifiedEntities;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return [];
+        }
     }
 
-    public function getRejectedApplicationsByJobID($jobID)
+    public function getRejectedApplicationsByJobID($jobID, $pageNumber = 1, $rowsPerPage = 10, $sort = "SubmissionDate", $order = "DESC", $search = '')
     {
-        $query = 'SELECT * FROM v_allapplications WHERE jobID = :jobID AND status = "Rejected"';
-        $this->db->query($query);
-        // Bind the job ID parameter
-        $this->db->bind(':jobID', $jobID);
+        try {
+            // Define base conditions
+            $conditions = [
+                ['jobID', '=', $jobID],
+                ['Status', '=', 'Rejected']
+            ];
 
-        // Execute the query and return the results
-        return $this->db->resultSet();
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', StudentName, StudentEmail, StudentContact, DATE_FORMAT(SubmissionDate, '%Y/%m/%d'), Status)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
+
+            // Get users verified by the current user
+            $verifiedEntities = $this->select('v_allapplications', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $verifiedEntities;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function approveApplication($applicationID)

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/application_dashboard.css">
 
 <div class="main-container">
-<?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
     <div class="content-area">
         <div class="containera">
@@ -10,7 +10,7 @@
                 <h1>Job Applications Dashboard</h1>
                 <div class="header-buttons">
                     <button class="btn-primary" onclick="goToJobPost()">Add New Job</button>
-                    <button class="btn-secondary">Filter</button>
+                    <!-- <button class="btn-secondary">Filter</button> -->
                 </div>
             </div>
 
@@ -23,7 +23,7 @@
                         <div class="job-details">
                             <h2><?php echo $job['title']; ?></h2>
                             <p>
-                                
+
                                 <?php echo $job['location']; ?> •
                                 Published On: <?php echo $job['posted']; ?>
                             </p>
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="job-actions">
-                            
+
                             <!-- Corrected onclick with proper quotes and PHP embedding -->
                             <span class="view-link" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/new_applications/<?php echo $job['jobID']; ?>'">
                                 View Applications <i class="fas fa-chevron-right"></i>
@@ -57,13 +57,13 @@
                 <?php endforeach; ?>
             </div>
         </div>
+        <?php require APPROOT . '/views/components/pagination.php'; ?>
     </div>
-</div>    
-<?php require APPROOT . '/views/components/footer.php'; ?>   
+</div>
+<?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>
     function goToJobPost() {
         window.location.href = "<?php echo URLROOT; ?>/service_provider/jobpost";
     }
 </script>
-    

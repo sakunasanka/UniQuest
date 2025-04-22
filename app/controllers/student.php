@@ -415,7 +415,7 @@ class Student extends Controller
         }
     }
 
-    public function accepted_app()
+    public function accepted_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
@@ -439,7 +439,7 @@ class Student extends Controller
         }
     }
 
-    public function rejected_app()
+    public function rejected_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
