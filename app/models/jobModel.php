@@ -398,4 +398,15 @@ class jobModel extends Model
         }
 
     }
+    public function getApplicants($jobId)
+    {
+        try {
+            $this->db->query("SELECT count(*) FROM applications WHERE job_id = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            return $this->db->resultSet();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }

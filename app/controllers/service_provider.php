@@ -182,7 +182,7 @@ class Service_provider extends Controller
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, );
+            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search);
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],

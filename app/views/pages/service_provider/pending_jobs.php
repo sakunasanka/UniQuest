@@ -14,8 +14,6 @@
             "Location" => "Location",
             "Category" => "Category",
             "jobs_create_at" => "Publish Date",
-            "Views" => "Views",
-            "Applicants" => "Applicants",
             "Actions" => "Actions"
         ];
         ?>
@@ -42,8 +40,6 @@
                                 <td><?php echo $post->City; ?></td>
                                 <td><?php echo $post->Category; ?></td>
                                 <td><?php echo date('Y-m-d', strtotime($post->PublishDate)); ?></td>
-                                <td>35</td>
-                                <td>18</td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $post->JobID; ?>'">
                                         preview
