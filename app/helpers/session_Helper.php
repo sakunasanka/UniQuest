@@ -60,7 +60,7 @@ function flash($name) {
 <?php if(isset($_SESSION['show_job_post_error_pro'])): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Flash.show("Please upgrade to Enterprise plan to post more than 20 jobs.<br>Or wait for <?php echo $_SESSION['remaining_days']; ?>.", "error");
+        Flash.show("Please upgrade to Enterprise plan to post more than 5 jobs.<br>Or wait for <?php echo $_SESSION['remaining_days']; ?>.", "error");
     });
 </script>
 <?php unset($_SESSION['show_job_post_error_pro']); 
