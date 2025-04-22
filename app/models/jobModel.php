@@ -375,4 +375,27 @@ class jobModel extends Model
         }
     }
 
+    public function viewcount($jobId){
+        try{
+            $this->db->query("SELECT COUNT(*) AS viewCount FROM is_viewed WHERE jodId = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            $row = $this->db->single();
+            return $row->viewCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function addView($jobID) {
+        try {
+            $this->db->query("INSERT IGNORE INTO is_viewed (studentId, jodId) VALUES (:studentId, :jobID)");
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobID', $jobID);
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+
+    }
 }

@@ -432,6 +432,8 @@ class Jobs extends Controller
 
     public function jobsDescription($id)
     {
+        //pass the every user in to the is_viewd table that is logged in to the page
+        $this->model('M_jobpost')->addView($id, $_SESSION['user_id']);
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
         } else {
