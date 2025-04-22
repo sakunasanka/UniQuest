@@ -1096,7 +1096,7 @@ class Admin extends Controller
             $verificationTeamPerformance = $this->model('reportModel')->getVerificationPerformanceData();
 
             // Job Market Reports
-            $jobPostingPerformance = $this->model('reportModel')->getJobPerformanceDataAdmin();
+            $jobPostingPerformance = $this->model('reportModel')->getJobPerformanceData();
             // $jobActivityByCategory = $this->model('reportModel')->getJobActivityByCategoryData();
             $studentPlacementStats = $this->model('reportModel')->getStudentPlacementData();
 

@@ -35,7 +35,7 @@ class Report extends Controller
     }
 
     // Fetch data
-    $reportData = $this->reportModel->getJobPerformanceData($jobId);
+    $reportData = $this->reportModel->getJobPerformanceDataComp($jobId);
 
     // Validate report data
     if (!$reportData || empty($reportData['job'])) {
@@ -58,7 +58,7 @@ class Report extends Controller
 public function generatePdf($jobId)
 {
     // Get report data
-    $reportData = $this->reportModel->getJobPerformanceData($jobId);
+    $reportData = $this->reportModel->getJobPerformanceDataComp($jobId);
 
     if (!$reportData) {
         http_response_code(404);

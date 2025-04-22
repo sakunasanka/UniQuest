@@ -95,7 +95,7 @@ body {
 }
 
 .report-card i {
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin-bottom: 15px;
 }
 
@@ -147,12 +147,39 @@ body {
     align-items: center;
     margin-bottom: 30px;
     padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
 }
 
 .report-actions {
     display: flex;
     gap: 10px;
 }
+
+.report-actions a,
+.report-actions button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #2d9c80;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.report-actions a:hover,
+.report-actions button:hover {
+    background-color: #22735f;
+}
+
+.report-actions button {
+    font-family: inherit;
+}
+
 
 .report-content {
     background: white;

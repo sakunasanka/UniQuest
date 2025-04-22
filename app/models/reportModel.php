@@ -8,7 +8,7 @@ class ReportModel extends Model
         $this->db = Database::getInstance();
     }
 
-    public function getJobPerformanceData($jobId)
+    public function getJobPerformanceDataComp($jobId)
     {
         try {
             // Get basic job information
@@ -239,7 +239,7 @@ class ReportModel extends Model
         }
     }
 
-    public function getJobPerformanceDataAdmin()
+    public function getJobPerformanceData()
     {
         try {
             $query = "
@@ -271,16 +271,17 @@ class ReportModel extends Model
             $query = "
             SELECT 
                 c.subscription_plan,
-                c.subscription_status,
-                COUNT(c.CompanyID) AS company_count,
+                COUNT(DISTINCT c.CompanyID) AS company_count,
                 SUM(CASE WHEN j.Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
-                AVG(TIMESTAMPDIFF(DAY, c.subscription_start_date, 
-                    CASE WHEN c.subscription_status = 'active' THEN NOW() 
-                    ELSE c.subscription_end_date END)) AS avg_subscription_days,
-                (SELECT COUNT(*) FROM jobs j WHERE j.CompanyID = c.CompanyID) AS jobs_per_company
+                AVG(TIMESTAMPDIFF(
+                    DAY, 
+                    c.subscription_start_date, 
+                    COALESCE(c.subscription_end_date, NOW())
+                )) AS avg_subscription_days,
+                COUNT(DISTINCT j.JobID) AS jobs_per_company
             FROM company c
             LEFT JOIN jobs j ON c.CompanyID = j.CompanyID
-            GROUP BY c.subscription_plan, c.subscription_status
+            GROUP BY c.subscription_plan
         ";
             $this->db->query($query);
             return $this->db->resultSet();
@@ -289,6 +290,7 @@ class ReportModel extends Model
             return null;
         }
     }
+
 
     public function getComplaintData()
     {
@@ -406,13 +408,18 @@ class ReportModel extends Model
                 (SELECT COUNT(*) FROM user) AS total_users,
                 (SELECT COUNT(*) FROM jobs) AS total_jobs,
                 (SELECT COUNT(*) FROM applications WHERE status = 'Hired') AS successful_hires,
-                (SELECT COUNT(*) FROM company WHERE subscription_status = 'active') AS paying_companies,
+                (SELECT COUNT(*) FROM company 
+                WHERE COALESCE(subscription_end_date, NOW()) >= NOW()) AS paying_companies,
                 (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Resolved' 
-                 AND ComplainedDate > NOW() - INTERVAL 30 DAY) AS complaints_resolved_30d,
-                (SELECT COUNT(DISTINCT StudentID) FROM applications 
-                 WHERE status = 'Hired') AS students_placed,
-                (SELECT AVG(TIMESTAMPDIFF(HOUR, create_at, ActionDate)) 
-                 FROM verificationlogs WHERE EntityType = 'Job') AS avg_job_approval_time_hours
+                AND ComplainedDate > NOW() - INTERVAL 30 DAY) AS complaints_resolved_30d,
+                (SELECT COUNT(DISTINCT user_id) FROM applications 
+                WHERE status = 'Hired') AS students_placed,
+                (
+                    SELECT AVG(TIMESTAMPDIFF(HOUR, j.create_at, v.ActionDate))
+                    FROM jobs j
+                    INNER JOIN verificationlogs v 
+                        ON v.EntityID = j.JobID AND v.EntityType = 'Job'
+                ) AS avg_job_approval_time_hours
         ";
             $this->db->query($query);
             return $this->db->resultSet();

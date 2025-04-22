@@ -99,6 +99,17 @@
                     <span><i class="fas fa-eye"></i> Popular items</span>
                 </div>
             </a>
+
+            <!-- Executive Summary Reports-->
+            <a href="/UniQuest/admin/viewReport/ExecutiveSummary" class="report-card">
+                <i class="fas fa-chart-pie icon-yellow"></i>
+                <h3>Executive Summary</h3>
+                <p>Comprehensive overview of all reports</p>
+                <div class="report-meta">
+                    <span><i class="fas fa-file-alt"></i> All metrics</span>
+                    <span><i class="fas fa-calendar-alt"></i> Quarterly</span>
+                </div>
+            </a>
         </div>
     </main>
 </div>
