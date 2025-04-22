@@ -1,20 +1,16 @@
-/* Overlay */
-.popup .overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 101;
-    display: none;
+.deactivated-icon {
+    font-size: 48px;
+    color: #d32f2f;
+    margin-bottom: 10px;
+    display: block;
 }
-
-/* Content box */
+/* Optional: If this isn't already part of your base styles */
 .popup .content {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.9);
-    background: #ffffff;
+    background: #fff;
     width: 90%;
     max-width: 600px;
     padding: 30px 25px;
@@ -25,7 +21,6 @@
     transition: all 300ms ease-in-out;
 }
 
-/* Active state */
 .popup.active .overlay {
     display: block;
     backdrop-filter: blur(5px);
@@ -36,56 +31,39 @@
     opacity: 1;
 }
 
-/* Message styling */
 .notification-message {
     text-align: center;
-}
-
-.success-icon {
-    font-size: 48px;
-    color: #299b63;
-    margin-bottom: 10px;
-    display: block;
 }
 
 .notification-message h2 {
     font-size: 22px;
     color: #2e2e2e;
-    margin: 10px 0 15px;
+    margin-bottom: 15px;
 }
 
 .notification-message p {
     font-size: 16px;
     color: #555;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-bottom: 15px;
+    line-height: 1.5;
 }
 
-.notification-message p .material-symbols-outlined {
-    font-size: 20px;
-    color: #299b63;
-    margin-left: 8px;
-}
-
-/* Button */
+/* Reuse this style for all your single buttons */
 .go-home-btn {
-    background-color: #299b63;
+    background-color: #f44336;
     color: white;
     padding: 12px 24px;
     font-size: 16px;
     font-weight: 600;
     text-decoration: none;
     border-radius: 6px;
-    margin: 20px auto 0;
     display: block;
-    max-width: 220px;
+    margin: 20px auto 0;
     text-align: center;
+    max-width: 220px;
     transition: background-color 0.3s ease;
 }
 
-
 .go-home-btn:hover {
-    background-color: #137d4a;
+    background-color: #c62828;
 }
