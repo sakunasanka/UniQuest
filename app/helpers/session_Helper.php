@@ -93,3 +93,67 @@ function flash($name) {
 </script>
 <?php unset($_SESSION['job_post_error']); ?>
 <?php endif; ?>
+
+<?php if(isset($_SESSION['show_contact_us_success'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Your message has been sent successfully.", "success");
+    });
+</script>
+<?php unset($_SESSION['show_contact_us_success']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['show_contact_us_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("An error occurred while sending your message. Please try again later.", "error");
+    });
+</script>
+<?php unset($_SESSION['show_contact_us_error']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['application_success'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Your application has been submitted successfully.", "success");
+    });
+</script>
+<?php unset($_SESSION['application_success']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['application_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("An error occurred while submitting your application. Please try again later.", "error");
+    });
+</script>
+<?php unset($_SESSION['application_error']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['complaint_submit_success'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Your complaint has been submitted successfully.", "success");
+    });
+</script>
+<?php unset($_SESSION['complaint_submit_success']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['complaint_submit_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("An error occurred while submitting your complaint. Please try again later.", "error");
+    });
+</script>
+<?php unset($_SESSION['complaint_submit_error']); ?>
+<?php endif; ?>
+
+
+<?php if(isset($_SESSION['existing_complaint'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("You have already submitted a complaint. Please wait for a response.", "error");
+    });
+</script>
+<?php unset($_SESSION['existing_complaint']); ?>
+<?php endif; ?>

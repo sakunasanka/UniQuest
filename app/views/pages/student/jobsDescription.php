@@ -248,7 +248,7 @@ function goToApplyPage(jobId) {
 }
 
 function goToReport(jobId) {
-    window.location.href = "/UniQuest/service_provider/report/" + jobId;
+window.location.href = "/uniquest/report/JobReport/" + jobId;
 }
 
 function toggleBookmark(icon, jobId) {
@@ -304,4 +304,37 @@ function goToCompanyDescription($companyID) {
 function goToApplications(jobId) {
     window.location.href = "/UniQuest/service_provider/new_applications/" + jobId;
 }
+
+function openChatPopup(userId) {
+    // Set the user ID in the hidden form
+    document.getElementById('selectedUserID').value = userId;
+    // Submit the form
+    document.getElementById('chatForm').submit();
+}
+
+function scrollToBottom() {
+    const messagesContainer = document.querySelector('.messages');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Only open the popup if a userID exists AND it came from a form submission
+    <?php if (isset($data['userID']) && isset($_POST['selectedUserID'])): ?>
+        document.getElementById('chatPopup').classList.remove('hidden');
+        document.getElementById('backgroundOverlay').classList.remove('hidden');
+        scrollToBottom();
+    <?php endif; ?>
+});
+
+//Refresh the page when the popup is closed
+closePopupBtn?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/jobs/jobsdescription/<?php echo $post->JobID; ?>";
+});
+
+backgroundOverlay?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/jobs/jobsdescription/<?php echo $post->JobID; ?>";
+});
+
 </script>

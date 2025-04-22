@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_Profile.css">
 
@@ -57,8 +58,12 @@
                             <span>Activated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
                         </div>
                     <?php endif; ?>
-                    <?php require APPROOT . '/views/components/chat-sent.php'; ?>
+                    
                 </div>
+            </div>
+            <div class="btn-row">
+                <div></div>
+                <button id="openPopupBtn" class="open-btn">Contact</button>
             </div>
         </div>
     </div>

@@ -840,6 +840,13 @@ class userModel extends Model
             GROUP BY gender");
         return $this->db->resultSet();
     }
+    
+    public function getUserRoleByID($userId)
+    {
+        $this->db->query("SELECT Role FROM user WHERE UserID = :userId");
+        $this->db->bind(':userId', $userId);
+        return $this->db->single();
+    }
 
     public function getAdminIds() 
     {
