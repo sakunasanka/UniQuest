@@ -83,7 +83,7 @@
                         </select>
                     </form>
                     <div class="header-actions">
-                        <button class="add-btn <?php echo $selectedTable === 'industries' ? 'industry-add-btn' : 'reason-add-btn'; ?>">
+                        <button class="post-btn <?php echo $selectedTable === 'industries' ? 'industry-add-btn' : 'reason-add-btn'; ?>">
                             <span class="material-symbols-outlined">add</span>
                             <span class="add-btn-text">Add</span>
                         </button>

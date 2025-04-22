@@ -21,7 +21,7 @@
                     <p><?php echo $data['activeCounts']['students'] ?? 0; ?></p>
                 </div>
                 <div class="icon_">
-                    <span class="material-symbols-outlined large-icon">groups</span>
+                    <span class="material-symbols-outlined large-icon blue-icon">groups</span>
                 </div>
             </div>
             <div class="card stat-card">
@@ -30,7 +30,7 @@
                     <p><?php echo $data['activeCounts']['companies'] ?? 0; ?></p>
                 </div>
                 <div class="icon_">
-                    <span class="material-symbols-outlined large-icon">store</span>
+                    <span class="material-symbols-outlined large-icon green-icon">store</span>
                 </div>
             </div>
             <div class="card stat-card">
@@ -39,7 +39,7 @@
                     <p><?php echo $data['activeCounts']['part_time_jobs'] ?? 0; ?></p>
                 </div>
                 <div class="icon_">
-                    <span class="material-symbols-outlined large-icon">work</span>
+                    <span class="material-symbols-outlined large-icon orange-icon">work</span>
                 </div>
             </div>
             <div class="card stat-card">
@@ -48,7 +48,7 @@
                     <p><?php echo $data['activeCounts']['internships'] ?? 0; ?></p>
                 </div>
                 <div class="icon_">
-                    <span class="material-symbols-outlined large-icon">school</span>
+                    <span class="material-symbols-outlined large-icon purple-icon">school</span>
                 </div>
             </div>
         </div>

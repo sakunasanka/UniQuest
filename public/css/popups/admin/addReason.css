@@ -107,28 +107,31 @@
 .cancel-btn, .submit-btn {
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.2s;
 }
 
 .cancel-btn {
-    background-color: #f0f0f0;
+    background-color: #f0f0f0; /* Light neutral background */
     color: #333;
+    border: 2px solid #6c757d;
 }
 
 .cancel-btn:hover {
-    background-color: #e0e0e0;
+    background-color: #6c757d; /* Fills with color on hover */
+    color: #fff; /* White text on hover */
+    border-color: #6c757d;
 }
 
 .submit-btn {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #299b63;
+    color: #fff;
 }
 
 .submit-btn:hover {
-    background-color: #45a049;
+    background-color: #137d4a;
 }
 
 .delete-btn {

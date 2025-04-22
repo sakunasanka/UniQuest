@@ -72,7 +72,12 @@
             <input type="hidden" name="topic" id="topic" value="<?php echo htmlspecialchars($data['topic'] ?? 'General Information'); ?>" />
             <input type="hidden" name="email" id="email" value="<?php echo htmlspecialchars($data['email'] ?? null); ?>" />
 
-            <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo htmlspecialchars($data['message_details'] ?? ''); ?>" />
+            <div class="input-with-icon">
+                <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo htmlspecialchars($data['message_details'] ?? ''); ?>" />
+                <button type="submit" class="send-icon-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
             <button type="submit" class="send-btn">Send</button>
         </form>
     </div>

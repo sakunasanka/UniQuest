@@ -220,17 +220,14 @@ button.contact-btn:hover {
 }
 
 .btn-row select {
-    width: 150px; /* Adjust width as needed */
-    padding: 8px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    background-color: #ffffff;
-    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.3em;
 }
 
 /* When the dropdown is focused */
@@ -255,6 +252,25 @@ button.contact-btn:hover {
     padding: 10px;
 }
 
+.open-btn{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.3em;
+}
+
+.open-btn {
+    background-color: #6eb2fc;
+    color: #fff;
+}
+
+.open-btn:hover {
+    background-color: #4aa1fd;
+}
 @media (max-width: 768px) {
     .main-container {
         flex-direction: column;
@@ -271,6 +287,103 @@ button.contact-btn:hover {
     .user-details,
     .file-previews {
         min-width: 100%;
+    }
+}
+
+
+.btn-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.inline-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex: 1;
+    min-width: 300px;
+}
+
+.btn-row button, .btn-row select {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+}
+
+/* Approve Button */
+button.approve-btn {
+    background-color: #299b63;
+    color: #fff;
+    min-width: 120px;
+}
+
+button.approve-btn:hover:not(:disabled) {
+    background-color: #137d4a;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Reject Button */
+button.reject-btn {
+    background-color: #dc3545;
+    color: #ffffff;
+    min-width: 120px;
+}
+
+button.reject-btn:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Dropdown */
+.btn-row select {
+    flex: 1;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 0 15px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+}
+
+.btn-row select:focus {
+    outline: none;
+    border-color: #32a852;
+    box-shadow: 0 0 0 2px rgba(50, 168, 82, 0.2);
+}
+
+/* Disabled States */
+button:disabled, select:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .inline-form {
+        flex-direction: column;
+        min-width: 100%;
+    }
+    
+    .btn-row select {
+        width: 100%;
+    }
+    
+    .btn-row {
+        gap: 8px;
     }
 }
 
