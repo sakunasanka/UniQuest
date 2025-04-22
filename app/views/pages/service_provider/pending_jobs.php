@@ -65,7 +65,7 @@
                 </tbody>
             </table>
             <?php 
-            // require APPROOT . '/views/components/pagination.php'; 
+            require APPROOT . '/views/components/pagination.php'; 
             ?>
         </div>
     </main>
