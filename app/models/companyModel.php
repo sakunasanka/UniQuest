@@ -8,6 +8,14 @@ class companyModel extends Model
         $this->db = Database::getInstance();
     }
 
+    public function getCompanyInfo() 
+    {
+        $this->db->query("SELECT * FROM company WHERE CompanyID = :companyId");
+
+        $this->db->bind(':companyId', $_SESSION['user_id']);
+        return $this->db->single();
+    }
+    
     public function addUserPostBookmark($companyId)
     {
         try {
@@ -62,5 +70,153 @@ class companyModel extends Model
         $this->db->bind(':companyId', $companyId);
         return $this->db->execute();
     }
+    
+    public function storePendingPayment($user_id, $order_id, $plan, $amount) {
+        try {
+            $this->db->query('INSERT INTO pending_payments 
+                             (user_id, order_id, plan, amount, created_at)
+                             VALUES (:user_id, :order_id, :plan, :amount, NOW())');
+            
+            $this->db->bind(':user_id', $user_id);
+            $this->db->bind(':order_id', $order_id);
+            $this->db->bind(':plan', $plan);
+            $this->db->bind(':amount', $amount);
+            
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log("Database error in storePendingPayment: " . $e->getMessage());
+            return false;
+        }
+    }
 
+    public function getPendingPayment($order_id) {
+        try {
+            $this->db->query('SELECT * FROM pending_payments WHERE order_id = :order_id LIMIT 1');
+            $this->db->bind(':order_id', $order_id);
+            return $this->db->single();
+        } catch (Exception $e) {
+            error_log("Database error in getPendingPayment: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function clearPendingPayment($order_id) {
+        try {
+            $this->db->query('DELETE FROM pending_payments WHERE order_id = :order_id');
+            $this->db->bind(':order_id', $order_id);
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log("Database error in clearPendingPayment: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateSubscription($user_id, $plan, $start_date, $end_date, $status) {
+        try {
+            $this->db->beginTransaction();
+            
+            // Update subscription
+            $this->db->query('UPDATE company 
+                             SET subscription_plan = :plan,
+                                 subscription_start_date = :start_date,
+                                 subscription_end_date = :end_date,
+                                 subscription_status = :status
+                             WHERE CompanyID = :user_id');
+            
+            $this->db->bind(':user_id', $user_id);
+            $this->db->bind(':plan', $plan);
+            $this->db->bind(':start_date', $start_date);
+            $this->db->bind(':end_date', $end_date);
+            $this->db->bind(':status', $status);
+            
+            if (!$this->db->execute()) {
+                throw new Exception("Failed to update subscription");
+            }
+            
+            // Add notifications
+            $this->addSubscriptionNotification(
+                $user_id,
+                'Subscription Expiry Warning',
+                'Your subscription plan will expire in 2 days.',
+                date('Y-m-d H:i:s', strtotime($end_date . ' -2 days'))
+            );
+            
+            $this->addSubscriptionNotification(
+                $user_id,
+                'Subscription Expiry Warning',
+                'Your subscription plan will expire in 1 day.',
+                date('Y-m-d H:i:s', strtotime($end_date . ' -1 day'))
+            );
+            
+            $this->addSubscriptionNotification(
+                $user_id,
+                'Subscription Expiry Warning',
+                'Your subscription plan has expired.',
+                $end_date
+            );
+            
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Database error in updateSubscription: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    private function addSubscriptionNotification($user_id, $title, $message, $date) {
+        $this->db->query('INSERT INTO notifications (UserID, type, title, message, created_at) 
+              VALUES (:user_id, "Warning", :title, :message, :date)');
+        
+        $this->db->bind(':user_id', $user_id);
+        $this->db->bind(':title', $title);
+        $this->db->bind(':message', $message);
+        $this->db->bind(':date', $date);
+        
+        if (!$this->db->execute()) {
+            throw new Exception("Failed to create notification");
+        }
+    }
+
+    public function storePaymentSuccess($user_id, $order_id, $payment_id, $plan, $amount) {
+        try {
+            $this->db->query('INSERT INTO payments 
+                             (user_id, order_id, payment_id, plan, amount, currency, payment_date, status)
+                             VALUES (:user_id, :order_id, :payment_id, :plan, :amount, "LKR", NOW(), "completed")');
+            
+            $this->db->bind(':user_id', $user_id);
+            $this->db->bind(':order_id', $order_id);
+            $this->db->bind(':payment_id', $payment_id);
+            $this->db->bind(':plan', $plan);
+            $this->db->bind(':amount', $amount);
+            
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log("Database error in storePaymentSuccess: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getPaymentByOrderId($order_id) {
+        try {
+            $this->db->query('SELECT * FROM payments WHERE order_id = :order_id LIMIT 1');
+            $this->db->bind(':order_id', $order_id);
+            return $this->db->single();
+        } catch (Exception $e) {
+            error_log("Database error in getPaymentByOrderId: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getSubscriptionPlan($user_id) {
+        try {
+            $this->db->query('SELECT subscription_plan FROM company WHERE CompanyID = :user_id LIMIT 1');
+            $this->db->bind(':user_id', $user_id);
+            $result = $this->db->single();
+            return $result ? $result->subscription_plan : null;
+        } catch (Exception $e) {
+            error_log("Database error in getSubscriptionPlan: " . $e->getMessage());
+            return false;
+        }
+    }
 }

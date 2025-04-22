@@ -28,60 +28,180 @@ class Model
         }
     }
 
+    // protected function buildWhereClause($conditions, &$bindings, $logicalOperator = 'AND')
+    // {
+    //     // Initialize an index to create unique placeholders for binding values
+    //     $index = 0;
+
+    //     // Array to hold the condition strings for the WHERE clause
+    //     $conditionStrings = [];
+
+    //     // Loop through each condition in the conditions array
+    //     foreach ($conditions as $condition) {
+    //         // Extract column, operator, and value from the condition
+    //         $column = $condition[0]; // The column name or expression
+    //         $operator = $condition[1]; // The SQL operator (e.g., '=', 'IN', 'LIKE')
+    //         $value = $condition[2]; // The value to compare against
+
+    //         // Handle special case for SQL functions in column (like CONCAT_WS)
+    //         if (strpos($column, '(') !== false) {
+    //             // For SQL functions, use the expression directly without parameter binding
+    //             $conditionStrings[] = "$column $operator " . $this->db->quote($value);
+    //             continue;
+    //         }
+
+    //         if ($operator === 'IN' || $operator === 'NOT IN') {
+    //             // Special handling for the 'IN' operator
+
+    //             // Array to store placeholders for the 'IN' values
+    //             $placeholders = [];
+
+    //             // Loop through each value in the 'IN' clause
+    //             foreach ((array)$value as $v) {
+    //                 // Create a unique placeholder for each value
+    //                 $placeholder = "{$column}_{$index}";
+    //                 $placeholders[] = ":$placeholder";
+
+    //                 // Add the value to the bindings array with the placeholder as the key
+    //                 $bindings[$placeholder] = $v;
+
+    //                 // Increment the index for the next placeholder
+    //                 $index++;
+    //             }
+
+    //             // Add the condition string for the 'IN' operator to the array
+    //             $conditionStrings[] = "$column $operator (" . implode(', ', $placeholders) . ")";
+    //         } else {
+    //             // For regular operators (e.g., '=', '<>', '<', '>', 'LIKE')
+
+    //             // Create a unique placeholder for the value
+    //             $placeholder = "{$column}_{$index}";
+
+    //             // Add the value to the bindings array with the placeholder as the key
+    //             $bindings[$placeholder] = $value;
+
+    //             // Increment the index for the next placeholder
+    //             $index++;
+
+    //             // Add the condition string for the regular operator to the array
+    //             $conditionStrings[] = "$column $operator :$placeholder";
+    //         }
+    //     }
+
+    //     // Join all condition strings with logical operator to form the complete WHERE clause
+    //     return implode(" $logicalOperator ", $conditionStrings);
+    // }
+
+    /**
+     * Builds a WHERE clause from conditions array with parameter binding
+     * 
+     * @param array $conditions Array of conditions in format [column, operator, value]
+     * @param array &$bindings Reference to store parameter bindings
+     * @param string $logicalOperator Operator to join conditions (AND/OR)
+     * @return string The generated WHERE clause
+     * @throws InvalidArgumentException For invalid BETWEEN conditions
+     */
     protected function buildWhereClause($conditions, &$bindings, $logicalOperator = 'AND')
     {
-        // Initialize an index to create unique placeholders for binding values
+        // Counter for creating unique parameter placeholders
         $index = 0;
 
-        // Array to hold the condition strings for the WHERE clause
+        // Array to store individual condition strings
         $conditionStrings = [];
 
-        // Loop through each condition in the conditions array
+        // Process each condition in the input array
         foreach ($conditions as $condition) {
-            // Extract column, operator, and value from the condition
-            $column = $condition[0]; // The column name (e.g., 'Status', 'Role')
-            $operator = $condition[1]; // The SQL operator (e.g., '=', 'IN')
-            $value = $condition[2]; // The value to compare against
+            // Extract condition components
+            $column = $condition[0];       // Column name or SQL expression
+            $operator = strtoupper($condition[1]); // Normalize operator to uppercase
+            $value = $condition[2] ?? null; // Optional value (not needed for NULL/EXISTS)
 
-            if ($operator === 'IN') {
-                // Special handling for the 'IN' operator (e.g., WHERE column IN (values))
+            // =======================================================================
+            // Special Operator Handling
+            // These operators need custom processing different from standard comparisons
+            // =======================================================================
 
-                // Array to store placeholders for the 'IN' values
+            // IS NULL / IS NOT NULL - Don't need value binding
+            if ($operator === 'IS NULL' || $operator === 'IS NOT NULL') {
+                $conditionStrings[] = "$column $operator";
+                continue;
+            }
+
+            // BETWEEN - Requires array with exactly 2 values
+            if ($operator === 'BETWEEN') {
+                // Validate BETWEEN value format
+                if (!is_array($value) || count($value) !== 2) {
+                    throw new InvalidArgumentException(
+                        'BETWEEN operator requires an array with exactly 2 values'
+                    );
+                }
+
+                // Create unique placeholders for min/max values
+                $minPlaceholder = "{$column}_{$index}_min";
+                $maxPlaceholder = "{$column}_{$index}_max";
+
+                // Add values to bindings
+                $bindings[$minPlaceholder] = $value[0];
+                $bindings[$maxPlaceholder] = $value[1];
+
+                // Build condition string
+                $conditionStrings[] = "$column BETWEEN :$minPlaceholder AND :$maxPlaceholder";
+                $index += 2; // Increment counter by 2 for the two values
+                continue;
+            }
+
+            // EXISTS/NOT EXISTS - Value should contain a subquery
+            if ($operator === 'EXISTS' || $operator === 'NOT EXISTS') {
+                $conditionStrings[] = "$operator ($value)";
+                continue;
+            }
+
+            // RAW SQL - Directly insert the SQL fragment (use with caution!)
+            if ($operator === 'RAW') {
+                $conditionStrings[] = $value;
+                continue;
+            }
+
+            // =======================================================================
+            // SQL Function Handling (e.g., CONCAT_WS(), DATE(), etc.)
+            // Identified by parentheses in column name
+            // =======================================================================
+            if (strpos($column, '(') !== false) {
+                $placeholder = "func_{$index}";
+                $bindings[$placeholder] = $value;
+                $conditionStrings[] = "$column $operator :$placeholder";
+                $index++;
+                continue;
+            }
+
+            // =======================================================================
+            // Standard Operators (IN, NOT IN, =, <>, >, <, etc.)
+            // =======================================================================
+
+            // IN/NOT IN - Handle array of values
+            if ($operator === 'IN' || $operator === 'NOT IN') {
                 $placeholders = [];
 
-                // Loop through each value in the 'IN' clause
-                foreach ($value as $v) {
-                    // Create a unique placeholder for each value
+                // Create a placeholder for each value in the array
+                foreach ((array)$value as $v) {
                     $placeholder = "{$column}_{$index}";
                     $placeholders[] = ":$placeholder";
-
-                    // Add the value to the bindings array with the placeholder as the key
                     $bindings[$placeholder] = $v;
-
-                    // Increment the index for the next placeholder
                     $index++;
                 }
 
-                // Add the condition string for the 'IN' operator to the array
                 $conditionStrings[] = "$column $operator (" . implode(', ', $placeholders) . ")";
-            } else {
-                // For regular operators (e.g., '=', '<>', '<', '>')
-
-                // Create a unique placeholder for the value
+            }
+            // Standard comparison operators (=, <>, >, <, LIKE, etc.)
+            else {
                 $placeholder = "{$column}_{$index}";
-
-                // Add the value to the bindings array with the placeholder as the key
                 $bindings[$placeholder] = $value;
-
-                // Increment the index for the next placeholder
-                $index++;
-
-                // Add the condition string for the regular operator to the array
                 $conditionStrings[] = "$column $operator :$placeholder";
+                $index++;
             }
         }
 
-        // Join all condition strings with logical operator to form the complete WHERE clause
+        // Combine all conditions with the specified logical operator
         return implode(" $logicalOperator ", $conditionStrings);
     }
 
@@ -214,7 +334,7 @@ class Model
                 'totalRows' => $totalRows,
                 'totalPages' => ($limit > 0) ? ceil($totalRows / $limit) : 1,
                 'isLastPage' => ($limit > 0) ? ($pageNumber >= ceil($totalRows / $limit)) : true
-            ];  
+            ];
             return $data;
         } else {
             return $this->db->single();

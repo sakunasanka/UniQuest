@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
@@ -8,6 +8,15 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php $columns = [
+            "FullName" => "Full Name",
+            "Email" => "Email",
+            "ContactNo" => "Mobile Number",
+            "RegisterDate" => "Registered Date",
+            "Status" => "Status",
+            "Actions" => "Actions"
+        ];
+        ?>
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/students_mng">Students</button>
             <button class="tab" data-path="/UniQuest/admin/company_mng">Companies</button>
@@ -22,24 +31,13 @@
                 </button>
             </div>
             <table>
-                <thead>
-                    <?php
-                    $columns = [
-                        "UserID" => "UserID",
-                        "Email" => "Email",
-                        "ContactNo" => "Mobile Number",
-                        "RegisterDate" => "Registered Date",
-                        "Status" => "Status",
-                        "Actions" => "Actions"
-                    ];
-                    $sorter = Sorter::getInstance($columns);
-                    echo $sorter->renderHeaders();
-                    ?>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php foreach ($data['vtMembers'] as $user) : ?>
-                        <tr>
-                            <td><?php echo $user->UserID; ?></td>
+
+                    <?php if ($data['vtMembers']) : ?>
+                        <?php foreach ($data['vtMembers'] as $user) : ?>
+                            <tr>
+                            <td><?php echo $user->FullName; ?></td>
                             <td><?php echo $user->Email; ?></td>
                             <td><?php echo $user->ContactNo; ?></td>
                             <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
@@ -49,7 +47,7 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $user->UserID; ?>, "VT-Member", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($user->Email); ?>")'>
                                         person_remove
                                     </span>
                                 </td>
@@ -59,13 +57,18 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $user->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $user->UserID; ?>, 'VT-Member')">
+                                    <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $user->UserID; ?>, "VT-Member", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($user->Email); ?>")'>
                                         person_add
                                     </span>
                                 </td>
                             <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td class="no-data" colspan="6">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

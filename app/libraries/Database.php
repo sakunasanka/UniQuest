@@ -31,15 +31,17 @@ class Database
     }
 
     // Get the singleton instance of the database
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance === null) {
             self::$instance = new Database();
         }
         return self::$instance;
     }
-  
+
     // Prepare statement with query
-    public function query($sql) {
+    public function query($sql)
+    {
         $this->stmt = $this->dbh->prepare($sql);
     }
 
@@ -118,5 +120,18 @@ class Database
     public function lastInsertId()
     {
         return $this->dbh->lastInsertId();
+    }
+    
+    // Quote a string for use in a query
+    // This method is used to escape special characters in a string for use in an SQL statement
+    public function quote($string)
+    {
+        try {
+            return $this->dbh->quote($string);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            error_log("Quote error: " . $this->error);
+            return false;
+        }
     }
 }

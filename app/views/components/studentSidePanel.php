@@ -1,7 +1,7 @@
 <aside class="sidebar">
     <nav class="nav-menu">
         <!-- Dashboard -->
-        <button class="nav-btn" data-paths="/UniQuest/student/jobs,/UniQuest/student/internships,/UniQuest/student/company">
+        <button class="nav-btn" data-paths="/UniQuest/jobs,/UniQuest/internships,/UniQuest/companies">
             <span class="material-symbols-outlined"> work </span>
             Browse Opportunities
         </button>
@@ -27,7 +27,7 @@
         </button>
 
         <!-- Trending companies -->
-        <button class="nav-btn" data-path="/UniQuest/student/trendyCompany">
+        <button class="nav-btn" data-path="/UniQuest/jobs/trendyCompany">
             <span class="material-symbols-outlined"> trending_up </span>
             Trending Companies
         </button>

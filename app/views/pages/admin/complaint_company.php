@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -7,8 +7,18 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php
+        $columns = [
+            "JobTitle" => "Title",
+            "Complaint" => "Complaint",
+            "StudentName" => "Student Name",
+            "ComplainedDate" => "Complained Date",
+            "Status" => "Status",
+            "Actions" => "Actions"
+        ];
+        ?>
         <div class="content-header">
-            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/company_complaint'">
+            <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/company_complaints'">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
                 <h1>Complaint Management</h1>
             </button>
@@ -18,43 +28,39 @@
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
             <table>
-                <thead>
-                    <?php
-                    $columns = [
-                        "JobTitle" => "Title",
-                        "CompanyEmail" => "Company Email",
-                        "Complaint" => "Complaint",
-                        "StudentName" => "Student Name",
-                        "ComplainedDate" => "Complained Date",
-                        "Status" => "Status",
-                        "Actions" => "Actions"
-                    ];
-                    $sorter = Sorter::getInstance($columns);
-                    echo $sorter->renderHeaders();
-                    ?>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php foreach ($data['complaints'] as $complaint): ?>
+                    <?php if ($data['complaints']) : ?>
+                        <?php foreach ($data['complaints'] as $complaint): ?>
+                            <tr>
+                                <td><?php echo $complaint->JobTitle ?></td>
+                                <td><?php echo $complaint->Complaint ?></td>
+                                <td><?php echo $complaint->StudentName ?></td>
+                                <td><?php echo substr($complaint->ComplainedDate, 0, 10); ?></td>
+                                <?php if ($complaint->Status == 'Pending') : ?>
+                                    <td><span class="status pending"><?php echo $complaint->Status ?></span></td>
+                                <?php elseif ($complaint->Status == 'Resolved') : ?>
+                                    <td><span class="status active"><?php echo $complaint->Status ?></span></td>
+                                <?php elseif ($complaint->Status == 'Rejected') : ?>
+                                    <td><span class="status inactive"><?php echo $complaint->Status ?></span></td>
+                                <?php elseif ($complaint->Status == 'In-Review') : ?>
+                                    <td><span class="status in-review"><?php echo $complaint->Status ?></span></td>
+                                <?php endif; ?>
+                                <td class="action">
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaint->ComplaintID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View Complaint</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
                         <tr>
-                            <td><?php echo $complaint->JobTitle ?></td>
-                            <td><?php echo $complaint->CompanyEmail ?></td>
-                            <td><?php echo $complaint->Complaint ?></td>
-                            <td><?php echo $complaint->StudentName ?></td>
-                            <td><?php echo substr($complaint->ComplainedDate, 0, 10); ?></td>
-                            <?php if ($complaint->Status == 'Pending') : ?>
-                                <td><span class="status pending"><?php echo $complaint->Status ?></span></td>
-                            <?php elseif ($complaint->Status == 'Resolved') : ?>
-                                <td><span class="status active"><?php echo $complaint->Status ?></span></td>
-                            <?php elseif ($complaint->Status == 'Rejected') : ?>
-                                <td><span class="status inactive"><?php echo $complaint->Status ?></span></td>
-                            <?php endif; ?>
-                            <td class="action">
-                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/complaint_detail/<?php echo $complaint->ComplaintID; ?>'">
-                                    preview
-                                </span>
-                            </td>
+                            <td class="no-data" colspan="6">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

@@ -2,7 +2,7 @@
 class ChatModel extends Model {
 
     // Fetch chat messages between two users
-    public function getMessagesForAdmin($sender_id, $receiver_id) {
+    public function getMessages($sender_id, $receiver_id) {
         $sql = "SELECT * FROM messages_with_roles WHERE 
             (sender_id = :sender_id AND receiver_id = :receiver_id)
             OR 
@@ -15,10 +15,11 @@ class ChatModel extends Model {
     }
 
     // Save a new message
-    public function sendMessage($sender_id, $receiver_id, $topic, $message) {
-        $sql = "INSERT INTO messages (sender_id, receiver_id, topic, message) 
-                VALUES (:sender_id, :receiver_id, :topic, :message)";
+    public function sendMessage($email, $sender_id, $receiver_id, $topic, $message) {
+        $sql = "INSERT INTO messages (user_email, sender_id, receiver_id, topic, message) 
+                VALUES (:email, :sender_id, :receiver_id, :topic, :message)";
         $this->db->query($sql);
+        $this->db->bind(':email', $email);
         $this->db->bind(':sender_id', $sender_id);
         $this->db->bind(':receiver_id', $receiver_id);
         $this->db->bind(':topic', $topic);
@@ -27,7 +28,7 @@ class ChatModel extends Model {
     }
 
     public function getLastMessageBetween($sender_id, $receiver_id) {
-        $sql = "SELECT topic FROM messages 
+        $sql = "SELECT topic, user_email FROM messages 
                 WHERE (sender_id = :sender_id AND receiver_id = :receiver_id)
                 OR (sender_id = :receiver_id AND receiver_id = :sender_id)
                 ORDER BY created_at DESC LIMIT 1";
@@ -75,19 +76,35 @@ class ChatModel extends Model {
         return false;
     }
 
-    public function editMessage($messageId, $newMessage) {
-        $sql = "UPDATE messages SET message = :newMessage WHERE id = :messageId";
-        $this->db->query($sql);
-        $this->db->bind(':newMessage', $newMessage);
-        $this->db->bind(':messageId', $messageId);
-        return $this->db->execute();
+    public function editMessage($messageId, $newMessage, $senderId) {
+        try {
+            $this->db->query('UPDATE messages SET message = :newMessage WHERE id = :messageId AND sender_id = :senderId');
+            $this->db->bind(':newMessage', $newMessage);
+            $this->db->bind(':messageId', $messageId);
+            $this->db->bind(':senderId', $senderId);
+
+            return $this->db->execute() ;
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
     }
 
-    public function deleteMessage($messageId) {
-        $sql = "DELETE FROM messages WHERE id = :messageId";
-        $this->db->query($sql);
-        $this->db->bind(':messageId', $messageId);
-        return $this->db->execute();
+    public function deleteMessage($messageId, $senderId) {
+        try {
+
+            $this->db->query('DELETE FROM messages WHERE id = :messageId AND sender_id = :senderId');
+            $this->db->bind(':messageId', $messageId);
+            $this->db->bind(':senderId', $senderId);
+
+            return $this->db->execute();
+               
+
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
     }
     
 }

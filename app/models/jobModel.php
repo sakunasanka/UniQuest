@@ -93,13 +93,22 @@ class jobModel extends Model
     //     }
     // }
 
-    public function getVerifiedJobsByCategory($category, $pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getVerifiedJobsByCategory($category, $pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '')
     {
         try {
+            // Define base conditions
             $conditions = [
                 ['Status', 'IN', ['Active', 'Deactive']],
                 ['Category', '=', $category]
             ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
             $users = $this->select(
                 'v_jobs', 
                 $conditions, 
@@ -122,12 +131,21 @@ class jobModel extends Model
     }
 
 
-    public function getPendingJobs($pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getPendingJobs($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '')
     {
         try {
+            // Define base conditions
             $conditions = [
                 ['Status', '=', 'Pending']
             ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
             $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
@@ -139,12 +157,21 @@ class jobModel extends Model
         }
     }
 
-    public function getNotApprovedJobs($pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getNotApprovedJobs($pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '')
     {
         try {
+            // Define base conditions
             $conditions = [
                 ['Status', '=', 'Not Approved']
             ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
             $users = $this->select('v_jobs', $conditions, 'JobID, CompanyID, Title, CompanyName, Email, jobs_create_at, Status, Category', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $users;
         } catch (PDOException $e) {
@@ -187,22 +214,6 @@ class jobModel extends Model
             } else {
                 return false;
             }
-
-            // $logData = [
-            //     'EntityID' => $jobId,
-            //     'EntityType' => 'Job',
-            //     'Action' => 'Approve',
-            //     'ActionBy' => $_SESSION['user_id'],
-            //     'ActionDate' => date('Y-m-d H:i:s')
-            // ];
-
-            // if (!$this->insert('VerificationLogs', $logData)) {
-            //     $this->db->rollBack();
-            //     return false;
-            // }
-
-            // $this->db->commit();
-            // return true;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
@@ -322,11 +333,23 @@ class jobModel extends Model
         }
     }
 
-    public function getVerifiedJobsByMe($userId, $pageNumber = 1, $rowsPerPage = 2, $sort = "JobID", $order = "ASC")
+    public function getVerifiedJobsByMe($userId, $pageNumber = 1, $rowsPerPage = 10, $sort = "JobID", $order = "ASC", $search = '')
     {
         try {
+            // Define base conditions
+            $conditions = [
+                ['ActionBy', '=', $userId]
+            ];
+
+            // Add search condition if a search term is provided
+            if (!empty($search)) {
+                $searchTerm = '%' . $search . '%';
+                $searchField =  "CONCAT_WS(' ', Title, Category, Email, DATE_FORMAT(ActionDate, '%Y-%m-%d'), Status)";
+
+                $conditions[] = [$searchField, 'LIKE', $searchTerm];
+            }
             // Get users verified by the current user
-            $verifiedEntities = $this->select('v_verifiedJobs', [['ActionBy', '=', $userId]], '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $verifiedEntities = $this->select('v_verifiedJobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $verifiedEntities;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -334,6 +357,21 @@ class jobModel extends Model
         } catch (Exception $e) {
             error_log("General Error: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function isApplied($jobId)
+    {
+        try {
+            $this->db->query("SELECT 1 FROM applications WHERE user_id = :studentId AND job_id = :jobId LIMIT 1");
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobId', $jobId);
+            
+            // Returns true if a row exists, false otherwise
+            return $this->db->single() !== false;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
         }
     }
 

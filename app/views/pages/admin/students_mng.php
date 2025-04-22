@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
 <!-- Sidebar and Content Layout -->
@@ -8,6 +8,15 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php $columns = [
+            "FullName" => "Full Name",
+            "Email" => "Email",
+            "ContactNo" => "Mobile Number",
+            "RegisterDate" => "Registered Date",
+            "Status" => "Status",
+            "Actions" => "Actions"
+        ];
+        ?>
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/students_mng">Students</button>
             <button class="tab" data-path="/UniQuest/admin/company_mng">Companies</button>
@@ -16,30 +25,18 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <!-- <button class="add-btn" data-path="/uniquest/admin/add_student">
+                <!-- <button class="add-btn" data-path="/UniQuest/admin/add_student">
                     <span class="material-symbols-outlined">person_add</span>
                     <span class="add-btn-text">Add Student</span>
                 </button> -->
             </div>
             <table>
-                <thead>
-                    <?php
-                    $columns = [
-                        "UserID" => "UserID", 
-                        "Email" => "Email", 
-                        "ContactNo" => "Mobile Number", 
-                        "RegisterDate" => "Registered Date", 
-                        "Status" => "Status", 
-                        "Actions" => "Actions"
-                    ];
-                    $sorter = Sorter::getInstance($columns);
-                    echo $sorter->renderHeaders();
-                    ?>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php foreach ($data['students'] as $student) : ?>
-                        <tr>
-                            <td><?php echo $student->UserID; ?></td>
+                    <?php if ($data['students']) : ?>
+                        <?php foreach ($data['students'] as $student) : ?>
+                            <tr>
+                            <td><?php echo $student->FullName; ?></td>
                             <td><?php echo $student->Email; ?></td>
                             <td><?php echo $student->ContactNo; ?></td>
                             <td><?php echo substr($student->RegisterDate, 0, 10); ?></td>
@@ -49,22 +46,27 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateUser(<?php echo $student->UserID; ?>, 'Student')">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $student->UserID; ?>, "Student", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($student->Email); ?>")'>
                                         person_remove
                                     </span>
                                 </td>
-                            <?php elseif ($student->Status == 'Deactive') : ?>
-                                <td><span class="status inactive">Deactive</span></td>
+                                <?php elseif (in_array($student->Status, ['Deactive', 'Pending Deletion', 'Deleted'])) : ?>
+                                <td><span class="status inactive"><?php echo $student->Status; ?></span></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
                                         account_box
                                     </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick="activateUser(<?php echo $student->UserID; ?>, 'Student')">
+                                    <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $student->UserID; ?>, "Student", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($student->Email); ?>")'>
                                         person_add
                                     </span>
                                 <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td class="no-data" colspan="6">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

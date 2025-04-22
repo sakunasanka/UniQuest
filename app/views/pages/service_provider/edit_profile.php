@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/changePassword.php'; ?>
 <?php require APPROOT . '/views/popups/student/deactivate_account.php'; ?>
 
@@ -17,7 +17,7 @@
                 <div class="sidebr">
                     <div class="upload-container">
                         <input type="file" id="profilePic" name="companyLogo" accept=".jpg, .jpeg, .png">
-                        <img src="<?php echo UPLOADROOT .'/profile_pictures/company/' . $data['companyLogo']; ?>" alt="profilepic-placeholder" id="profilePicPreview">
+                        <img src="<?php echo UPLOADROOT . '/profile_pictures/company/' . $data['companyLogo']; ?>" alt="profilepic-placeholder" id="profilePicPreview">
                         <div class="upload-icon">⬆️</div>
                         <div class="upload-message">Image size should be under 5MB</div>
                     </div>
@@ -39,7 +39,12 @@
                         </div>
                         <div class="form-group">
                             <label for="industry">Industry</label>
-                            <input type="text" id="industry" name="industry" value="<?php echo $data['industry']; ?>" required>
+                            <select id="industryID" name="industryID" required>
+                                <option value="" disabled selected>Select Industry</option>
+                                <?php foreach ($data['industries'] as $industry) : ?>
+                                    <option value="<?php echo $industry->IndustryID; ?>" <?php echo ($data['industryID'] == $industry->IndustryID) ? 'selected' : ''; ?>><?php echo $industry->IndustryName; ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <span class="error-msg"><?php echo !empty($data['industry_err']) ? $data['industry_err'] : ''; ?></span>
                         </div>
                     </div>
@@ -53,6 +58,18 @@
                             <label for="website">Website</label>
                             <input type="text" id="website" name="website" value="<?php echo $data['website']; ?>">
                             <span class="error-msg"><?php echo !empty($data['website_err']) ? $data['website_err'] : ''; ?></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="linkedin">Linkedin</label>
+                            <input type="text" id="linkedin" name="linkedin" value="<?php echo $data['linkedin']; ?>">
+                            <span class="error-msg"><?php echo !empty($data['linkedin_err']) ? $data['linkedin_err'] : ''; ?></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="facebook">Facebook</label>
+                            <input type="text" id="facebook" name="facebook" value="<?php echo $data['facebook']; ?>">
+                            <span class="error-msg"><?php echo !empty($data['facebook_err']) ? $data['facebook_err'] : ''; ?></span>
                         </div>
                     </div>
                     <div class="form-row">
@@ -75,7 +92,20 @@
                         </div>
                         <div class="form-group">
                             <label for="city">City</label>
-                            <input type="text" id="city" name="city" value="<?php echo $data['city']; ?>" required>
+                            <div style="display: flex; justify-content: space-between; gap: 10px; width: 100%;">
+                                <select id="districtID" name="districtID" required style="width: 50%;" data-preselected-district="<?php echo htmlspecialchars($data['districtID']); ?>">
+                                    <option value="" disabled selected>Select District</option>
+                                    <?php foreach ($data['districts'] as $district) : ?>
+                                        <option value="<?php echo $district->DistrictID; ?>" <?php echo ($data['districtID'] == $district->DistrictID) ? 'selected' : ''; ?>><?php echo $district->DistrictName; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <select id="cityID" name="cityID" required style="width: 50%;" data-preselected-city="<?php echo htmlspecialchars($data['cityID']); ?>">
+                                    <option value="" disabled selected>Select City</option>
+                                    <?php foreach ($data['cities'] as $city) : ?>
+                                        <option value=" <?php echo $city->CityID; ?>" <?php echo ($data['cityID'] == $city->CityID) ? 'selected' : ''; ?>><?php echo $city->CityName; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                             <span class="error-msg"><?php echo !empty($data['city_err']) ? $data['city_err'] : ''; ?></span>
                         </div>
                     </div>
@@ -102,5 +132,6 @@
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/register/fileUpload.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/student/profile_pic_preview.js"></script>
+<script type="module" src="<?php echo URLROOT; ?>/public/js/register/citiesForDistrict.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

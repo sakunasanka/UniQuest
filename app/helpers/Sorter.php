@@ -4,18 +4,16 @@ class Sorter {
     private $currentSort;
     private $currentOrder;
     private $baseUrl;
-    private $columns;
 
-    private function __construct($columns) {
-        $this->columns = $columns;
-        $this->currentSort = isset($_GET['sort']) ? $_GET['sort'] : array_key_first($columns);
+    private function __construct() {
+        $this->currentSort = isset($_GET['sort']) ? $_GET['sort'] : ""; // Default sort
         $this->currentOrder = isset($_GET['order']) ? $_GET['order'] : "ASC"; // Default order
         $this->baseUrl = $this->generateBaseUrl();
     }
 
-    public static function getInstance($columns) {
+    public static function getInstance() {
         if (self::$instance === null) {
-            self::$instance = new self($columns);
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -35,10 +33,10 @@ class Sorter {
         return $parsedUrl['path'] . '?' . http_build_query($queryParams);
     }
 
-    public function renderHeaders() {
+    public function renderHeaders($columns) {
         $headerHtml = "<tr>";
         
-        foreach ($this->columns as $key => $column) {
+        foreach ($columns as $key => $column) {
             if ($key === "Actions") {
                 $headerHtml .= "<th class='no-sort'>$column</th>";
                 continue;
@@ -58,6 +56,22 @@ class Sorter {
 
         $headerHtml .= "</tr>";
         return $headerHtml;
+    }
+
+    public function renderMainSort($columns) {
+        $sortHtml = "<select class='filter' name='sortBy'onchange='window.location.href=this.value'>";
+        $sortHtml .= "<option value=''>Sort By</option>";
+        
+        foreach ($columns as $key => $column) {
+            // $newOrder = ($this->currentSort === $key && $this->currentOrder === "ASC") ? "DESC" : "ASC";
+            $sortUrl = $this->baseUrl . "&sort=$key&order=DESC";
+            $selected = $this->currentSort === $key ? "selected" : "";
+            
+            $sortHtml .= "<option value='$sortUrl' $selected>$column</option>";
+        }
+
+        $sortHtml .= "</select>";
+        return $sortHtml;
     }
 }
 

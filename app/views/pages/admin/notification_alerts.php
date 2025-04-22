@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/notification.css">
 
 <div class="main-container">
@@ -61,15 +61,13 @@
                         \"{$message->id}\",
                         \"{$message->topic}\",
                         \"{$message->message}\",
-                        \"{$message->name}\",
-                        \"{$message->email}\",
+                        \"{$message->sender_email}\",
                         \"{$message->created_at}\"
                     )'>
                     <div class='badge message'>message</div> 
                     <div class='content'>
                         <h4>{$message->topic}</h4>
                         <p>{$message->message}</p>
-                        <span class='author'>{$message->name}</span>
                     </div>
                     <div class='time'>{$message->created_at}</div>
                 </div>";

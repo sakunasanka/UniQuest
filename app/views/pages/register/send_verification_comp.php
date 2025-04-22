@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/login.css">
+    <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
 </head>
 
 <body>
@@ -49,7 +50,7 @@
                     <div class="form-row">
                         <!-- <div class="input-center">
                             <div class="reg">
-                                <span>Do not have an account?</span> <a href="/uniquest/register"> Register now</a>
+                                <span>Do not have an account?</span> <a href="/UniQuest/register"> Register now</a>
                             </div>
                         </div> -->
                     </div>

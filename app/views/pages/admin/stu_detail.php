@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_details.css">
@@ -100,6 +100,49 @@
                             No uploaded CV
                         <?php endif; ?>
                     </span>
+                </div>
+                <div class="detail-row">
+                    <?php if ($data['verifyDetails']->Action == 'Approve'): ?>
+                        <div class="status-act">
+                            <span>Approved By: </span>
+                            <?php if ($data['verifyDetails']->ActionByID == $_SESSION['user_id']): ?>
+                                <span><?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                            <?php else: ?>
+                                <span class="actionby-link" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['verifyDetails']->ActionByID; ?>'">
+                                    <?php echo $data['verifyDetails']->ActionByName ?>
+                                </span><br>
+                            <?php endif; ?>
+                            <span>Approved On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php elseif ($data['verifyDetails']->Action == 'Reject'): ?>
+                        <div class="status-deact">
+                            <span>Rejected By: </span>
+                            <?php if ($data['verifyDetails']->ActionByID == $_SESSION['user_id']): ?>
+                                <span><?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                            <?php else: ?>
+                                <span class="actionby-link" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['verifyDetails']->ActionByID; ?>'">
+                                    <?php echo $data['verifyDetails']->ActionByName ?>
+                                </span><br>
+                            <?php endif; ?>
+                            <span>Reason: <?php echo $data['verifyDetails']->Reason ?></span><br>
+                            <span>Rejected On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="detail-row">
+                    <?php if ($data['user']['Status'] == 'Deactive' || $data['user']['Status'] == 'Pendind Deletion' && $data['acc_log'] != NULL): ?>
+                        <div class="status-deact">
+                            <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                            <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>
+                            <span>Deactivated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php elseif ($data['user']['Status'] == 'Active' && $data['acc_log'] != NULL): ?>
+                        <div class="status-act">
+                            <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                            <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>
+                            <span>Activated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="btn-row">
                     <div></div>

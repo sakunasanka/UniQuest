@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/ser_dashboard.css">
 
 <div class="main-container">
@@ -6,9 +6,26 @@
     <main class="content-area">
         <div class="header-section">
             <h1>Welcome!</h1>
+
+            <?php
+            if($data['companyInfo']->subscription_plan == 'professional'):
+            ?>
+            <button class="activate-btn" id="activate-premium" onclick="goToPremiums()">
+                <span class="material-symbols-outlined gold-icon"> workspace_premium </span> Professional
+            </button>
+
+            <?php
+            elseif($data['companyInfo']->subscription_plan == 'enterprise'):
+            ?>
+            <button class="activate-btn" id="activate-premium" onclick="goToPremiums()">
+                <span class="material-symbols-outlined black-icon"> workspace_premium </span> Enterprise
+            </button>
+
+            <?php else: ?>   
             <button class="activate-btn" id="activate-premium" onclick="goToPremiums()">
                 <span class="material-symbols-outlined black-icon"> workspace_premium </span> Activate Premium
             </button>
+            <?php endif; ?>
         </div>
         <div class="grid-container">
             <div class="card" onclick="goToJobs()">
@@ -67,22 +84,33 @@
 
 <script>
     function goToJobs() {
-        window.location.href = "/uniquest/service_provider/ongoing_jobs";
+        window.location.href = "/UniQuest/service_provider/pending_jobs";
     }
 
     function goToApplications() {
-        window.location.href = "/uniquest/service_provider/new_applications";
+        window.location.href = "/UniQuest/service_provider/application_dashboard";
     }
 
     function goToAnalytics() {
-        window.location.href = "/uniquest/service_provider/analytics";
+        window.location.href = "/UniQuest/service_provider/analytics";
     }
 
     function goToReviews() {
-        window.location.href = "/uniquest/service_provider/reviews";
+        window.location.href = "/UniQuest/user/profile#reviews-section";
     }
 
+    window.onload = function() {
+        if(window.location.hash === "#reviews-section") {
+            const reviewsSection = document.getElementById('reviews-section');
+            if(reviewsSection) {
+                reviewsSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        }
+    };
+
     function goToPremiums() {
-        window.location.href = "/uniquest/service_provider/premium";
+        window.location.href = "/UniQuest/service_provider/premium";
     }
 </script>

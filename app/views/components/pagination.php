@@ -11,11 +11,17 @@
     <div class="limit-container">
         <!-- Form for limit selection -->
         <form method="GET" class="limit-form">
-            <span class="rows-text">Records per Page:</span>
+            <span class="rows-text">Limit:</span>
             <select class="limit-select" name="limit" onchange="this.form.submit()">
                 <?php
-                $limits = [1, 2, 4, 6, 8, 10];
                 $selectedLimit = isset($_GET['limit']) ? (int)$_GET['limit'] : $data['rowsPerPage'];
+                if (in_array($selectedLimit, [12, 24, 48, 96])) {
+                    $limits = [12, 24, 48, 96];
+                } elseif (in_array($selectedLimit, [10, 20, 40, 80])) {
+                    $limits = [10, 20, 40, 80];
+                } else {
+                    $limits = [10, 20, 40, 80];
+                }
                 foreach ($limits as $limit) {
                     $selected = ($limit == $selectedLimit) ? "selected" : "";
                     echo "<option value='$limit' $selected>$limit</option>";

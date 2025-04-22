@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/register/reg_form.css">
+    <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
 </head>
 
 <body>
@@ -88,7 +89,7 @@
                                 <div class="file-content">
                                     <span>Drag & Drop to Upload NIC Scanned copy</span>
                                     <button type="button" class="browse-btn">Browse File
-                                        <input type="file" id="nicCopy" name="nicCopy" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" id="nicCopy" name="nicCopy" accept=".pdf,.doc,.docx">
                                     </button>
                                     <span class="file-name">No file selected</span>
                                 </div>
@@ -143,7 +144,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="university">University<span class="req"> *</span></label>
-                            <input type="text" id="university" name="university" value="<?php echo $data['university']; ?>" placeholder="Enter University" required>
+                            <input type="text" id="university" name="university" value="<?php echo $_SESSION['university'] ?>" placeholder="Enter University" required readonly>
                             <span class="error-msg"><?php echo !empty($data['university_err']) ? $data['university_err'] : ''; ?></span>
                         </div>
                         <div class="input-container">
@@ -159,7 +160,7 @@
                                 <div class="file-content">
                                     <span>Drag & Drop to Upload University ID Scanned Copy</span>
                                     <button type="button" class="browse-btn">Browse File
-                                        <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".pdf,.doc,.docx">
                                     </button>
                                     <span class="file-name">No file selected</span>
                                 </div>

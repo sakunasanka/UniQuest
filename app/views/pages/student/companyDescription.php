@@ -1,18 +1,25 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/more_reviews.php'; ?>
 <?php require APPROOT . '/views/popups/student/addReview_popup.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobsDescription.css">
 
-<?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
-    <?php else: ?>       
-<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
+<?php if (isset($_SESSION['user_role'])): ?>
+<?php else: ?>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/guest_user.css">
 <?php endif; ?>
 
 <div class="main-container">
     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
         <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
-    <?php endif; ?>    
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>
+        <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+        <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
+    <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
+        <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
+    <?php endif; ?>
 
     <div class="content-area">
         <div class="view-card">
@@ -25,122 +32,183 @@
 
             <div class="view-card-content">
                 <div class="title-with-bookmark">
-                    <h1><?php echo $data['post']->CompanyName;?></h1>
+                    <h1><?php echo $data['post']->CompanyName; ?></h1>
                     <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
                         <div class="card-icons">
-                            <i class="fa fa-share-alt" aria-hidden="true"></i>
-                            <i class="<?php echo in_array($post->CompanyID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->CompanyID; ?>, this);"></i>
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->UserID; ?>)"></i>
+                            <i class="<?php echo in_array($post->UserID, $data['bookmarkedCompanyIds']) ? 'fa-solid' : 'fa-regular'; ?> fa-bookmark" onclick="toggleBookmark(this); bookmarkCompany(<?php echo $post->UserID; ?>, this);"></i>
+                        </div>
+                    <?php else: ?>
+                        <div class="card-icons">
+                            <i class="fa fa-share-alt" aria-hidden="true" onclick="shareJob(<?php echo $post->UserID; ?>)"></i>
                         </div>
                     <?php endif; ?>
                 </div>
 
                 <h2><?php echo $data['post']->Industry; ?></h2>
                 <p><?php echo $data['post']->Description; ?></p>
-              
+
                 <div class="view-card-info">
                     <div>
                         <span>Address</span>
-                        <?php 
-                        $addressParts = [
-                            rtrim($data['post']->StreetNo, ','),        // Remove trailing comma if it exists
-                            rtrim($data['post']->AddressLine1, ','),
-                            rtrim($data['post']->AddressLine2, ','),
-                            rtrim($data['post']->City, ',')
-                        ];
-
-                        $address = implode(', ', array_filter($addressParts)); // Join parts with commas
-                        echo $address;
-                        ?>
+                        <?php echo $data['post']->Address; ?>
                     </div>
                     <div>
-                        <span>Phone</span>
+                        <span>Contact No</span>
                         <?php echo $data['post']->ContactNo; ?>
                     </div>
                     <div>
                         <span>Email</span>
                         <?php echo $data['post']->Email; ?>
                     </div>
-                    <div>
-                        <span>Website</span>
-                        <a href="<?php echo (strpos($data['post']->Website, 'http://') === 0 || strpos($data['post']->Website, 'https://') === 0) 
-                                    ? $data['post']->Website 
-                                    : 'http://' . $data['post']->Website; ?>" 
-                        target="_blank">
-                            <?php echo $data['post']->Website; ?>
-                        </a>
-                    </div>
                 </div>
+                <div class="view-card-info">
+                    <?php if (!empty($data['post']->Website)): ?>
+                        <div>
+                            <span>Website</span>
+                            <?php
+                            $website = $data['post']->Website;
+                            // Ensure website has proper protocol
+                            if (!preg_match("~^(?:f|ht)tps?://~i", $website)) {
+                                $website = "https://" . ltrim($website, '/');
+                            }
+                            ?>
+                            <a href="<?php echo htmlspecialchars($website); ?>" target="_blank" rel="noopener noreferrer">
+                                <?php echo htmlspecialchars(parse_url($website, PHP_URL_HOST) ?: $website); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
 
+                    <?php if (!empty($data['post']->LinkedIn)): ?>
+                        <div>
+                            <span>LinkedIn</span>
+                            <?php
+                            $linkedin = $data['post']->LinkedIn;
+                            // Format LinkedIn URL properly
+                            if (!preg_match("~^(?:f|ht)tps?://~i", $linkedin)) {
+                                $linkedin = "https://www.linkedin.com/" . ltrim($linkedin, '/');
+                            }
+                            ?>
+                            <a href="<?php echo htmlspecialchars($linkedin); ?>" target="_blank" rel="noopener noreferrer">
+                                linkedin.com/<?php echo htmlspecialchars(basename($linkedin)); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($data['post']->Facebook)): ?>
+                        <div>
+                            <span>Facebook</span>
+                            <?php
+                            $facebook = $data['post']->Facebook;
+                            // Format Facebook URL properly
+                            if (!preg_match("~^(?:f|ht)tps?://~i", $facebook)) {
+                                $facebook = "https://www.facebook.com/" . ltrim($facebook, '/');
+                            }
+                            ?>
+                            <a href="<?php echo htmlspecialchars($facebook); ?>" target="_blank" rel="noopener noreferrer">
+                                facebook.com/<?php echo htmlspecialchars(basename($facebook)); ?>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
+                    <div class="buttons">
+                        <button id="openPopupBtn" class="contact-btn-2">Contact</button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
-
         <div class="view-card">
             <div class="job-list">
-                <?php for ($i = 0; $i < 3; $i++): ?>
-                    <div class="job-item" onclick="goToJobDescription()">
-                        <div class="job-header">
-                            <div>
-                                <h5>Senior UX Designer</h5>
-                            </div>
-                        </div>
-                        <div class="job-tags">
-                            <span class="tag">On-Site</span>
-                            <span class="tag">Full-Time</span>
-                            <span class="tag">Design</span>
-                        </div>
-                        <p class="job-description">
-                            Acme Inc. seeks a Senior UX Designer to create user-centric designs, collaborating with teams to deliver innovative, intuitive software solutions for exceptional user experiences.
-                        </p>
-                        <div class="job-actions">
-                            <button class="details-btn">View Details</button>
+                <?php if (empty($data['jobs'])): ?>
+                    <div class="job-header">
+                        <div>
+                            <h5><?php echo ("No available jobs to show."); ?></h5>
                         </div>
                     </div>
-                <?php endfor; ?>
+                <?php else: ?>
+
+                    <?php foreach ($data['jobs'] as $index => $job): ?>
+                        <div class="job-item" onclick="goToJobDescription(<?php echo ($job->JobID); ?>)">
+                            <div class="job-header">
+                                <div>
+                                    <h5><?php echo ($job->Title); ?></h5>
+                                </div>
+                            </div>
+                            <div class="job-tags">
+                                <span class="tag"><?php echo ($job->Category); ?></span>
+                                <!-- <span class="tag">Design</span> -->
+                            </div>
+                            <div>
+                                <p>Location: <?php echo ($job->City); ?></p>
+                            </div>
+                            <div>
+                                <p>Salary: Rs.<?php echo ($job->SalaryRange); ?> <?php echo ($job->SalaryType); ?></p>
+                            </div>
+                            <div>
+                                <p>Published On: <?php echo converttimetoreadableformat($job->PublishDate); ?></p>
+                            </div>
+                            </br>
+                            <div class="job-actions">
+                                <button class="details-btn">View Details</button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
 
         <div class="view-card view-card-2">
             <div class="reviews-section">
-                <h4>Reviews and Ratings about this company</h4>
+                <h3>Reviews and Ratings about this company</h3>
+                <?php if (!empty($data['reviews'])): ?>
+                    <?php foreach ($data['reviews'] as $index => $review): ?>
+                        <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
+                            <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
+                                <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                <div class="review-details">
+                                    <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
+                                    <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
+                                </div>
+                                <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company')): ?>
+                                    <div class="review-actions">
+                                        <button class="like-btn <?php echo $review->is_liked ? 'liked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
+                                            <span class="material-symbols-outlined like-icon">thumb_up</span>
+                                        </button>
+                                        <span class="like-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->LikeCount); ?> likes</span>
 
-                <!-- Reviews on Main Page -->
-                <?php for ($i = 0; $i < 3; $i++): ?>
-                    <div class="review" id="page-review-<?php echo $i; ?>" data-id="<?php echo $i; ?>">
-                        <p class="review-text">"Great company to work for! Management is supportive, with benefits like meals and accommodation."</p>
-                        <div class="review-details">
-                            <span class="reviewer-name">- John Doe</span>
-                            <span class="review-rating"><i class="fa fa-star"></i> 5.0</span>
-                        </div>
-                        <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
-                            <div class="review-actions">
-                                <button class="like-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined like-icon">thumb_up</span>
-                                </button>
-                                <span class="like-count" data-id="<?php echo $i; ?>">0 likes</span>
-
-                                <button class="dislike-btn" data-id="<?php echo $i; ?>">
-                                    <span class="material-symbols-outlined dislike-icon">thumb_down</span>
-                                </button>
-                                <span class="dislike-count" data-id="<?php echo $i; ?>">0 dislikes</span>
+                                        <button class="dislike-btn <?php echo $review->is_disliked ? 'disliked' : ''; ?>" data-id="<?php echo $index; ?>" data-review-id="<?php echo $review->ReviewID; ?>">
+                                            <span class="material-symbols-outlined dislike-icon">thumb_down</span>
+                                        </button>
+                                        <span class="dislike-count" data-id="<?php echo $index; ?>"><?php echo htmlspecialchars($review->DislikeCount); ?> dislikes</span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
-                    </div>
-                <?php endfor; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No reviews available.</p>
+                <?php endif; ?>
             </div>
             <div class="buttons btn-space-between">
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
-                    <!-- <button onclick="goToAddReview(<?php echo $post->CompanyID; ?>)" class="apply-btn">Add review</button> -->
                     <button onclick="ToggleAddReview()" class="apply-btn">Add review</button>
 
-                    <button class="seemore">
-                        <p onclick="toggleMoreReviews()">See more reviews...</p>
-                    </button>
+                    <?php if (count($data['reviews']) >= 3): ?>
+                        <button class="seemore" style="margin-top: 1px;">
+                            <p onclick="toggleMoreReviews()">See more reviews...</p>
+                        </button>
+                    <?php endif; ?>
+
                 <?php else: ?>
                     <div></div>
-                    <button class="seemore">
-                        <p onclick="toggleMoreReviews()">See more reviews...</p>
-                    </button>
+
+                    <?php if (count($data['reviews']) >= 3): ?>
+                        <button class="seemore" style="margin-top: 1px;">
+                            <p onclick="toggleMoreReviews()">See more reviews...</p>
+                        </button>
+                    <?php endif; ?>
 
                 <?php endif; ?>
             </div>
@@ -151,20 +219,15 @@
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script src="<?php echo URLROOT; ?>/public/js/student/jobsDescription.js"></script>
+<script src="<?php echo URLROOT; ?>/public/js/student/myreviews.js"></script>
 
 <script>
-    function goToJobDescription() {
-        window.location.href = "/uniquest/student/jobsdescription/" + 23;
+    function goToJobDescription(jobId) {
+        window.location.href = "/UniQuest/jobs/jobsdescription/" + jobId;
     }
 </script>
 
 <script>
-    function toggleFavorite(icon) {
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-        icon.classList.toggle("icon-active");
-    }
-
     function toggleBookmark(icon, companyId) {
         icon.classList.toggle("fa-regular");
         icon.classList.toggle("fa-solid");
@@ -192,5 +255,15 @@
 
         // Send the request with the form data
         xhr.send(formData);
+    }
+
+    function shareJob(companyId) {
+        const jobURL = `${window.location.origin}/UniQuest/jobs/companydescription/${companyId}`;
+
+        navigator.clipboard.writeText(jobURL).then(() => {
+            Flash.show('Company link copied to clipboard!', 'success');
+        }).catch(err => {
+            Flash.show('Failed to copy link', 'error');
+        });
     }
 </script>

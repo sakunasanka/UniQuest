@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -21,70 +21,41 @@
                         <th onclick="sortTable(2)">Location</th>
                         <th onclick="sortTable(3)">Date</th>
                         <th onclick="sortTable(4)">Status</th>
-                        <!-- <th class="no-sort">Actions</th> -->
+                        <th class="no-sort">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Delivery Rider</td>
-                        <td>Pizza Hut</td>
-                        <td>Negombo</td>
-                        <td>2024/08/16</td>
-                        <td><span class="status active">Accepted</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
-                    </tr>
-                    <tr>
-                        <td>Software Engineer</td>
-                        <td>99X Technology</td>
-                        <td>Colombo</td>
-                        <td>2024/08/15</td>
-                        <td><span class="status pending">Pending</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
-                    </tr>
-                    <tr>
-                        <td>Marketing Executive</td>
-                        <td>John Keells</td>
-                        <td>Colombo</td>
-                        <td>2024/08/14</td>
-                        <td><span class="status inactive">Rejected</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
-                    </tr>
-                    <tr>
-                        <td>Sales Ref</td>
-                        <td>Abans</td>
-                        <td>Wattala</td>
-                        <td>2024/07/09</td>
-                        <td><span class="status inactive">Rejected</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
-                    </tr>
-                    <tr>
-                        <td>Delivery Rider</td>
-                        <td>Burger King</td>
-                        <td>Galle</td>
-                        <td>2024/07/16</td>
-                        <td><span class="status active">Accepted</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
-                </tbody>
+    <?php if(empty($data['applications'])) : ?>
+        <tr>
+            <td colspan="6" class="text-center">You haven't applied to any jobs yet.</td>
+        </tr>
+    <?php else : ?>
+        <?php foreach($data['applications'] as $application) : ?>
+            <tr>
+                <td><?php echo htmlspecialchars($application->JobTitle); ?></td>
+                <td><?php echo htmlspecialchars($application->CompanyName); ?></td>
+                <td><?php echo htmlspecialchars($application->JobLocation); ?></td>
+                <td><?php echo date('Y/m/d', strtotime($application->SubmissionDate)); ?></td>
+                <td>
+                    <?php if($application->ApplicationStatus == 'Accepted') : ?>
+                        <span class="status active">Accepted</span>
+                    <?php elseif($application->ApplicationStatus == 'Rejected') : ?>
+                        <span class="status inactive">Rejected</span>
+                    <?php else : ?>
+                        <span class="status pending">Pending</span>
+                    <?php endif; ?>
+                </td>
+                <td class="action">
+                    <a href="<?php echo URLROOT; ?>/student/view_application/<?php echo $application->ApplicationID; ?>">
+                        <span class="material-symbols-outlined action-btn view">
+                            preview
+                        </span>
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
