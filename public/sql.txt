@@ -1048,6 +1048,12 @@ ALTER TABLE `notifications`
 MODIFY COLUMN `type` ENUM('info', 'success', 'warning', 'danger', 'message', 'complaint') NOT NULL;
 
 
+ALTER TABLE jobs 
+MODIFY COLUMN Status 
+ENUM('Active', 'Deactive', 'Pending', 'Not Approved', 'Deleted') 
+CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci 
+NULL;
+
 
 
 -- Create the trigger for automatic date updates
