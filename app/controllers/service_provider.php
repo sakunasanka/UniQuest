@@ -138,9 +138,18 @@ class Service_provider extends Controller
 
     public function dashboard()
     {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+        }
+        // Get bookmarked jobs for the user
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($userId);
+        $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($userId);
+
         $companyInfo = $this->model('companyModel')->getCompanyInfo();
 
         $data = [
+            'reviews'=>$reviews,
+            'Rating'=>$displayRating,
             'companyInfo' => $companyInfo
         ];
         

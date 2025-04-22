@@ -33,7 +33,7 @@
                 <h2>Jobs</h2>
                 <p>View, Edit and manage your jobs.</p>
                 <div class="card-stats">
-                    <span><?php echo $data['companyInfo']->TotalJobViewCount ?></span>
+                    <span><?php $data['companyInfo']->TotalJobViewCount ?></span>
                     <span class="down">▼ 10.5%</span>
                 </div>
                 <p class="card-subtext">Job Clicks (Last month)</p>
@@ -45,11 +45,11 @@
                 <p>View applications for your jobs.</p>
                 <div class="applications-stats">
                     <div class="new">
-                        <span class="new-stat"><?php echo $data['companyInfo']->PendingApplicationCount ?></span>
+                        <span class="new-stat"><?php $data['companyInfo']->PendingApplicationCount ?></span>
                         <span class="new-label">New</span>
                     </div>
                     <div class="active">
-                        <span class="active-stat"><?php echo $data['companyInfo']->AcceptedApplicationCount ?></span>
+                        <span class="active-stat"><?php $data['companyInfo']->AcceptedApplicationCount ?></span>
                         <span class="active-label">Active</span>
                     </div>  
                 </div>
@@ -60,7 +60,7 @@
                 <h2>Analytics</h2>
                 <p>View analytics and generate reports related to jobs.</p>
                 <div class="card-stats">
-                    <span>4.2</span>
+                    <span><?php echo $data['Rating']?></span>
                     <span class="up">▲ 2.6%</span>
                 </div>
                 <p class="card-subtext">Company Rating (Last month)</p>
@@ -71,7 +71,7 @@
                 <h2>Community Reviews</h2>
                 <p>View, respond to, and manage your reviews.</p>
                 <div class="card-stats">
-                    <span><?php echo $data['companyInfo']-> ReviewCount ?></span>
+                    <span><?php $data['companyInfo']-> ReviewCount ?></span>
                     <span class="up">▲ 3.5%</span>
                 </div>
                 <p class="card-subtext">Company Reviews (Last month)</p>
