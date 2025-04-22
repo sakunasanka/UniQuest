@@ -555,8 +555,7 @@ class Service_provider extends Controller
             $payment->user_id,
             $payment->plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -621,8 +620,7 @@ class Service_provider extends Controller
                         $payment->user_id,
                         $payment->plan,
                         $start_date,
-                        $end_date,
-                        'active'
+                        $end_date
                     );
 
                     // Store payment success
@@ -674,8 +672,7 @@ class Service_provider extends Controller
             $user_id,
             $plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -1130,6 +1127,26 @@ class Service_provider extends Controller
         }
     }
 
+    public function active($postId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $post = $this->model('M_jobpost')->getpostbyid($postId);
+
+            //check owner
+            if ($post->CompanyID != $_SESSION['user_id']) {
+                redirect('student/jobs');
+            } else {
+
+                if ($this->model('M_jobpost')->activatePost($postId)) {
+                    flash('post-msg', 'post is activated');
+                    redirect('service_provider/active_jobs');
+                } else {
+                    die('Something went wrong');
+                }
+            }
+        }
+    }
+
     public function deactivate($postId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1360,11 +1377,9 @@ class Service_provider extends Controller
     }
 
     public function markAllRead() {
-        if (!isset($_SESSION['user_id'])) {
-            redirect('users/login');
-        }
 
-        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/notifications';
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
         Redirect::to($previousURL);
     }
 
@@ -1382,6 +1397,20 @@ class Service_provider extends Controller
 
     public function getRecentNotifications() {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
         
         header('Content-Type: application/json');
