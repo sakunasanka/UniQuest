@@ -434,6 +434,19 @@ class Register extends Controller
                     //clear data array and session
                     $_SESSION['verified_email'] = '';
                     $data = [];
+
+                    $companyID = $this->model->getLatestCompanyId();
+                    $company = $this->model->getCompanyByID($companyID);
+                    //Notify admins about new student registration
+                    $admins = $this->model->getAdminIds();
+                    $vts = $this->model->getVTIds();
+                    foreach ($admins as $admin) {
+                        notifyAdminAboutNewCom($admin->AdminID, $companyID, $company->FirstName);
+                    }
+                    foreach ($vts as $vt) {
+                        notifyVtAboutNewCom($vt->VT_MemberID, $companyID, $company->FirstName);
+                    }
+
                     // Redirect to login page
                     Redirect::to(URLROOT . '/login');
                 } else {
@@ -523,6 +536,18 @@ class Register extends Controller
                     //clear data array and session
                     $_SESSION['verified_email'] = '';
                     $data = [];
+                    $studentID = $this->model->getLatestStudentId();
+                    $student = $this->model->getStudentByID($studentID);
+                    //Notify admins about new student registration
+                    $admins = $this->model->getAdminIds();
+                    $vts = $this->model->getVTIds();
+                    foreach ($admins as $admin) {
+                        notifyAdminAboutNewStu($admin->AdminID, $studentID, $student->FirstName);
+                    }
+                    foreach ($vts as $vt) {
+                        notifyVtAboutNewStu($vt->VT_MemberID, $studentID, $student->FirstName);
+                    }
+
                     // Redirect to login page
                     Redirect::to(URLROOT . '/login');
                 } else {

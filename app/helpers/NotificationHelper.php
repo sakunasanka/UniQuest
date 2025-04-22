@@ -433,3 +433,101 @@ function notifyComplaintToAdmin($adminID, $jobName, $studentName) {
         return false;
     }
 }    
+
+function notifyPostPublishStu($userId, $jobID, $jobTitle, $date) {
+    try {
+        $message = "New job post '{$jobTitle}' has been published on our platform.";    
+        $title = "Job Post Published";
+        $type = 'info';
+        $link = "/jobs/jobsDescription/{$jobID}";
+        return sendNotificationWithDate(
+            $userId,
+            $message,
+            $title,
+            $date,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post publish notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyAdminAboutNewStu($adminId, $studentID, $studentName) {
+    try {
+        $message = "A new student '{$studentName}' has registered and is pending verification.";
+        $title = "New Student Registered";
+        $type = 'info';
+        $link = "/admin/user_ver_detail/{$studentID}";
+        
+        return sendNotification(
+            $adminId,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send admin notification about new student: " . $e->getMessage());
+        return false;
+    }
+}    
+
+function notifyVtAboutNewStu($vtID, $studentID, $studentName) {
+    try {
+        $message = "A new student '{$studentName}' has registered and is pending verification.";
+        $title = "New Student Registered";
+        $type = 'info';
+        $link = "/verification_team/user_ver_detail/{$studentID}";
+        
+        return sendNotification(
+            $vtID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send verification_team notification about new student: " . $e->getMessage());
+        return false;
+    }
+}    
+
+function notifyAdminAboutNewCom($adminId, $companyID, $companyName) {
+    try {
+        $message = "A new company '{$companyName}' has registered and is pending verification.";
+        $title = "New Company Registered";
+        $type = 'info';
+        $link = "/admin/user_ver_detail/{$companyID}";
+        return sendNotification(
+            $adminId,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send admin notification about new company: " . $e->getMessage());
+        return false;
+    }
+}    
+
+function notifyVtAboutNewCom($vtID, $companyID, $companyName) {
+    try {
+        $message = "A new company '{$companyName}' has registered and is pending verification.";
+        $title = "New Company Registered";
+        $type = 'info';
+        $link = "/verification_team/user_ver_detail/{$companyID}";
+        return sendNotification(
+            $vtID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send verification_team notification about new company: " . $e->getMessage());
+        return false;
+    }
+}   
