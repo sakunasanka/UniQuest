@@ -236,6 +236,18 @@ class M_jobpost extends Model
         }
     }
 
+    public function activatePost($postId){
+        $this->db->query('UPDATE jobs SET Status="Active" WHERE JobID=:id');
+        $this->db->bind(':id',$postId );
+
+        //execute
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function deactivatePost($postId){
         $this->db->query('UPDATE jobs SET Status="Deactive" WHERE JobID=:id');
         $this->db->bind(':id',$postId );
