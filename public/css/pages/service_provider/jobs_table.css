@@ -137,3 +137,7 @@ table td {
     color: #52CA20;
     margin-left: 5px;
 }
+
+.action-btn.activate1 {
+    color: #52CA20;
+}

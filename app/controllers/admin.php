@@ -574,6 +574,7 @@ class Admin extends Controller
             // Fetch previous messages to determine the last topic if not provided
             $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
             $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+            $userRole = $this->model->getUserRoleByID($userID)->Role;
 
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
@@ -612,7 +613,19 @@ class Admin extends Controller
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
-                    redirect('admin/user_detail/' . $userID);
+                    if($_SESSION['user_role'] == 'Admin') {
+                        notifyMessageFromAdmin($data['receiver_id'], $data['messageInput']);
+                        if($userRole == 'Student') {
+                            Redirect::to(URLROOT . '/admin/messages_stu');
+                        } elseif ($userRole == 'Company') {
+                            Redirect::to(URLROOT . '/admin/messages_com');
+                        } elseif ($userRole == 'VT-Member') {
+                            Redirect::to(URLROOT . '/admin/messages_ver');
+                        }
+                    else{
+                        die('Something went wrong');
+                    }    
+                    }
                 } else {
                     die('Something went wrong while sending the message.');
                 }
@@ -1001,6 +1014,17 @@ class Admin extends Controller
             $this->model('jobModel')->approveJob($jobID);
             // Send email to user
             MailHelper::sendEmailJobApproved($email, $name, $title, $publishDate);
+
+            // Notify the user about the approval
+            notifyPostApproval($job->CompanyID, $job->Title);
+            notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
+
+            // Notify students about the new job
+            $students = $this->model('jobModel')->getStudentIds();
+            foreach ($students as $student) {
+                notifyPostPublishStu($student->UserID, $jobID, $title, $publishDate);
+            }
+
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
@@ -1752,7 +1776,7 @@ class Admin extends Controller
     {
 
         $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
-        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/notifications';
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/dashboard';
         Redirect::to($previousURL);
     }
 
@@ -1777,6 +1801,20 @@ class Admin extends Controller
         header('Content-Type: application/json');
         echo json_encode([
             'success' => true,
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
             'notifications' => $notifications,
             'unreadCount' => $unreadCount
         ]);

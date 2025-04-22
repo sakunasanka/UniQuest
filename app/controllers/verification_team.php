@@ -302,6 +302,18 @@ class Verification_team extends Controller
             $this->model('jobModel')->approveJob($jobID);
             // Send email to user
             MailHelper::sendEmailJobApproved($email, $name, $title, $publishDate);
+
+            // Notify the user about the approval
+            notifyPostApproval($job->CompanyID, $job->Title);
+            notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
+
+            // Notify students about the new job
+            $students = $this->model('jobModel')->getStudentIds();
+            foreach ($students as $student) {
+                notifyPostPublishStu($student->UserID, $jobID, $title, $publishDate);
+            }
+
+
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
             Redirect::to(URLROOT . '/verification_team/job_ver_pending');
@@ -323,6 +335,10 @@ class Verification_team extends Controller
             $title = $job->Title;
             MailHelper::sendEmailJobRejected($email, $name, $title, $reason);
             //add verificationlogs
+
+            // Notify the user about the rejection
+            notifyPostRejection($job->CompanyID, $job->Title, $reason);
+
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Reject', $reasonID);
             Redirect::to(URLROOT . '/verification_team/job_ver_pending');
         } catch (Exception $e) {
@@ -330,13 +346,45 @@ class Verification_team extends Controller
         }
     }
 
-
-    public function notifications()
+    public function messages_adm($userID = null)
     {
-        $this->view('pages/verification_team/notification_alerts');
-    }
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all admin messages
+        $messages_adm = $this->model('ContactModel')->getMessagesVerAdm();
 
-    public function contact_admin($userID)
+        // Initialize data with the message list
+        $data = [
+            'messages_adm' => $messages_adm,
+            
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+
+        $this->view('pages/verification_team/messages_adm', $data);
+    }
+    
+    public function sendMessage($userID)
     {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -382,14 +430,16 @@ class Verification_team extends Controller
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
-                    // flash('message_sent', 'Message sent successfully');
-                    redirect('admin/user_detail/' . $userID);
+                    $_SESSION['show_contact_us_success'] = true;
+                    notifyMessageToAdminFromVt($data['receiver_id'], $data['messageInput'], $data['sender_id'], $_SESSION['user_name']);
+                    redirect('verification_team/messages_adm/' . $userID);
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong while sending the message.');
                 }
             } else {
                 // Reload view with errors
-                $this->view('pages/verification_team/contact_admin', $data);
+                $this->view('pages/verification_team/messages_adm', $data);
             }
         } else {
             // Load initial view without POST request
@@ -406,14 +456,14 @@ class Verification_team extends Controller
                 'topic' => '', // Default to empty until a message is sent
             ];
 
-            $this->view('pages/verification_team/contact_admin', $data);;
+            $this->view('pages/verification_team/messages_adm', $data);
         }
     }
 
     public function markAllRead() {
 
         $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
-        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/notifications';
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/user_ver_pending';
         Redirect::to($previousURL);
     }
 
@@ -431,6 +481,20 @@ class Verification_team extends Controller
 
     public function getRecentNotifications() {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
         
         header('Content-Type: application/json');
