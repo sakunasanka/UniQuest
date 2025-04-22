@@ -1023,9 +1023,23 @@ class Service_provider extends Controller
             ) {
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
+                    $job = $this->model('M_jobpost')->getpostbyid($jobId);
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
+
+                    $admins = $this->model('userModel')->getAdminIds();
+                    $vts = $this->model('userModel')->getVtIds();
+                    foreach ($admins as $admin) {
+                        notifyAdminAboutJobPost($admin->AdminID, $jobId, $job->Title);
+                    }
+                    foreach ($vts as $vt) {
+                        notifyVtAboutJobPost($vt->VT_MemberID, $jobId, $job->Title);
+                    }
+
+                    $_SESSION['job_send_to_verify'] = true;
+
                     redirect('service_provider/pending_jobs');
                 } else {
+                    $_SESSION['job_post_error'] = true;
                     die('something went wrong');
                 }
             } else {

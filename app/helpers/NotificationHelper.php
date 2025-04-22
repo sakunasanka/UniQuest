@@ -26,6 +26,17 @@ function sendNotification($userId, $message, $title, $type = 'info', $link = nul
     }
 }
 
+//Send Notificatio with date
+function sendNotificationWithDate($userId, $message, $title, $date, $type = 'info', $link = null) {
+    try {
+        $notificationModel = model('NotificationModel');
+        return $notificationModel->createWithDate($userId, $type, $title, $message, $date, $link);
+    } catch (Exception $e) {
+        error_log("Failed to send notification: " . $e->getMessage());
+        return false;
+    }
+}    
+
  // Notify a student that their application has been accepted
  function notifyStudentApplicationAccepted($applicationId, $studentId, $jobTitle) {
     try {
@@ -140,6 +151,26 @@ function notifyAccountDeactivation($userId, $reason) {
         );
     } catch (Exception $e) {
         error_log("Failed to send account deactivation notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+
+// Notify job post publish
+function notifyPostApproval($userId, $jobTitle) {
+    try {
+        $message = "Congratulations! Your job post '{$jobTitle}' has been approved. Your job will be published soon.";
+        $title = "Job Post Approved";
+        $type = 'success';
+        
+        return sendNotification(
+            $userId,
+            $message,
+            $title,
+            $type,
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post approval notification: " . $e->getMessage());
         return false;
     }
 }
@@ -264,6 +295,87 @@ function notifyMessageToAdminFromVt($adminID, $messageFromVt, $VtID, $VtName) {
     }
 }
 
+// Notify job post publish
+function notifyPostRejection($userId, $jobTitle, $reason) {
+    try {
+        $message = "Your job post '{$jobTitle}' has been rejected.<br>Reason: {$reason}";
+        $title = "Job Post Rejected";
+        $type = 'danger';
+        
+        return sendNotification(
+            $userId,
+            $message,
+            $title,
+            $type,
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post rejection notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Notify job post publish
+function notifyPostPublish($userId, $jobID, $jobTitle, $date) {
+    try {
+        $message = "Congratulations! Your job post '{$jobTitle}' has been published on our platform.";
+        $title = "Job Post Published";
+        $type = 'success';
+        $link = "/jobs/jobsDescription/{$jobID}";
+        
+        return sendNotificationWithDate(
+            $userId,
+            $message,
+            $title,
+            $date,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post publish notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyAdminAboutJobPost($userID, $jobID, $jobTitle) {
+    try {
+        $message = "A new job post '{$jobTitle}' has been created.";
+        $title = "New Job Post Created";
+        $type = 'info';
+        $link = "/admin/job_ver_detail/{$jobID}";
+        
+        return sendNotification(
+            $userID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send admin notification about new job post: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyVtAboutJobPost($userID, $jobID, $jobTitle) {
+    try {
+        $message = "A new job post '{$jobTitle}' has been created.";
+        $title = "New Job Post Created";
+        $type = 'info';
+        $link = "/verification_team/job_ver_detail/{$jobID}";
+        
+        return sendNotification(
+            $userID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send admin notification about new job post: " . $e->getMessage());
+        return false;
+    }
+}
+
 function notifyPremiumPlanActive($companyID, $plan) {
     try {
         $message = "Your {$plan} plan is now active.";
@@ -321,3 +433,101 @@ function notifyComplaintToAdmin($adminID, $jobName, $studentName) {
         return false;
     }
 }    
+
+function notifyPostPublishStu($userId, $jobID, $jobTitle, $date) {
+    try {
+        $message = "New job post '{$jobTitle}' has been published on our platform.";    
+        $title = "Job Post Published";
+        $type = 'info';
+        $link = "/jobs/jobsDescription/{$jobID}";
+        return sendNotificationWithDate(
+            $userId,
+            $message,
+            $title,
+            $date,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post publish notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function notifyAdminAboutNewStu($adminId, $studentID, $studentName) {
+    try {
+        $message = "A new student '{$studentName}' has registered and is pending verification.";
+        $title = "New Student Registered";
+        $type = 'info';
+        $link = "/admin/user_ver_detail/{$studentID}";
+        
+        return sendNotification(
+            $adminId,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send admin notification about new student: " . $e->getMessage());
+        return false;
+    }
+}    
+
+function notifyVtAboutNewStu($vtID, $studentID, $studentName) {
+    try {
+        $message = "A new student '{$studentName}' has registered and is pending verification.";
+        $title = "New Student Registered";
+        $type = 'info';
+        $link = "/verification_team/user_ver_detail/{$studentID}";
+        
+        return sendNotification(
+            $vtID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send verification_team notification about new student: " . $e->getMessage());
+        return false;
+    }
+}    
+
+function notifyAdminAboutNewCom($adminId, $companyID, $companyName) {
+    try {
+        $message = "A new company '{$companyName}' has registered and is pending verification.";
+        $title = "New Company Registered";
+        $type = 'info';
+        $link = "/admin/user_ver_detail/{$companyID}";
+        return sendNotification(
+            $adminId,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send admin notification about new company: " . $e->getMessage());
+        return false;
+    }
+}    
+
+function notifyVtAboutNewCom($vtID, $companyID, $companyName) {
+    try {
+        $message = "A new company '{$companyName}' has registered and is pending verification.";
+        $title = "New Company Registered";
+        $type = 'info';
+        $link = "/verification_team/user_ver_detail/{$companyID}";
+        return sendNotification(
+            $vtID,
+            $message,
+            $title,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send verification_team notification about new company: " . $e->getMessage());
+        return false;
+    }
+}   

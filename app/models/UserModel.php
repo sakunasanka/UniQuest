@@ -850,8 +850,62 @@ class userModel extends Model
 
     public function getAdminIds() 
     {
-        $this->db->query("SELECT AdminID FROM admin");
+        $this->db->query("SELECT AdminID FROM Admin");
         return $this->db->resultSet();
+    }
+
+    public function getVtIds() 
+    {
+        $this->db->query("SELECT VT_MemberID FROM verificationteam");
+        return $this->db->resultSet();
+    }
+
+    public function getStudentIds() 
+    {
+        $this->db->query("SELECT StudentID FROM Student");
+        return $this->db->resultSet();
+    }
+
+    public function getLatestStudentId()
+    {
+        $this->db->query('SELECT * FROM Student ORDER BY StudentID DESC LIMIT 1');
+
+        $row = $this->db->single();
+
+        if ($row) {
+            return $row->StudentID;
+        }
+
+        return false;
+    }
+
+    public function getStudentByID($id) 
+    {
+        $this->db->query('SELECT * FROM Student WHERE Student.StudentID = :id');
+        $this->db->bind(':id', $id);
+        $row = $this->db->single();
+        return $row;
+    }
+    
+    public function getLatestCompanyId()
+    {
+        $this->db->query('SELECT * FROM Company ORDER BY CompanyID DESC LIMIT 1');
+
+        $row = $this->db->single();
+
+        if ($row) {
+            return $row->CompanyID;
+        }
+
+        return false;
+    }
+
+    public function getCompanyByID($id) 
+    {
+        $this->db->query('SELECT * FROM Company WHERE Company.CompanyID = :id');
+        $this->db->bind(':id', $id);
+        $row = $this->db->single();
+        return $row;
     }
 
     public function getAllUserIds() 

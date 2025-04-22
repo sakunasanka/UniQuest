@@ -1014,6 +1014,17 @@ class Admin extends Controller
             $this->model('jobModel')->approveJob($jobID);
             // Send email to user
             MailHelper::sendEmailJobApproved($email, $name, $title, $publishDate);
+
+            // Notify the user about the approval
+            notifyPostApproval($job->CompanyID, $job->Title);
+            notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
+
+            // Notify students about the new job
+            $students = $this->model('jobModel')->getStudentIds();
+            foreach ($students as $student) {
+                notifyPostPublishStu($student->UserID, $jobID, $title, $publishDate);
+            }
+
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
