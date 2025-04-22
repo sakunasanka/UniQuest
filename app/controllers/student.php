@@ -89,7 +89,7 @@ class Student extends Controller
                 if ($this->model('ContactModel')->sendMessage($data)) {
 
                     //send notification for each admin
-                    $admins = $this->model('userModel')->getAdminIds();
+                    $admins = $this->model->getAdminIds();
                     foreach ($admins as $admin) {
                         notifyMessageToAdminFromStudent($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
                     }
@@ -390,23 +390,24 @@ class Student extends Controller
         $this->view('pages/student/rate_review_company', $data);
     }
 
-    public function all_app()
+    public function all_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-            $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id']);
+            $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id'], $page, $limit, $sort, $order, $search);
             $data = [
-                'applications' => $applications,
-                // 'currentPage' => $applications['currentPage'],
-                // 'rowsPerPage' => $applications['limit'],
-                // 'totalRows' => $applications['totalRows'],
-                // 'totalPages' => $applications['totalPages'],
-                // 'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+                'applications' => $applications['data'],
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/student/all_applications', $data);
         } catch (Exception $e) {
@@ -419,9 +420,9 @@ class Student extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
@@ -443,9 +444,9 @@ class Student extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [

@@ -8,16 +8,16 @@
 
         <!-- Applications with Dropdown -->
         <div class="nav-dropdown">
-            <button class="nav-btn dropdown-toggle">
+            <button class="nav-btn dropdown-toggle" data-path="/UniQuest/student/all_app">
                 <span class="material-symbols-outlined"> assignment </span>
                 My Applications
-                <span class="material-symbols-outlined dropdown-icon"> expand_more </span>
+                <!-- <span class="material-symbols-outlined dropdown-icon"> expand_more </span> -->
             </button>
-            <div class="dropdown-menu">
+            <!-- <div class="dropdown-menu">
                 <button class="nav-btn" data-path="/UniQuest/student/all_app">All</button>
                 <button class="nav-btn" data-path="/UniQuest/student/accepted_app">Accepted</button>
                 <button class="nav-btn" data-path="/UniQuest/student/rejected_app">Rejected</button>
-            </div>
+            </div> -->
         </div>
 
         <!-- Saved -->
@@ -31,16 +31,16 @@
             <span class="material-symbols-outlined"> trending_up </span>
             Trending Companies
         </button>
-
-        <button class="nav-btn" data-path="/UniQuest/User/profile">
-            <span class="material-symbols-outlined"> person </span>
-            Profile
-        </button>
-
+        
         <!-- Reviews by me -->
         <button class="nav-btn" data-path="/UniQuest/student/myreviews">
             <span class="material-symbols-outlined"> reviews </span>
             Reviews by me
+        </button>
+
+        <button class="nav-btn" data-path="/UniQuest/User/profile">
+            <span class="material-symbols-outlined"> person </span>
+            Profile
         </button>
 
         <!-- Help and Support
