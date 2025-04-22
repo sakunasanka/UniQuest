@@ -1039,6 +1039,7 @@ ALTER TABLE `notifications`
 MODIFY COLUMN `type` ENUM('info', 'success', 'warning', 'danger', 'message', 'complaint') NOT NULL;
 
 
+alter table company drop column subscription_status;
 
 
 -- Create the trigger for automatic date updates
