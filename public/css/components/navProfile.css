@@ -63,17 +63,17 @@
     border: 3px solid rgba(255,255,255,0.3);
 }
 
-.user-details {
+.user-details1 {
     line-height: 1.4;
 }
 
-.user-details strong {
+.user-details1 strong {
     display: block;
     font-size: 0.95rem;
     font-weight: 600;
 }
 
-.user-details small {
+.user-details1 small {
     display: block;
     font-size: 0.8rem;
     opacity: 0.9;

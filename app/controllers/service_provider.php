@@ -599,8 +599,7 @@ class Service_provider extends Controller
             $payment->user_id,
             $payment->plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -665,8 +664,7 @@ class Service_provider extends Controller
                         $payment->user_id,
                         $payment->plan,
                         $start_date,
-                        $end_date,
-                        'active'
+                        $end_date
                     );
 
                     // Store payment success
@@ -718,8 +716,7 @@ class Service_provider extends Controller
             $user_id,
             $plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -980,13 +977,20 @@ class Service_provider extends Controller
         $companyPosts = $this->model('M_jobpost')->getJobsByCompanyId($_SESSION['user_id']);
         $companyInfo = $this->model('M_jobpost')->getpostbycompanyid($_SESSION['user_id']);
         $NewPostCount = count($companyPosts);
+        $can_post = $this->model('M_jobpost')->canPostJob();
 
         //Current date - subscription end date
         $currentDate = date('Y-m-d');
         $subscriptionEndDate = $companyInfo->subscription_end_date;
         $remainingDays = waitForTime(strtotime($subscriptionEndDate) - strtotime($currentDate));
 
-        if ($companyInfo->subscription_plan == 'free' && $NewPostCount >= 2) {
+        if($can_post == 'N') {
+            $_SESSION['show_canpost_job_error'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+            Redirect::to($previousURL);
+        }
+
+        elseif ($companyInfo->subscription_plan == 'free' && $NewPostCount >= 2) {
             $_SESSION['show_job_post_error_free'] = true;
             $_SESSION['remaining_days'] = $remainingDays;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
@@ -1069,8 +1073,8 @@ class Service_provider extends Controller
                     $job = $this->model('M_jobpost')->getpostbyid($jobId);
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
 
-                    $admins = $this->model('userModel')->getAdminIds();
-                    $vts = $this->model('userModel')->getVtIds();
+                    $admins = $this->model->getAdminIds();
+                    $vts = $this->model->getVtIds();
                     foreach ($admins as $admin) {
                         notifyAdminAboutJobPost($admin->AdminID, $jobId, $job->Title);
                     }
@@ -1166,6 +1170,26 @@ class Service_provider extends Controller
 
                 if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
+                    redirect('service_provider/active_jobs');
+                } else {
+                    die('Something went wrong');
+                }
+            }
+        }
+    }
+
+    public function active($postId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $post = $this->model('M_jobpost')->getpostbyid($postId);
+
+            //check owner
+            if ($post->CompanyID != $_SESSION['user_id']) {
+                redirect('student/jobs');
+            } else {
+
+                if ($this->model('M_jobpost')->activatePost($postId)) {
+                    flash('post-msg', 'post is activated');
                     redirect('service_provider/active_jobs');
                 } else {
                     die('Something went wrong');
@@ -1405,11 +1429,9 @@ class Service_provider extends Controller
 
     public function markAllRead()
     {
-        if (!isset($_SESSION['user_id'])) {
-            redirect('users/login');
-        }
 
-        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/notifications';
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
         Redirect::to($previousURL);
     }
 
@@ -1439,4 +1461,19 @@ class Service_provider extends Controller
         ]);
         exit;
     }
-}
+
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+}    

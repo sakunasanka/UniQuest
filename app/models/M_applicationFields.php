@@ -738,4 +738,16 @@ class M_applicationFields extends Model
             return false;
         }
     }
+
+    public function getApplicationCountForJob($jobID) {
+        try {
+            $this->db->query("SELECT ApplicationCount FROM v_jobs WHERE v_jobs.JobID = :jobID");
+            $this->db->bind(':jobID', $jobID);
+            $row = $this->db->single();
+            return $row->ApplicationCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }

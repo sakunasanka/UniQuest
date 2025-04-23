@@ -308,9 +308,9 @@ class Verification_team extends Controller
             notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
 
             // Notify students about the new job
-            $students = $this->model('jobModel')->getStudentIds();
+            $students = $this->model->getStudentIds();
             foreach ($students as $student) {
-                notifyPostPublishStu($student->UserID, $jobID, $title, $publishDate);
+                notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
             }
 
 
@@ -463,7 +463,7 @@ class Verification_team extends Controller
     public function markAllRead() {
 
         $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
-        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/notifications';
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/verification_team/user_ver_pending';
         Redirect::to($previousURL);
     }
 
@@ -481,6 +481,20 @@ class Verification_team extends Controller
 
     public function getRecentNotifications() {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
         
         header('Content-Type: application/json');

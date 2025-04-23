@@ -31,6 +31,7 @@ class NotificationModel extends Model {
     public function getAllNotifications($userId) {
         $this->db->query('SELECT * FROM notifications 
                          WHERE UserID = :user_id 
+                         AND created_at <= NOW()
                          ORDER BY created_at DESC');
         
         $this->db->bind(':user_id', $userId);
