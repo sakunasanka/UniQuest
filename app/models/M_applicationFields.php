@@ -200,7 +200,7 @@ class M_applicationFields extends Model
                     'qualifications' => ['type' => 'textarea', 'label' => 'Educational Qualifications'],
                     'experience' => ['type' => 'textarea', 'label' => 'Work Experience'],
                     'skills' => ['type' => 'textarea', 'label' => 'Skills'],
-                    'cv' => ['type' => 'file', 'label' => 'CVs/Resume', 'accept' => '.pdf,.doc,.docx'],
+                    'cv' => ['type' => 'file', 'label' => 'CV/Resume', 'accept' => '.pdf,.doc,.docx'],
                     'linkedin' => ['type' => 'url', 'label' => 'LinkedIn Profile']
                 ];
 
