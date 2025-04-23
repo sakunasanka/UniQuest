@@ -43,22 +43,37 @@
                             <?php if ($company->Status == 'Active') : ?>
                                 <td><span class="status active">Active</span></td>
                                 <td class="action">
+                                <div class="tooltip">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
-                                        account_box
+                                            account_box
                                     </span>
+                                    <span class="tooltiptext view">View</span>
+                                </div>
+                                <div class="tooltip"> 
                                     <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $company->UserID; ?>, "Company", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($company->Email); ?>")'>  
                                         person_remove
                                     </span>
+                                    <span class="tooltiptext deactivate">Deactivate</span>
+                                </div>   
+                                    
                                 </td>
                                 <?php elseif (in_array($company->Status, ['Deactive', 'Pending Deletion', 'Deleted'])) : ?>
                                     <td><span class="status inactive"><?php echo $company->Status; ?></span></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
-                                        account_box
-                                    </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $company->UserID; ?>, "Company", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($company->Email); ?>")'>
-                                        person_add
-                                    </span>
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $company->UserID; ?>'">
+                                            account_box
+                                        </span>
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+                                    
+                                    <div class="tooltip"> 
+                                        <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $company->UserID; ?>, "Company", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($company->Email); ?>")'>
+                                            person_add
+                                        </span>
+                                    <span class="tooltiptext activate">Activate</span>
+                                    </div> 
+                                    
                                 </td>
                             <?php endif; ?>
                             </tr>
