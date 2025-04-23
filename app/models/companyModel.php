@@ -10,7 +10,7 @@ class companyModel extends Model
 
     public function getCompanyInfo() 
     {
-        $this->db->query("SELECT * FROM company WHERE CompanyID = :companyId");
+        $this->db->query("SELECT * FROM v_company WHERE UserID = :companyId");
 
         $this->db->bind(':companyId', $_SESSION['user_id']);
         return $this->db->single();

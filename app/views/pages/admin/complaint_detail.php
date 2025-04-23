@@ -77,6 +77,7 @@
                                 <input type="hidden" name="companyID" value="<?php echo $data['complaint']->CompanyID; ?>">
                                 <input type="hidden" name="companyEmail" value="<?php echo $data['complaint']->CompanyEmail; ?>">
                                 <input type="hidden" name="studentID" value="<?php echo $data['complaint']->StudentID; ?>">
+                                <input type="hidden" name="jobTitle" value="<?php echo $data['complaint']->JobTitle; ?>">
                             </div>
                             <div class="btn-row">
                                 <textarea id="note" name="note" rows="1" placeholder="Add Note" class="note-field"></textarea>

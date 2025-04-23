@@ -1,28 +1,15 @@
 <?php
 class NotificationModel extends Model {
 
-    public function create($userId, $type, $title, $message, $relatedUrl = null) {
-        $this->db->query('INSERT INTO notifications (UserID, type, title, message, related_url) 
-                        VALUES (:user_id, :type, :title, :message, :related_url)');
+    public function create($userId, $type, $title, $date, $message, $relatedUrl = null) {
+        $this->db->query('INSERT INTO notifications (UserID, type, title, created_at, message, related_url) 
+                        VALUES (:user_id, :type, :title, :date, :message, :related_url)');
         
         $this->db->bind(':user_id', $userId);
         $this->db->bind(':type', $type);
         $this->db->bind(':title', $title);
+        $this->db->bind(':date', $date);
         $this->db->bind(':message', $message);
-        $this->db->bind(':related_url', $relatedUrl);
-        
-        return $this->db->execute();
-    }
-
-    public function createWithDate($userId, $type, $title, $message, $date, $relatedUrl = null) {
-        $this->db->query('INSERT INTO notifications (UserID, type, title, message, related_url, created_at) 
-                        VALUES (:user_id, :type, :title, :message, :created_at, :related_url)');
-        
-        $this->db->bind(':user_id', $userId);
-        $this->db->bind(':type', $type);
-        $this->db->bind(':title', $title);
-        $this->db->bind(':message', $message);
-        $this->db->bind(':created_at', $date);
         $this->db->bind(':related_url', $relatedUrl);
         
         return $this->db->execute();
