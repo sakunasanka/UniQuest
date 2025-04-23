@@ -1005,7 +1005,7 @@ class Student extends Controller
 
         // Define allowed file types based on field
         $allowedTypes = [
-            'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            'cvs' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             'photo' => ['image/jpeg', 'image/png'],
             'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png'],
             'other1' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
