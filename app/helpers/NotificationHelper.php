@@ -16,26 +16,15 @@ function model($model)
 
 
  // Send a notification to a user
-function sendNotification($userId, $message, $title, $type = 'info', $link = null) {
+function sendNotification($userId, $message, $title, $date, $type = 'info', $link = null) {
     try {
         $notificationModel = model('NotificationModel');
-        return $notificationModel->create($userId, $type, $title, $message, $link);
+        return $notificationModel->create($userId, $type, $title, $date, $message, $link);
     } catch (Exception $e) {
         error_log("Failed to send notification: " . $e->getMessage());
         return false;
     }
-}
-
-//Send Notificatio with date
-function sendNotificationWithDate($userId, $message, $title, $date, $type = 'info', $link = null) {
-    try {
-        $notificationModel = model('NotificationModel');
-        return $notificationModel->createWithDate($userId, $type, $title, $message, $date, $link);
-    } catch (Exception $e) {
-        error_log("Failed to send notification: " . $e->getMessage());
-        return false;
-    }
-}    
+} 
 
  // Notify a student that their application has been accepted
  function notifyStudentApplicationAccepted($applicationId, $studentId, $jobTitle) {
@@ -44,11 +33,13 @@ function sendNotificationWithDate($userId, $message, $title, $date, $type = 'inf
         $link = "/student/view_application/{$applicationId}";
         $title = "Application Accepted";
         $type = 'success';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $studentId,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -65,11 +56,13 @@ function sendNotificationWithDate($userId, $message, $title, $date, $type = 'inf
         $link = "/student/view_application/{$applicationId}";
         $title = "Application Rejected";
         $type = 'danger';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $studentId,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -85,11 +78,13 @@ function notifyUserApproval($userId) {
         $message = "Congratulations! Your account has been approved.";
         $title = "Account Approved";
         $type = 'success';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userId,
             $message,
             $title,
+            $date,
             $type,
         );
     } catch (Exception $e) {
@@ -104,11 +99,13 @@ function notifyUserRejection($userId, $reason) {
         $message = "Your account has been rejected. Reason: {$reason}";
         $title = "Account Rejected";
         $type = 'danger';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userId,
             $message,
             $title,
+            $date,
             $type,
         );
     } catch (Exception $e) {
@@ -123,11 +120,13 @@ function notifyAccountActivation($userId) {
         $message = "Congratulations! Your account has been activated.";
         $title = "Account Activated";
         $type = 'success';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userId,
             $message,
             $title,
+            $date,
             $type,
         );
     } catch (Exception $e) {
@@ -142,11 +141,13 @@ function notifyAccountDeactivation($userId, $reason) {
         $message = "Sorry! Your account has been deactivated. Reason: {$reason}";
         $title = "Account Deactivated";
         $type = 'warning';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userId,
             $message,
             $title,
+            $date,
             $type,
         );
     } catch (Exception $e) {
@@ -162,11 +163,13 @@ function notifyPostApproval($userId, $jobTitle) {
         $message = "Congratulations! Your job post '{$jobTitle}' has been approved. Your job will be published soon.";
         $title = "Job Post Approved";
         $type = 'success';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userId,
             $message,
             $title,
+            $date,
             $type,
         );
     } catch (Exception $e) {
@@ -182,11 +185,13 @@ function notifyMessageFromAdmin($userID, $messageFromAdmin) {
         $title = "Message from Admin";
         $type = 'message';
         $link = "/verification_team/messages_adm";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -203,11 +208,13 @@ function notifyMessageToAdminFromStudent($adminID, $messageFromAdmin, $studentID
         $title = "Message from Student";
         $type = 'message';
         $link = "/admin/messages_stu";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $adminID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -223,11 +230,13 @@ function notifyMessageToAdminFromCompany($adminID, $messageFromAdmin, $companyID
         $title = "Message from Company";
         $type = 'message';
         $link = "/admin/messages_com";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $adminID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -243,11 +252,13 @@ function notifyMessageToCompanyFromStudent($companyID, $messageFromStudent, $stu
         $title = "Message from Student";
         $type = 'message';
         $link = "/service_provider/messages_stu";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $companyID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -263,11 +274,13 @@ function notifyMessageToStudentFromCompany($studentID, $messageFromCompany, $com
         $title = "Message from Company";
         $type = 'message';
         $link = "/jobs/companydescription/{$companyID}";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $studentID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -283,11 +296,13 @@ function notifyMessageToAdminFromVt($adminID, $messageFromVt, $VtID, $VtName) {
         $title = "Message from VT-Member";
         $type = 'message';
         $link = "/admin/messages_ver";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $adminID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -303,11 +318,13 @@ function notifyPostRejection($userId, $jobTitle, $reason) {
         $message = "Your job post '{$jobTitle}' has been rejected.<br>Reason: {$reason}";
         $title = "Job Post Rejected";
         $type = 'danger';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userId,
             $message,
             $title,
+            $date,
             $type,
         );
     } catch (Exception $e) {
@@ -323,12 +340,13 @@ function notifyPostPublish($userId, $jobID, $jobTitle, $date) {
         $title = "Job Post Published";
         $type = 'success';
         $link = "/jobs/jobsDescription/{$jobID}";
+        $date1 = $date;
         
-        return sendNotificationWithDate(
+        return sendNotification(
             $userId,
             $message,
             $title,
-            $date,
+            $date1,
             $type,
             $link
         );
@@ -344,11 +362,13 @@ function notifyAdminAboutJobPost($userID, $jobID, $jobTitle) {
         $title = "New Job Post Created";
         $type = 'info';
         $link = "/admin/job_ver_detail/{$jobID}";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -364,11 +384,13 @@ function notifyVtAboutJobPost($userID, $jobID, $jobTitle) {
         $title = "New Job Post Created";
         $type = 'info';
         $link = "/verification_team/job_ver_detail/{$jobID}";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $userID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -383,11 +405,13 @@ function notifyPremiumPlanActive($companyID, $plan) {
         $message = "Your {$plan} plan is now active.";
         $title = "Plan Activated";
         $type = 'success';
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $companyID,
             $message,
             $title,
+            $date,
             $type
         );
     } catch (Exception $e) {
@@ -402,11 +426,13 @@ function notifyJobsApply($companyID, $jobTitle, $jobID) {
         $title = "New Job Application";
         $type = 'info';
         $link = "/service_provider/new_applications/{$jobID}";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $companyID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -422,11 +448,13 @@ function notifyComplaintToAdmin($adminID, $jobName, $studentName) {
         $title = "New Complaint Received";
         $type = 'complaint';
         $link = "/admin/all_complaints";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $adminID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -442,11 +470,12 @@ function notifyPostPublishStu($userId, $jobID, $jobTitle, $date) {
         $title = "Job Post Published";
         $type = 'info';
         $link = "/jobs/jobsDescription/{$jobID}";
-        return sendNotificationWithDate(
+        $date1 = $date;
+        return sendNotification(
             $userId,
             $message,
             $title,
-            $date,
+            $date1,
             $type,
             $link
         );
@@ -462,11 +491,13 @@ function notifyAdminAboutNewStu($adminId, $studentID, $studentName) {
         $title = "New Student Registered";
         $type = 'info';
         $link = "/admin/user_ver_detail/{$studentID}";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $adminId,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -482,11 +513,13 @@ function notifyVtAboutNewStu($vtID, $studentID, $studentName) {
         $title = "New Student Registered";
         $type = 'info';
         $link = "/verification_team/user_ver_detail/{$studentID}";
+        $date = date('Y-m-d H:i:s');
         
         return sendNotification(
             $vtID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -502,10 +535,12 @@ function notifyAdminAboutNewCom($adminId, $companyID, $companyName) {
         $title = "New Company Registered";
         $type = 'info';
         $link = "/admin/user_ver_detail/{$companyID}";
+        $date = date('Y-m-d H:i:s');
         return sendNotification(
             $adminId,
             $message,
             $title,
+            $date,
             $type,
             $link
         );
@@ -521,10 +556,12 @@ function notifyVtAboutNewCom($vtID, $companyID, $companyName) {
         $title = "New Company Registered";
         $type = 'info';
         $link = "/verification_team/user_ver_detail/{$companyID}";
+        $date = date('Y-m-d H:i:s');
         return sendNotification(
             $vtID,
             $message,
             $title,
+            $date,
             $type,
             $link
         );

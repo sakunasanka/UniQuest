@@ -962,7 +962,7 @@ class Service_provider extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            $publishDate = date('Y-m-d', strtotime('+2 days'));
+            $publishDate = date('Y-m-d H:i:s', strtotime('+2 days'));
 
             $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
@@ -1051,7 +1051,7 @@ class Service_provider extends Controller
             }
         } else {
             // Default values for GET request
-            $publishDate = date('Y-m-d', strtotime('+2 days'));
+            $publishDate = date('Y-m-d H:i:s', strtotime('+2 days'));
 
             $data = [
                 'job_name' => '',

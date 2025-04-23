@@ -1033,7 +1033,7 @@ class Admin extends Controller
             notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
 
             // Notify students about the new job
-            $students = $this->model('jobModel')->getStudentIds();
+            $students = $this->model->getStudentIds();
             foreach ($students as $student) {
                 notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
             }
