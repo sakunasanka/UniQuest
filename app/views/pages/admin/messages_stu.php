@@ -40,17 +40,16 @@
                                 <td><?php echo $message->created_at ?></td>
                                 <td><span class="status <?php echo $message->read_status ?>"><?php echo $message->read_status ?></span></td>
                                 <td class="action">
-                                <?php if ($message->sender_role == 'Student') : ?>
-                                    <button class="open-btn-2 material-symbols-outlined action-btn view" 
-                                        onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
-                                        preview
-                                    </button>
-                                <?php elseif ($message->receiver_role == 'Student'):?>
-                                    <button class="open-btn-2 material-symbols-outlined action-btn view" 
-                                        onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
-                                        preview
-                                    </button>
-                                <?php endif; ?>
+                                <div class="tooltip">
+                                    <?php if ($message->sender_role == 'Student') : ?>
+                                        <button class="open-btn-2 material-symbols-outlined action-btn view" 
+                                                onclick="openChatPopup('<?php echo $message->sender_id; ?>')">preview</button>
+                                    <?php elseif ($message->receiver_role == 'Student'):?>
+                                        <button class="open-btn-2 material-symbols-outlined action-btn view" 
+                                                onclick="openChatPopup('<?php echo $message->receiver_id; ?>')">preview</button>
+                                    <?php endif; ?>      
+                                    <span class="tooltiptext view">View</span>
+                                </div>   
                                 </td>
                             </tr>
                         <?php endforeach; ?>

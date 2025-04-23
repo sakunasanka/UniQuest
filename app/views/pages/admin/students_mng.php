@@ -36,30 +36,44 @@
                     <?php if ($data['students']) : ?>
                         <?php foreach ($data['students'] as $student) : ?>
                             <tr>
-                            <td><?php echo $student->FullName; ?></td>
-                            <td><?php echo $student->Email; ?></td>
-                            <td><?php echo $student->ContactNo; ?></td>
-                            <td><?php echo substr($student->RegisterDate, 0, 10); ?></td>
-                            <?php if ($student->Status == 'Active') : ?>
-                                <td><span class="status active">Active</span></td>
-                                <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
-                                        account_box
-                                    </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $student->UserID; ?>, "Student", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($student->Email); ?>")'>
-                                        person_remove
-                                    </span>
-                                </td>
+                                <td><?php echo $student->FullName; ?></td>
+                                <td><?php echo $student->Email; ?></td>
+                                <td><?php echo $student->ContactNo; ?></td>
+                                <td><?php echo substr($student->RegisterDate, 0, 10); ?></td>
+                                <?php if ($student->Status == 'Active') : ?>
+                                    <td><span class="status active">Active</span></td>
+                                    <td class="action">
+                                        <div class="tooltip">
+                                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
+                                                account_box
+                                            </span>
+                                            <span class="tooltiptext view">View</span>
+                                        </div>
+                                        <div class="tooltip"> 
+                                        <span class="material-symbols-outlined action-btn deactivate" onclick='deactivateUser(<?php echo $student->UserID; ?>, "Student", <?php echo htmlspecialchars(json_encode($data["deactReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($student->Email); ?>")'>
+                                            person_remove
+                                        </span>
+                                            <span class="tooltiptext deactivate">Deactivate</span>
+                                        </div>
+                                    </td>
                                 <?php elseif (in_array($student->Status, ['Deactive', 'Pending Deletion', 'Deleted'])) : ?>
-                                <td><span class="status inactive"><?php echo $student->Status; ?></span></td>
-                                <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
-                                        account_box
-                                    </span>
-                                    <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $student->UserID; ?>, "Student", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($student->Email); ?>")'>
-                                        person_add
-                                    </span>
-                                <?php endif; ?>
+                                    <td><span class="status inactive"><?php echo $student->Status; ?></span></td>
+                                    <td class="action">
+                                        <div class="tooltip">
+                                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $student->UserID; ?>'">
+                                                account_box
+                                            </span>
+                                            <span class="tooltiptext view">View</span>
+                                        </div>
+                                        
+                                        <div class="tooltip"> 
+                                            <span class="material-symbols-outlined action-btn activate" onclick='activateUser(<?php echo $student->UserID; ?>, "Student", <?php echo htmlspecialchars(json_encode($data["actReasons"]), ENT_QUOTES, "UTF-8"); ?>, "<?php echo addslashes($student->Email); ?>")'>
+                                                person_add
+                                            </span>
+                                            <span class="tooltiptext activate">Activate</span>
+                                        </div> 
+                                        
+                                    <?php endif; ?>
                             </tr>
                         <?php endforeach; ?>
                     <?php else : ?>
