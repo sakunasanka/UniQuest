@@ -43,22 +43,38 @@
                                 <?php if ($job->Status == 'Active') : ?>
                                     <td><span class="status active">Active</span></td>
                                     <td class="action">
-                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
-                                            preview
-                                        </span>
-                                        <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateJob(<?php echo $job->JobID; ?>, 'Internship')">
-                                            block
-                                        </span>
+                                        <div class="tooltip">
+                                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
+                                                preview
+                                            </span>
+                                            <span class="tooltiptext view">View</span>
+                                        </div>
+                                        
+                                        <div class="tooltip"> 
+                                            <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateJob(<?php echo $job->JobID; ?>, 'Internship')">
+                                                block
+                                            </span>
+                                            <span class="tooltiptext deactivate">Deactivate</span>
+                                        </div>
+                                        
                                     </td>
                                 <?php elseif ($job->Status == 'Deactive') : ?>
                                     <td><span class="status inactive">Deactive</span></td>
                                     <td class="action">
-                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
-                                            preview
-                                        </span>
-                                        <span class="material-symbols-outlined action-btn activate" onclick="activateJob(<?php echo $job->JobID; ?>, 'Internship')">
-                                            check_circle
-                                        </span>
+                                        <div class="tooltip">
+                                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
+                                                preview
+                                            </span>
+                                            <span class="tooltiptext view">View</span>
+                                        </div>
+                                        
+                                        <div class="tooltip"> 
+                                            <span class="material-symbols-outlined action-btn activate" onclick="activateJob(<?php echo $job->JobID; ?>, 'Internship')">
+                                                check_circle
+                                            </span>
+                                            <span class="tooltiptext activate">Activate</span>
+                                        </div> 
+                                        
                                     </td>
                                 <?php endif; ?>
                             </tr>

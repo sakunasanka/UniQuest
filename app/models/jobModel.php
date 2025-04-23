@@ -375,4 +375,39 @@ class jobModel extends Model
         }
     }
 
+    public function viewcount($jobId){
+        try{
+            $this->db->query("SELECT COUNT(*) AS viewCount FROM is_viewed_job WHERE jodId = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            $row = $this->db->single();
+            return $row->viewCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function addView($jobID, $companyID) {
+        try {
+            $this->db->query("INSERT  INTO is_viewed_job (CompanyID,UserID, JobID) VALUES (:CompanyID,:studentId, :jobID)");
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobID', $jobID);
+            $this->db->bind(':CompanyID', $companyID);
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+
+    }
+    public function getApplicants($jobId)
+    {
+        try {
+            $this->db->query("SELECT count(*) FROM applications WHERE job_id = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            return $this->db->resultSet();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }

@@ -45,11 +45,15 @@
                                     <?php endif; ?>
                                 </td>
                                 <td class="action">
-                                    <a href="<?php echo URLROOT; ?>/student/view_application/<?php echo $application->ApplicationID; ?>">
-                                        <span class="material-symbols-outlined action-btn view">
-                                            preview
-                                        </span>
-                                    </a>
+                                    <div class="tooltip">
+                                        <a href="<?php echo URLROOT; ?>/student/view_application/<?php echo $application->ApplicationID; ?>">
+                                            <span class="material-symbols-outlined action-btn view">
+                                                preview
+                                            </span>
+                                        </a>               
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+                                    
                                 </td>
                             </tr>
                         <?php endforeach; ?>

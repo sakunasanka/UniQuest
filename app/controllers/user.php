@@ -87,9 +87,9 @@ class User extends Controller
                         }
                     } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
                         if ($loggedInUser->Role === 'Student') {
-                            $this->view('pages/login/deactivate_stu');
+                            $this->view('pages/login/not_approved_stu');
                         } else if ($loggedInUser->Role === 'Company') {
-                            $this->view('pages/login/deactivate_ser');
+                            $this->view('pages/login/not_approved_ser');
                         }
                     } else {
                         $data['password_err'] = 'Password incorrect';
