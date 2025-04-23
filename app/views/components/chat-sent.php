@@ -9,7 +9,7 @@
                 if ($data['user']['Role'] == 'Company') {
                     echo $data['user']['CompanyName'];
                 } else {
-                    echo $data['user']['FirstName'];
+                    echo $data['user']['FirstName'] . ' ' . $data['user']['LastName'];
                 }
             }
             else {
