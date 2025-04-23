@@ -52,7 +52,7 @@
                                     <span class="material-symbols-outlined action-btn activate1" onclick="showActivatePostConfirm(<?= $post->JobID ?>)">
                                         check_circle
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick="showDeletePostConfirm(<?= $post->JobID ?>)">
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="showdeletereviewconfirm(<?= $post->JobID ?>)">
                                         delete
                                     </span>
                                 </td>
