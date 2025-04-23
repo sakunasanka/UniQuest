@@ -157,3 +157,22 @@ function flash($name) {
 </script>
 <?php unset($_SESSION['existing_complaint']); ?>
 <?php endif; ?>
+
+<?php if(isset($_SESSION['show_job_apply_count_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Sorry, this post has reached the maximum number of applications.", "error");
+    });
+</script>
+<?php unset($_SESSION['show_job_apply_count_error']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['show_canpost_job_error'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Sorry, you cannot post a job at this time due to an admin restriction.<br>Please try again later.", "error");
+    });
+</script>
+<?php unset($_SESSION['show_canpost_job_error']); ?>
+<?php endif; ?>
+

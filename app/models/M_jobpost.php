@@ -53,6 +53,14 @@ class M_jobpost extends Model
         return $row->job_count;
     }
 
+    public function canPostJob()
+    {
+        $this->db->query('SELECT can_post FROM company WHERE CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single();
+        return $row->can_post;
+    }
+
     public function getActiveJobCountByCompany()
     {
         $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id AND Status = :status');

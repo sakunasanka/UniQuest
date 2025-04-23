@@ -1,7 +1,7 @@
 let dapopup1 = document.getElementById("popup-active");
 
 // Function to show the delete review confirmation popup
-function showActivePostconfirm(postID) {
+function showActivatePostConfirm(postID) {
     
     dapopup1.classList.add("active");
     disableScrolling();

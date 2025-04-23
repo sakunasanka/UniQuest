@@ -217,4 +217,22 @@ class companyModel extends Model
             return false;
         }
     }
+
+    public function getSubscriptionPlanByJobID($jobID) {
+        try {
+            
+            $this->db->query('SELECT CompanyID FROM v_jobs WHERE JobID = :jobID LIMIT 1');
+            $this->db->bind(':jobID', $jobID);
+            $result1 = $this->db->single()->CompanyID;
+
+
+            $this->db->query('SELECT subscription_plan FROM company WHERE CompanyID = :companyID LIMIT 1');
+            $this->db->bind(':companyID', $result1);
+            $result2 = $this->db->single();
+            return $result2->subscription_plan;
+        } catch (Exception $e) {
+            error_log("Database error in getSubscriptionPlan: " . $e->getMessage());
+            return false;
+        }
+    }
 }
