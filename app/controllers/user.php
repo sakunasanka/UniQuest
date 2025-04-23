@@ -78,18 +78,24 @@ class User extends Controller
                         Redirect::to(URLROOT . '/user/reactivate_acc');
                         exit;
                     } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Deactive', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
                             $this->view('pages/login/deactivate_stu');
                         } else if ($loggedInUser->Role === 'Company') {
                             $this->view('pages/login/deactivate_ser');
                         }
                     } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Pending', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
                             $this->view('pages/login/wait_to_verify_stu');
                         } else if ($loggedInUser->Role === 'Company') {
                             $this->view('pages/login/wait_to_verify_ser');
                         }
                     } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Not Approved', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
                             $this->view('pages/login/deactivate_stu');
                         } else if ($loggedInUser->Role === 'Company') {

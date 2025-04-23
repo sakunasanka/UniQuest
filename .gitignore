@@ -5,3 +5,4 @@ logs
 vendor
 composer.lock
 composer.json
+dompdf/
