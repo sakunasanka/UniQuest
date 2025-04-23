@@ -570,3 +570,47 @@ function notifyVtAboutNewCom($vtID, $companyID, $companyName) {
         return false;
     }
 }   
+
+function notifyComAboutJobDeactivation($companyID, $reason, $jobID, $jobTitle) {
+    try {
+        $message = "Your job post '{$jobTitle}' has been deactivated.<br>Reason: {$reason}";
+        $title = "Job Post Deactivated";
+        $type = 'danger';
+        $link = "/jobs/jobsdescription/{$jobID}";
+        $date = date('Y-m-d H:i:s');
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $date,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post deactivation notification: " . $e->getMessage());
+        return false;
+    }
+}   
+
+function sendWarningToCompany($companyID, $jobID, $jobTitle) {
+    try {
+        $message = "Your job post '{$jobTitle}' has been warned due to complaints.";
+        $title = "Job Post Warning";
+        $type = 'warning';
+        $date = date('Y-m-d H:i:s');
+        $link = "/jobs/jobsdescription/{$jobID}";
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $date,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post warning notification: " . $e->getMessage());
+        return false;
+    }
+} 
