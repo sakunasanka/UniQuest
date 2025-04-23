@@ -15,6 +15,11 @@
             Verified By Me
         </button>
 
+        <button class="nav-btn" data-paths="/UniQuest/verification_team/messages_adm">
+            <span class="material-symbols-outlined">sms</span>
+            Messages With Admin
+        </button>
+
         <button class="nav-btn" data-path="/UniQuest/user/profile">
             <span class="material-symbols-outlined"> person </span>
             Profile

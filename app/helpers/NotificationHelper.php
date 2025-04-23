@@ -181,12 +181,14 @@ function notifyMessageFromAdmin($userID, $messageFromAdmin) {
         $message = $messageFromAdmin;
         $title = "Message from Admin";
         $type = 'message';
+        $link = "/verification_team/messages_adm";
         
         return sendNotification(
             $userID,
             $message,
             $title,
-            $type
+            $type,
+            $link
         );
     } catch (Exception $e) {
         error_log("Failed to send application acceptance notification: " . $e->getMessage());
@@ -200,7 +202,7 @@ function notifyMessageToAdminFromStudent($adminID, $messageFromAdmin, $studentID
         $message = "From: {$studentName}<br>{$messageFromAdmin}";
         $title = "Message from Student";
         $type = 'message';
-        $link = "/admin/messages_stu?userID={$studentID}";
+        $link = "/admin/messages_stu";
         
         return sendNotification(
             $adminID,
@@ -220,7 +222,7 @@ function notifyMessageToAdminFromCompany($adminID, $messageFromAdmin, $companyID
         $message = "From: {$companyName}<br>{$messageFromAdmin}";
         $title = "Message from Company";
         $type = 'message';
-        $link = "/admin/messages_com?userID={$companyID}";
+        $link = "/admin/messages_com";
         
         return sendNotification(
             $adminID,
@@ -240,7 +242,7 @@ function notifyMessageToCompanyFromStudent($companyID, $messageFromStudent, $stu
         $message = "From: {$studentName}<br>{$messageFromStudent}";
         $title = "Message from Student";
         $type = 'message';
-        $link = "/service_provider/messages_stu?userID={$studentID}";
+        $link = "/service_provider/messages_stu";
         
         return sendNotification(
             $companyID,
