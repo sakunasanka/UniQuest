@@ -111,7 +111,7 @@ class companyModel extends Model
         }
     }
 
-    public function updateSubscription($user_id, $plan, $start_date, $end_date, $status) {
+    public function updateSubscription($user_id, $plan, $start_date, $end_date) {
         try {
             $this->db->beginTransaction();
             
@@ -119,15 +119,13 @@ class companyModel extends Model
             $this->db->query('UPDATE company 
                              SET subscription_plan = :plan,
                                  subscription_start_date = :start_date,
-                                 subscription_end_date = :end_date,
-                                 subscription_status = :status
+                                 subscription_end_date = :end_date
                              WHERE CompanyID = :user_id');
             
             $this->db->bind(':user_id', $user_id);
             $this->db->bind(':plan', $plan);
             $this->db->bind(':start_date', $start_date);
             $this->db->bind(':end_date', $end_date);
-            $this->db->bind(':status', $status);
             
             if (!$this->db->execute()) {
                 throw new Exception("Failed to update subscription");
@@ -214,6 +212,24 @@ class companyModel extends Model
             $this->db->bind(':user_id', $user_id);
             $result = $this->db->single();
             return $result ? $result->subscription_plan : null;
+        } catch (Exception $e) {
+            error_log("Database error in getSubscriptionPlan: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getSubscriptionPlanByJobID($jobID) {
+        try {
+            
+            $this->db->query('SELECT CompanyID FROM v_jobs WHERE JobID = :jobID LIMIT 1');
+            $this->db->bind(':jobID', $jobID);
+            $result1 = $this->db->single()->CompanyID;
+
+
+            $this->db->query('SELECT subscription_plan FROM company WHERE CompanyID = :companyID LIMIT 1');
+            $this->db->bind(':companyID', $result1);
+            $result2 = $this->db->single();
+            return $result2->subscription_plan;
         } catch (Exception $e) {
             error_log("Database error in getSubscriptionPlan: " . $e->getMessage());
             return false;

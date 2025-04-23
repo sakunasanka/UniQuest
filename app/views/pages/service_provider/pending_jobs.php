@@ -1,6 +1,6 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
+<?php require APPROOT . '/views/popups/student/deletepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -48,7 +48,7 @@
                                         edit_square
                                     </span>
                                     <span class="material-symbols-outlined action-btn deactivate" onclick=showdeletereviewconfirm(<?= $post->JobID ?>)>
-                                        block
+                                        delete
                                     </span>
                                 </td>
                             </tr>
@@ -60,9 +60,7 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-            <?php 
-            // require APPROOT . '/views/components/pagination.php'; 
-            ?>
+            <?php require APPROOT . '/views/components/pagination.php';?>
         </div>
     </main>
 </div>

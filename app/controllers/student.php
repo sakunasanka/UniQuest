@@ -89,7 +89,7 @@ class Student extends Controller
                 if ($this->model('ContactModel')->sendMessage($data)) {
 
                     //send notification for each admin
-                    $admins = $this->model('userModel')->getAdminIds();
+                    $admins = $this->model->getAdminIds();
                     foreach ($admins as $admin) {
                         notifyMessageToAdminFromStudent($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
                     }
@@ -390,23 +390,24 @@ class Student extends Controller
         $this->view('pages/student/rate_review_company', $data);
     }
 
-    public function all_app()
+    public function all_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-            $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id']);
+            $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id'], $page, $limit, $sort, $order, $search);
             $data = [
-                'applications' => $applications,
-                // 'currentPage' => $applications['currentPage'],
-                // 'rowsPerPage' => $applications['limit'],
-                // 'totalRows' => $applications['totalRows'],
-                // 'totalPages' => $applications['totalPages'],
-                // 'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+                'applications' => $applications['data'],
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/student/all_applications', $data);
         } catch (Exception $e) {
@@ -419,9 +420,9 @@ class Student extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
@@ -443,9 +444,9 @@ class Student extends Controller
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
@@ -946,25 +947,35 @@ class Student extends Controller
             // If no errors, save application
             if (empty($data['errors'])) {
                 $applicationModel = $this->model('M_applicationFields');
-                
-                
-            $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
-                if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
-                    // Notify the user about the successful application
-                    $_SESSION['application_success'] = true;
-
-                    notifyJobsApply(
-                        $posts->CompanyID,
-                        $posts->Title,
-                        $jobId
-                        
-                    );
-                    redirect('student/all_app');
-                } else {
-                    // Return to form with errors
-                    $_SESSION['application_error'] = true;
-                    $this->view('pages/student/jobsApply', $data);
+            
+            $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($jobId); 
+            $sub_plan = $this->model('companyModel')->getSubscriptionPlanByJobID($jobId); 
+            
+                if ($applicationCount >= 20 && $sub_plan == 'free' || $applicationCount >= 50 && $sub_plan == 'professional') {
+                    $_SESSION['show_job_apply_count_error'];
+                    $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                    Redirect::to($previousURL);
                 }
+                elseif ($sub_plan == 'enterprise') {    
+                    $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
+                    
+                    if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
+                        // Notify the user about the successful application
+                        $_SESSION['application_success'] = true;
+
+                        notifyJobsApply(
+                            $posts->CompanyID,
+                            $posts->Title,
+                            $jobId
+                            
+                        );
+                        redirect('student/all_app');
+                    } else {
+                        // Return to form with errors
+                        $_SESSION['application_error'] = true;
+                        $this->view('pages/student/jobsApply', $data);
+                    }
+                }    
             } else {
                 // GET request - show the application form
                 $jobModel = $this->model('M_jobpost');
@@ -994,7 +1005,7 @@ class Student extends Controller
 
         // Define allowed file types based on field
         $allowedTypes = [
-            'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            'cvs' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             'photo' => ['image/jpeg', 'image/png'],
             'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png'],
             'other1' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],

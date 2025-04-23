@@ -566,8 +566,7 @@ class Service_provider extends Controller
             $payment->user_id,
             $payment->plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -632,8 +631,7 @@ class Service_provider extends Controller
                         $payment->user_id,
                         $payment->plan,
                         $start_date,
-                        $end_date,
-                        'active'
+                        $end_date
                     );
 
                     // Store payment success
@@ -685,8 +683,7 @@ class Service_provider extends Controller
             $user_id,
             $plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -946,13 +943,20 @@ class Service_provider extends Controller
         $companyPosts = $this->model('M_jobpost')->getJobsByCompanyId($_SESSION['user_id']);
         $companyInfo = $this->model('M_jobpost')->getpostbycompanyid($_SESSION['user_id']);
         $NewPostCount = count($companyPosts);
+        $can_post = $this->model('M_jobpost')->canPostJob();
 
         //Current date - subscription end date
         $currentDate = date('Y-m-d');
         $subscriptionEndDate = $companyInfo->subscription_end_date;
         $remainingDays = waitForTime(strtotime($subscriptionEndDate) - strtotime($currentDate));
 
-        if ($companyInfo->subscription_plan == 'free' && $NewPostCount >= 2) {
+        if($can_post == 'N') {
+            $_SESSION['show_canpost_job_error'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+            Redirect::to($previousURL);
+        }
+
+        elseif ($companyInfo->subscription_plan == 'free' && $NewPostCount >= 2) {
             $_SESSION['show_job_post_error_free'] = true;
             $_SESSION['remaining_days'] = $remainingDays;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
@@ -1034,6 +1038,16 @@ class Service_provider extends Controller
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
+                    $admins = $this->model->getAdminIds();
+                    $vts = $this->model->getVtIds();
+                    foreach ($admins as $admin) {
+                        notifyAdminAboutJobPost($admin->AdminID, $jobId, $job->Title);
+                    }
+                    foreach ($vts as $vt) {
+                        notifyVtAboutJobPost($vt->VT_MemberID, $jobId, $job->Title);
+                    }
+
+                    $_SESSION['job_send_to_verify'] = true;
                     redirect('service_provider/pending_jobs');
                 } else {
                     die('something went wrong');
@@ -1118,6 +1132,26 @@ class Service_provider extends Controller
 
                 if ($this->model('M_jobpost')->deletePost($postId)) {
                     flash('post-msg', 'post is deleted');
+                    redirect('service_provider/active_jobs');
+                } else {
+                    die('Something went wrong');
+                }
+            }
+        }
+    }
+
+    public function active($postId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $post = $this->model('M_jobpost')->getpostbyid($postId);
+
+            //check owner
+            if ($post->CompanyID != $_SESSION['user_id']) {
+                redirect('student/jobs');
+            } else {
+
+                if ($this->model('M_jobpost')->activatePost($postId)) {
+                    flash('post-msg', 'post is activated');
                     redirect('service_provider/active_jobs');
                 } else {
                     die('Something went wrong');
@@ -1234,43 +1268,6 @@ class Service_provider extends Controller
 
         $this->view('pages/service_provider/messages_stu', $data);
     }
-
-    public function messages_add($userID = null)
-    { 
-        // Check if a user ID was submitted via POST
-        if (isset($_POST['selectedUserID'])) {
-            $userID = $_POST['selectedUserID'];
-        }
-        
-        // Fetch all student messages
-        $messages_add = $this->model('ContactModel')->getMessagesAddCom();
-
-        // Initialize data with the message list
-        $data = [
-            'messages_add' => $messages_add,
-        ];
-        
-        // Check if we need to load chat data only if userID is valid AND form was submitted
-        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
-        // If we should load chat data, add the additional info
-        if ($loadChatData) {
-            // Ensure session user ID exists before accessing
-            if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in.");
-            }
-            // Fetch user details and chat messages
-            $data['userID'] = $userID;
-            $data['user'] = $this->model->getUserDetails($userID);
-            $data['sender_id'] = $_SESSION['user_id'];
-            $data['receiver_id'] = $userID;
-            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
-            $data['messageInput'] = '';
-            $data['messageInput_err'] = '';
-        }
-        
-        $this->view('pages/service_provider/messages_add', $data);
-    }
     
     public function sendMessage($userID)
     {
@@ -1345,6 +1342,20 @@ class Service_provider extends Controller
             $this->loadUserDetailView($data);
         }
     }
+
+    public function markMessageRead() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $messageId = $_POST['message_id'] ?? null;
+
+            if ($messageId) {
+                $this->model('chatModel')->updateReadStatus($messageId);
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
+            }
+        }
+    }
+
     private function loadUserDetailView($data)
     {
         // Load the view with the provided data
@@ -1353,11 +1364,9 @@ class Service_provider extends Controller
     }
 
     public function markAllRead() {
-        if (!isset($_SESSION['user_id'])) {
-            redirect('users/login');
-        }
 
-        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/notifications';
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
         Redirect::to($previousURL);
     }
 
@@ -1375,6 +1384,20 @@ class Service_provider extends Controller
 
     public function getRecentNotifications() {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
         
         header('Content-Type: application/json');

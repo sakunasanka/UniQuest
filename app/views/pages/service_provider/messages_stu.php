@@ -33,14 +33,18 @@
                                 <td><?php echo $message->user_email ?></td>
                                 <td><?php echo $message->message ?></td>
                                 <td><?php echo $message->created_at ?></td>
-                                <td><span class="status active"><?php echo $message->read_status ?></span></td>
+                                <td><span class="status <?php echo $message->read_status ?>"><?php echo $message->read_status ?></span></td>
                                 <td class="action">
                                 <?php if ($message->sender_role == 'Student') : ?>
                                     <button class="open-btn-2 material-symbols-outlined action-btn view" 
-                                            onclick="openChatPopup('<?php echo $message->sender_id; ?>')">preview</button>
+                                        onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
+                                        preview
+                                    </button>
                                 <?php elseif ($message->receiver_role == 'Student'):?>
                                     <button class="open-btn-2 material-symbols-outlined action-btn view" 
-                                            onclick="openChatPopup('<?php echo $message->receiver_id; ?>')">preview</button>
+                                        onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
+                                        preview
+                                    </button>
                                 <?php endif; ?>
                                 </td>
                             </tr>
@@ -72,12 +76,6 @@
 
 <!-- Add simple script for opening the chat popup -->
 <script>
-function openChatPopup(userId) {
-    // Set the user ID in the hidden form
-    document.getElementById('selectedUserID').value = userId;
-    // Submit the form
-    document.getElementById('chatForm').submit();
-}
 
 function scrollToBottom() {
     const messagesContainer = document.querySelector('.messages');
@@ -103,6 +101,33 @@ closePopupBtn?.addEventListener("click", function () {
 backgroundOverlay?.addEventListener("click", function () {
     window.location.href = "/UniQuest/service_provider/messages_stu";
 });
+
+function openChatPopup(userId, messageId = null) {
+console.log("User ID:", userId);
+    if (messageId) {
+        fetch("<?php echo URLROOT; ?>/service_provider/markMessageRead", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `message_id=${messageId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Message marked as read");
+            }
+        })
+        .catch(error => {
+            console.error("Error updating read status:", error);
+        });
+    }
+
+    // Set the user ID in the hidden form
+    document.getElementById('selectedUserID').value = userId;
+    // Submit the form
+    document.getElementById('chatForm').submit();
+}
 
 </script>
 
