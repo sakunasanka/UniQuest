@@ -823,6 +823,7 @@ class Service_provider extends Controller
                 'salary_type' => trim($_POST['salaryType'] ?? ''),
                 'job_description' => trim($_POST['job_description'] ?? ''),
                 'job_id' => $postId,
+                'status' => 'Edited',
                 'job_district' => trim($_POST['job_district'] ?? ''),
                 'job_city' => trim($_POST['job_city'] ?? ''),
                 'districts' => $this->model('AdminModel')->getDistricts()['data'],
@@ -852,7 +853,10 @@ class Service_provider extends Controller
             }
             if (empty($data['salary_range']) || empty($data['salary_type'])) {
                 $data['salary_range_err'] = 'Please enter salary range and type';
+            } else if (!is_numeric($data['salary_range'])) {
+                $data['salary_range_err'] = 'Please enter a valid salary range';
             }
+            
             if (empty($data['job_description'])) {
                 $data['Description_err'] = 'Please enter description';
             }

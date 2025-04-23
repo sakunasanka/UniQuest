@@ -83,7 +83,7 @@ class M_jobpost extends Model
             // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                ['Status', '=', 'Pending']
+                ['Status', 'IN', ['Pending', 'Edited']]
             ];
 
             // Add search condition if a search term is provided
@@ -215,7 +215,8 @@ class M_jobpost extends Model
                 JobBenefits = :job_benifits, 
                 RequiredQualifications = :required_skills, 
                 SalaryRange = :salary_range,
-                SalaryType = :salary_type
+                SalaryType = :salary_type,
+                Status = :status
             WHERE 
                JobID = :job_id 
         ');
@@ -230,6 +231,7 @@ class M_jobpost extends Model
         $this->db->bind(':salary_range', $data['salary_range']);
         $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':job_id', $data['job_id']);
+        $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
         return $this->db->execute();
