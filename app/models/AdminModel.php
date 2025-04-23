@@ -322,11 +322,31 @@ class AdminModel extends Model {
         }
     }
 
+    //get districtid by name
+    public function getDistrictIDByName($districtName) {
+        try {
+            $district = $this->select('districts', [['DistrictName', '=', $districtName]], 'DistrictID', 'AND', '', '', 0, 1, false);
+            return $district;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     //get all cities for a district
     public function getCitiesByDistrict($districtID) {
         try {
             $cities = $this->select('cities', [['DistrictID', '=', $districtID]], 'CityID, CityName', 'AND', '', '', 0, 1, true);
             return $cities;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    //get cityid by name
+    public function getCityIDByName($cityName) {
+        try {
+            $city = $this->select('cities', [['CityName', '=', $cityName]], 'CityID', 'AND', '', '', 0, 1, false);
+            return $city;
         } catch (Exception $e) {
             return $e->getMessage();
         }

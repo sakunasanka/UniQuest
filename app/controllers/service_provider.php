@@ -830,11 +830,15 @@ class Service_provider extends Controller
             $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
                 'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
-                'job_location' => trim($_POST['jobLocation'] ?? ''),
                 'required_skills' => trim($_POST['qualifications'] ?? ''),
                 'salary_range' => trim($_POST['salaryRange'] ?? ''),
-                'Description' => trim($_POST['jobDescription'] ?? ''),
+                'salary_type' => trim($_POST['salaryType'] ?? ''),
+                'job_description' => trim($_POST['job_description'] ?? ''),
                 'job_id' => $postId,
+                'job_district' => trim($_POST['job_district'] ?? ''),
+                'job_city' => trim($_POST['job_city'] ?? ''),
+                'districts' => $this->model('AdminModel')->getDistricts()['data'],
+                'cities' => [],
 
 
                 'job_name_err' => '',
@@ -846,25 +850,22 @@ class Service_provider extends Controller
             ];
 
 
-
-
-
             if (empty($data['job_name'])) {
                 $data['job_name_err'] = 'Please enter job name';
             }
             if (empty($data['job_benifits'])) {
                 $data['job_benifits_err'] = 'Please enter job benefits';
             }
-            if (empty($data['job_location'])) {
+            if (empty($data['job_district']) || empty($data['job_city'])) {
                 $data['job_location_err'] = 'Please enter job location';
             }
             if (empty($data['required_skills'])) {
                 $data['required_skills_err'] = 'Please enter required skills';
             }
-            if (empty($data['salary_range'])) {
-                $data['salary_range_err'] = 'Please enter salary range';
+            if (empty($data['salary_range']) || empty($data['salary_type'])) {
+                $data['salary_range_err'] = 'Please enter salary range and type';
             }
-            if (empty($data['Description'])) {
+            if (empty($data['job_description'])) {
                 $data['Description_err'] = 'Please enter description';
             }
 
@@ -900,11 +901,15 @@ class Service_provider extends Controller
                 'job_name' => $post->Title,
                 'job_id' => $postId,
                 'job_benifits' => $post->JobBenefits,
-                'job_location' => $post->Location,
                 'required_skills' => $post->RequiredQualifications,
                 'salary_range' => $post->SalaryRange,
-                'Description' => $post->Description,
+                'salary_type' => $post->SalaryType,
+                'job_description' => $post->Description,
                 'subscription' => $subscription,
+                'job_district' => $this->model('AdminModel')->getDistrictIDByName($post->District)->DistrictID,
+                'job_city' => $this->model('AdminModel')->getCityIDByName($post->City)->CityID,
+                'districts' => $this->model('AdminModel')->getDistricts()['data'],
+                'cities' => [],
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
