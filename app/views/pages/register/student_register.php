@@ -58,7 +58,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="dob">Date Of Birth<span class="req"> *</span></label>
-                            <input type="date" id="dob" name="dob" value="<?php echo $data['dob']; ?>" placeholder="Enter Date of Birth" required>
+                            <input type="date" id="dob" name="dob" value="<?php echo $data['dob']; ?>" placeholder="Enter Date of Birth" max="<?php echo date('Y-m-d', strtotime('-18 years')); ?>"                            required>
                             <span class="error-msg"><?php echo !empty($data['dob_err']) ? $data['dob_err'] : ''; ?></span>
                         </div>
                         <div class="input-container">
