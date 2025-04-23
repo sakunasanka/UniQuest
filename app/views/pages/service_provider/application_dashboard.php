@@ -57,7 +57,9 @@
                 <?php endforeach; ?>
             </div>
         </div>
-        <?php require APPROOT . '/views/components/pagination.php'; ?>
+        <?php 
+        // require APPROOT . '/views/components/pagination.php'; 
+        ?>
     </div>
 </div>
 <?php require APPROOT . '/views/components/footer.php'; ?>

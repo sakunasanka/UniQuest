@@ -1,14 +1,14 @@
 <?php
-class RateAndReviewModel
+class RateAndReviewModel extends Model
 {
-    private $db;
+    // private $db;
     private $anonymousNames;
 
     public function __construct()
     {
         $this->db = Database::getInstance();
         // Load anonymous names from the JSON file
-        $anonymousNamesPath = 'anonymousNames.json'; 
+        $anonymousNamesPath = 'anonymousNames.json';
         if (!file_exists($anonymousNamesPath)) {
             throw new Exception("Anonymous names file not found.");
         }
@@ -29,7 +29,7 @@ class RateAndReviewModel
             $this->db->bind(':rating', $data['rating']);
             $this->db->bind(':comment', $data['comment']);
             $this->db->bind(':user_id', $_SESSION['user_id']);
-            $this->db->bind(':company_id', $data['company_id']); 
+            $this->db->bind(':company_id', $data['company_id']);
 
             // Execute query
             if (!$this->db->execute()) {
@@ -41,7 +41,6 @@ class RateAndReviewModel
             // Commit transaction
             $this->db->commit();
             return true;
-
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             $this->db->rollBack(); // Rollback on exception
@@ -56,23 +55,36 @@ class RateAndReviewModel
     public function getReviewsByCompanyId($id)
     {
         $this->db->query('SELECT * FROM companyreviews WHERE CompanyID = :company_id ORDER BY created_at DESC');
-        $this->db->bind(':company_id', $id);       
+        $this->db->bind(':company_id', $id);
         return $this->db->resultSet();
     }
 
-    public function getReviewsByStuId()
+    public function getReviewsByStuId($studentID, $pageNumber = 1, $rowsPerPage = 10, $sort = "created_at", $order = "DESC")
     {
-        $this->db->query('SELECT * FROM companyreviews WHERE StudentID = :student_id ORDER BY created_at DESC');
-        $this->db->bind(':student_id', $_SESSION['user_id']);
-        return $this->db->resultSet();
+        try {
+            // Base conditions
+            $conditions = [
+                ['StudentID', '=', $studentID]
+            ];
+
+            $companies = $this->select('companyreviews', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            return $companies;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
     }
 
-    public function getReviewById($reviewID){
+    public function getReviewById($reviewID)
+    {
         $this->db->query('SELECT * FROM review WHERE ReviewID = :review_id');
         $this->db->bind(':review_id', $reviewID);
         return $this->db->single();
     }
-    
+
     public function updateReview(array $data)
     {
         try {
@@ -81,7 +93,7 @@ class RateAndReviewModel
             $this->db->bind(':comment', $data['comment']);
             $this->db->bind(':id', $data['review_id']);
             // $this->db->bind(':user_id', $_SESSION['user_id']);
-            
+
             return $this->db->execute();
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -255,20 +267,20 @@ class RateAndReviewModel
         return $this->db->resultSet();
     }
 
-    public function getLikesByReviewID($reviewId) 
+    public function getLikesByReviewID($reviewId)
     {
         $this->db->query("SELECT likeCount FROM review_likes WHERE ReviewID = :reviewId");
         $this->db->bind(':reviewId', $reviewId);
         $row = $this->db->single();
-        return $row ? $row->likeCount : 0; 
+        return $row ? $row->likeCount : 0;
     }
 
-    public function getDislikesByReviewID($reviewId) 
+    public function getDislikesByReviewID($reviewId)
     {
         $this->db->query("SELECT dislikeCount FROM review_likes WHERE ReviewID = :reviewId");
         $this->db->bind(':reviewId', $reviewId);
         $row = $this->db->single();
-        return $row ? $row->dislikeCount : 0; 
+        return $row ? $row->dislikeCount : 0;
     }
 
     // Add a like to a review
@@ -276,27 +288,27 @@ class RateAndReviewModel
     {
         // First, check if a dislike exists and remove it
         $this->removeDislike($reviewId, $userId);
-        
+
         // Check if like already exists
         $this->db->query('SELECT * FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId');
         $this->db->bind(':reviewId', $reviewId);
         $this->db->bind(':userId', $userId);
-        
+
         $existingLike = $this->db->single();
 
         // Check if any like exist in the review_likes table
         $this->db->query('SELECT * FROM review_likes WHERE ReviewID = :reviewId');
         $this->db->bind(':reviewId', $reviewId);
         $existingRow = $this->db->single();
-        
+
         if (!$existingLike) {
             // Insert new like
             $this->db->query('INSERT INTO is_liked (ReviewID, UserID) VALUES (:reviewId, :userId)');
             $this->db->bind(':reviewId', $reviewId);
             $this->db->bind(':userId', $userId);
-            
+
             $inserted = $this->db->execute();
-            
+
             if (!$existingRow) {
                 // If no like exists, create a new entry in review_likes
                 $this->db->query('INSERT INTO review_likes (ReviewID, likeCount, dislikeCount) VALUES (:reviewId, 1, 0)');
@@ -306,10 +318,10 @@ class RateAndReviewModel
             }
             $this->db->bind(':reviewId', $reviewId);
             $this->db->execute();
-            
+
             return $inserted;
         }
-        
+
         return false;
     }
 
@@ -320,25 +332,25 @@ class RateAndReviewModel
         $this->db->query('SELECT * FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId');
         $this->db->bind(':reviewId', $reviewId);
         $this->db->bind(':userId', $userId);
-        
+
         $existingLike = $this->db->single();
-        
+
         if ($existingLike) {
             // Delete the like
             $this->db->query('DELETE FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId');
             $this->db->bind(':reviewId', $reviewId);
             $this->db->bind(':userId', $userId);
-            
+
             $deleted = $this->db->execute();
-            
+
             // Update like count
             $this->db->query('UPDATE review_likes SET likeCount = GREATEST(likeCount - 1, 0) WHERE ReviewID = :reviewId');
             $this->db->bind(':reviewId', $reviewId);
             $this->db->execute();
-            
+
             return $deleted;
         }
-        
+
         return false;
     }
 
@@ -347,25 +359,25 @@ class RateAndReviewModel
     {
         // First, check if a like exists and remove it
         $this->removeLike($reviewId, $userId);
-        
+
         // Check if dislike already exists
         $this->db->query('SELECT * FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId');
         $this->db->bind(':reviewId', $reviewId);
         $this->db->bind(':userId', $userId);
-        
+
         $existingDislike = $this->db->single();
 
         // Check if any dislike exist in the review_likes table
         $this->db->query('SELECT * FROM review_likes WHERE ReviewID = :reviewId');
         $this->db->bind(':reviewId', $reviewId);
         $existingRow = $this->db->single();
-        
+
         if (!$existingDislike) {
             // Insert new dislike
             $this->db->query('INSERT INTO is_disliked (ReviewID, UserID) VALUES (:reviewId, :userId)');
             $this->db->bind(':reviewId', $reviewId);
             $this->db->bind(':userId', $userId);
-            
+
             $inserted = $this->db->execute();
 
             if (!$existingRow) {
@@ -377,10 +389,10 @@ class RateAndReviewModel
             }
             $this->db->bind(':reviewId', $reviewId);
             $this->db->execute();
-            
+
             return $inserted;
         }
-        
+
         return false;
     }
 
@@ -391,43 +403,41 @@ class RateAndReviewModel
         $this->db->query('SELECT * FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId');
         $this->db->bind(':reviewId', $reviewId);
         $this->db->bind(':userId', $userId);
-        
+
         $existingDislike = $this->db->single();
-        
+
         if ($existingDislike) {
             // Delete the dislike
             $this->db->query('DELETE FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId');
             $this->db->bind(':reviewId', $reviewId);
             $this->db->bind(':userId', $userId);
-            
+
             $deleted = $this->db->execute();
-            
+
             // Update dislike count
             $this->db->query('UPDATE review_likes SET dislikeCount = GREATEST(dislikeCount - 1, 0) WHERE ReviewID = :reviewId');
             $this->db->bind(':reviewId', $reviewId);
             $this->db->execute();
-            
+
             return $deleted;
         }
-        
+
         return false;
     }
 
-    public function checkIfLiked($reviewId, $userId) 
+    public function checkIfLiked($reviewId, $userId)
     {
         $this->db->query("SELECT * FROM is_liked WHERE ReviewID = :reviewId AND UserID = :userId");
         $this->db->bind(':reviewId', $reviewId);
         $this->db->bind(':userId', $userId);
         return $this->db->single();
     }
-    
-    public function checkIfDisliked($reviewId, $userId) 
+
+    public function checkIfDisliked($reviewId, $userId)
     {
         $this->db->query("SELECT * FROM is_disliked WHERE ReviewID = :reviewId AND UserID = :userId");
         $this->db->bind(':reviewId', $reviewId);
         $this->db->bind(':userId', $userId);
         return $this->db->single();
     }
-
 }
-?>
