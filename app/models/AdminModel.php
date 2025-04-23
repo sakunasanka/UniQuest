@@ -260,7 +260,7 @@ class AdminModel extends Model {
     //retrieve all industries
     public function getIndustries() {
         try {
-            $industries = $this->select('industry', [], 'IndustryID, IndustryName', 'AND', '', 'IndustryName ASC', 0, 1, true);
+            $industries = $this->select('industry', [], 'IndustryID, IndustryName', 'AND', '', '', 0, 1, true);
             return $industries;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -315,8 +315,18 @@ class AdminModel extends Model {
     // get all districts
     public function getDistricts() {
         try {
-            $districts = $this->select('districts', [], 'DistrictID, DistrictName', 'AND', '', 'DistrictName ASC', 0, 1, true);
+            $districts = $this->select('districts', [], 'DistrictID, DistrictName', 'AND', '', '', 0, 1, true);
             return $districts;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    //get districtid by name
+    public function getDistrictIDByName($districtName) {
+        try {
+            $district = $this->select('districts', [['DistrictName', '=', $districtName]], 'DistrictID', 'AND', '', '', 0, 1, false);
+            return $district;
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -325,8 +335,18 @@ class AdminModel extends Model {
     //get all cities for a district
     public function getCitiesByDistrict($districtID) {
         try {
-            $cities = $this->select('cities', [['DistrictID', '=', $districtID]], 'CityID, CityName', 'AND', '', 'CityName ASC', 0, 1, true);
+            $cities = $this->select('cities', [['DistrictID', '=', $districtID]], 'CityID, CityName', 'AND', '', '', 0, 1, true);
             return $cities;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    //get cityid by name
+    public function getCityIDByName($cityName) {
+        try {
+            $city = $this->select('cities', [['CityName', '=', $cityName]], 'CityID', 'AND', '', '', 0, 1, false);
+            return $city;
         } catch (Exception $e) {
             return $e->getMessage();
         }

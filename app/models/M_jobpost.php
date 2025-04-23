@@ -210,10 +210,12 @@ class M_jobpost extends Model
             SET 
                 Title = :job_name, 
                 Description = :job_description, 
-                Location = :job_location, 
+                DistrictID = :job_district,
+                CityID = :job_city,
                 JobBenefits = :job_benifits, 
                 RequiredQualifications = :required_skills, 
-                SalaryRange = :salary_range 
+                SalaryRange = :salary_range,
+                SalaryType = :salary_type
             WHERE 
                JobID = :job_id 
         ');
@@ -221,10 +223,12 @@ class M_jobpost extends Model
         // Bind the values from $data array
         $this->db->bind(':job_name', $data['job_name']);
         $this->db->bind(':job_description', $data['job_description']);
-        $this->db->bind(':job_location', $data['job_location']);
+        $this->db->bind(':job_district', $data['job_district']);
+        $this->db->bind(':job_city', $data['job_city']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
+        $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':job_id', $data['job_id']);
 
         // Execute and return the result
