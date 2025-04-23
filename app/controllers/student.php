@@ -415,7 +415,7 @@ class Student extends Controller
         }
     }
 
-    public function accepted_app()
+    public function accepted_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
@@ -439,7 +439,7 @@ class Student extends Controller
         }
     }
 
-    public function rejected_app()
+    public function rejected_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
@@ -1108,15 +1108,23 @@ class Student extends Controller
         $this->view('pages/service_provider/view_application', $data);
     }
 
-    public function myreviews()
+    public function myreviews($queryParam = [])
     {
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ReviewID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+
+        // Get user ID from session
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
         } else {
             $userId = null;
         }
 
-        $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
+        $reviewsData = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id'], $page, $limit, $sort, $order);
+        $reviews = $reviewsData['data'];
 
         foreach ($reviews as $review) {
             $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
@@ -1130,6 +1138,11 @@ class Student extends Controller
             'rating' => '',
             'comment' => '',
             'company_id' => '',
+            'currentPage' => $reviewsData['currentPage'],
+            'rowsPerPage' => $reviewsData['limit'],
+            'totalRows' => $reviewsData['totalRows'],
+            'totalPages' => $reviewsData['totalPages'],
+            'isLastPage' => $reviewsData['isLastPage'] ? 'yes' : 'no',
         ];
 
         $this->view('pages/student/myreviews', $data);

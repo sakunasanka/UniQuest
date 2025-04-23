@@ -38,6 +38,11 @@ p {
     margin-bottom: 20px;
 }
 
+.req {
+    color: red;
+    font-size: 1.2rem;
+}
+
 label {
     display: block;
     margin: 10px 0 5px;

@@ -106,7 +106,7 @@ class Service_provider extends Controller
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
-                    
+
                     //send notification for each admin
                     $admins = $this->model('userModel')->getAdminIds();
                     foreach ($admins as $admin) {
@@ -190,9 +190,7 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-
-            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, );
-            
+            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search);
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -217,9 +215,7 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-
-            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
-        
+            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search);
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -245,7 +241,7 @@ class Service_provider extends Controller
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
+            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search,);
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -261,21 +257,32 @@ class Service_provider extends Controller
         }
     }
 
-    public function offered_applications($jobID)
+    public function offered_applications($jobID, $queryParam = [])
     {
-        // Fetch applications for the given job ID
-        $applications = $this->model('M_applicationFields')->getOfferedApplicationsByJobID($jobID);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // Pass data to the view
-        $data = [
-            'applications' => $applications,
-            'jobID' => $jobID,
-            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
-        ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
-
-        // Load the view
-        $this->view('pages/service_provider/offered_applications', $data);
+            $applications = $this->model('M_applicationFields')->getOfferedApplicationsByJobID($jobID, $page, $limit, $sort, $order, $search);
+            $data = [
+                'applications' => $applications['data'],
+                'jobID' => $jobID,
+                'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+            ];
+            $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
+            $this->view('pages/service_provider/offered_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     // public function new_applications($id)
@@ -324,22 +331,34 @@ class Service_provider extends Controller
 
     //     $this->view('pages/service_provider/new_applications', $data);
     // }
-    public function new_applications($jobID)
+    public function new_applications($jobID, $queryParam = [])
     {
-        // Fetch applications for the given job ID
-        $applications = $this->model('M_applicationFields')->getPendnigApplicationsByJobID($jobID);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // Pass data to the view
-        $data = [
-            'applications' => $applications,
-            'jobID' => $jobID,
-            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
-        ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
-
-        // Load the view
-        $this->view('pages/service_provider/new_applications', $data);
+            $applications = $this->model('M_applicationFields')->getPendnigApplicationsByJobID($jobID, $page, $limit, $sort, $order, $search);
+            $data = [
+                'applications' => $applications['data'],
+                'jobID' => $jobID,
+                'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+            ];
+            $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
+            $this->view('pages/service_provider/new_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
+
     public function view_application($applicationID)
     {
         // Fetch application details
@@ -352,7 +371,7 @@ class Service_provider extends Controller
 
         // Access the first element of the $application array
         $application = $application[0];
-        
+
         // Prepare the application data
         $applicationData = [
             'jobID' => $application->JobID ?? null,
@@ -392,30 +411,46 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/view_application', $data);
     }
 
-    public function rejected_applications($jobID)
+    public function rejected_applications($jobID, $queryParam = [])
     {
-        // Fetch applications for the given job ID
-        $applications = $this->model('M_applicationFields')->getRejectedApplicationsByJobID($jobID);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // Pass data to the view
-        $data = [
-            'applications' => $applications,
-            'jobID' => $jobID,
-            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
-        ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
-
-        // Load the view
-        $this->view('pages/service_provider/rejected_applications', $data);
+            $applications = $this->model('M_applicationFields')->getRejectedApplicationsByJobID($jobID, $page, $limit, $sort, $order, $search);
+            $data = [
+                'applications' => $applications['data'],
+                'jobID' => $jobID,
+                'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+            ];
+            $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
+            $this->view('pages/service_provider/rejected_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
-    public function application_dashboard()
+
+    public function application_dashboard($queryParam = [])
     {
         // Get the company ID from the session (assuming the company is logged in)
         $companyId = $_SESSION['user_id'];
 
-        // Fetch all applications for the company's jobs
-        $applications = $this->model('M_applicationFields')->getAllApplicationsByCompanyId($companyId);
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
 
+        // Fetch all applications for the company's jobs
+        $applicationData = $this->model('M_applicationFields')->getAllApplicationsByCompanyId($companyId, $page, $limit);
+        $applications = $applicationData['data'];
         // Process the data to calculate stats for each job
         $jobs = [];
         foreach ($applications as $application) {
@@ -457,7 +492,12 @@ class Service_provider extends Controller
 
         // Pass data to the view
         $data = [
-            'jobs' => $jobs
+            'jobs' => $jobs,
+            'currentPage' => $applicationData['currentPage'],
+            'rowsPerPage' => $applicationData['limit'],
+            'totalRows' => $applicationData['totalRows'],
+            'totalPages' => $applicationData['totalPages'],
+            'isLastPage' => $applicationData['isLastPage'] ? 'yes' : 'no',
         ];
 
         $this->view('pages/service_provider/application_dashboard', $data);
@@ -843,7 +883,7 @@ class Service_provider extends Controller
             if ($post->CompanyID != $_SESSION['user_id'] && $subscription == 'free') {
                 redirect('student/jobs');
             }
-             
+
             $data = [
                 'job_name' => $post->Title,
                 'job_id' => $postId,
@@ -861,11 +901,11 @@ class Service_provider extends Controller
                 'salary_range_err' => '',
                 'Description_err' => ''
             ];
-            if($post->Status != 'Pending' && $data['subscription'] == 'free'){ 
+            if ($post->Status != 'Pending' && $data['subscription'] == 'free') {
                 $_SESSION['show_job_edit_error'] = true;
                 $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
                 Redirect::to($previousURL);
-            }   
+            }
             // echo json_encode($data);
             $this->view('pages/service_provider/edit_job', $data);
         }
@@ -961,8 +1001,7 @@ class Service_provider extends Controller
             $_SESSION['remaining_days'] = $remainingDays;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
             Redirect::to($previousURL);
-        }
-        elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 20) {
+        } elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 5) {
             $_SESSION['show_job_post_error_pro'] = true;
             $_SESSION['remaining_days'] = $remainingDays;
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
@@ -1090,22 +1129,23 @@ class Service_provider extends Controller
         }
     }
 
-    public function getCitiesByDistrict() {
+    public function getCitiesByDistrict()
+    {
         try {
             // Get the district ID from POST data
             $districtID = $_POST['districtID'] ?? null;
-            
+
             if (!$districtID) {
                 throw new Exception('District ID is required');
             }
-            
+
             // Fetch cities based on the district ID
             $cities = $this->model('AdminModel')->getCitiesByDistrict($districtID)['data'];
-            
+
             if (!$cities) {
                 throw new Exception('No cities found for the given district ID');
             }
-            
+
             // Return JSON response
             echo json_encode([
                 'success' => true,
@@ -1193,17 +1233,17 @@ class Service_provider extends Controller
 
             $application = $application[0];
             $this->model('M_applicationFields')->approveApplication($applicationID);
-            
+
             //Send notification to student
             notifyStudentApplicationAccepted(
                 $applicationID,
                 $application->StudentID,
                 $application->JobTitle
             );
-            
-            Redirect::to(URLROOT . '/service_provider/offered_applications/'.$jobID);
+
+            Redirect::to(URLROOT . '/service_provider/offered_applications/' . $jobID);
         } catch (Exception $e) {
-            die($e->getMessage()); 
+            die($e->getMessage());
         }
     }
 
@@ -1225,10 +1265,10 @@ class Service_provider extends Controller
                 $application->StudentID,
                 $application->JobTitle
             );
-            
-            Redirect::to(URLROOT . '/service_provider/rejected_applications/'.$jobID);
+
+            Redirect::to(URLROOT . '/service_provider/rejected_applications/' . $jobID);
         } catch (Exception $e) {
-            die($e->getMessage()); 
+            die($e->getMessage());
         }
     }
 
@@ -1238,7 +1278,7 @@ class Service_provider extends Controller
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
-        
+
         // Fetch all student messages
         $messages_stu = $this->model('ContactModel')->getMessagesStuCom();
 
@@ -1246,10 +1286,10 @@ class Service_provider extends Controller
         $data = [
             'messages_stu' => $messages_stu,
         ];
-        
+
         // Check if we need to load chat data only if userID is valid AND form was submitted
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
+
         // If we should load chat data, add the additional info
         if ($loadChatData) {
             // Ensure session user ID exists before accessing
@@ -1268,7 +1308,7 @@ class Service_provider extends Controller
 
         $this->view('pages/service_provider/messages_stu', $data);
     }
-    
+
     public function sendMessage($userID)
     {
 
@@ -1297,7 +1337,7 @@ class Service_provider extends Controller
 
             $data = [
                 'userID' => $userID,
-                'email' => $email, 
+                'email' => $email,
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
@@ -1326,7 +1366,7 @@ class Service_provider extends Controller
             }
         } else {
             // Load initial view without POST request
-            
+
             $data = [
                 'userID' => $userID,
                 'email' => '',
@@ -1363,14 +1403,16 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/messages_add', $data);
     }
 
-    public function markAllRead() {
+    public function markAllRead()
+    {
 
         $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
         $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
         Redirect::to($previousURL);
     }
 
-    public function markAsRead($notificationId) {
+    public function markAsRead($notificationId)
+    {
         if ($this->model('NotificationModel')->markAsRead($notificationId)) {
             $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
             header('Content-Type: application/json');
@@ -1382,18 +1424,20 @@ class Service_provider extends Controller
         exit;
     }
 
-    public function getRecentNotifications() {
+    public function getRecentNotifications()
+    {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
-        
+
         header('Content-Type: application/json');
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'notifications' => $notifications,
             'unreadCount' => $unreadCount
         ]);
         exit;
     }
+
 
     public function getAllNotifications() {
 
