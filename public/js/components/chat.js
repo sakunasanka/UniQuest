@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Update the message text in the UI
                         messageTextElement.innerText = newMessage;
                     } else {
-                        alert('Failed to edit message: ' + data.error);
+                        Flash.show('Failed to edit message: ' + data.error, 'error');
                     }
                 })
                 .catch(error => console.error('Error:', error));
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Remove the message from the UI
                         messageContainer.remove();
                     } else {
-                        alert('Failed to delete message: ' + data.error);
+                        Flash.show('Failed to delete message: ' + data.error, 'error');
                     }
                 })
                 .catch(error => console.error('Error:', error));

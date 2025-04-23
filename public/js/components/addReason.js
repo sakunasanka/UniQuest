@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Basic validation
         if (!reasonName) {
-            alert('Please enter a reason name');
+            Flash.show('Please enter a reason name', 'warning');
             return;
         }
 
@@ -120,11 +120,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Show success message
                 // alert('Reason added successfully!');
             } else {
-                alert(result.message || 'Failed to save reason. Please try again.');
+                Flash.show(result.message || 'Failed to save reason. Please try again.', 'error');
             }
         } catch (error) {
-            console.error('Error submitting reason:', error);
-            alert('Failed to save reason. Please try again.');
+            Flash.show('Failed to save reason. Please try again.', 'error');
         }
     });
 

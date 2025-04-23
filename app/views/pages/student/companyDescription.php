@@ -249,7 +249,7 @@
             if (xhr.status === 200) {
                 iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
             } else {
-                alert('Failed to bookmark the company.');
+                Flash.show('Failed to bookmark company', 'error');
             }
         };
 

@@ -137,14 +137,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Validate name field
         if (!formData[formData.type === 'industries' ? 'industryName' : 'reasonName']) {
-            alert('Please enter a name');
+            Flash.show('Please enter a name', 'warning');
             nameInput.focus();
             return;
         }
 
         // For non-industry items, validate reason field
         if (formData.type !== 'industries' && !formData.reason) {
-            alert('Please enter a reason');
+            Flash.show('Please enter a reason', 'warning');
             reasonTextarea.focus();
             return;
         }
@@ -183,11 +183,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 closePopup();
                 location.reload(); // Refresh to show changes
             } else {
-                alert(result.message || 'Failed to update item.');
+                Flash.show(result.message || 'Failed to update item.', 'error');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            Flash.show('Failed to update item. Please try again.', 'error');
             
             // Restore button state in case of error
             const submitBtn = form.querySelector('.submit-btn');
