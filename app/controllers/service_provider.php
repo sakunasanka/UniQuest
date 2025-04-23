@@ -192,6 +192,7 @@ class Service_provider extends Controller
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, );
+            
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -218,6 +219,7 @@ class Service_provider extends Controller
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
+        
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],

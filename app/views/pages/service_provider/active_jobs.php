@@ -42,7 +42,6 @@
                                 <td><?php echo $post->City; ?></td>
                                 <td><?php echo $post->Category; ?></td>
                                 <td><?php echo date('Y-m-d', strtotime($post->PublishDate)); ?></td>
-
                                 <td><?php echo $post->ViewCount; ?></td>
                                 <td><?php echo $post->ApplicationCount; ?></td>
                                 <td class="action">

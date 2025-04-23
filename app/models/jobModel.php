@@ -377,7 +377,7 @@ class jobModel extends Model
 
     public function viewcount($jobId){
         try{
-            $this->db->query("SELECT COUNT(*) AS viewCount FROM is_viewed WHERE jodId = :jobId");
+            $this->db->query("SELECT COUNT(*) AS viewCount FROM is_viewed_job WHERE jodId = :jobId");
             $this->db->bind(':jobId', $jobId);
             $row = $this->db->single();
             return $row->viewCount;
@@ -388,10 +388,10 @@ class jobModel extends Model
     }
     public function addView($jobID, $companyID) {
         try {
-            $this->db->query("INSERT IGNORE INTO is_viewed (CompanyID,studentId, jodId) VALUES (:CompanyID,:studentId, :jobID)");
+            $this->db->query("INSERT  INTO is_viewed_job (CompanyID,UserID, JobID) VALUES (:CompanyID,:studentId, :jobID)");
             $this->db->bind(':studentId', $_SESSION['user_id']);
             $this->db->bind(':jobID', $jobID);
-            $this->db->bind(':jobID', $companyID);
+            $this->db->bind(':CompanyID', $companyID);
             return $this->db->execute();
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
