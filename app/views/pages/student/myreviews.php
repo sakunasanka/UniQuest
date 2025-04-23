@@ -48,8 +48,8 @@
                         </div>
                     <?php endforeach; ?>
                 </div>
-
             </div>
+            <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </div>
 </div>
