@@ -61,6 +61,6 @@
 
 <script>
     function goToCompany(companyID) {
-        window.location.href = "<?php echo URLROOT; ?>/student/companydescription/" + companyID;
+        window.location.href = "<?php echo URLROOT; ?>/jobs/companydescription/" + companyID;
     }
 </script>

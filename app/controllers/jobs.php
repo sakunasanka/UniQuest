@@ -707,7 +707,7 @@ class Jobs extends Controller
                 'reviews' => $reviews,
                 'rating' => $existingReview ? $existingReview->Rating : '',
                 'comment' => $existingReview ? $existingReview->Comment : '',
-                'user_id' => '',
+                'user_id' => $userId,
                 'company_id' => $id,
                 'rating_err' => '',
                 'comment_err' => '',

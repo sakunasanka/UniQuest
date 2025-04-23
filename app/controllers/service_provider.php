@@ -144,13 +144,25 @@ class Service_provider extends Controller
         // Get bookmarked jobs for the user
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($userId);
         $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($userId);
+        $percentageIncreaseViews = $this->model('jobModel')-> getViewIncreasedPercentage($userId);
+        $percentageDecreaseViews = $this->model('jobModel')->getViewDecreasedPercentage($userId);
+        $percentageIncreaseRatings = $this->model('jobModel')->getRatingIncreasePercentage($userId);
+        $percentageDecreaseRatings = $this->model('jobModel')->getRatingDecreasePercentage($userId);
+        $percentageIncreaseReviews = $this->model('jobModel')->getReviewIncreasePercentage($userId);
+        $percentageDecreaseReviews = $this->model('jobModel')->getReviewDecreasePercentage($userId);
 
         $companyInfo = $this->model('companyModel')->getCompanyInfo();
 
         $data = [
             'reviews'=>$reviews,
             'Rating'=>$displayRating,
-            'companyInfo' => $companyInfo
+            'companyInfo' => $companyInfo,
+            'percentageIncreaseViews' => $percentageIncreaseViews,
+            'percentageDecreaseViews' => $percentageDecreaseViews,
+            'percentageIncreaseRatings' => $percentageIncreaseRatings,
+            'percentageDecreaseRatings' => $percentageDecreaseRatings,
+            'percentageIncreaseReviews' => $percentageIncreaseReviews,
+            'percentageDecreaseReviews' => $percentageDecreaseReviews
         ];
         
         $this->view('pages/service_provider/ser_dashboard', $data);
