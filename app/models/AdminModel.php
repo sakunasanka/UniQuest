@@ -469,13 +469,28 @@ class AdminModel extends Model {
     // Helper method for executing raw queries
     protected function query($sql, $params = []) {
         try {
-            // Use your framework's preferred query execution method
-            // This might vary based on your Database class implementation
             $result = $this->db->query($sql, $params);
             return $result['data'] ?? [];
         } catch (Exception $e) {
             error_log("Query error: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function getRevenueOfMonth() {
+        try {
+            // Sum of ratings this month
+            $this->db->query("SELECT SUM(amount) AS thisMonthRevenue
+                FROM payments
+                WHERE Payment_date >= DATE_FORMAT(NOW(), '%Y-%m-01')
+                AND Payment_date < DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01');");
+            $this->db->execute();
+            $revenue = $this->db->single();
+            return $revenue->thisMonthRevenue;
+    
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
         }
     }
 
