@@ -446,6 +446,7 @@ class Jobs extends Controller
         $posts = $this->model('M_jobpost')->getpostbyid($id);
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
         $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
+        $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($id);
 
         if ($posts->Category == 'Internship') {
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
@@ -476,6 +477,7 @@ class Jobs extends Controller
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
                 'displayRating' => $displayRating,
+                'applicationCount' => $applicationCount,
                 'reviews' => $reviews,
                 'rating' => $_POST['rating'] ?? '',
                 'comment' => trim($_POST['comment'] ?? ''),
@@ -526,6 +528,7 @@ class Jobs extends Controller
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
                 'displayRating' => $displayRating,
+                'applicationCount' => $applicationCount,
                 'reviews' => $reviews,
                 'rating' => $existingReview ? $existingReview->Rating : '',
                 'comment' => $existingReview ? $existingReview->Comment : '',
