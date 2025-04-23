@@ -425,6 +425,7 @@ class Admin extends Controller
                 'note' => trim($_POST['note']) ?? null,
                 'reasonID' => ($_POST['reasonID']) ?? null,
                 'jobID' => ($_POST['jobID']) ?? null,
+                'jobTitle' => ($_POST['jobTitle']) ?? null,
                 'companyID' => ($_POST['companyID']) ?? null,
                 'companyEmail' => trim($_POST['companyEmail']) ?? null,
                 'studentID' => ($_POST['studentID']) ?? null,
@@ -483,19 +484,21 @@ class Admin extends Controller
                     $this->model('jobModel')->deactivateJob($data['jobID']);
                     //todo : get correct reason by type
                     //add job log
-                    //todo : send notification to company about job deactivation
                 }
                 if ($data['deactivate_company'] == 1) {
                     $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
                     $this->model->deactivateAccount($data['companyID']);
                     $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
+                    notifyComAboutJobDeactivation($data['companyID'], $reason, $data['jobID'], $data['jobTitle']);
                     MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
                 }
                 if ($data['send_warning'] == 1) {
-                    //todo : send warning notification to company
+                    sendWarningToCompany($data['companyID'], $data['jobID'], $data['jobTitle']);
                 }
                 if ($data['restrict_posting'] == 1) {
                     $this->model('AdminModel')->restrictPosting($data['companyID']);
+                    $notificationDate = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    notifyComAboutCanPostAgain($data['companyID'], $notificationDate);
                 }
                 //set statusAfter to resolved
                 $data['statusAfter'] = 'Resolved';
