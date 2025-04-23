@@ -144,13 +144,25 @@ class Service_provider extends Controller
         // Get bookmarked jobs for the user
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($userId);
         $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($userId);
+        $percentageIncreaseViews = $this->model('jobModel')-> getViewIncreasedPercentage($userId);
+        $percentageDecreaseViews = $this->model('jobModel')->getViewDecreasedPercentage($userId);
+        $percentageIncreaseRatings = $this->model('jobModel')->getRatingIncreasePercentage($userId);
+        $percentageDecreaseRatings = $this->model('jobModel')->getRatingDecreasePercentage($userId);
+        $percentageIncreaseReviews = $this->model('jobModel')->getReviewIncreasePercentage($userId);
+        $percentageDecreaseReviews = $this->model('jobModel')->getReviewDecreasePercentage($userId);
 
         $companyInfo = $this->model('companyModel')->getCompanyInfo();
 
         $data = [
             'reviews'=>$reviews,
             'Rating'=>$displayRating,
-            'companyInfo' => $companyInfo
+            'companyInfo' => $companyInfo,
+            'percentageIncreaseViews' => $percentageIncreaseViews,
+            'percentageDecreaseViews' => $percentageDecreaseViews,
+            'percentageIncreaseRatings' => $percentageIncreaseRatings,
+            'percentageDecreaseRatings' => $percentageDecreaseRatings,
+            'percentageIncreaseReviews' => $percentageIncreaseReviews,
+            'percentageDecreaseReviews' => $percentageDecreaseReviews
         ];
         
         $this->view('pages/service_provider/ser_dashboard', $data);
@@ -1076,7 +1088,9 @@ class Service_provider extends Controller
             ) {
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
+                    $job = $this->model('M_jobpost')->getpostbyid($jobId);
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
+
                     $admins = $this->model->getAdminIds();
                     $vts = $this->model->getVtIds();
                     foreach ($admins as $admin) {
@@ -1087,8 +1101,10 @@ class Service_provider extends Controller
                     }
 
                     $_SESSION['job_send_to_verify'] = true;
+
                     redirect('service_provider/pending_jobs');
                 } else {
+                    $_SESSION['job_post_error'] = true;
                     die('something went wrong');
                 }
             } else {
