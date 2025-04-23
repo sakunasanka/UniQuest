@@ -652,6 +652,19 @@ class Admin extends Controller
         }
     }
 
+    public function markMessageRead() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $messageId = $_POST['message_id'] ?? null;
+
+            if ($messageId) {
+                $this->model('chatModel')->updateReadStatus($messageId);
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
+            }
+        }
+    }
+
     public function user_ver_pending($queryParam = [])
     {
         try {
