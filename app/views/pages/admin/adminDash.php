@@ -90,7 +90,7 @@
     }
 
     function goToComplaintMng() {
-        window.location.href = "<?php echo URLROOT; ?>/admin/job_complaints";
+        window.location.href = "<?php echo URLROOT; ?>/admin/all_complaints?search=pending";
     }
 
     function goToUserVer() {

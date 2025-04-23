@@ -497,6 +497,8 @@ class Admin extends Controller
                 }
                 if ($data['restrict_posting'] == 1) {
                     $this->model('AdminModel')->restrictPosting($data['companyID']);
+                    $notificationDate = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    notifyComAboutCanPostAgain($data['companyID'], $notificationDate);
                 }
                 //set statusAfter to resolved
                 $data['statusAfter'] = 'Resolved';

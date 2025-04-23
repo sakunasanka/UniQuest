@@ -358,7 +358,7 @@ function notifyPostPublish($userId, $jobID, $jobTitle, $date) {
 
 function notifyAdminAboutJobPost($userID, $jobID, $jobTitle) {
     try {
-        $message = "A new job post '{$jobTitle}' has been created.";
+        $message = "A new job post '{$jobTitle}' has been created. You can review it.";
         $title = "New Job Post Created";
         $type = 'info';
         $link = "/admin/job_ver_detail/{$jobID}";
@@ -380,7 +380,7 @@ function notifyAdminAboutJobPost($userID, $jobID, $jobTitle) {
 
 function notifyVtAboutJobPost($userID, $jobID, $jobTitle) {
     try {
-        $message = "A new job post '{$jobTitle}' has been created.";
+        $message = "A new job post '{$jobTitle}' has been created. You can review it.";
         $title = "New Job Post Created";
         $type = 'info';
         $link = "/verification_team/job_ver_detail/{$jobID}";
@@ -614,3 +614,45 @@ function sendWarningToCompany($companyID, $jobID, $jobTitle) {
         return false;
     }
 } 
+
+function sendPostRestrictionToCompany($companyID, $jobID, $jobTitle) {
+    try {
+        $message = "Your job post '{$jobTitle}' has been warned due to complaints.";
+        $title = "Job Post Warning";
+        $type = 'warning';
+        $date = date('Y-m-d H:i:s');
+        $link = "/jobs/jobsdescription/{$jobID}";
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $date,
+            $type,
+            $link
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post warning notification: " . $e->getMessage());
+        return false;
+    }
+} 
+
+function notifyComAboutCanPostAgain($companyID, $date) {
+    try {
+        $message = "Your restriction period has ended. You can now post jobs again.";
+        $title = "Job Posting Reactivated";
+        $type = 'success';
+        $date1 = $date;;
+        
+        return sendNotification(
+            $companyID,
+            $message,
+            $title,
+            $date1,
+            $type,
+        );
+    } catch (Exception $e) {
+        error_log("Failed to send job post reactivation notification: " . $e->getMessage());
+        return false;
+    }
+}
