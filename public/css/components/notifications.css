@@ -42,16 +42,17 @@
 .notification-dropdown {
     display: none;
     position: absolute;
-    top: 100%;
+    top: 85%;
     right: 40px;
     width: 350px;
-    max-height: 500px;
+    max-height: 600px;
     overflow-y: auto;
+    overflow-x: hidden;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    z-index: 100;
     animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -126,7 +127,7 @@
 }
 
 .notification-item.warning {
-    border-left: 4px solid #ffdd57;
+    border-left: 4px solid #e9992f;
 }
 
 .notification-item.message {
@@ -255,7 +256,7 @@
 }
 
 .notification-item.warning .notification-icon {
-    color: #ffdd57;
+    color: #e9992f;
 }
 
 .notification-item.message .notification-icon {
@@ -291,4 +292,52 @@ body.dropdown-open {
 
 .notification-content {
     pointer-events: auto; /* Ensure clicks work on the content */
+}
+
+.notification-title {
+    font-weight: 700; /* Bold */
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.notification-title.success {
+    color: #23d160; 
+}
+
+.notification-title.info {
+    color: #209cee; /* Same as info icon */
+}
+
+.notification-title.warning {
+    color: #e9992f; /* Same as warning icon */
+}
+
+.notification-title.message {
+    color: #0d6efd; 
+}
+
+.notification-title.danger,
+.notification-title.error {
+    color: #ff3860; 
+}
+
+.notification-content-wrapper {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.notification-content {
+    margin-top: 4px;
+}
+
+.notification-item.complaint {
+    border-left: 4px solid #ff851b; 
+}
+
+.notification-item.complaint .notification-icon {
+    color: #ff851b; 
+}
+
+.notification-title.complaint {
+    color: #ff851b; 
 }

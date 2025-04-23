@@ -38,7 +38,7 @@
                                 <td><?php echo $message->user_email ?></td>
                                 <td><?php echo $message->message ?></td>
                                 <td><?php echo $message->created_at ?></td>
-                                <td><span class="status active"><?php echo $message->read_status ?></span></td>
+                                <td><span class="status <?php echo $message->read_status ?>"><?php echo $message->read_status ?></span></td>
                                 <td class="action">
                                 <div class="tooltip">
                                     <?php if ($message->sender_role == 'VT-Member') : ?>
@@ -49,8 +49,7 @@
                                                 onclick="openChatPopup('<?php echo $message->receiver_id; ?>')">preview</button>
                                     <?php endif; ?>
                                     <span class="tooltiptext view">View</span>
-                                </div>
-                                
+                                </div>    
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -79,12 +78,6 @@
 
 <!-- Add simple script for opening the chat popup -->
 <script>
-function openChatPopup(userId) {
-    // Set the user ID in the hidden form
-    document.getElementById('selectedUserID').value = userId;
-    // Submit the form
-    document.getElementById('chatForm').submit();
-}
 
 function scrollToBottom() {
     const messagesContainer = document.querySelector('.messages');
@@ -110,6 +103,33 @@ closePopupBtn?.addEventListener("click", function () {
 backgroundOverlay?.addEventListener("click", function () {
     window.location.href = "/UniQuest/admin/messages_ver";
 });
+
+function openChatPopup(userId, messageId = null) {
+console.log("User ID:", userId);
+    if (messageId) {
+        fetch("<?php echo URLROOT; ?>/admin/markMessageRead", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `message_id=${messageId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Message marked as read");
+            }
+        })
+        .catch(error => {
+            console.error("Error updating read status:", error);
+        });
+    }
+
+    // Set the user ID in the hidden form
+    document.getElementById('selectedUserID').value = userId;
+    // Submit the form
+    document.getElementById('chatForm').submit();
+}
 
 </script>
 

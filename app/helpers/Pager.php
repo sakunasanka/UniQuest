@@ -11,7 +11,7 @@ class Pager {
         $this->totalItems = $totalItems;
         $this->limit = $limit;
         $this->currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-        $this->totalPages = ceil($totalItems / $limit);
+        $this->totalPages = $totalItems ? ceil($totalItems / $limit) : 1;
 
         // Generate the base URL dynamically
         $this->baseUrl = $this->generateBaseUrl();

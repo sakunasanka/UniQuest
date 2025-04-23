@@ -60,7 +60,6 @@ document.getElementById("contactForm").addEventListener("submit", function(event
 
     // Submit the form if all fields are valid
     if (isValid) {
-        alert("Form submitted successfully!");
         this.submit();
     }
 });

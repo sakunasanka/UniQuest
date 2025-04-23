@@ -24,6 +24,7 @@
         <?php require APPROOT . '/views/components/adm_header.php'; ?>
     <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'VT-Member'): ?>
         <?php require APPROOT . '/views/components/ver_header.php'; ?>
+        <?php require APPROOT . '/views/components/chat-sent.php'; ?>
     <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Student'): ?>
         <?php require APPROOT . '/views/components/stu_header.php'; ?>
     <?php elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Company'): ?>

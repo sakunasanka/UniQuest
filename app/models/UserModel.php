@@ -60,7 +60,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', CompanyName, Address, Industry, Email)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -501,7 +501,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', UserID, Email, Role, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -528,7 +528,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', UserID, Email, Role, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -633,7 +633,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField = ($role === 'Company')
                     ? "CONCAT_WS(' ', CompanyName, Email, ContactNo, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status, Role)"
                     : "CONCAT_WS(' ', FullName, Email, ContactNo, Status, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Role)";
@@ -711,7 +711,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', Name, Email, DATE_FORMAT(ActionDate, '%Y-%m-%d'), Status, Role)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -840,11 +840,72 @@ class userModel extends Model
             GROUP BY gender");
         return $this->db->resultSet();
     }
+    
+    public function getUserRoleByID($userId)
+    {
+        $this->db->query("SELECT Role FROM user WHERE UserID = :userId");
+        $this->db->bind(':userId', $userId);
+        return $this->db->single();
+    }
 
     public function getAdminIds() 
     {
         $this->db->query("SELECT AdminID FROM Admin");
-        $admins = $this->db->resultSet();
+        return $this->db->resultSet();
+    }
+
+    public function getVtIds() 
+    {
+        $this->db->query("SELECT VT_MemberID FROM verificationteam");
+        return $this->db->resultSet();
+    }
+
+    public function getStudentIds() 
+    {
+        $this->db->query("SELECT StudentID FROM Student");
+        return $this->db->resultSet();
+    }
+
+    public function getLatestStudentId()
+    {
+        $this->db->query('SELECT * FROM Student ORDER BY StudentID DESC LIMIT 1');
+
+        $row = $this->db->single();
+
+        if ($row) {
+            return $row->StudentID;
+        }
+
+        return false;
+    }
+
+    public function getStudentByID($id) 
+    {
+        $this->db->query('SELECT * FROM Student WHERE Student.StudentID = :id');
+        $this->db->bind(':id', $id);
+        $row = $this->db->single();
+        return $row;
+    }
+    
+    public function getLatestCompanyId()
+    {
+        $this->db->query('SELECT * FROM Company ORDER BY CompanyID DESC LIMIT 1');
+
+        $row = $this->db->single();
+
+        if ($row) {
+            return $row->CompanyID;
+        }
+
+        return false;
+    }
+
+    public function getCompanyByID($id) 
+    {
+        $this->db->query('SELECT * FROM Company WHERE Company.CompanyID = :id');
+        $this->db->bind(':id', $id);
+        $row = $this->db->single();
+        return $row;
     }
 
     public function getAllUserIds() 

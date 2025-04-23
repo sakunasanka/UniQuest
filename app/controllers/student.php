@@ -87,9 +87,17 @@ class Student extends Controller
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
-                    flash('contact-msg', 'Your message has been sent successfully.');
+
+                    //send notification for each admin
+                    $admins = $this->model->getAdminIds();
+                    foreach ($admins as $admin) {
+                        notifyMessageToAdminFromStudent($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
+                    }
+                    $_SESSION['show_contact_us_success'] = true;
+                    
                     redirect('student/contact_admin');
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong. Please try again.');
                 }
             } else {
@@ -98,14 +106,14 @@ class Student extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'email' => '',
+                'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
                 'email_err' => '',
                 'topic_err' => '',
-                'message_err' => ''
+                'message_err' => '',
             ];
-
+            
             $this->view('pages/student/contact_admin', $data);
         }
     }
@@ -382,23 +390,24 @@ class Student extends Controller
         $this->view('pages/student/rate_review_company', $data);
     }
 
-    public function all_app()
+    public function all_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-            $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id']);
+            $applications = $this->model('M_applicationFields')->getAllApplications($_SESSION['user_id'], $page, $limit, $sort, $order, $search);
             $data = [
-                'applications' => $applications,
-                // 'currentPage' => $applications['currentPage'],
-                // 'rowsPerPage' => $applications['limit'],
-                // 'totalRows' => $applications['totalRows'],
-                // 'totalPages' => $applications['totalPages'],
-                // 'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+                'applications' => $applications['data'],
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
             ];
             $this->view('pages/student/all_applications', $data);
         } catch (Exception $e) {
@@ -406,14 +415,14 @@ class Student extends Controller
         }
     }
 
-    public function accepted_app()
+    public function accepted_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
@@ -430,14 +439,14 @@ class Student extends Controller
         }
     }
 
-    public function rejected_app()
+    public function rejected_app($queryParam = [])
     {
         try {
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
-            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 2;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order);
             $data = [
@@ -630,6 +639,13 @@ class Student extends Controller
 
     public function make_complain($jobID)
     {
+        $existingComplaint = $this->model('ComplaintModel')->getExistingComplaint($_SESSION['user_id'], $jobID);
+        if ($existingComplaint) {
+            $_SESSION['existing_complaint'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+            Redirect::to($previousURL);
+        }
+        
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
             $data = [
@@ -664,8 +680,15 @@ class Student extends Controller
                     return;
                 }
                 if ($this->model('ComplaintModel')->createComplaint($data)) {
+                    $admins = $this->model->getAdminIds();
+                    $job = $this->model('M_jobpost')->getpostbyid($jobID);
+                    foreach ($admins as $admin) {
+                        notifyComplaintToAdmin($admin->AdminID, $job->Title, $_SESSION['user_name']);
+                    }
+                    $_SESSION['complaint_submit_success'] = true;                 
                     Redirect::to(URLROOT . '/jobs'); // Adjust the redirect URL as needed
                 } else {
+                    $_SESSION['complaint_submit_error'] = true;   
                     die('Something went wrong'); // Improved error handling suggested
                 }
             } else {
@@ -881,6 +904,7 @@ class Student extends Controller
     }
     public function jobsApply($jobId)
     {
+        $posts = $this->model('M_jobpost')->getpostbyid($jobId);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
 
@@ -923,16 +947,35 @@ class Student extends Controller
             // If no errors, save application
             if (empty($data['errors'])) {
                 $applicationModel = $this->model('M_applicationFields');
-                
-                
-            $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
-                if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
-                    flash('application_success', 'Your application has been submitted successfully');
-                    redirect('student/all_app');
-                } else {
-                    // Return to form with errors
-                    $this->view('pages/student/jobsApply', $data);
+            
+            $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($jobId); 
+            $sub_plan = $this->model('companyModel')->getSubscriptionPlanByJobID($jobId); 
+            
+                if ($applicationCount >= 20 && $sub_plan == 'free' || $applicationCount >= 50 && $sub_plan == 'professional') {
+                    $_SESSION['show_job_apply_count_error'];
+                    $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                    Redirect::to($previousURL);
                 }
+                elseif ($sub_plan == 'enterprise') {    
+                    $applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id']);
+                    
+                    if ($applicationModel->createApplication($data['fields'], $jobId, $_SESSION['user_id'])) {
+                        // Notify the user about the successful application
+                        $_SESSION['application_success'] = true;
+
+                        notifyJobsApply(
+                            $posts->CompanyID,
+                            $posts->Title,
+                            $jobId
+                            
+                        );
+                        redirect('student/all_app');
+                    } else {
+                        // Return to form with errors
+                        $_SESSION['application_error'] = true;
+                        $this->view('pages/student/jobsApply', $data);
+                    }
+                }    
             } else {
                 // GET request - show the application form
                 $jobModel = $this->model('M_jobpost');
@@ -962,7 +1005,7 @@ class Student extends Controller
 
         // Define allowed file types based on field
         $allowedTypes = [
-            'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            'cvs' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             'photo' => ['image/jpeg', 'image/png'],
             'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png'],
             'other1' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
@@ -1065,15 +1108,23 @@ class Student extends Controller
         $this->view('pages/service_provider/view_application', $data);
     }
 
-    public function myreviews()
+    public function myreviews($queryParam = [])
     {
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+        $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'ReviewID';
+        $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+
+        // Get user ID from session
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
         } else {
             $userId = null;
         }
 
-        $reviews = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id']);
+        $reviewsData = $this->model('RateAndReviewModel')->getReviewsByStuId($_SESSION['user_id'], $page, $limit, $sort, $order);
+        $reviews = $reviewsData['data'];
 
         foreach ($reviews as $review) {
             $review->LikeCount = $this->model('RateAndReviewModel')->getLikesByReviewID($review->ReviewID);
@@ -1087,6 +1138,11 @@ class Student extends Controller
             'rating' => '',
             'comment' => '',
             'company_id' => '',
+            'currentPage' => $reviewsData['currentPage'],
+            'rowsPerPage' => $reviewsData['limit'],
+            'totalRows' => $reviewsData['totalRows'],
+            'totalPages' => $reviewsData['totalPages'],
+            'isLastPage' => $reviewsData['isLastPage'] ? 'yes' : 'no',
         ];
 
         $this->view('pages/student/myreviews', $data);

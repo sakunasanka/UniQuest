@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', (e) => {
             // Get the reason type from the table title
             const tableCard = e.target.closest('.table-card');
-            const tableTitle = tableCard.querySelector('.table-title').textContent.trim();
+            const tableBlock = e.target.closest('.table-block');
+            const tableTitle = tableBlock.querySelector('.table-title').textContent.trim();
             const reasonTypeValue = tableTypes[tableTitle];
 
             if (!reasonTypeValue) {
