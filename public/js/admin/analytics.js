@@ -105,6 +105,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Helper functions
+    function getMaxValue(datasets) {
+        if (!datasets?.length) return 0;
+        
+        return Math.max(
+            ...datasets.flatMap(dataset => 
+                dataset.data?.length ? dataset.data : [0]
+            )
+        );
+    }
+    
+    function getRoundedMaxValue(maxValue, tickCount = 5) {
+        if (maxValue <= 0) return 0;
+        
+        const orderOfMagnitude = Math.pow(10, Math.floor(Math.log10(maxValue)));
+        const scaledValue = maxValue / orderOfMagnitude;
+        
+        // Find appropriate scaling factor
+        const scaleFactors = [1, 2, 5, 10];
+        const factor = scaleFactors.find(f => f * orderOfMagnitude * tickCount >= maxValue) || 10;
+        
+        return Math.ceil(scaledValue / factor) * factor * orderOfMagnitude;
+    }
+    
+    function getStepSize(maxValue, desiredTicks = 5) {
+        if (maxValue <= 0 || desiredTicks <= 0) return 0;
+        
+        const rawStep = maxValue / desiredTicks;
+        const power = Math.pow(10, Math.floor(Math.log10(rawStep)));
+        const roundedStep = Math.ceil(rawStep / power) * power;
+        
+        // Round to nearest "nice" number (1, 2, 5 multiples)
+        const niceSteps = [1, 2, 5, 10].map(n => n * power);
+        return niceSteps.find(n => n >= roundedStep) || roundedStep;
+    }
     function processMonthLabels(stats) {
         if (!stats || stats.length === 0) return getDefaultMonths(5);
         
@@ -179,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate max values based on actual data
         let maxValue;
         if (isLineChart) {
-            maxValue = Math.max(...revenueData, 1) * 1.2;
+            maxValue = getRoundedMaxValue(getMaxValue([{ data: revenueData }]));
         } else {
             const allValues = [
                 ...registrationData.students,
@@ -187,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...jobData.partTime,
                 ...jobData.internships
             ];
-            maxValue = Math.max(...allValues, 1) * 1.2;
+            maxValue = getRoundedMaxValue(getMaxValue([{ data: allValues }]));
         }
         
         // Calculate appropriate step size
