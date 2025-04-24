@@ -982,8 +982,7 @@ class Student extends Controller
                 }    
             } else {
                 // GET request - show the application form
-                $jobModel = $this->model('M_jobpost');
-                $job = $jobModel->getJobById($jobId);
+                $job = $this->model('M_jobpost')->getpostbyid($jobId);
 
                 if (!$job) {
                     redirect('pages/error');
@@ -1009,7 +1008,7 @@ class Student extends Controller
 
         // Define allowed file types based on field
         $allowedTypes = [
-            'cvs' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             'photo' => ['image/jpeg', 'image/png'],
             'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png'],
             'other1' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
@@ -1090,7 +1089,7 @@ class Student extends Controller
             'qualifications' => $application->Qualifications ?? null,
             'experience' => $application->Experience ?? null,
             'skills' => $application->Skills ?? null,
-            'cv' => $application->cv ?? null,
+            'cv' => $application->StudentResume ?? null,
             'nic_copy' => $application->nic_copy ?? null,
             'linkedin' => $application->linkedin ?? null,
             'other1' => $application->other1 ?? null,
