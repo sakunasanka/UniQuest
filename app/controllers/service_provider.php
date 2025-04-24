@@ -879,8 +879,9 @@ class Service_provider extends Controller
                 empty($data['salary_range_err'])
             ) {
                 if ($this->model('M_jobpost')->edit($data)) {
-                    flash('post-msg', 'post is updated');
-                    redirect('service_provider/pending_jobs');
+                    $_SESSION['job_edit_success'] = true;
+                    $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/sservice_provider/dashboard';
+                    Redirect::to($previousURL);
                 } else {
                     die('something went wrong');
                 }

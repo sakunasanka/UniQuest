@@ -70,6 +70,8 @@ class User extends Controller
                         $this->model->updateLastLogin($loggedInUser->UserID);
                         // Create session
                         $this->createSession($loggedInUser->UserID);
+                        
+
                     } else if ($loggedInUser && $loggedInUser->Status === 'Pending Deletion') {
                         // Redirect to reactivate account page
                         $_SESSION['logged_user_id'] = $loggedInUser->UserID;
@@ -273,12 +275,16 @@ class User extends Controller
 
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/jobs');
+                $_SESSION['login_success_msg'] = true;
+                Redirect::to(URLROOT . '/jobs');        
             } else if ($user['Role'] === 'Company') {
+                $_SESSION['login_success_msg'] = true;
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {
+                $_SESSION['login_success_msg'] = true;
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
+                $_SESSION['login_success_msg'] = true;
                 Redirect::to(URLROOT . '/verification_team/user_ver_pending');
             }
             //print user details
