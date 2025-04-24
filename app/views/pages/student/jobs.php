@@ -47,7 +47,7 @@
 
             <?php $columns = [
                 'jobs_create_at' => 'Newest',
-                'Rating' => 'Highest Rating',
+                // 'Rating' => 'Highest Rating',
                 'SalaryRange' => 'Highest Salary'
             ]; ?>
             <?php require APPROOT . '/views/components/searchBar.php'; ?>

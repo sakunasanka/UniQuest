@@ -59,7 +59,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="industry">Industry<span class="req"> *</span></label>
-                            <select id="industryID" name="industryID">
+                            <select id="industryID" name="industryID" required>
                                 <option value="" disabled selected>Select Industry</option>
                                 <?php foreach ($data['industries'] as $industry) : ?>
                                     <option value="<?php echo $industry->IndustryID; ?>" <?php echo ($data['industryID'] == $industry->IndustryID) ? 'selected' : ''; ?>><?php echo $industry->IndustryName; ?></option>

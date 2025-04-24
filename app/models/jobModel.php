@@ -136,7 +136,7 @@ class jobModel extends Model
         try {
             // Define base conditions
             $conditions = [
-                ['Status', '=', 'Pending']
+                ['Status', 'IN', ['Pending', 'Edited']]
             ];
 
             // Add search condition if a search term is provided

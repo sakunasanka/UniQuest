@@ -58,15 +58,21 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="dob">Date Of Birth<span class="req"> *</span></label>
-                            <input type="date" id="dob" name="dob" value="<?php echo $data['dob']; ?>" placeholder="Enter Date of Birth" required>
+                            <input type="date" id="dob" name="dob" value="<?php echo $data['dob']; ?>" placeholder="Enter Date of Birth" max="<?php echo date('Y-m-d', strtotime('-18 years')); ?>" required>
                             <span class="error-msg"><?php echo !empty($data['dob_err']) ? $data['dob_err'] : ''; ?></span>
                         </div>
                         <div class="input-container">
                             <label for="gender">Gender</label>
-                            <input type="radio" id="male" name="gender" value="male">
-                            <span for="male">Male</span>
-                            <input type="radio" id="female" name="gender" value="female">
-                            <span for="female">Female</span> <br>
+                            <div style="display: flex; ">
+                                <input type="radio" id="male" name="gender" value="male"
+                                    <?php echo ($data['gender'] == 'male') ? 'checked' : ''; ?>>
+                                <label for="male">Male</label>
+
+                                <input type="radio" id="female" name="gender" value="female"
+                                    <?php echo ($data['gender'] == 'female') ? 'checked' : ''; ?>>
+                                <label for="female">Female</label>
+                                <br>
+                            </div>
                             <span class="error-msg"><?php echo !empty($data['gender_err']) ? $data['gender_err'] : ''; ?></span>
                         </div>
                     </div>

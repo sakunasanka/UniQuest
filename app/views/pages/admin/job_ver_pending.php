@@ -35,7 +35,7 @@
                                 <td><?php echo $job->Email; ?></td>
                                 <td><?php echo $job->Category; ?></td>
                                 <td><?php echo substr($job->jobs_create_at, 0, 10); ?></td>
-                                <td><span class="status pending">Pending</span></td>
+                                <td><span class="status pending"><?php echo $job->Status; ?></span></td>
                                 <td class="action">
                                         <div class="tooltip">
                                             <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_detail/<?php echo $job->JobID; ?>'">
