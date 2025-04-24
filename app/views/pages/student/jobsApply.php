@@ -18,66 +18,103 @@
             method="POST" 
             enctype="multipart/form-data"
             class="application-form">
-            <?php 
-            $fields = $data['fields'];
-            if ($fields): 
-                foreach ($fields as $fieldName => $fieldConfig): 
-                    $isRequired = isset($fieldConfig['required']) && $fieldConfig['required'];
-            ?>
-                <div class="form-group">
-                    <label for="<?php echo $fieldName; ?>">
-                        <?php echo $fieldConfig['label']; ?>
-                        <span class="required-asterik" <?php if ($isRequired) echo 'style="display:inline;"'; ?>>*</span>
-                    </label>
-                    
-                    <?php switch($fieldConfig['type']):
-                        case 'textarea': ?>
-                            <textarea 
-                                id="<?php echo $fieldName; ?>"
-                                name="<?php echo $fieldName; ?>"
-                                rows="5"
-                                <?php if ($isRequired) echo 'required'; ?>
-                            ></textarea>
-                            <?php break;
+            <?php
+                    $fields = $data['fields'];
+                    if ($fields):
+                        // Create a mapping between form field names and userdetails keys
+                        $fieldMapping = [
+                            'fullname' => ['firstname', 'lastname'], // Combine first and last name
+                            'photo' => 'profilepic',
+                            'email' => 'email',
+                            'contact' => 'contactno',
+                            'nic' => 'nic_no',
+                            'dob' => 'dob',
+                            'address' => ['streetno', 'addressline1', 'addressline2', 'city'],
+                            'gender' => 'gender',
+                        ];
 
-                        case 'select': ?>
-                            <select 
-                                id="<?php echo $fieldName; ?>"
-                                name="<?php echo $fieldName; ?>"
-                                <?php if ($isRequired) echo 'required'; ?>                  
-                            >
-                                <option value="">Select <?php echo $fieldConfig['label']; ?></option>
-                                <?php foreach($fieldConfig['options'] as $option): ?>
-                                    <option value="<?php echo $option; ?>"><?php echo $option; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <?php break;
+                        foreach ($fields as $fieldName => $fieldConfig):
+                            $isRequired = isset($fieldConfig['required']) && $fieldConfig['required'];
 
-                        case 'file': ?>
-                            <input 
-                                type="file"
-                                id="<?php echo $fieldName; ?>"
-                                name="<?php echo $fieldName; ?>"
-                                accept="<?php echo $fieldConfig['accept']; ?>"
-                                <?php if ($isRequired) echo 'required'; ?>
-                            >
-                            <?php break;
+                            // Get the value based on the mapping
+                            $fieldValue = '';
+                            if (isset($fieldMapping[$fieldName])) {
+                                if (is_array($fieldMapping[$fieldName])) {
+                                    // Handle combined fields (like firstname + lastname)
+                                    $values = [];
+                                    foreach ($fieldMapping[$fieldName] as $userDetailKey) {
+                                        if (isset($data['userdetails'][$userDetailKey])) {
+                                            $values[] = $data['userdetails'][$userDetailKey];
+                                        }
+                                    }
+                                    $fieldValue = implode(' ', $values);
+                                } else {
+                                    // Handle direct mapping
+                                    $userDetailKey = $fieldMapping[$fieldName];
+                                    if (isset($data['userdetails'][$userDetailKey])) {
+                                        $fieldValue = $data['userdetails'][$userDetailKey];
+                                    }
+                                }
+                            }
+                    ?>
+                            <div class="form-group">
+                                <label for="<?php echo $fieldName; ?>">
+                                    <?php echo $fieldConfig['label']; ?>
+                                    <span class="required-asterik" <?php if ($isRequired) echo 'style="display:inline;"'; ?>>*</span>
+                                </label>
 
-                        default: ?>
-                            <input 
-                                type="<?php echo $fieldConfig['type']; ?>"
-                                id="<?php echo $fieldName; ?>"
-                                name="<?php echo $fieldName; ?>"
-                                <?php if ($isRequired) echo 'required'; ?>
-                            >
-                    <?php endswitch; ?>
-                    
-                    <span class="error-message" id="<?php echo $fieldName; ?>-error"></span>
-                </div>
-            <?php 
-                endforeach;
-            endif; 
-            ?>
+                                <?php switch ($fieldConfig['type']):
+                                    case 'textarea': ?>
+                                        <textarea
+                                            id="<?php echo $fieldName; ?>"
+                                            name="<?php echo $fieldName; ?>"
+                                            rows="5"
+                                            <?php if ($isRequired) echo 'required'; ?>><?php echo htmlspecialchars($fieldValue); ?></textarea>
+                                    <?php break;
+
+                                    case 'select': ?>
+                                        <select
+                                            id="<?php echo $fieldName; ?>"
+                                            name="<?php echo $fieldName; ?>"
+                                            <?php if ($isRequired) echo 'required'; ?>>
+                                            <option value="">Select <?php echo $fieldConfig['label']; ?></option>
+                                            <?php foreach ($fieldConfig['options'] as $option): ?>
+                                                <option value="<?php echo $option; ?>" <?php if ($option == $fieldValue) echo 'selected'; ?>>
+                                                    <?php echo $option; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    <?php break;
+
+                                    case 'file': ?>
+                                        <input
+                                            type="file"
+                                            id="<?php echo $fieldName; ?>"
+                                            name="<?php echo $fieldName; ?>"
+                                            accept="<?php echo $fieldConfig['accept']; ?>"
+                                            <?php if ($isRequired) echo 'required'; ?>>
+                                        <!-- <?php if ($fieldValue): ?>
+                                            <div class="current-file">
+                                                Current file: <?php echo basename($fieldValue); ?>
+                                            </div>
+                                        <?php endif; ?> -->
+                                    <?php break;
+
+                                    default: ?>
+                                        <input
+                                            type="<?php echo $fieldConfig['type']; ?>"
+                                            id="<?php echo $fieldName; ?>"
+                                            name="<?php echo $fieldName; ?>"
+                                            value="<?php echo htmlspecialchars($fieldValue); ?>"
+                                            <?php if ($isRequired) echo 'required'; ?>>
+                                <?php endswitch; ?>
+
+                                <span class="error-message" id="<?php echo $fieldName; ?>-error"></span>
+                            </div>
+                    <?php
+                        endforeach;
+                    endif;
+                    ?>
 
             <p class="form-notice">Please note that once you submit, the application will be directly sent to the recruiter.</p>
             

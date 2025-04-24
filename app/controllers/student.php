@@ -878,6 +878,9 @@ class Student extends Controller
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         }
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        $userdetails = $this->model('UserModel')->getUserDetails($_SESSION['user_id']);
+        $userdetails = array_change_key_case($userdetails, CASE_LOWER);
+        // die(var_dump($userdetails));
 
         $data = [
             'fields' => $applicationFields,
@@ -886,6 +889,7 @@ class Student extends Controller
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
             'displayRating' => $displayRating,
+            'userdetails' => $userdetails,
         ];
         // Check if the user has already applied for this job
         if ($isApplied) {
