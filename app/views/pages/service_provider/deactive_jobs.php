@@ -46,15 +46,25 @@
                                 <td><?php echo $post->ViewCount; ?></td>
                                 <td><?php echo $post->ApplicationCount; ?></td>
                                 <td class="action">
+                                    <div class="tooltip">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $post->JobID; ?>'">
                                         preview
                                     </span>
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+
+                                    <div class="tooltip">
                                     <span class="material-symbols-outlined action-btn activate1" onclick="showActivatePostConfirm(<?= $post->JobID ?>)">
                                         check_circle
                                     </span>
+                                        <span class="tooltiptext activate">Activate</span>
+                                    </div> 
+                                    <div class="tooltip">                                        
                                     <span class="material-symbols-outlined action-btn deactivate" onclick="showdeletereviewconfirm(<?= $post->JobID ?>)">
                                         delete
                                     </span>
+                                        <span class="tooltiptext deactivate">Delete</span>
+                                    </div>        
                                 </td>
                             </tr>
                         <?php endforeach; ?>

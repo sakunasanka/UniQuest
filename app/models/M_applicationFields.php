@@ -750,4 +750,20 @@ class M_applicationFields extends Model
             return false;
         }
     }
+
+    public function getMostAppliedJob() {
+        try {
+            $this->db->query("SELECT job_id, COUNT(*) as ApplicationCount FROM applications GROUP BY job_id ORDER BY ApplicationCount DESC LIMIT 1");
+            $row = $this->db->single();
+
+            $this->db->query("SELECT Title, JobID FROM jobs WHERE JobID = :jobID");
+            $this->db->bind(':jobID', $row->job_id);
+            $job = $this->db->single();
+            return $job;
+        }
+        catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
