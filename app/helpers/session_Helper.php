@@ -176,3 +176,22 @@ function flash($name) {
 <?php unset($_SESSION['show_canpost_job_error']); ?>
 <?php endif; ?>
 
+
+<?php if(isset($_SESSION['job_edit_success'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Your job post will be published soon after verification.", "success");
+    });
+</script>
+<?php unset($_SESSION['job_edit_success']); ?>
+<?php endif; ?>
+
+
+<?php if(isset($_SESSION['login_success_msg'])): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Flash.show("Login successful! Welcome back.", "success");
+    });
+</script>
+<?php unset($_SESSION['login_success_msg']); ?>
+<?php endif; ?>
