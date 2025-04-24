@@ -877,7 +877,7 @@ class Student extends Controller
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         }
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        $userdetails = $this->model('UserModel')->getUserDetails($_SESSION['user_id']);
+        $userdetails = $this->model->getUserDetails($_SESSION['user_id']);
         $userdetails = array_change_key_case($userdetails, CASE_LOWER);
         $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($jobId);
         // die(var_dump($userdetails));
@@ -937,7 +937,7 @@ class Student extends Controller
                 $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
             }
             $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-            $userdetails = $this->model('UserModel')->getUserDetails($_SESSION['user_id']);
+            $userdetails = $this->model->getUserDetails($_SESSION['user_id']);
             $userdetails = array_change_key_case($userdetails, CASE_LOWER);
             $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($jobId);
 
@@ -1139,6 +1139,7 @@ class Student extends Controller
 
         $data = [
             'application' => $applicationData,
+            'category' => $application->JobCategory
         ];
         $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
 
