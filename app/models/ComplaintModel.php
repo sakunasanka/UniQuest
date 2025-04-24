@@ -31,7 +31,7 @@ class ComplaintModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobTitle, CompanyEmail, Complaint, StudentName, DATE_FORMAT(ComplainedDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -71,7 +71,7 @@ class ComplaintModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', CompanyEmail, CompanyName, ComplaintCount, DATE_FORMAT(LastComplainedDate, '%Y-%m-%d'))";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -97,7 +97,7 @@ class ComplaintModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', CompanyEmail, CompanyName, ComplaintCount, DATE_FORMAT(LastComplainedDate, '%Y-%m-%d'))";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -123,7 +123,7 @@ class ComplaintModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobTitle, CompanyEmail, Complaint, StudentName, DATE_FORMAT(ComplainedDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -149,7 +149,7 @@ class ComplaintModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobTitle, CompanyEmail, Complaint, StudentName, DATE_FORMAT(ComplainedDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
