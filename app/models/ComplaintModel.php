@@ -1,5 +1,6 @@
 <?php
-class ComplaintModel extends Model {
+class ComplaintModel extends Model
+{
 
     public function createComplaint($data)
     {
@@ -30,7 +31,7 @@ class ComplaintModel extends Model {
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobTitle, CompanyEmail, Complaint, StudentName, DATE_FORMAT(ComplainedDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -70,7 +71,7 @@ class ComplaintModel extends Model {
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', CompanyEmail, CompanyName, ComplaintCount, DATE_FORMAT(LastComplainedDate, '%Y-%m-%d'))";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -96,7 +97,7 @@ class ComplaintModel extends Model {
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', CompanyEmail, CompanyName, ComplaintCount, DATE_FORMAT(LastComplainedDate, '%Y-%m-%d'))";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -122,7 +123,7 @@ class ComplaintModel extends Model {
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobTitle, CompanyEmail, Complaint, StudentName, DATE_FORMAT(ComplainedDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -148,7 +149,7 @@ class ComplaintModel extends Model {
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobTitle, CompanyEmail, Complaint, StudentName, DATE_FORMAT(ComplainedDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -167,7 +168,7 @@ class ComplaintModel extends Model {
     public function getCountPendingComplaints()
     {
         try {
-            $complaints = $this->select('v_complaints', [['Status', '=', 'Pending']], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, 1, false);
+            $complaints = $this->select('v_complaints', [['Status', 'IN', ['Pending', 'In-Review']]], 'COUNT(ComplaintID) AS PendingCount', '', '', '', 0, 1, false);
             return $complaints->PendingCount;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -177,7 +178,7 @@ class ComplaintModel extends Model {
             return false;
         }
     }
-    
+
 
     public function startReview($complaintId)
     {
@@ -240,5 +241,36 @@ class ComplaintModel extends Model {
             return false;
         }
     }
+
+    public function getLastComplaintLog($complaintId)
+    {
+        try {
+            $log = $this->select('v_complaint_logs', [['ComplaintID', '=', $complaintId]], 'ComplaintID, CurrentStatus, ReasonID, Reason, ReasonName, ReasonType, AdminNote, ActionTimestamp', 'AND', '', 'ActionTimestamp DESC', 0, 1, false);
+            return $log;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getExistingComplaint($studentID, $jobID) {
+        try {
+            $conditions = [
+                ['StudentID', '=', $studentID],
+                ['JobID', '=', $jobID],
+                ['Status', 'IN', ['Pending', 'In-Review']]
+            ];
+            $complaint = $this->select('complaint_jobs', $conditions, '*', 'AND', '', '', 0, 1, false);
+            return $complaint;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("General Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }
-?>

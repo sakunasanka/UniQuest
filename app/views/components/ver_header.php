@@ -18,12 +18,13 @@
                     </div>
                 </li> -->
             <!-- <li><a href="/uniQuest/about" class="hov">About Us</a></li> -->
-            <li><a href="/uniQuest/verification_team/contact_admin" class="hov">Contact Us</a></li>
+            <li><a href="/uniQuest/verification_team/messages_adm" class="hov" onclick="">Contact Us</a></li>
+    
         </ul>
         <div class="nav-icons">
-            <a href="/UniQuest/verification_team/notifications"><span class="material-symbols-outlined">notifications</span></a>
-            <span class="notification-badge">1</span>
+            <?php require APPROOT . '/views/components/notification_dropdown.php'; ?>           
         </div>
+        
         <?php require APPROOT . '/views/components/navProfile.php'; ?>
     </div>
 </nav>

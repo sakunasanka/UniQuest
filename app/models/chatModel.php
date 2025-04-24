@@ -106,6 +106,13 @@ class ChatModel extends Model {
             return false;
         }
     }
+
+    public function updateReadStatus($id)
+    {
+        $this->db->query("UPDATE messages SET read_status = 'Read' WHERE id = :id");
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
     
 }
 ?>

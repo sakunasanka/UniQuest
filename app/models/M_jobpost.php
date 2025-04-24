@@ -24,7 +24,7 @@ class M_jobpost extends Model
 
     public function getJobsByCompanyId($id)
     {
-        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY jobs_create_at DESC');
+        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY PublishDate DESC');
         $this->db->bind(':company_id', $id);
         return $this->db->resultSet();
     }
@@ -53,6 +53,14 @@ class M_jobpost extends Model
         return $row->job_count;
     }
 
+    public function canPostJob()
+    {
+        $this->db->query('SELECT can_post FROM company WHERE CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single();
+        return $row->can_post;
+    }
+
     public function getActiveJobCountByCompany()
     {
         $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id AND Status = :status');
@@ -75,7 +83,7 @@ class M_jobpost extends Model
             // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                ['Status', '=', 'Pending']
+                ['Status', 'IN', ['Pending', 'Edited']]
             ];
 
             // Add search condition if a search term is provided
@@ -155,7 +163,7 @@ class M_jobpost extends Model
 
     public function getPosts()
     {
-        $this->db->query('SELECT * FROM v_jobs');
+        $this->db->query('SELECT * FROM v_jobs ORDER BY PublishDate DESC');
         $results = $this->db->resultSet();
         return $results;
     }
@@ -202,10 +210,13 @@ class M_jobpost extends Model
             SET 
                 Title = :job_name, 
                 Description = :job_description, 
-                Location = :job_location, 
+                DistrictID = :job_district,
+                CityID = :job_city,
                 JobBenefits = :job_benifits, 
                 RequiredQualifications = :required_skills, 
-                SalaryRange = :salary_range 
+                SalaryRange = :salary_range,
+                SalaryType = :salary_type,
+                Status = :status
             WHERE 
                JobID = :job_id 
         ');
@@ -213,11 +224,14 @@ class M_jobpost extends Model
         // Bind the values from $data array
         $this->db->bind(':job_name', $data['job_name']);
         $this->db->bind(':job_description', $data['job_description']);
-        $this->db->bind(':job_location', $data['job_location']);
+        $this->db->bind(':job_district', $data['job_district']);
+        $this->db->bind(':job_city', $data['job_city']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
+        $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':job_id', $data['job_id']);
+        $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
         return $this->db->execute();
@@ -232,6 +246,18 @@ class M_jobpost extends Model
         if($this->db->execute()){
             return true;
         }else{               
+            return false;
+        }
+    }
+
+    public function activatePost($postId){
+        $this->db->query('UPDATE jobs SET Status="Active" WHERE JobID=:id');
+        $this->db->bind(':id',$postId );
+
+        //execute
+        if ($this->db->execute()) {
+            return true;
+        } else {
             return false;
         }
     }
@@ -300,13 +326,14 @@ class M_jobpost extends Model
         return $conditions;
     }
 
-    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
+    public function getPartTimeJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             // Base conditions
             $conditions = [
                 ['Status', '=', 'Active'],
-                ['Category', '=', 'Part-time']
+                ['Category', '=', 'Part-time'],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -334,12 +361,13 @@ class M_jobpost extends Model
         }
     }
 
-    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
+    public function getInternshipJobs($pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             $conditions = [
                 ['Status', '=', 'Active'],
-                ['Category', '=', 'Internship']
+                ['Category', '=', 'Internship'],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -365,14 +393,15 @@ class M_jobpost extends Model
         }
     }
 
-    public function getSaveJobs($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    public function getSaveJobs($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
     {
         try {
             // Base conditions
             $conditions = [
                 ['Status', '=', 'Active'],
                 ['Category', '=', 'Part-time'],
-                ['StudentID', '=', $studentId]
+                ['StudentID', '=', $studentId],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -400,14 +429,15 @@ class M_jobpost extends Model
         }
     }
 
-    public function getSaveInternships($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', array $filters = [])
+    public function getSaveInternships($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', array $filters = [])
     {
         try {
             // Base conditions
             $conditions = [
                 ['Status', '=', 'Active'],
                 ['Category', '=', 'Internship'],
-                ['StudentID', '=', $studentId]
+                ['StudentID', '=', $studentId],
+                ['PublishDate', '<=', date('Y-m-d H:i:s')]
             ];
 
             // Add search condition if a search term is provided
@@ -435,7 +465,7 @@ class M_jobpost extends Model
         }
     }
 
-    public function getSaveCompanies($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "JobID", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
+    public function getSaveCompanies($studentId, $pageNumber = 1, $rowsPerPage = 12, $sort = "PublishDate", $order = "DESC", $search = '', $searchBy = 'Title', array $filters = [])
     {
         try {
             // Base conditions

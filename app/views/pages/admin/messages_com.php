@@ -38,11 +38,18 @@
                                 <td><?php echo $message->user_email ?></td>
                                 <td><?php echo $message->message ?></td>
                                 <td><?php echo $message->created_at ?></td>
-                                <td><span class="status active"><?php echo $message->read_status ?></span></td>
+                                <td><span class="status <?php echo $message->read_status ?>"><?php echo $message->read_status ?></span></td>
                                 <td class="action">
-                                    <button id="openPopupBtn" class="open-btn-2 material-symbols-outlined action-btn view">
-                                        preview
-                                    </button>
+                                <div class="tooltip">
+                                    <?php if ($message->sender_role == 'Company') : ?>
+                                        <button class="open-btn-2 material-symbols-outlined action-btn view" 
+                                                onclick="openChatPopup('<?php echo $message->sender_id; ?>')">preview</button>
+                                    <?php elseif ($message->receiver_role == 'Company'):?>
+                                        <button class="open-btn-2 material-symbols-outlined action-btn view" 
+                                                onclick="openChatPopup('<?php echo $message->receiver_id; ?>')">preview</button>
+                                    <?php endif; ?>
+                                    <span class="tooltiptext view">View</span>
+                                </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -53,15 +60,78 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-            <?php require APPROOT . '/views/components/pagination.php'; ?>
+            <?php //require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>
+
+<!-- Create a hidden form to submit the user ID -->
+<form id="chatForm" action="<?php echo URLROOT; ?>/admin/messages_com" method="post" style="display: none;">
+    <input type="hidden" name="selectedUserID" id="selectedUserID" value="">
+</form>
 
 <script src="<?php echo URLROOT; ?>/public/js/admin/popups.js"></script>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
+
+
+<!-- Add simple script for opening the chat popup -->
+<script>
+
+function scrollToBottom() {
+    const messagesContainer = document.querySelector('.messages');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Only open the popup if a userID exists AND it came from a form submission
+    <?php if (isset($data['userID']) && isset($_POST['selectedUserID'])): ?>
+        document.getElementById('chatPopup').classList.remove('hidden');
+        document.getElementById('backgroundOverlay').classList.remove('hidden');
+        scrollToBottom();
+    <?php endif; ?>
+});
+
+//Refresh the page when the popup is closed
+closePopupBtn?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/admin/messages_com";
+});
+
+backgroundOverlay?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/admin/messages_com";
+});
+
+function openChatPopup(userId, messageId = null) {
+console.log("User ID:", userId);
+    if (messageId) {
+        fetch("<?php echo URLROOT; ?>/admin/markMessageRead", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `message_id=${messageId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Message marked as read");
+            }
+        })
+        .catch(error => {
+            console.error("Error updating read status:", error);
+        });
+    }
+
+    // Set the user ID in the hidden form
+    document.getElementById('selectedUserID').value = userId;
+    // Submit the form
+    document.getElementById('chatForm').submit();
+}
+
+</script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

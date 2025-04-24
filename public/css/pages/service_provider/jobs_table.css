@@ -90,7 +90,7 @@ table td {
     padding: 0px;
 }
 
-.status.active {
+.status.active, .status.Read {
     color: #32a852;
     border-radius: 5px;
     padding: 5px 10px;
@@ -104,7 +104,7 @@ table td {
     background-color: #ff4d4d50;
 }
 
-.status.pending {
+.status.pending, .status.Unread {
     color: #E9992F;
     border-radius: 5px;
     padding: 5px 10px;
@@ -136,4 +136,8 @@ table td {
 .action-btn.activate {
     color: #52CA20;
     margin-left: 5px;
+}
+
+.action-btn.activate1 {
+    color: #52CA20;
 }

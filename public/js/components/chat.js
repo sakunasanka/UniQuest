@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     openPopupBtn?.addEventListener("click", function () {
         chatPopup.classList.remove("hidden");
         backgroundOverlay.classList.remove("hidden");
+        scrollToBottom();
     });
 
     // Close popup
@@ -15,6 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
         chatPopup.classList.add("hidden");
         backgroundOverlay.classList.add("hidden");
     });
+
+    function scrollToBottom() {
+        const messagesContainer = document.querySelector('.messages');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    }
 
     // Close popup when clicking outside it
     backgroundOverlay?.addEventListener("click", function () {
@@ -49,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Update the message text in the UI
                         messageTextElement.innerText = newMessage;
                     } else {
-                        alert('Failed to edit message: ' + data.error);
+                        Flash.show('Failed to edit message: ' + data.error, 'error');
                     }
                 })
                 .catch(error => console.error('Error:', error));
@@ -78,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Remove the message from the UI
                         messageContainer.remove();
                     } else {
-                        alert('Failed to delete message: ' + data.error);
+                        Flash.show('Failed to delete message: ' + data.error, 'error');
                     }
                 })
                 .catch(error => console.error('Error:', error));

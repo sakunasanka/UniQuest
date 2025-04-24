@@ -18,7 +18,6 @@
             method="POST" 
             enctype="multipart/form-data"
             class="application-form">
-
             <?php 
             $fields = $data['fields'];
             if ($fields): 
@@ -294,7 +293,7 @@ function bookmarkJob(jobId, iconElement) {
         if (xhr.status === 200) {
             iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
         } else {
-            alert('Failed to bookmark the job.');
+            Flash.show('Failed to bookmark company', 'error');
         }
     };
 

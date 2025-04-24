@@ -136,6 +136,13 @@ table td.no-data {
     background-color: #E9992F50;
 }
 
+.status.in-review {
+    color: #0045FF;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #0045FF50;
+}
+
 .action-btn {
     display: inline-block;
     background-color: transparent;
@@ -161,6 +168,10 @@ table td.no-data {
 .action-btn.activate {
     color: #52CA20;
     margin-left: 5px;
+}
+
+.action-btn.activate1 {
+    color: #52CA20;
 }
 
 .hidden {

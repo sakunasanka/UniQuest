@@ -24,22 +24,23 @@ class Register extends Controller
         }
     }
 
-    public function getCitiesByDistrict() {
+    public function getCitiesByDistrict()
+    {
         try {
             // Get the district ID from POST data
             $districtID = $_POST['districtID'] ?? null;
-            
+
             if (!$districtID) {
                 throw new Exception('District ID is required');
             }
-            
+
             // Fetch cities based on the district ID
             $cities = $this->model('AdminModel')->getCitiesByDistrict($districtID)['data'];
-            
+
             if (!$cities) {
                 throw new Exception('No cities found for the given district ID');
             }
-            
+
             // Return JSON response
             echo json_encode([
                 'success' => true,
@@ -362,182 +363,217 @@ class Register extends Controller
 
     public function company()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize POST array
-            $_POST = filter_input_array(INPUT_POST);
+        if (isset($_SESSION['verified_email'])) {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                // Sanitize POST array
+                $_POST = filter_input_array(INPUT_POST);
 
-            // Init data
-            $data = $this->prepareDataCompany($_POST, $_FILES);
+                // Init data
+                $data = $this->prepareDataCompany($_POST, $_FILES);
 
-            //check email is already registered
-            if ($this->model->findUserByEmail($data['email'])) {
-                $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
-                $data['email_err'] = 'Email is not verified';
-            }
+                //check email is already registered
+                if ($this->model->findUserByEmail($data['email'])) {
+                    $data['email_err'] = 'Email is already registered';
+                } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
+                    $data['email_err'] = 'Email is not verified';
+                }
 
-            $validationResponse = Validator::isValidRegistrationData($data);
-            if (!$validationResponse['is_valid']) {
-                $data = array_merge($data, $validationResponse['error']);
-            }
+                $validationResponse = Validator::isValidRegistrationData($data);
+                if (!$validationResponse['is_valid']) {
+                    $data = array_merge($data, $validationResponse['error']);
+                }
 
-            // $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
-            // if (!$logoValidationResponse['is_valid']) {
-            //     $data['companyLogo_err'] = $logoValidationResponse['error'];
-            // }
-
-            //vallidate files
-            $fileValidationResponse = FileUploadHelper::validateFiles([
-                'companyLogo' => ['file' => $data['companyLogo'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
-                'brCertificate' => ['file' => $data['brCertificate'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
-            ]);
-
-            if (!$fileValidationResponse['is_valid']) {
-                $data = array_merge($data, $fileValidationResponse['error']);
-            }
-
-            // Check if there are no errors
-            if (empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['companyName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['companyLogo_err'])) {
-                // Hash password
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-                // Upload company logo
-                // $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
-                // if ($companyLogoResponse['success']) {
-                //     $data['companyLogoName'] = $companyLogoResponse['file_name'];
-                // } else {
-                //     $data['companyLogo_err'] = $companyLogoResponse['error'];
-                //     $this->view('pages/register/company_register', $data);
-                //     return;
+                // $logoValidationResponse = FileUploadHelper::validateFile($data['companyLogo'], FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS);
+                // if (!$logoValidationResponse['is_valid']) {
+                //     $data['companyLogo_err'] = $logoValidationResponse['error'];
                 // }
 
-                //upload each file
-                $uploadedFilesResponse = FileUploadHelper::uploadFiles([
-                    'companyLogo' => ['file' => $data['companyLogo'], 'path' => PUBROOT . '/uploads/profile_pictures/company'],
-                    'brCertificate' => ['file' => $data['brCertificate'], 'path' => PUBROOT . '/uploads/br_certificates']
+                //vallidate files
+                $fileValidationResponse = FileUploadHelper::validateFiles([
+                    'companyLogo' => ['file' => $data['companyLogo'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                    'brCertificate' => ['file' => $data['brCertificate'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
                 ]);
 
-                //check if all files are uploaded successfully
-                if ($uploadedFilesResponse['success']) {
-                    //set file names to data array
-                    $data = array_merge($data, $uploadedFilesResponse['file_name']);
-                } else {
-                    //merge data with errors
-                    $data = array_merge($data, $uploadedFilesResponse['error']);
-                    // Load view with errors
-                    $this->view('pages/register/company_register', $data);
-                    return;
+                if (!$fileValidationResponse['is_valid']) {
+                    $data = array_merge($data, $fileValidationResponse['error']);
                 }
 
-                // Register user
-                if ($this->model->companyRegister($data)) {
-                    //clear data array and session
-                    $_SESSION['verified_email'] = '';
-                    $data = [];
-                    // Redirect to login page
-                    Redirect::to(URLROOT . '/login');
+                // Check if there are no errors
+                if (empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['companyName_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['companyLogo_err'])) {
+                    // Hash password
+                    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+                    // Upload company logo
+                    // $companyLogoResponse = FileUploadHelper::uploadFile($data['companyLogo'], PUBROOT . '/uploads/profile_pictures/company');
+                    // if ($companyLogoResponse['success']) {
+                    //     $data['companyLogoName'] = $companyLogoResponse['file_name'];
+                    // } else {
+                    //     $data['companyLogo_err'] = $companyLogoResponse['error'];
+                    //     $this->view('pages/register/company_register', $data);
+                    //     return;
+                    // }
+
+                    //upload each file
+                    $uploadedFilesResponse = FileUploadHelper::uploadFiles([
+                        'companyLogo' => ['file' => $data['companyLogo'], 'path' => PUBROOT . '/uploads/profile_pictures/company'],
+                        'brCertificate' => ['file' => $data['brCertificate'], 'path' => PUBROOT . '/uploads/br_certificates']
+                    ]);
+
+                    //check if all files are uploaded successfully
+                    if ($uploadedFilesResponse['success']) {
+                        //set file names to data array
+                        $data = array_merge($data, $uploadedFilesResponse['file_name']);
+                    } else {
+                        //merge data with errors
+                        $data = array_merge($data, $uploadedFilesResponse['error']);
+                        // Load view with errors
+                        $this->view('pages/register/company_register', $data);
+                        return;
+                    }
+
+                    // Register user
+                    if ($this->model->companyRegister($data)) {
+                        //clear data array and session
+                        $_SESSION['verified_email'] = '';
+                        $data = [];
+
+                        $companyID = $this->model->getLatestCompanyId();
+                        $company = $this->model->getCompanyByID($companyID);
+                        //Notify admins about new student registration
+                        $admins = $this->model->getAdminIds();
+                        $vts = $this->model->getVTIds();
+                        foreach ($admins as $admin) {
+                            notifyAdminAboutNewCom($admin->AdminID, $companyID, $company->FirstName);
+                        }
+                        foreach ($vts as $vt) {
+                            notifyVtAboutNewCom($vt->VT_MemberID, $companyID, $company->FirstName);
+                        }
+
+                        // Redirect to login page
+                        Redirect::to(URLROOT . '/login');
+                    } else {
+                        die('Something went wrong'); //TODO: Handle this
+                    }
                 } else {
-                    die('Something went wrong'); //TODO: Handle this
+                    // Load view with errors
+                    $this->view('pages/register/company_register', $data);
                 }
             } else {
-                // Load view with errors
+                $data = $this->prepareDataCompany();
+
+                // Load view
                 $this->view('pages/register/company_register', $data);
             }
         } else {
-            $data = $this->prepareDataCompany();
-
-            // Load view
-            $this->view('pages/register/company_register', $data);
+            // Redirect to send verification email page if email is not verified
+            Redirect::to(URLROOT . '/register/sendCompVeriEmail');
         }
     }
 
     public function student()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Process form
-            $_POST = filter_input_array(INPUT_POST);
+        if (isset($_SESSION['verified_email'])) {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                // Process form
+                $_POST = filter_input_array(INPUT_POST);
 
-            // Init data
-            $data = $this->prepareDataStudent($_POST, $_FILES);
+                // Init data
+                $data = $this->prepareDataStudent($_POST, $_FILES);
 
-            //check email is already registered
-            if ($this->model->findUserByEmail($data['email'])) {
-                $data['email_err'] = 'Email is already registered';
-            } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
-                $data['email_err'] = 'Email is not verified';
-            }
+                //check email is already registered
+                if ($this->model->findUserByEmail($data['email'])) {
+                    $data['email_err'] = 'Email is already registered';
+                } elseif (!$this->model('AdminModel')->isEmailVerified($data['email'])) {
+                    $data['email_err'] = 'Email is not verified';
+                }
 
-            //vallidate input data
-            $validationResponse = Validator::isValidRegistrationData($data);
-            if (!$validationResponse['is_valid']) {
-                $data = array_merge($data, $validationResponse['error']);
-            }
+                //vallidate input data
+                $validationResponse = Validator::isValidRegistrationData($data);
+                if (!$validationResponse['is_valid']) {
+                    $data = array_merge($data, $validationResponse['error']);
+                }
 
-            //validate required files
-            if (empty($data['nicCopy']['name'])) {
-                $data['nicCopy_err'] = 'Please upload a NIC copy';
-            }
-            if (empty($data['universityIDCopy']['name'])) {
-                $data['universityIDCopy_err'] = 'Please upload a university ID copy';
-            }
+                //validate required files
+                if (empty($data['nicCopy']['name'])) {
+                    $data['nicCopy_err'] = 'Please upload a NIC copy';
+                }
+                if (empty($data['universityIDCopy']['name'])) {
+                    $data['universityIDCopy_err'] = 'Please upload a university ID copy';
+                }
 
-            //vallidate files
-            $fileValidationResponse = FileUploadHelper::validateFiles([
-                'profilePic' => ['file' => $data['profilePic'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
-                'nicCopy' => ['file' => $data['nicCopy'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
-                'cv' => ['file' => $data['cv'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
-                'universityIDCopy' => ['file' => $data['universityIDCopy'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
-            ]);
-
-            if (!$fileValidationResponse['is_valid']) {
-                $data = array_merge($data, $fileValidationResponse['error']);
-            }
-
-            //check if there are no validation errors
-            if (empty($data['firstName_err']) && empty($data['lastName_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['gender_err']) && empty($data['dob_err']) && empty($data['nicNo_err']) && empty($data['university_err']) && empty($data['universityID_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['profilePic_err']) && empty($data['nicCopy_err']) && empty($data['cv_err']) && empty($data['universityIDCopy_err'])) {
-                // Hash password
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-                //upload each file
-                $uploadedFilesResponse = FileUploadHelper::uploadFiles([
-                    'profilePic' => ['file' => $data['profilePic'], 'path' => PUBROOT . '/uploads/profile_pictures/student'],
-                    'nicCopy' => ['file' => $data['nicCopy'], 'path' => PUBROOT . '/uploads/nic_copies'],
-                    'cv' => ['file' => $data['cv'], 'path' => PUBROOT . '/uploads/cvs'],
-                    'universityIDCopy' => ['file' => $data['universityIDCopy'], 'path' => PUBROOT . '/uploads/university_id_copies']
+                //vallidate files
+                $fileValidationResponse = FileUploadHelper::validateFiles([
+                    'profilePic' => ['file' => $data['profilePic'], 'allowedExtensions' => FileUploadHelper::ALLOWED_IMAGE_EXTENSIONS],
+                    'nicCopy' => ['file' => $data['nicCopy'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
+                    'cv' => ['file' => $data['cv'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS],
+                    'universityIDCopy' => ['file' => $data['universityIDCopy'], 'allowedExtensions' => FileUploadHelper::ALLOWED_DOC_EXTENSIONS]
                 ]);
 
-                //check if all files are uploaded successfully
-                if ($uploadedFilesResponse['success']) {
-                    //set file names to data array
-                    $data = array_merge($data, $uploadedFilesResponse['file_name']);
-                } else {
-                    //merge data with errors
-                    $data = array_merge($data, $uploadedFilesResponse['error']);
-                    // Load view with errors
-                    $this->view('pages/register/student_register', $data);
-                    return;
+                if (!$fileValidationResponse['is_valid']) {
+                    $data = array_merge($data, $fileValidationResponse['error']);
                 }
 
-                //register student
-                if ($this->model->studentRegister($data)) {
-                    //clear data array and session
-                    $_SESSION['verified_email'] = '';
-                    $data = [];
-                    // Redirect to login page
-                    Redirect::to(URLROOT . '/login');
+                //check if there are no validation errors
+                if (empty($data['firstName_err']) && empty($data['lastName_err']) && empty($data['email_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['contactNo_err']) && empty($data['streetNo_err']) && empty($data['addressLine1_err']) && empty($data['city_err']) && empty($data['gender_err']) && empty($data['dob_err']) && empty($data['nicNo_err']) && empty($data['university_err']) && empty($data['universityID_err']) && empty($data['role_err']) && empty($data['status_err']) && empty($data['profilePic_err']) && empty($data['nicCopy_err']) && empty($data['cv_err']) && empty($data['universityIDCopy_err'])) {
+                    // Hash password
+                    $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+                    //upload each file
+                    $uploadedFilesResponse = FileUploadHelper::uploadFiles([
+                        'profilePic' => ['file' => $data['profilePic'], 'path' => PUBROOT . '/uploads/profile_pictures/student'],
+                        'nicCopy' => ['file' => $data['nicCopy'], 'path' => PUBROOT . '/uploads/nic_copies'],
+                        'cv' => ['file' => $data['cv'], 'path' => PUBROOT . '/uploads/cvs'],
+                        'universityIDCopy' => ['file' => $data['universityIDCopy'], 'path' => PUBROOT . '/uploads/university_id_copies']
+                    ]);
+
+                    //check if all files are uploaded successfully
+                    if ($uploadedFilesResponse['success']) {
+                        //set file names to data array
+                        $data = array_merge($data, $uploadedFilesResponse['file_name']);
+                    } else {
+                        //merge data with errors
+                        $data = array_merge($data, $uploadedFilesResponse['error']);
+                        // Load view with errors
+                        $this->view('pages/register/student_register', $data);
+                        return;
+                    }
+
+                    //register student
+                    if ($this->model->studentRegister($data)) {
+                        //clear data array and session
+                        $_SESSION['verified_email'] = '';
+                        $data = [];
+                        $studentID = $this->model->getLatestStudentId();
+                        $student = $this->model->getStudentByID($studentID);
+                        //Notify admins about new student registration
+                        $admins = $this->model->getAdminIds();
+                        $vts = $this->model->getVTIds();
+                        foreach ($admins as $admin) {
+                            notifyAdminAboutNewStu($admin->AdminID, $studentID, $student->FirstName);
+                        }
+                        foreach ($vts as $vt) {
+                            notifyVtAboutNewStu($vt->VT_MemberID, $studentID, $student->FirstName);
+                        }
+
+                        // Redirect to login page
+                        Redirect::to(URLROOT . '/login');
+                    } else {
+                        die('Something went wrong'); //TODO: Handle this
+                    }
                 } else {
-                    die('Something went wrong'); //TODO: Handle this
+                    // Load view with errors
+                    $this->view('pages/register/student_register', $data);
                 }
             } else {
-                // Load view with errors
+                // Init data
+                $data = $this->prepareDataStudent();
+
+                // Load view
                 $this->view('pages/register/student_register', $data);
             }
         } else {
-            // Init data
-            $data = $this->prepareDataStudent();
-
-            // Load view
-            $this->view('pages/register/student_register', $data);
+            // Redirect to send verification email page if email is not verified
+            Redirect::to(URLROOT . '/register/sendStuVeriEmail');
         }
     }
 }

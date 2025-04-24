@@ -1,3 +1,4 @@
+
 <?php
 class Service_provider extends Controller
 {
@@ -105,7 +106,14 @@ class Service_provider extends Controller
             // Ensure no errors before submitting
             if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
-                    flash('contact-msg', 'Your message has been sent successfully.');
+
+                    //send notification for each admin
+                    $admins = $this->model('userModel')->getAdminIds();
+                    foreach ($admins as $admin) {
+                        notifyMessageToAdminFromCompany($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
+                    }
+                    $_SESSION['show_contact_us_success'] = true;
+
                     Redirect::to(URLROOT . '/service_provider/contact_admin');
                 } else {
                     die('Something went wrong. Please try again.');
@@ -116,7 +124,7 @@ class Service_provider extends Controller
         } else {
             // Initialize default data for the view on GET request
             $data = [
-                'email' => '',
+                'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
                 'email_err' => '',
@@ -130,12 +138,33 @@ class Service_provider extends Controller
 
     public function dashboard()
     {
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+        }
+        // Get bookmarked jobs for the user
+        $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($userId);
+        $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($userId);
+        $percentageIncreaseViews = $this->model('jobModel')-> getViewIncreasedPercentage($userId);
+        $percentageDecreaseViews = $this->model('jobModel')->getViewDecreasedPercentage($userId);
+        $percentageIncreaseRatings = $this->model('jobModel')->getRatingIncreasePercentage($userId);
+        $percentageDecreaseRatings = $this->model('jobModel')->getRatingDecreasePercentage($userId);
+        $percentageIncreaseReviews = $this->model('jobModel')->getReviewIncreasePercentage($userId);
+        $percentageDecreaseReviews = $this->model('jobModel')->getReviewDecreasePercentage($userId);
+
         $companyInfo = $this->model('companyModel')->getCompanyInfo();
 
         $data = [
-            'companyInfo' => $companyInfo
+            'reviews'=>$reviews,
+            'Rating'=>$displayRating,
+            'companyInfo' => $companyInfo,
+            'percentageIncreaseViews' => $percentageIncreaseViews,
+            'percentageDecreaseViews' => $percentageDecreaseViews,
+            'percentageIncreaseRatings' => $percentageIncreaseRatings,
+            'percentageDecreaseRatings' => $percentageDecreaseRatings,
+            'percentageIncreaseReviews' => $percentageIncreaseReviews,
+            'percentageDecreaseReviews' => $percentageDecreaseReviews
         ];
-
+        
         $this->view('pages/service_provider/ser_dashboard', $data);
     }
     public function jobPostform()
@@ -147,6 +176,7 @@ class Service_provider extends Controller
     public function report()
     {
         if ($_SESSION['user_role'] == 'Company') {
+            //jobs Information 
             $companyInfo = $this->model('companyModel')->getCompanyInfo();
         } else {
             $companyInfo = null;
@@ -154,7 +184,7 @@ class Service_provider extends Controller
 
         $data = [];
 
-        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/job_report', $data);
         } else {
             $_SESSION['show_report_error'] = true;
@@ -172,8 +202,7 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-
-            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search, );
+            $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search);
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -198,8 +227,7 @@ class Service_provider extends Controller
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
-
-            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
+            $posts = $this->model('M_jobpost')->getActivePost($pageNumber, $rowsPerPage, $sort, $order, $search);
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -225,7 +253,7 @@ class Service_provider extends Controller
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search, );
+            $posts = $this->model('M_jobpost')->getDeactivePost($pageNumber, $rowsPerPage, $sort, $order, $search,);
             $data = [
                 'posts' => $posts['data'],
                 'currentPage' => $posts['currentPage'],
@@ -241,21 +269,32 @@ class Service_provider extends Controller
         }
     }
 
-    public function offered_applications($jobID)
+    public function offered_applications($jobID, $queryParam = [])
     {
-        // Fetch applications for the given job ID
-        $applications = $this->model('M_applicationFields')->getOfferedApplicationsByJobID($jobID);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // Pass data to the view
-        $data = [
-            'applications' => $applications,
-            'jobID' => $jobID,
-            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
-        ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
-
-        // Load the view
-        $this->view('pages/service_provider/offered_applications', $data);
+            $applications = $this->model('M_applicationFields')->getOfferedApplicationsByJobID($jobID, $page, $limit, $sort, $order, $search);
+            $data = [
+                'applications' => $applications['data'],
+                'jobID' => $jobID,
+                'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+            ];
+            $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
+            $this->view('pages/service_provider/offered_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
 
     // public function new_applications($id)
@@ -304,26 +343,38 @@ class Service_provider extends Controller
 
     //     $this->view('pages/service_provider/new_applications', $data);
     // }
-    public function new_applications($jobID)
+    public function new_applications($jobID, $queryParam = [])
     {
-        // Fetch applications for the given job ID
-        $applications = $this->model('M_applicationFields')->getPendnigApplicationsByJobID($jobID);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // Pass data to the view
-        $data = [
-            'applications' => $applications,
-            'jobID' => $jobID,
-            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
-        ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
-
-        // Load the view
-        $this->view('pages/service_provider/new_applications', $data);
+            $applications = $this->model('M_applicationFields')->getPendnigApplicationsByJobID($jobID, $page, $limit, $sort, $order, $search);
+            $data = [
+                'applications' => $applications['data'],
+                'jobID' => $jobID,
+                'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+            ];
+            $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
+            $this->view('pages/service_provider/new_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
+
     public function view_application($applicationID)
     {
         // Fetch application details
-        $application = $this->model('M_applicationFields')->getApplicationsByID($applicationID);
+        $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -332,7 +383,7 @@ class Service_provider extends Controller
 
         // Access the first element of the $application array
         $application = $application[0];
-        
+
         // Prepare the application data
         $applicationData = [
             'jobID' => $application->JobID ?? null,
@@ -372,30 +423,46 @@ class Service_provider extends Controller
         $this->view('pages/service_provider/view_application', $data);
     }
 
-    public function rejected_applications($jobID)
+    public function rejected_applications($jobID, $queryParam = [])
     {
-        // Fetch applications for the given job ID
-        $applications = $this->model('M_applicationFields')->getRejectedApplicationsByJobID($jobID);
+        try {
+            // Get the requested data from query params
+            $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+            $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'SubmissionDate';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
-        // Pass data to the view
-        $data = [
-            'applications' => $applications,
-            'jobID' => $jobID,
-            'post' => $this->model('M_jobpost')->getpostbyid($jobID),
-        ];
-        $data['posted'] = date('M d, Y', strtotime($data['post']->jobs_create_at));
-
-        // Load the view
-        $this->view('pages/service_provider/rejected_applications', $data);
+            $applications = $this->model('M_applicationFields')->getRejectedApplicationsByJobID($jobID, $page, $limit, $sort, $order, $search);
+            $data = [
+                'applications' => $applications['data'],
+                'jobID' => $jobID,
+                'post' => $this->model('M_jobpost')->getpostbyid($jobID),
+                'currentPage' => $applications['currentPage'],
+                'rowsPerPage' => $applications['limit'],
+                'totalRows' => $applications['totalRows'],
+                'totalPages' => $applications['totalPages'],
+                'isLastPage' => $applications['isLastPage'] ? 'yes' : 'no',
+            ];
+            $data['posted'] = date('M d, Y', strtotime($data['post']->PublishDate));
+            $this->view('pages/service_provider/rejected_applications', $data);
+        } catch (Exception $e) {
+            die($e->getMessage()); //TODO: Handle this
+        }
     }
-    public function application_dashboard()
+
+    public function application_dashboard($queryParam = [])
     {
         // Get the company ID from the session (assuming the company is logged in)
         $companyId = $_SESSION['user_id'];
 
-        // Fetch all applications for the company's jobs
-        $applications = $this->model('M_applicationFields')->getAllApplicationsByCompanyId($companyId);
+        // Get the requested data from query params
+        $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
+        $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
 
+        // Fetch all applications for the company's jobs
+        $applicationData = $this->model('M_applicationFields')->getAllApplicationsByCompanyId($companyId, $page, $limit);
+        $applications = $applicationData['data'];
         // Process the data to calculate stats for each job
         $jobs = [];
         foreach ($applications as $application) {
@@ -407,7 +474,7 @@ class Service_provider extends Controller
                     'title' => $application->JobTitle,
                     'jobID' => $jobId,
                     'location' => $application->JobLocation,
-                    'posted' => date('M d, Y', strtotime($application->JobCreatedAt)),
+                    'posted' => date('M d, Y', strtotime($application->PublishDate)),
                     'stats' => [
                         'total' => 0,
                         'accepted' => 0,
@@ -437,7 +504,12 @@ class Service_provider extends Controller
 
         // Pass data to the view
         $data = [
-            'jobs' => $jobs
+            'jobs' => $jobs,
+            'currentPage' => $applicationData['currentPage'],
+            'rowsPerPage' => $applicationData['limit'],
+            'totalRows' => $applicationData['totalRows'],
+            'totalPages' => $applicationData['totalPages'],
+            'isLastPage' => $applicationData['isLastPage'] ? 'yes' : 'no',
         ];
 
         $this->view('pages/service_provider/application_dashboard', $data);
@@ -546,8 +618,7 @@ class Service_provider extends Controller
             $payment->user_id,
             $payment->plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -612,8 +683,7 @@ class Service_provider extends Controller
                         $payment->user_id,
                         $payment->plan,
                         $start_date,
-                        $end_date,
-                        'active'
+                        $end_date
                     );
 
                     // Store payment success
@@ -665,8 +735,7 @@ class Service_provider extends Controller
             $user_id,
             $plan,
             $start_date,
-            $end_date,
-            'active'
+            $end_date
         );
 
         if ($result) {
@@ -739,7 +808,7 @@ class Service_provider extends Controller
             // 'userLoginsData' => $userLoginsData,
         ];
 
-        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $companyInfo->subscription_status == 'active' && $_SESSION['user_role'] == 'Company') {
+        if (($companyInfo->subscription_plan == 'professional' || $companyInfo->subscription_plan == 'enterprise') && $_SESSION['user_role'] == 'Company') {
             $this->view('pages/service_provider/ser_analytics', $data);
         } else {
             $_SESSION['show_premium_error'] = true;
@@ -761,11 +830,16 @@ class Service_provider extends Controller
             $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
                 'job_benifits' => trim($_POST['jobBenefits'] ?? ''),
-                'job_location' => trim($_POST['jobLocation'] ?? ''),
                 'required_skills' => trim($_POST['qualifications'] ?? ''),
                 'salary_range' => trim($_POST['salaryRange'] ?? ''),
-                'Description' => trim($_POST['jobDescription'] ?? ''),
+                'salary_type' => trim($_POST['salaryType'] ?? ''),
+                'job_description' => trim($_POST['job_description'] ?? ''),
                 'job_id' => $postId,
+                'status' => 'Edited',
+                'job_district' => trim($_POST['job_district'] ?? ''),
+                'job_city' => trim($_POST['job_city'] ?? ''),
+                'districts' => $this->model('AdminModel')->getDistricts()['data'],
+                'cities' => [],
 
 
                 'job_name_err' => '',
@@ -777,25 +851,25 @@ class Service_provider extends Controller
             ];
 
 
-
-
-
             if (empty($data['job_name'])) {
                 $data['job_name_err'] = 'Please enter job name';
             }
             if (empty($data['job_benifits'])) {
                 $data['job_benifits_err'] = 'Please enter job benefits';
             }
-            if (empty($data['job_location'])) {
+            if (empty($data['job_district']) || empty($data['job_city'])) {
                 $data['job_location_err'] = 'Please enter job location';
             }
             if (empty($data['required_skills'])) {
                 $data['required_skills_err'] = 'Please enter required skills';
             }
-            if (empty($data['salary_range'])) {
-                $data['salary_range_err'] = 'Please enter salary range';
+            if (empty($data['salary_range']) || empty($data['salary_type'])) {
+                $data['salary_range_err'] = 'Please enter salary range and type';
+            } else if (!is_numeric($data['salary_range'])) {
+                $data['salary_range_err'] = 'Please enter a valid salary range';
             }
-            if (empty($data['Description'])) {
+            
+            if (empty($data['job_description'])) {
                 $data['Description_err'] = 'Please enter description';
             }
 
@@ -820,19 +894,26 @@ class Service_provider extends Controller
             }
         } else {
             $post = $this->model('M_jobpost')->getpostbyid($postId);
+            $subscription = $this->model('companyModel')->getSubscriptionPlan($_SESSION['user_id']);
 
             //check the owner
-            if ($post->CompanyID != $_SESSION['user_id']) {
+            if ($post->CompanyID != $_SESSION['user_id'] && $subscription == 'free') {
                 redirect('student/jobs');
             }
+
             $data = [
                 'job_name' => $post->Title,
                 'job_id' => $postId,
                 'job_benifits' => $post->JobBenefits,
-                'job_location' => $post->Location,
                 'required_skills' => $post->RequiredQualifications,
                 'salary_range' => $post->SalaryRange,
-                'Description' => $post->Description,
+                'salary_type' => $post->SalaryType,
+                'job_description' => $post->Description,
+                'subscription' => $subscription,
+                'job_district' => $this->model('AdminModel')->getDistrictIDByName($post->District)->DistrictID,
+                'job_city' => $this->model('AdminModel')->getCityIDByName($post->City)->CityID,
+                'districts' => $this->model('AdminModel')->getDistricts()['data'],
+                'cities' => [],
 
                 'job_name_err' => '',
                 'job_benifits_err' => '',
@@ -841,6 +922,11 @@ class Service_provider extends Controller
                 'salary_range_err' => '',
                 'Description_err' => ''
             ];
+            if ($post->Status != 'Pending' && $data['subscription'] == 'free') {
+                $_SESSION['show_job_edit_error'] = true;
+                $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                Redirect::to($previousURL);
+            }
             // echo json_encode($data);
             $this->view('pages/service_provider/edit_job', $data);
         }
@@ -915,10 +1001,38 @@ class Service_provider extends Controller
 
     public function jobPost()
     {
+        $companyPosts = $this->model('M_jobpost')->getJobsByCompanyId($_SESSION['user_id']);
+        $companyInfo = $this->model('M_jobpost')->getpostbycompanyid($_SESSION['user_id']);
+        $NewPostCount = count($companyPosts);
+        $can_post = $this->model('M_jobpost')->canPostJob();
+
+        //Current date - subscription end date
+        $currentDate = date('Y-m-d');
+        $subscriptionEndDate = $companyInfo->subscription_end_date;
+        $remainingDays = waitForTime(strtotime($subscriptionEndDate) - strtotime($currentDate));
+
+        if($can_post == 'N') {
+            $_SESSION['show_canpost_job_error'] = true;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+            Redirect::to($previousURL);
+        }
+
+        elseif ($companyInfo->subscription_plan == 'free' && $NewPostCount >= 2) {
+            $_SESSION['show_job_post_error_free'] = true;
+            $_SESSION['remaining_days'] = $remainingDays;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
+            Redirect::to($previousURL);
+        } elseif ($companyInfo->subscription_plan == 'professional' && $NewPostCount >= 5) {
+            $_SESSION['show_job_post_error_pro'] = true;
+            $_SESSION['remaining_days'] = $remainingDays;
+            $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/premium';
+            Redirect::to($previousURL);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            $publishDate = date('Y-m-d', strtotime('+2 days'));
+            $publishDate = date('Y-m-d H:i:s', strtotime('+2 days'));
 
             $data = [
                 'job_name' => trim($_POST['jobName'] ?? ''),
@@ -983,9 +1097,23 @@ class Service_provider extends Controller
             ) {
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
+                    $job = $this->model('M_jobpost')->getpostbyid($jobId);
                     $this->model('M_applicationFields')->saveFields($jobId, $_POST);
+
+                    $admins = $this->model->getAdminIds();
+                    $vts = $this->model->getVtIds();
+                    foreach ($admins as $admin) {
+                        notifyAdminAboutJobPost($admin->AdminID, $jobId, $job->Title);
+                    }
+                    foreach ($vts as $vt) {
+                        notifyVtAboutJobPost($vt->VT_MemberID, $jobId, $job->Title);
+                    }
+
+                    $_SESSION['job_send_to_verify'] = true;
+
                     redirect('service_provider/pending_jobs');
                 } else {
+                    $_SESSION['job_post_error'] = true;
                     die('something went wrong');
                 }
             } else {
@@ -993,7 +1121,7 @@ class Service_provider extends Controller
             }
         } else {
             // Default values for GET request
-            $publishDate = date('Y-m-d', strtotime('+2 days'));
+            $publishDate = date('Y-m-d H:i:s', strtotime('+2 days'));
 
             $data = [
                 'job_name' => '',
@@ -1026,22 +1154,23 @@ class Service_provider extends Controller
         }
     }
 
-    public function getCitiesByDistrict() {
+    public function getCitiesByDistrict()
+    {
         try {
             // Get the district ID from POST data
             $districtID = $_POST['districtID'] ?? null;
-            
+
             if (!$districtID) {
                 throw new Exception('District ID is required');
             }
-            
+
             // Fetch cities based on the district ID
             $cities = $this->model('AdminModel')->getCitiesByDistrict($districtID)['data'];
-            
+
             if (!$cities) {
                 throw new Exception('No cities found for the given district ID');
             }
-            
+
             // Return JSON response
             echo json_encode([
                 'success' => true,
@@ -1076,6 +1205,26 @@ class Service_provider extends Controller
         }
     }
 
+    public function active($postId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $post = $this->model('M_jobpost')->getpostbyid($postId);
+
+            //check owner
+            if ($post->CompanyID != $_SESSION['user_id']) {
+                redirect('student/jobs');
+            } else {
+
+                if ($this->model('M_jobpost')->activatePost($postId)) {
+                    flash('post-msg', 'post is activated');
+                    redirect('service_provider/active_jobs');
+                } else {
+                    die('Something went wrong');
+                }
+            }
+        }
+    }
+
     public function deactivate($postId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1101,20 +1250,231 @@ class Service_provider extends Controller
     public function approve_application($applicationID, $jobID)
     {
         try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
             $this->model('M_applicationFields')->approveApplication($applicationID);
-            Redirect::to(URLROOT . '/service_provider/offered_applications/'.$jobID);
+
+            //Send notification to student
+            notifyStudentApplicationAccepted(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+
+            Redirect::to(URLROOT . '/service_provider/offered_applications/' . $jobID);
         } catch (Exception $e) {
-            die($e->getMessage()); 
+            die($e->getMessage());
         }
     }
 
     public function reject_application($applicationID, $jobID)
     {
         try {
+            $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+
+            if (!$application) {
+                redirect('error/not_found');
+            }
+
+            $application = $application[0];
             $this->model('M_applicationFields')->rejectApplication($applicationID);
-            Redirect::to(URLROOT . '/service_provider/rejected_applications/'.$jobID);
+
+            //Send notification to student
+            notifyStudentApplicationRejected(
+                $applicationID,
+                $application->StudentID,
+                $application->JobTitle
+            );
+
+            Redirect::to(URLROOT . '/service_provider/rejected_applications/' . $jobID);
         } catch (Exception $e) {
-            die($e->getMessage()); 
+            die($e->getMessage());
         }
     }
-}
+
+    public function messages_stu($userID = null)
+    {
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+
+        // Fetch all student messages
+        $messages_stu = $this->model('ContactModel')->getMessagesStuCom();
+
+        // Initialize data with the message list
+        $data = [
+            'messages_stu' => $messages_stu,
+        ];
+
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+
+        $this->view('pages/service_provider/messages_stu', $data);
+    }
+
+    public function sendMessage($userID)
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            // Fetch previous messages to determine the last topic if not provided
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
+            $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+
+            // Use the submitted topic if provided, otherwise use the last topic
+            $submittedTopic = trim($_POST['topic'] ?? '');
+
+            // Fetch email logic
+            $email = null; // Default to null
+
+            // 1. Check if the previous message has an email
+            if ($previousMessage && !empty($previousMessage->user_email)) {
+                $email = $previousMessage->user_email;
+            }
+            // 2. If previous message email is null, fetch email from the user table
+            elseif ($this->model->getUserDetails($userID)) {
+                $userDetails = $this->model->getUserDetails($userID);
+                $email = $userDetails->email ?? null; // Use email if available, else null
+            }
+
+            $data = [
+                'userID' => $userID,
+                'email' => $email,
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => trim($_POST['messageInput'] ?? ''),
+                'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
+                'messageInput_err' => '',
+            ];
+
+            // Validation
+            if (empty($data['messageInput'])) {
+                $data['messageInput_err'] = 'Message cannot be empty';
+            }
+
+            // Ensure no errors before proceeding
+            if (empty($data['messageInput_err'])) {
+                if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    // flash('message_sent', 'Message sent successfully');
+                    redirect('service_provider/messages_stu/' . $userID);
+                } else {
+                    die('Something went wrong while sending the message.');
+                }
+            } else {
+                // Reload view with errors
+                $this->loadUserDetailView($data);
+            }
+        } else {
+            // Load initial view without POST request
+
+            $data = [
+                'userID' => $userID,
+                'email' => '',
+                'user' => $this->model->getUserDetails($userID),
+                'sender_id' => $_SESSION['user_id'],
+                'receiver_id' => $userID,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
+                'messageInput' => '',
+                'messageInput_err' => '',
+                'topic' => '', // Default to empty until a message is sent
+            ];
+
+            $this->loadUserDetailView($data);
+        }
+    }
+
+    public function markMessageRead() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $messageId = $_POST['message_id'] ?? null;
+
+            if ($messageId) {
+                $this->model('chatModel')->updateReadStatus($messageId);
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
+            }
+        }
+    }
+
+    private function loadUserDetailView($data)
+    {
+        // Load the view with the provided data
+        $this->view('pages/service_provider/messages_stu', $data);
+        $this->view('pages/service_provider/messages_add', $data);
+    }
+
+    public function markAllRead()
+    {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId)
+    {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications()
+    {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+}    

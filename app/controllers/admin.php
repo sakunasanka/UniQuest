@@ -55,7 +55,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search);
@@ -90,7 +90,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
             // $page = $_GET['page'] ?? 1;
             // $limit = $_GET['limit'] ?? 2;
@@ -129,7 +129,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search);
@@ -316,10 +316,21 @@ class Admin extends Controller
                 $reasons = null; // Handle unexpected status
         }
 
+        // get last complaint log
+        $lastComplaintLog = $this->model('ComplaintModel')->getLastComplaintLog($complaintID);
+
         $data = [
             'complaint' => $complaint,
             'reasons' => $reasons ?? [],
+            'reasonID_err' => '',
+            'actionDetail' => $lastComplaintLog,
         ];
+
+        // Check for session error
+        if (isset($_SESSION['reasonID_err'])) {
+            $data['reasonID_err'] = $_SESSION['reasonID_err'];
+            unset($_SESSION['reasonID_err']);
+        }
 
         return $data;
     }
@@ -412,11 +423,12 @@ class Admin extends Controller
             $data = [
                 'complaintID' => $complaintID,
                 'note' => trim($_POST['note']) ?? null,
-                'reasonID' => trim($_POST['reasonID']) ?? null,
-                'jobID' => trim($_POST['jobID']) ?? null,
-                'companyID' => trim($_POST['companyID']) ?? null,
+                'reasonID' => ($_POST['reasonID']) ?? null,
+                'jobID' => ($_POST['jobID']) ?? null,
+                'jobTitle' => ($_POST['jobTitle']) ?? null,
+                'companyID' => ($_POST['companyID']) ?? null,
                 'companyEmail' => trim($_POST['companyEmail']) ?? null,
-                'studentID' => trim($_POST['studentID']) ?? null,
+                'studentID' => ($_POST['studentID']) ?? null,
                 'deactivate_job' => isset($_POST['deactivate_job']) ? 1 : 0,
                 'deactivate_company' => isset($_POST['deactivate_company']) ? 1 : 0,
                 'send_warning' => isset($_POST['send_warning']) ? 1 : 0,
@@ -442,13 +454,21 @@ class Admin extends Controller
     protected function reject_complaint($data)
     {
         try {
-            //set statusAfter to rejected
-            $data['statusAfter'] = 'Rejected';
-            //add complaint log
-            $this->model('ComplaintModel')->addComplaintLog($data);
-            //update complaint status to in-review
-            $this->model('ComplaintModel')->rejectComplaint($data['complaintID']);
-            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            //check if reasonID is not empty
+            if (!empty($data['reasonID'])) {
+                //set statusAfter to rejected
+                $data['statusAfter'] = 'Rejected';
+                //add complaint log
+                $this->model('ComplaintModel')->addComplaintLog($data);
+                //update complaint status to in-review
+                $this->model('ComplaintModel')->rejectComplaint($data['complaintID']);
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            } else {
+                //set error message for reasonID
+                $_SESSION['reasonID_err'] = 'Please select a reason for rejecting the complaint';
+                // Redirect to the complaint detail page with error message
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            }
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -458,34 +478,41 @@ class Admin extends Controller
     {
         try {
             //check if reasonID is not empty
-
-            //check secondary actions are selected
-            if ($data['deactivate_job'] == 1) {
-                $this->model('jobModel')->deactivateJob($data['jobID']);
-                //todo : get correct reason by type
-                //add job log
-                //todo : send notification to company about job deactivation
+            if (!empty($data['reasonID'])) {
+                //check secondary actions are selected
+                if ($data['deactivate_job'] == 1) {
+                    $this->model('jobModel')->deactivateJob($data['jobID']);
+                    //todo : get correct reason by type
+                    //add job log
+                }
+                if ($data['deactivate_company'] == 1) {
+                    $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
+                    $this->model->deactivateAccount($data['companyID']);
+                    $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
+                    notifyComAboutJobDeactivation($data['companyID'], $reason, $data['jobID'], $data['jobTitle']);
+                    MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
+                }
+                if ($data['send_warning'] == 1) {
+                    sendWarningToCompany($data['companyID'], $data['jobID'], $data['jobTitle']);
+                }
+                if ($data['restrict_posting'] == 1) {
+                    $this->model('AdminModel')->restrictPosting($data['companyID']);
+                    $notificationDate = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    notifyComAboutCanPostAgain($data['companyID'], $notificationDate);
+                }
+                //set statusAfter to resolved
+                $data['statusAfter'] = 'Resolved';
+                //add complaint log
+                $this->model('ComplaintModel')->addComplaintLog($data);
+                //update complaint status to resolved
+                $this->model('ComplaintModel')->resolveComplaint($data['complaintID']);
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
+            } else {
+                //set error message for reasonID
+                $_SESSION['reasonID_err'] = 'Please select a reason for resolving the complaint';
+                // Redirect to the complaint detail page with error message
+                Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
             }
-            if ($data['deactivate_company'] == 1) {
-                $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
-                $this->model->deactivateAccount($data['companyID']);
-                $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
-                MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
-            }
-            if ($data['send_warning'] == 1) {
-                // $this->model('ComplaintModel')->sendWarning($data['complaintID']);
-                //todo : send warning notification to company
-            }
-            if ($data['restrict_posting'] == 1) {
-                $this->model('AdminModel')->restrictPosting($data['companyID']);
-            }
-            //set statusAfter to resolved
-            $data['statusAfter'] = 'Resolved';
-            //add complaint log
-            $this->model('ComplaintModel')->addComplaintLog($data);
-            //update complaint status to resolved
-            $this->model('ComplaintModel')->resolveComplaint($data['complaintID']);
-            Redirect::to(URLROOT . '/admin/complaint_detail/' . $data['complaintID']);
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
         }
@@ -498,7 +525,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search);
@@ -523,7 +550,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search);
@@ -550,6 +577,7 @@ class Admin extends Controller
             // Fetch previous messages to determine the last topic if not provided
             $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $userID);
             $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
+            $userRole = $this->model->getUserRoleByID($userID)->Role;
 
             // Use the submitted topic if provided, otherwise use the last topic
             $submittedTopic = trim($_POST['topic'] ?? '');
@@ -588,7 +616,19 @@ class Admin extends Controller
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
-                    redirect('admin/user_detail/' . $userID);
+                    if($_SESSION['user_role'] == 'Admin') {
+                        notifyMessageFromAdmin($data['receiver_id'], $data['messageInput']);
+                        if($userRole == 'Student') {
+                            Redirect::to(URLROOT . '/admin/messages_stu');
+                        } elseif ($userRole == 'Company') {
+                            Redirect::to(URLROOT . '/admin/messages_com');
+                        } elseif ($userRole == 'VT-Member') {
+                            Redirect::to(URLROOT . '/admin/messages_ver');
+                        }
+                    else{
+                        die('Something went wrong');
+                    }    
+                    }
                 } else {
                     die('Something went wrong while sending the message.');
                 }
@@ -615,6 +655,19 @@ class Admin extends Controller
         }
     }
 
+    public function markMessageRead() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $messageId = $_POST['message_id'] ?? null;
+
+            if ($messageId) {
+                $this->model('chatModel')->updateReadStatus($messageId);
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
+            }
+        }
+    }
+
     public function user_ver_pending($queryParam = [])
     {
         try {
@@ -622,7 +675,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search);
@@ -647,7 +700,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search);
@@ -796,9 +849,11 @@ class Admin extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailCompAccountApproved($email, $name);
+                notifyUserApproval($userID);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailStuAccountApproved($email, $name);
+                notifyUserApproval($userID);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', 10);
@@ -819,9 +874,11 @@ class Admin extends Controller
             if ($user['Role'] == 'Company') {
                 $name = $user['CompanyName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             } elseif ($user['Role'] == 'Student') {
                 $name = $user['FirstName'];
                 MailHelper::sendEmailAccountRejected($email, $name, $reason);
+                notifyUserRejection($userID, $reason);
             }
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Reject', $reasonID);
@@ -839,6 +896,7 @@ class Admin extends Controller
             $this->model->activateAccount($userID);
             $this->model('AdminModel')->addUserAccountLog($userID, 'Activate', $reasonID);
             MailHelper::sendEmailAccountReactivatedByAdmin($email, $reason);
+            notifyAccountActivation($userID);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -859,6 +917,7 @@ class Admin extends Controller
             $this->model->deactivateAccount($userID);
             $this->model('AdminModel')->addUserAccountLog($userID, 'Deactivate', $reasonID);
             MailHelper::sendEmailAccountDeactivatedByAdmin($email, $reason);
+            notifyAccountDeactivation($userID, $reason);
             if ($role == 'Company') {
                 Redirect::to(URLROOT . '/admin/company_mng');
             } else if ($role == 'Student') {
@@ -900,7 +959,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
@@ -942,7 +1001,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search);
@@ -971,6 +1030,17 @@ class Admin extends Controller
             $this->model('jobModel')->approveJob($jobID);
             // Send email to user
             MailHelper::sendEmailJobApproved($email, $name, $title, $publishDate);
+
+            // Notify the user about the approval
+            notifyPostApproval($job->CompanyID, $job->Title);
+            notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
+
+            // Notify students about the new job
+            $students = $this->model->getStudentIds();
+            foreach ($students as $student) {
+                notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
+            }
+
             //add verificationlogs
             $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
@@ -1036,6 +1106,9 @@ class Admin extends Controller
             $pendingUserCount = $this->model->getCountPendingUsers();
             $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
             $pendingComplaintCount = $this->model('ComplaintModel')->getCountPendingComplaints();
+            $mostPopularJob = $this->model('M_applicationFields')->getMostAppliedJob();
+            $mostPopularCompany = $this->model('RateAndReviewModel')->getMostReviewedCompany();
+            $revenueOfMonth = $this->model('AdminModel')->getRevenueOfMonth();
 
             $data = [
                 'studentCount' => $studentCount,
@@ -1043,7 +1116,10 @@ class Admin extends Controller
                 'activeJobCount' => $activeJobCount,
                 'pendingUserCount' => $pendingUserCount,
                 'pendingJobCount' => $pendingJobCount,
-                'pendingComplaintCount' => $pendingComplaintCount
+                'pendingComplaintCount' => $pendingComplaintCount,
+                'mostPopularJob' => $mostPopularJob,
+                'mostPopularCompany' => $mostPopularCompany,
+                'revenueOfMonth' => $revenueOfMonth,
             ];
 
             $this->view('pages/admin/adminDash', $data);
@@ -1056,10 +1132,33 @@ class Admin extends Controller
     {
         $this->view('pages/admin/jobPost');
     }
-    public function analytics()
-    {
-        $this->view('pages/admin/analytics');
+    // Add this method to your Admin controller class
+
+public function analytics() {
+    try {
+        $months = 5; // Number of months to show in charts
+        
+        $registrationStats = $this->model('AdminModel')->getRegistrationStats($months);
+        $jobStats = $this->model('AdminModel')->getJobListingStats($months);
+        $revenueStats = $this->model('AdminModel')->getRevenueStats($months);
+        $loginStats = $this->model('AdminModel')->getLoginStats();
+        $activeCounts = $this->model('AdminModel')->getActiveCounts();
+        
+        $data = [
+            'registrationStats' => $registrationStats,
+            'jobStats' => $jobStats,
+            'revenueStats' => $revenueStats,
+            'loginStats' => $loginStats,
+            'activeCounts' => $activeCounts
+        ];
+        
+        $this->view('pages/admin/analytics', $data);
+    } catch (Exception $e) {
+        // Handle error appropriately
+        error_log("Error in analytics: " . $e->getMessage());
+        $this->view('pages/admin/analytics', []);
     }
+}
 
     public function notifications()
     {
@@ -1090,96 +1189,111 @@ class Admin extends Controller
 
     public function messages_stu($userID = null)
     {
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
         // Fetch all student messages
         $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_stu' => $messages_stu,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_stu' => $messages_stu,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_stu' => $messages_stu,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
 
         $this->view('pages/admin/messages_stu', $data);
     }
 
     public function messages_com($userID = null)
-    {
-        // Fetch all company messages
+    { 
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
         $messages_com = $this->model('ContactModel')->getMessagesCom();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_com' => $messages_com,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_com' => $messages_com,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_com' => $messages_com,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
-
+        
         $this->view('pages/admin/messages_com', $data);
     }
 
 
     public function messages_ver($userID = null)
     {
-        // Fetch all verification team messages
+        // Check if a user ID was submitted via POST
+        if (isset($_POST['selectedUserID'])) {
+            $userID = $_POST['selectedUserID'];
+        }
+        
+        // Fetch all student messages
         $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
-        // If no specific user is selected, just load the messages
-        if (!isset($userID)) {
-            $data = [
-                'messages_ver' => $messages_ver,
-            ];
-        } else {
+        // Initialize data with the message list
+        $data = [
+            'messages_ver' => $messages_ver,
+        ];
+        
+        // Check if we need to load chat data only if userID is valid AND form was submitted
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+        
+        // If we should load chat data, add the additional info
+        if ($loadChatData) {
             // Ensure session user ID exists before accessing
             if (!isset($_SESSION['user_id'])) {
-                die("Unauthorized access. Please log in."); // Redirect or handle it better
+                die("Unauthorized access. Please log in.");
             }
-
             // Fetch user details and chat messages
-            $data = [
-                'userID' => $userID,
-                'user' => $this->model->getUserDetails($userID),
-                'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $userID,
-                'messages_ver' => $messages_ver,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
-                'messageInput' => '',
-                'messageInput_err' => '',
-            ];
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID);
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
         }
 
         $this->view('pages/admin/messages_ver', $data);
@@ -1523,6 +1637,52 @@ class Admin extends Controller
             echo json_encode(['success' => false, 'message' => 'An error occurred while deleting the industry.']);
         }
 
+        exit;
+    }
+
+    public function markAllRead() {
+
+        $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/dashboard';
+        Redirect::to($previousURL);
+    }
+
+    public function markAsRead($notificationId) {
+        if ($this->model('NotificationModel')->markAsRead($notificationId)) {
+            $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'unreadCount' => $unreadCount]);
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Failed to mark notification as read']);
+        }
+        exit;
+    }
+
+    public function getRecentNotifications() {
+        $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true, 
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
         exit;
     }
 }

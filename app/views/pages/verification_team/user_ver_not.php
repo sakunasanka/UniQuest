@@ -37,9 +37,13 @@
                                 <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
                                 <td><span class="status inactive">Not Approved</span></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_detail/<?php echo $user->UserID; ?>'">
-                                        preview
-                                    </span>
+                                    <div class="tooltip">    
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_detail/<?php echo $user->UserID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+                                    
                                 </td>
                             </tr>
                         <?php endforeach; ?>

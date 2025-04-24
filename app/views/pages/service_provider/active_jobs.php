@@ -1,6 +1,6 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
+<?php require APPROOT . '/views/popups/service_provider/deactivatepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -12,6 +12,7 @@
         $columns = [
             "Title" => "Title",
             "Location" => "Location",
+            "Category" => "Category",
             "jobs_create_at" => "Date Published",
             "Views" => "Views",
             "Applicants" => "Applicants",
@@ -39,19 +40,32 @@
                             <tr>
                                 <td><?php echo $post->Title; ?></td>
                                 <td><?php echo $post->City; ?></td>
+                                <td><?php echo $post->Category; ?></td>
                                 <td><?php echo date('Y-m-d', strtotime($post->PublishDate)); ?></td>
-                                <td>35</td>
-                                <td>18</td>
+                                <td><?php echo $post->ViewCount; ?></td>
+                                <td><?php echo $post->ApplicationCount; ?></td>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $post->JobID; ?>'">
-                                        preview
-                                    </span>
-                                    <span class="material-symbols-outlined action-btn edit" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $post->JobID; ?>'">
-                                        edit_square
-                                    </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick=showdeletereviewconfirm(<?= $post->JobID ?>)>
-                                        block
-                                    </span>
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $post->JobID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+                                    
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn edit" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $post->JobID; ?>'">
+                                            edit_square
+                                        </span>
+                                        <span class="tooltiptext edit">Edit</span>
+                                    </div>
+
+                                    <div class="tooltip">                                        
+                                        <span class="material-symbols-outlined action-btn deactivate" onclick=showdeletereviewconfirm(<?= $post->JobID ?>)>
+                                            block
+                                        </span>
+                                        <span class="tooltiptext deactivate">Deactivate</span>
+                                    </div>
+                                   
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -63,7 +77,7 @@
                 </tbody>
             </table>
             <?php 
-            // require APPROOT . '/views/components/pagination.php'; 
+            require APPROOT . '/views/components/pagination.php'; 
             ?>
         </div>
     </main>
