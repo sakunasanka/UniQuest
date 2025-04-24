@@ -108,7 +108,7 @@ class Service_provider extends Controller
                 if ($this->model('ContactModel')->sendMessage($data)) {
 
                     //send notification for each admin
-                    $admins = $this->model('userModel')->getAdminIds();
+                    $admins = $this->model->getAdminIds();
                     foreach ($admins as $admin) {
                         notifyMessageToAdminFromCompany($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
                     }
