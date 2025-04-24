@@ -1355,7 +1355,7 @@ class Service_provider extends Controller
             // 2. If previous message email is null, fetch email from the user table
             elseif ($this->model->getUserDetails($userID)) {
                 $userDetails = $this->model->getUserDetails($userID);
-                $email = $userDetails->email ?? null; // Use email if available, else null
+                $email = $userDetails['Email'] ?? null; // Use email if available, else null
             }
 
             $data = [
