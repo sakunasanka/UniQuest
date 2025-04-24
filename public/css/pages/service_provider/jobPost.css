@@ -83,17 +83,20 @@ input:focus, textarea:focus, select:focus {
 }
 
 .submit-btn {
-    background-color: #32a852;
+    background-color: #299b63;
     color: #fff;
-    border: none;
     padding: 10px 20px;
-    border-radius: 10px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
+    min-width: 150px;
+    height: 50px;
     font-size: 1.2em;
 }
 
 .submit-btn:hover {
-    background-color: #038a27;
+    background-color: #137d4a;
 }
 
 .employment-types {
@@ -247,18 +250,47 @@ label[for="jobPostDate"] {
     display: block;
 }
 
-.next-btn, .prev-btn {
+.next-btn {
+    background-color: #299b63;
+    color: #fff;
     padding: 10px 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    background-color: #32a852;
-    color: white;
-    font-size: 1.2em;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.3em;
 }
 
-.next-btn:hover, .prev-btn:hover {
-    background-color: #038a27;
+.next-btn:hover{
+    background-color: #137d4a;
+}
+
+.prev-btn{
+    padding: 10px 20px;
+    border: 2px solid #299b63; 
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+    background-color: transparent; 
+    color: #299b63; 
+    transition: all 0.3s ease; 
+}
+
+.prev-btn:hover{
+    background-color: #299b63;
+    color: #fff; 
+    border-color: #299b63;
+}
+
+.prev-btn:active {
+    background-color: #137d4a; 
+    border-color: #137d4a;
+    cursor: pointer; 
 }
 
 .salary-container {

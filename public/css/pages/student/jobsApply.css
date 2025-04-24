@@ -61,9 +61,8 @@ body {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: #299b63; /* Desired border color */
-    border-width: 0.15rem;
     outline: none;
+    border: 2px solid #32a852;
 }
 
 

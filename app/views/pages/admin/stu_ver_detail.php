@@ -130,17 +130,18 @@
                     <?php endif; ?>
                 </div>
                 <div class="btn-row">
-                    <form action="<?php echo URLROOT; ?>/admin/user_ver_reject/<?php echo $data['user']['UserID']; ?>" method="GET">
+                    <form action="<?php echo URLROOT; ?>/admin/user_ver_reject/<?php echo $data['user']['UserID']; ?>" method="GET" class="inline-form">
                         <select class="reason" name="reason" required <?php if ($data['user']['Status'] == 'Not Approved') echo 'disabled'; ?>>
-                            <option value="" disabled selected>Select Reason</option>
+                            <option value="" disabled selected>Rejection Reason</option>
                             <?php foreach ($data['rejectReasons'] as $reason) : ?>
                                 <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
                             <?php endforeach; ?>
                         </select>
                         <button type="submit" class="reject-btn" <?php if ($data['user']['Status'] == 'Not Approved') echo 'disabled'; ?>>Reject</button>
                     </form>
-                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_approve/<?php echo $data['user']['UserID']; ?>'">Approve</button>
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_ver_approve/<?php echo $data['user']['UserID']; ?>'" <?php if ($data['user']['Status'] == 'Approved') echo 'disabled'; ?>>Approve</button>
                 </div>
+                
             </div>
 
             <!-- Right Side: File Previews -->
