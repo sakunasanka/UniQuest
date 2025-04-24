@@ -414,6 +414,7 @@ class Service_provider extends Controller
 
         $data = [
             'application' => $applicationData,
+            'category' => $application->JobCategory
         ];
         $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
 

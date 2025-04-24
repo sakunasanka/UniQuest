@@ -15,9 +15,17 @@
     <?php endif; ?> 
 
     <div class="content-area">
-        <div class="header">
-            <h1>Application Details</h1>
-        </div>
+    <div class="header">
+        <h1>Application Details</h1>
+        <button class="view-job-button" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $data['application']['jobID']; ?>'">
+            <i class="fas fa-eye"></i> 
+            <?php if($data['category'] == 'Part-time'):?>
+            View Job
+            <?php else:?>
+            View Internship
+            <?php endif;?>
+        </button>
+    </div>
 
         <?php 
             $fields = $data['fields'];
