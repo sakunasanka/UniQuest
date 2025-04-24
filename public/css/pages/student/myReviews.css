@@ -101,3 +101,9 @@ h2 {
 .post-control-btn.delete:hover {
     background-color: #c82333;
 }
+
+.no-reviews-message {
+    font-size: 1em;
+    text-align: left;
+    margin-top: 30px;
+}
