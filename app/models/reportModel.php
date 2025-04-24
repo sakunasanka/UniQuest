@@ -32,12 +32,13 @@ class ReportModel extends Model
                 'location' => $this->getLocationDistribution($jobId)
             ];
 
-            return [
+            $data = [
                 'job' => $job,
                 'totalApplicants' => $totalApplicants,
                 'applicationRate' => round($applicationRate, 1),
                 'demographics' => $demographics
             ];
+            return $data;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return null;
@@ -61,10 +62,15 @@ class ReportModel extends Model
     //**************************************view count *********************** *
     private function getJobViews($jobId)
     {
-        $this->db->query("SELECT views FROM job_views WHERE job_id = :jobId");
-        $this->db->bind(':jobId', $jobId);
-        $result = $this->db->single();
-        return $result ? $result->views : 0;
+        try {
+            $this->db->query("SELECT COUNT(*) AS viewCount FROM is_viewed_job WHERE JobID = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            $row = $this->db->single();
+            return $row->viewCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
     }
     private function getGenderDistribution($jobId)
     {
@@ -72,10 +78,10 @@ class ReportModel extends Model
         SELECT 
             COALESCE(
                 CASE 
-                    WHEN s.gender = 'M' THEN 'Male'
-                    WHEN s.gender = 'F' THEN 'Female'
-                    WHEN s.gender IS NULL OR s.gender = '' THEN 'Unknown'
-                    ELSE s.gender 
+                    WHEN s.Gender = 'Male' THEN 'Male'
+                    WHEN s.Gender = 'Female' THEN 'Female'
+                    WHEN s.Gender IS NULL OR s.Gender = '' THEN 'Unknown'
+                    ELSE s.Gender 
                 END, 
                 'Unknown'
             ) as gender,
@@ -84,7 +90,7 @@ class ReportModel extends Model
         JOIN student s ON a.user_id = s.StudentID
         WHERE a.job_id = :jobId
         GROUP BY gender
-    ");
+        ");
         $this->db->bind(':jobId', $jobId);
         $results = $this->db->resultSet();
 
@@ -93,7 +99,7 @@ class ReportModel extends Model
         if (!empty($results)) {
             $total = array_sum(array_column($results, 'count'));
             foreach ($results as $row) {
-                $gender = ucfirst(strtolower($row->gender));
+                $gender = $row->gender;
                 $distribution[$gender] = $total > 0 ? round(($row->count / $total) * 100, 1) : 0;
             }
         }
@@ -113,7 +119,7 @@ class ReportModel extends Model
         AND s.DOB IS NOT NULL
         AND s.DOB != '0000-00-00'
         GROUP BY age
-    ");
+        ");
         $this->db->bind(':jobId', $jobId);
         $results = $this->db->resultSet();
 
@@ -161,7 +167,7 @@ class ReportModel extends Model
         JOIN student s ON a.user_id = s.StudentID
         WHERE a.job_id = :jobId
         GROUP BY s.City
-    ");
+        ");
         $this->db->bind(':jobId', $jobId);
         $results = $this->db->resultSet();
 

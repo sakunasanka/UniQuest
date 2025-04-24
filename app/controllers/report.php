@@ -1,7 +1,7 @@
 <?php
 class Report extends Controller
 {
-    private $reportModel;
+    private $model;
 
     public function __construct()
     {
@@ -9,122 +9,121 @@ class Report extends Controller
         AuthMiddleware::requireAuth();
         // Check if user has the required role
         AuthMiddleware::requireRole('Company');
-        
+
         // Load model
-        $this->reportModel = $this->model('ReportModel');
+        $this->model = $this->model('reportModel');
     }
 
     public function jobReport($jobId)
-{
-    // Validate job ID
-    // if (empty($jobId) || !is_numeric($jobId)) {
-    //     flash('report_error', 'Invalid Job ID', 'alert alert-danger');
-    //     Redirect::to(URLROOT . '/service_provider/ongoing_jobs');
-    //     return;
-    // }
+    {
+        try {
+            // 1. Input Validation
+            if (!isset($jobId) || !is_numeric($jobId) || $jobId <= 0) {
+                throw new InvalidArgumentException("Invalid Job ID");
+            }
 
-    // Premium check
-    if ($_SESSION['user_role'] == 'Company') {
-        $companyInfo = $this->model('companyModel')->getCompanyInfo();
-        if (!in_array($companyInfo->subscription_plan, ['professional', 'enterprise'])) {
-            $_SESSION['show_report_error'] = true;
+            // 2. Authorization Check
+            if (!isset($_SESSION['user_role'])) {
+                throw new RuntimeException("Unauthorized access");
+            }
+
+            // 3. Premium Feature Check
+            if ($_SESSION['user_role'] === 'Company') {
+                $companyInfo = $this->model('companyModel')->getCompanyInfo();
+
+                if (!$companyInfo) {
+                    throw new RuntimeException("Company information not found");
+                }
+
+                $allowedPlans = ['professional', 'enterprise'];
+                if (!in_array($companyInfo->subscription_plan, $allowedPlans)) {
+                    $_SESSION['show_report_error'] = true;
+                    flash(
+                        'report_error',
+                        'Job reports are available in Professional and Enterprise plans only',
+                        'alert alert-warning'
+                    );
+                    Redirect::to(URLROOT . '/service_provider/dashboard');
+                    return;
+                }
+            }
+
+            // 4. Data Fetching
+            $reportData = $this->model->getJobPerformanceDataComp($jobId);
+
+            if (!$reportData || empty($reportData['job'])) {
+                flash(
+                    'report_error',
+                    'No performance data available for this job',
+                    'alert alert-info'
+                );
+                Redirect::to(URLROOT . '/service_provider/active_jobs');
+                return;
+            }
+
+            // Prepare data for charts
+            $chartData = [
+                'gender' => [
+                    'labels' => array_keys($reportData['demographics']['gender']),
+                    'data' => array_values($reportData['demographics']['gender']),
+                    'backgroundColor' => ['#36a2eb', '#ff6384', '#ffcd56']
+                ],
+                'age' => [
+                    'labels' => array_keys($reportData['demographics']['age']),
+                    'data' => array_values($reportData['demographics']['age']),
+                    'backgroundColor' => '#4bc0c0'
+                ],
+                'location' => [
+                    'labels' => array_keys($reportData['demographics']['location']),
+                    'data' => array_values($reportData['demographics']['location']),
+                    'backgroundColor' => '#9966ff'
+                ]
+            ];
+
+            // 5. Data Processing
+            $data = [
+                'job' => $reportData['job'],
+                'totalApplicants' => $reportData['totalApplicants'],
+                'applicationRate' => $reportData['applicationRate'],
+                'demographics' => $reportData['demographics'],
+                'chartData' => $chartData,
+                'reportGeneratedAt' => date('F j, Y \a\t H:i:s')
+            ];
+
+            // 6. View Rendering
+            $this->view('pages/service_provider/job_report', $data);
+        } catch (InvalidArgumentException $e) {
+            flash('report_error', $e->getMessage(), 'alert alert-danger');
+            Redirect::to(URLROOT . '/service_provider/active_jobs');
+        } catch (RuntimeException $e) {
+            error_log("Job Report Error: " . $e->getMessage());
+            flash('report_error', 'An error occurred while generating the report', 'alert alert-danger');
             Redirect::to(URLROOT . '/service_provider/dashboard');
-            return;
         }
     }
 
-    // Fetch data
-    $reportData = $this->reportModel->getJobPerformanceDataComp($jobId);
+    public function generateJobReportPdf($jobId)
+    {
+        // Check if user is authorized and has premium access
+        // (similar checks as in jobReport method)
 
-    // Validate report data
-    if (!$reportData || empty($reportData['job'])) {
-        flash('report_error', 'No data found for this job', 'alert alert-danger');
-        Redirect::to(URLROOT . '/service_provider/ongoing_jobs');
-        return;
+        $reportData = $this->model->getJobPerformanceDataComp($jobId);
+
+        if (!$reportData) {
+            http_response_code(404);
+            die('Report data not found');
+        }
+
+        $html = $this->preparePdfHtml($reportData);
+
+        // Use your PDFHelper to generate the PDF
+        PDFHelper::generate($html, "job_report_{$jobId}", true);
     }
 
-    // Prepare view data
-    $data = [
-        'job' => $reportData['job'],
-        'totalApplicants' => $reportData['totalApplicants'] ?? 0,
-        'applicationRate' => $reportData['applicationRate'] ?? 0,
-        'demographics' => $reportData['demographics'] ?? []
-    ];
-// In your controller before passing to view:
-    
-    $this->view('pages/service_provider/job_report', $data);
-}
-public function generatePdf($jobId)
-{
-    // Get report data
-    $reportData = $this->reportModel->getJobPerformanceDataComp($jobId);
-
-    if (!$reportData) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Report data not found']);
-        exit;
+    private function preparePdfHtml($reportData)
+    {
+        ob_start();
+        include TEMPLATEROOT . '/pdf/job_report_pdf.php'; // Path to your PDF template
+        return ob_get_clean();
     }
-
-    // Generate PDF
-    $this->generatePdfContent($reportData, $jobId);
-    exit;
-}
-private function generatePdfContent($reportData, $jobId)
-{
-    // Create simple PDF content
-    $content = "%PDF-1.4\n";
-    $content .= "%¥±ë\n";
-    $content .= "1 0 obj\n";
-    $content .= "<< /Type /Catalog /Pages 2 0 R >>\n";
-    $content .= "endobj\n";
-    $content .= "2 0 obj\n";
-    $content .= "<< /Type /Pages /Kids [3 0 R] /Count 1 >>\n";
-    $content .= "endobj\n";
-    $content .= "3 0 obj\n";
-    $content .= "<< /Type /Page /Parent 2 0 R /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>\n";
-    $content .= "endobj\n";
-    $content .= "4 0 obj\n";
-    $content .= "<< /Type /Font /Subtype /Type1 /Name /F1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\n";
-    $content .= "endobj\n";
-    
-    // Add your content as PDF text
-    $text = "Job Performance Report\n\n";
-    $text .= "Title: " . $reportData['job']->Title . "\n";
-    $text .= "Location: " . $reportData['job']->Location . "\n";
-    $text .= "Total Applicants: " . $reportData['totalApplicants'] . "\n";
-    $text .= "Application Rate: " . $reportData['applicationRate'] . "%\n\n";
-    
-    // Add demographics
-    $text .= "Gender Distribution:\n";
-    foreach ($reportData['demographics']['gender'] as $gender => $percent) {
-        $text .= $gender . ": " . $percent . "%\n";
-    }
-    
-    // Similar for age and location...
-    
-    // Add text to PDF
-    $stream = "BT /F1 12 Tf 72 720 Td (" . str_replace(")", "\)", str_replace("(", "\(", $text)) . ") Tj ET";
-    
-    $content .= "5 0 obj\n";
-    $content .= "<< /Length " . strlen($stream) . " >>\n";
-    $content .= "stream\n";
-    $content .= $stream . "\n";
-    $content .= "endstream\n";
-    $content .= "endobj\n";
-    $content .= "xref\n";
-    $content .= "0 6\n";
-    $content .= "0000000000 65535 f \n";
-    // Add more xref entries...
-    $content .= "trailer\n";
-    $content .= "<< /Size 6 /Root 1 0 R >>\n";
-    $content .= "startxref\n";
-    $content .= strlen($content) . "\n";
-    $content .= "%%EOF";
-    
-    // Output PDF
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="job_report_' . $jobId . '.pdf"');
-    echo $content;
-    exit;
-}
 }
