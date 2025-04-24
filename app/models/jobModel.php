@@ -104,7 +104,7 @@ class jobModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -141,7 +141,7 @@ class jobModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -167,7 +167,7 @@ class jobModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -343,7 +343,7 @@ class jobModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = $search . '%';
+                $searchTerm = '%' . $search . '%';
                 $searchField =  "CONCAT_WS(' ', Title, Category, Email, DATE_FORMAT(ActionDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];

@@ -64,8 +64,14 @@ class User extends Controller
                     $loggedInUser = $this->model->login($data['email'], $data['password']);
 
                     if ($loggedInUser && $loggedInUser->Status === 'Active') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Success', 'Login successful', $loggedInUser->Role);
+                        // Update last login time
+                        $this->model->updateLastLogin($loggedInUser->UserID);
                         // Create session
                         $this->createSession($loggedInUser->UserID);
+                        
+
                     } else if ($loggedInUser && $loggedInUser->Status === 'Pending Deletion') {
                         // Redirect to reactivate account page
                         $_SESSION['logged_user_id'] = $loggedInUser->UserID;
@@ -74,18 +80,24 @@ class User extends Controller
                         Redirect::to(URLROOT . '/user/reactivate_acc');
                         exit;
                     } else if ($loggedInUser && $loggedInUser->Status === 'Deactive') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Deactive', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
                             $this->view('pages/login/deactivate_stu');
                         } else if ($loggedInUser->Role === 'Company') {
                             $this->view('pages/login/deactivate_ser');
                         }
                     } else if ($loggedInUser && $loggedInUser->Status === 'Pending') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Pending', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
                             $this->view('pages/login/wait_to_verify_stu');
                         } else if ($loggedInUser->Role === 'Company') {
                             $this->view('pages/login/wait_to_verify_ser');
                         }
                     } else if ($loggedInUser && $loggedInUser->Status === 'Not Approved') {
+                        //add login log
+                        $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Not Approved', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
                             $this->view('pages/login/not_approved_stu');
                         } else if ($loggedInUser->Role === 'Company') {
@@ -263,12 +275,16 @@ class User extends Controller
 
             // TODO: Redirect to dashboard or handle the next step
             if ($user['Role'] === 'Student') {
-                Redirect::to(URLROOT . '/jobs');
+                $_SESSION['login_success_msg'] = true;
+                Redirect::to(URLROOT . '/jobs');        
             } else if ($user['Role'] === 'Company') {
+                $_SESSION['login_success_msg'] = true;
                 Redirect::to(URLROOT . '/service_provider/dashboard');
             } else if ($user['Role'] === 'Admin') {
+                $_SESSION['login_success_msg'] = true;
                 Redirect::to(URLROOT . '/admin/dashboard');
             } else if ($user['Role'] === 'VT-Member') {
+                $_SESSION['login_success_msg'] = true;
                 Redirect::to(URLROOT . '/verification_team/user_ver_pending');
             }
             //print user details
