@@ -39,7 +39,7 @@
                 <p>Job Title: <?php echo $data['job']->Title; ?></p>
             </div>
             <div class="card">
-                <p>Job Location: <?php echo $data['job']->Location; ?></p>
+                <p>Job Location: <?php echo $data['job']->City; ?></p>
             </div>
             <div class="card">
                 <p>Total Applicants: <?php echo $data['totalApplicants']; ?></p>
@@ -51,7 +51,7 @@
     </section>
  
 
-
+<?php if (!empty($data['totalApplicants'])): ?>
     <section class="applicant-demographics">
         <h2>Applicant Demographics</h2>
         <div class="demographic-grid">
@@ -65,8 +65,13 @@
                 <canvas id="locationChart"></canvas>
             </div>
         </div>
-
     </section>
+<?php else: ?>
+    <section class="applicant-demographics">
+        <h2>Applicant Demographics</h2>
+        <p>No applicants found for this job posting.</p>
+    </section>
+<?php endif; ?>
     
     </div>
 </main>

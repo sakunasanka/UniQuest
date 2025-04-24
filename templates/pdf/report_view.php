@@ -23,7 +23,7 @@
             left: 0;
             right: 0;
             height: 80px;
-            background: #ffffff;
+            background: #fff;
             border-bottom: 1px solid #dfe6e9;
             padding: 10px 20px;
             display: flex;
@@ -43,12 +43,13 @@
         .report-title {
             font-size: 20px;
             font-weight: bold;
-            margin-bottom: 3px;
+            margin: 0;
         }
 
         .report-subtitle {
             font-size: 12px;
             color: #636e72;
+            margin: 2px 0;
         }
 
         /* Footer */
@@ -58,17 +59,19 @@
             left: 0;
             right: 0;
             height: 50px;
-            background: #ffffff;
+            background: #fff;
             border-top: 1px solid #dfe6e9;
             padding: 10px 20px;
             font-size: 10px;
             color: #95a5a6;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            gap: 30px;
+            text-align: center;
         }
 
-        .page-number:after {
+        .page-number::after {
             content: "Page " counter(page) " of " counter(pages);
         }
 
@@ -86,12 +89,13 @@
         .content-title {
             font-size: 18px;
             font-weight: bold;
-            margin: 0 0 5px 0;
+            margin: 0;
         }
 
         .content-subtitle {
             font-size: 12px;
             color: #636e72;
+            margin-top: 5px;
         }
 
         /* Table */
@@ -104,9 +108,10 @@
 
         thead th {
             background-color: #f1f2f6;
-            padding: 10px 8px;
+            padding: 10px;
             text-align: left;
             border-bottom: 2px solid #dcdde1;
+            font-weight: bold;
         }
 
         tbody td {
@@ -134,7 +139,7 @@
         <div class="header-info">
             <div class="report-title">UniQuest Reports</div>
             <div class="report-subtitle">Administrative Dashboard</div>
-            <div class="report-subtitle"><?= date('F j, Y') ?> | <?= date('H:i') ?></div>
+            <!-- <div class="report-subtitle"><?= date('F j, Y') ?> | <?= date('H:i') ?></div> -->
         </div>
     </div>
 

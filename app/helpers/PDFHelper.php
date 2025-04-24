@@ -11,33 +11,76 @@ class PDFHelper
      * 
      * @param string $html The HTML content to convert to PDF
      * @param string $filename The output filename (without extension)
-     * @param bool $download Whether to force download (default: true)
-     * @return mixed
+     * @param array $options Configuration options [
+     *     'download' => bool,     // Whether to force download (default: true)
+     *     'paper' => string,      // Paper size (default: 'A4')
+     *     'orientation' => string,// 'portrait' or 'landscape' (default: 'portrait')
+     *     'watermark' => string,  // Watermark text (optional)
+     *     'password' => string    // PDF password (optional)
+     * ]
+     * @return mixed Returns PDF content if download=false, otherwise outputs to browser
+     * @throws Exception On PDF generation failure
      */
-    public static function generate($html, $filename = 'document', $download = true)
+    public static function generate(string $html, string $filename = 'document', array $options = [])
     {
+        // Merge default options
+        $defaults = [
+            'download' => true,
+            'paper' => 'A4',
+            'orientation' => 'portrait',
+            'watermark' => null,
+            'password' => null
+        ];
+        $options = array_merge($defaults, $options);
+
         try {
             // Configure DomPDF
-            $options = new Options();
-            $options->set('isRemoteEnabled', true);
-            $options->set('defaultFont', 'DejaVu Sans');
-            $options->set('isPhpEnabled', true);
-            $options->set('isHtml5ParserEnabled', true);
-            
-            $dompdf = new Dompdf($options);
+            $dompdfOptions = new Options();
+            $dompdfOptions->set([
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'DejaVu Sans',
+                'isPhpEnabled' => true,
+                'isHtml5ParserEnabled' => true,
+                'isFontSubsettingEnabled' => true,
+                'debugKeepTemp' => false,
+                'tempDir' => sys_get_temp_dir()
+            ]);
+
+            $dompdf = new Dompdf($dompdfOptions);
             $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->setPaper($options['paper'], $options['orientation']);
             $dompdf->render();
 
-            // Add watermark
-            $canvas = $dompdf->getCanvas();
-            $font = "DejaVu Sans";
-            $canvas->page_text(72, 18, "Confidential", $font, 8, array(0,0,0));
+            // Add watermark if specified
+            if ($options['watermark']) {
+                $canvas = $dompdf->getCanvas();
+                $font = "DejaVu Sans";
+                $canvas->page_text(
+                    72, 18, 
+                    $options['watermark'], 
+                    $font, 
+                    8, 
+                    [0.75, 0.75, 0.75], // Light gray color
+                    0.5,                // Opacity
+                    45,                 // Angle
+                    'center'             // Alignment
+                );
+            }
 
-            if ($download) {
+            // Set password if specified
+            // if ($options['password']) {
+            //     $dompdf->getCanvas()->get_cpdf()->setEncryption(
+            //         $options['password'],
+            //         null,
+            //         ['copy', 'print'] // Allowed permissions
+            //     );
+            // }
+
+            if ($options['download']) {
                 // Output as downloadable PDF
                 $dompdf->stream("{$filename}.pdf", [
-                    'Attachment' => 1
+                    'Attachment' => 1,
+                    'compress' => 1
                 ]);
                 exit;
             }
@@ -47,31 +90,7 @@ class PDFHelper
 
         } catch (Exception $e) {
             error_log("PDF Generation Error: " . $e->getMessage());
-            return false;
+            throw new Exception("Failed to generate PDF: " . $e->getMessage());
         }
     }
-
-    /**
-     * Generate PDF from a view file
-     * 
-     * @param string $viewPath Path to the view file
-     * @param array $data Data to pass to the view
-     * @param string $filename Output filename
-     * @param bool $download Whether to force download
-     * @return mixed
-     */
-    // public static function generateFromView($viewPath, $data = [], $filename = 'document', $download = true)
-    // {
-    //     try {
-    //         // Render the view
-    //         $html = \Illuminate\Support\Facades\View::make($viewPath, $data)->render();
-
-    //         // Generate PDF
-    //         return self::generate($html, $filename, $download);
-            
-    //     } catch (Exception $e) {
-    //         error_log("PDF View Generation Error: " . $e->getMessage());
-    //         return false;
-    //     }
-    // }
 }
