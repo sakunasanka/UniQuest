@@ -586,15 +586,14 @@ class Admin extends Controller
             $email = null; // Default to null
 
             // 1. Check if the previous message has an email
-            if ($previousMessage && !empty($previousMessage->user_email)) {
+            if (!empty($previousMessage) && !empty($previousMessage->user_email)) {
                 $email = $previousMessage->user_email;
             }
             // 2. If previous message email is null, fetch email from the user table
-            elseif ($this->model->getUserDetails($userID)) {
+            else {
                 $userDetails = $this->model->getUserDetails($userID);
-                $email = $userDetails->email ?? null; // Use email if available, else null
+                $email = $userDetails['Email'] ?? null; // Use email if available, else null
             }
-
             $data = [
                 'userID' => $userID,
                 'email' => $email,
