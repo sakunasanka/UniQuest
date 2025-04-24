@@ -100,4 +100,11 @@
     function goToJobsVer() {
         window.location.href = "<?php echo URLROOT; ?>/admin/job_ver_pending";
     }
+
+    function goToComMng() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/company_mng";
+    }
+    function goToJobMng() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/ptjobs_mng";
+    }
 </script>

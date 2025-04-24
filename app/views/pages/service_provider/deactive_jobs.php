@@ -57,13 +57,13 @@
                                     <span class="material-symbols-outlined action-btn activate1" onclick="showActivatePostConfirm(<?= $post->JobID ?>)">
                                         check_circle
                                     </span>
-                                        <span class="tooltiptext edit">Edit</span>
+                                        <span class="tooltiptext activate">Activate</span>
                                     </div> 
                                     <div class="tooltip">                                        
                                     <span class="material-symbols-outlined action-btn deactivate" onclick="showdeletereviewconfirm(<?= $post->JobID ?>)">
                                         delete
                                     </span>
-                                        <span class="tooltiptext deactivate">Deactivate</span>
+                                        <span class="tooltiptext deactivate">Delete</span>
                                     </div>        
                                 </td>
                             </tr>
