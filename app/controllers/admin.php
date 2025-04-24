@@ -1106,6 +1106,9 @@ class Admin extends Controller
             $pendingUserCount = $this->model->getCountPendingUsers();
             $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
             $pendingComplaintCount = $this->model('ComplaintModel')->getCountPendingComplaints();
+            $mostPopularJob = $this->model('M_applicationFields')->getMostAppliedJob();
+            $mostPopularCompany = $this->model('RateAndReviewModel')->getMostReviewedCompany();
+            $revenueOfMonth = $this->model('AdminModel')->getRevenueOfMonth();
 
             $data = [
                 'studentCount' => $studentCount,
@@ -1113,7 +1116,10 @@ class Admin extends Controller
                 'activeJobCount' => $activeJobCount,
                 'pendingUserCount' => $pendingUserCount,
                 'pendingJobCount' => $pendingJobCount,
-                'pendingComplaintCount' => $pendingComplaintCount
+                'pendingComplaintCount' => $pendingComplaintCount,
+                'mostPopularJob' => $mostPopularJob,
+                'mostPopularCompany' => $mostPopularCompany,
+                'revenueOfMonth' => $revenueOfMonth,
             ];
 
             $this->view('pages/admin/adminDash', $data);

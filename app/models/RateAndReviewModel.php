@@ -440,4 +440,21 @@ class RateAndReviewModel extends Model
         $this->db->bind(':userId', $userId);
         return $this->db->single();
     }
+
+    public function getMostReviewedCompany() {
+        try {
+            $this->db->query("SELECT CompanyID, COUNT(*) as ReviewCount FROM Review GROUP BY CompanyID ORDER BY ReviewCount DESC LIMIT 1");
+            $row = $this->db->single();
+
+            $this->db->query("SELECT CompanyName, CompanyID FROM company WHERE CompanyID = :companyID");
+            $this->db->bind(':companyID', $row->CompanyID);
+            $company = $this->db->single();
+            return $company;
+        }
+        catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
 }
