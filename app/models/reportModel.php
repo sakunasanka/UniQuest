@@ -222,22 +222,44 @@ class ReportModel extends Model
         }
     }
 
-    public function getUserGrowthData()
+    public function getUserGrowthData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-            SELECT 
-                DATE_FORMAT(u.RegisterDate, '%Y-%m') AS month,
-                u.Role,
-                COUNT(*) AS new_users,
-                COUNT(CASE WHEN u.VerifiedBy IS NOT NULL THEN 1 END) AS verified_users,
-                COUNT(CASE WHEN u.Status = 'Active' THEN 1 END) AS active_users,
-                COUNT(CASE WHEN u.Status = 'Pending' THEN 1 END) AS pending_users
-            FROM user u
-            GROUP BY DATE_FORMAT(u.RegisterDate, '%Y-%m'), u.Role
-            ORDER BY month DESC, u.Role
+        SELECT 
+            DATE_FORMAT(u.RegisterDate, '%Y-%m') AS month,
+            u.Role,
+            COUNT(*) AS new_users,
+            COUNT(CASE WHEN u.VerifiedBy IS NOT NULL THEN 1 END) AS verified_users,
+            COUNT(CASE WHEN u.Status = 'Active' THEN 1 END) AS active_users,
+            COUNT(CASE WHEN u.Status = 'Pending' THEN 1 END) AS pending_users
+        FROM user u
+        WHERE 1=1
         ";
+
+            // Add date filtering if provided
+            if ($startDate) {
+                $query .= " AND u.RegisterDate >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND u.RegisterDate <= :endDate";
+            }
+
+            $query .= "
+        GROUP BY DATE_FORMAT(u.RegisterDate, '%Y-%m'), u.Role
+        ORDER BY month DESC, u.Role
+        ";
+
             $this->db->query($query);
+
+            // Bind parameters if dates are provided
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getUserGrowthData: " . $e->getMessage());
@@ -245,25 +267,47 @@ class ReportModel extends Model
         }
     }
 
-    public function getJobPerformanceData()
+    public function getJobPerformanceData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-            SELECT 
-                j.Category,
-                c.CompanyName,
-                COUNT(j.JobID) AS total_jobs,
-                COUNT(a.id) AS total_applications,
-                COUNT(CASE WHEN a.status = 'Hired' THEN 1 END) AS hires,
-                ROUND(COUNT(CASE WHEN a.status = 'Hired' THEN 1 END)*100.0/COUNT(a.id),2) AS hire_rate,
-                AVG(TIMESTAMPDIFF(HOUR, j.create_at, a.created_at)) AS avg_time_to_apply
-            FROM jobs j
-            LEFT JOIN applications a ON j.JobID = a.job_id
-            LEFT JOIN company c ON j.CompanyID = c.CompanyID
-            GROUP BY j.Category, c.CompanyName
-            ORDER BY total_applications DESC
+        SELECT 
+            j.Category,
+            c.CompanyName,
+            COUNT(j.JobID) AS total_jobs,
+            COUNT(a.id) AS total_applications,
+            COUNT(CASE WHEN a.status = 'Hired' THEN 1 END) AS hires,
+            ROUND(COUNT(CASE WHEN a.status = 'Hired' THEN 1 END)*100.0/NULLIF(COUNT(a.id), 0), 2) AS hire_rate,
+            AVG(TIMESTAMPDIFF(HOUR, j.create_at, a.created_at)) AS avg_time_to_apply
+        FROM jobs j
+        LEFT JOIN applications a ON j.JobID = a.job_id
+        LEFT JOIN company c ON j.CompanyID = c.CompanyID
+        WHERE 1=1
         ";
+
+            // Add date filters if provided
+            if ($startDate) {
+                $query .= " AND j.create_at >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND j.create_at <= :endDate";
+            }
+
+            $query .= "
+        GROUP BY j.Category, c.CompanyName
+        ORDER BY total_applications DESC
+        ";
+
             $this->db->query($query);
+
+            // Bind parameters if dates are provided
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getJobPerformanceData: " . $e->getMessage());
@@ -271,25 +315,54 @@ class ReportModel extends Model
         }
     }
 
-    public function getRevenueData()
+    public function getRevenueData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-            SELECT 
-                c.subscription_plan,
-                COUNT(DISTINCT c.CompanyID) AS company_count,
-                SUM(CASE WHEN j.Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
-                AVG(TIMESTAMPDIFF(
-                    DAY, 
-                    c.subscription_start_date, 
-                    COALESCE(c.subscription_end_date, NOW())
-                )) AS avg_subscription_days,
-                COUNT(DISTINCT j.JobID) AS jobs_per_company
-            FROM company c
-            LEFT JOIN jobs j ON c.CompanyID = j.CompanyID
-            GROUP BY c.subscription_plan
+        SELECT 
+            c.subscription_plan,
+            COUNT(DISTINCT c.CompanyID) AS company_count,
+            SUM(CASE WHEN j.Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
+            AVG(TIMESTAMPDIFF(
+                DAY, 
+                c.subscription_start_date, 
+                COALESCE(c.subscription_end_date, NOW())
+            )) AS avg_subscription_days,
+            COUNT(DISTINCT j.JobID) AS jobs_per_company,
+            SUM(CASE 
+                WHEN c.subscription_plan = 'basic' THEN 29.99
+                WHEN c.subscription_plan = 'professional' THEN 99.99
+                WHEN c.subscription_plan = 'enterprise' THEN 299.99
+                ELSE 0
+            END) AS estimated_revenue
+        FROM company c
+        LEFT JOIN jobs j ON c.CompanyID = j.CompanyID
+        WHERE 1=1
         ";
+
+            // Add date filters if provided
+            if ($startDate) {
+                $query .= " AND c.subscription_start_date >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND (c.subscription_end_date <= :endDate OR c.subscription_end_date IS NULL)";
+            }
+
+            $query .= "
+        GROUP BY c.subscription_plan
+        ORDER BY company_count DESC
+        ";
+
             $this->db->query($query);
+
+            // Bind parameters if dates are provided
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getRevenueData: " . $e->getMessage());

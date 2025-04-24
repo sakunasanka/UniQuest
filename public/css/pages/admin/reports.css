@@ -51,6 +51,31 @@ body {
     color: #28a745;
 }
 
+.time-period-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.time-period-filter select {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+#customDateRange {
+    gap: 10px;
+    align-items: center;
+}
+
+#customDateRange input {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
 .main-container {
     display: flex;
     justify-content: center;
@@ -156,8 +181,8 @@ body {
 }
 
 .report-actions a,
-.report-actions button {
-    display: flex;
+.report-actions button,
+.time-period-filter button {
     align-items: center;
     gap: 5px;
     padding: 8px 14px;
@@ -192,6 +217,7 @@ body {
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
+    justify-content: space-between;
 }
 
 .summary-card {
