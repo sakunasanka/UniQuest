@@ -13,7 +13,8 @@
             "Email" => "Company Email",
             "Category" => "Job Type",
             "ActionDate" => "Verified Date",
-            "Status" => "Status"
+            "Status" => "Status",
+            "Actions" => "Actions"
         ];
         ?>
         <div class="tabs-header">
