@@ -48,7 +48,7 @@
                                         </button>
                                     <?php elseif ($message->receiver_role == 'Student'):?>
                                         <button class="open-btn-2 material-symbols-outlined action-btn view" 
-                                            onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
+                                            onclick="openChatPopup('<?php echo $message->receiver_id; ?>', '<?php echo $message->id; ?>')">
                                             preview
                                         </button>
                                     <?php endif; ?>      
