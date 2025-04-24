@@ -55,7 +55,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search);
@@ -90,7 +90,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
             // $page = $_GET['page'] ?? 1;
             // $limit = $_GET['limit'] ?? 2;
@@ -129,7 +129,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search);
@@ -425,6 +425,7 @@ class Admin extends Controller
                 'note' => trim($_POST['note']) ?? null,
                 'reasonID' => ($_POST['reasonID']) ?? null,
                 'jobID' => ($_POST['jobID']) ?? null,
+                'jobTitle' => ($_POST['jobTitle']) ?? null,
                 'companyID' => ($_POST['companyID']) ?? null,
                 'companyEmail' => trim($_POST['companyEmail']) ?? null,
                 'studentID' => ($_POST['studentID']) ?? null,
@@ -483,19 +484,21 @@ class Admin extends Controller
                     $this->model('jobModel')->deactivateJob($data['jobID']);
                     //todo : get correct reason by type
                     //add job log
-                    //todo : send notification to company about job deactivation
                 }
                 if ($data['deactivate_company'] == 1) {
                     $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
                     $this->model->deactivateAccount($data['companyID']);
                     $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
+                    notifyComAboutJobDeactivation($data['companyID'], $reason, $data['jobID'], $data['jobTitle']);
                     MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
                 }
                 if ($data['send_warning'] == 1) {
-                    //todo : send warning notification to company
+                    sendWarningToCompany($data['companyID'], $data['jobID'], $data['jobTitle']);
                 }
                 if ($data['restrict_posting'] == 1) {
                     $this->model('AdminModel')->restrictPosting($data['companyID']);
+                    $notificationDate = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    notifyComAboutCanPostAgain($data['companyID'], $notificationDate);
                 }
                 //set statusAfter to resolved
                 $data['statusAfter'] = 'Resolved';
@@ -522,7 +525,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search);
@@ -547,7 +550,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search);
@@ -652,6 +655,19 @@ class Admin extends Controller
         }
     }
 
+    public function markMessageRead() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $messageId = $_POST['message_id'] ?? null;
+
+            if ($messageId) {
+                $this->model('chatModel')->updateReadStatus($messageId);
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
+            }
+        }
+    }
+
     public function user_ver_pending($queryParam = [])
     {
         try {
@@ -659,7 +675,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search);
@@ -684,7 +700,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search);
@@ -943,7 +959,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
@@ -985,7 +1001,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search);
@@ -1020,9 +1036,9 @@ class Admin extends Controller
             notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
 
             // Notify students about the new job
-            $students = $this->model('jobModel')->getStudentIds();
+            $students = $this->model->getStudentIds();
             foreach ($students as $student) {
-                notifyPostPublishStu($student->UserID, $jobID, $title, $publishDate);
+                notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
             }
 
             //add verificationlogs
@@ -1090,6 +1106,9 @@ class Admin extends Controller
             $pendingUserCount = $this->model->getCountPendingUsers();
             $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
             $pendingComplaintCount = $this->model('ComplaintModel')->getCountPendingComplaints();
+            $mostPopularJob = $this->model('M_applicationFields')->getMostAppliedJob();
+            $mostPopularCompany = $this->model('RateAndReviewModel')->getMostReviewedCompany();
+            $revenueOfMonth = $this->model('AdminModel')->getRevenueOfMonth();
 
             $data = [
                 'studentCount' => $studentCount,
@@ -1097,7 +1116,10 @@ class Admin extends Controller
                 'activeJobCount' => $activeJobCount,
                 'pendingUserCount' => $pendingUserCount,
                 'pendingJobCount' => $pendingJobCount,
-                'pendingComplaintCount' => $pendingComplaintCount
+                'pendingComplaintCount' => $pendingComplaintCount,
+                'mostPopularJob' => $mostPopularJob,
+                'mostPopularCompany' => $mostPopularCompany,
+                'revenueOfMonth' => $revenueOfMonth,
             ];
 
             $this->view('pages/admin/adminDash', $data);

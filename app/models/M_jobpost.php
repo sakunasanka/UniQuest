@@ -53,6 +53,14 @@ class M_jobpost extends Model
         return $row->job_count;
     }
 
+    public function canPostJob()
+    {
+        $this->db->query('SELECT can_post FROM company WHERE CompanyID = :user_id');
+        $this->db->bind(':user_id', $_SESSION['user_id']);
+        $row = $this->db->single();
+        return $row->can_post;
+    }
+
     public function getActiveJobCountByCompany()
     {
         $this->db->query('SELECT COUNT(*) as job_count FROM v_jobs WHERE CompanyID = :user_id AND Status = :status');
@@ -75,7 +83,7 @@ class M_jobpost extends Model
             // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                ['Status', '=', 'Pending']
+                ['Status', 'IN', ['Pending', 'Edited']]
             ];
 
             // Add search condition if a search term is provided
@@ -202,10 +210,13 @@ class M_jobpost extends Model
             SET 
                 Title = :job_name, 
                 Description = :job_description, 
-                Location = :job_location, 
+                DistrictID = :job_district,
+                CityID = :job_city,
                 JobBenefits = :job_benifits, 
                 RequiredQualifications = :required_skills, 
-                SalaryRange = :salary_range 
+                SalaryRange = :salary_range,
+                SalaryType = :salary_type,
+                Status = :status
             WHERE 
                JobID = :job_id 
         ');
@@ -213,11 +224,14 @@ class M_jobpost extends Model
         // Bind the values from $data array
         $this->db->bind(':job_name', $data['job_name']);
         $this->db->bind(':job_description', $data['job_description']);
-        $this->db->bind(':job_location', $data['job_location']);
+        $this->db->bind(':job_district', $data['job_district']);
+        $this->db->bind(':job_city', $data['job_city']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
+        $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':job_id', $data['job_id']);
+        $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
         return $this->db->execute();

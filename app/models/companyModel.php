@@ -10,7 +10,7 @@ class companyModel extends Model
 
     public function getCompanyInfo() 
     {
-        $this->db->query("SELECT * FROM company WHERE CompanyID = :companyId");
+        $this->db->query("SELECT * FROM v_company WHERE UserID = :companyId");
 
         $this->db->bind(':companyId', $_SESSION['user_id']);
         return $this->db->single();
@@ -212,6 +212,24 @@ class companyModel extends Model
             $this->db->bind(':user_id', $user_id);
             $result = $this->db->single();
             return $result ? $result->subscription_plan : null;
+        } catch (Exception $e) {
+            error_log("Database error in getSubscriptionPlan: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getSubscriptionPlanByJobID($jobID) {
+        try {
+            
+            $this->db->query('SELECT CompanyID FROM v_jobs WHERE JobID = :jobID LIMIT 1');
+            $this->db->bind(':jobID', $jobID);
+            $result1 = $this->db->single()->CompanyID;
+
+
+            $this->db->query('SELECT subscription_plan FROM company WHERE CompanyID = :companyID LIMIT 1');
+            $this->db->bind(':companyID', $result1);
+            $result2 = $this->db->single();
+            return $result2->subscription_plan;
         } catch (Exception $e) {
             error_log("Database error in getSubscriptionPlan: " . $e->getMessage());
             return false;

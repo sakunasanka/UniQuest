@@ -104,7 +104,7 @@ class jobModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -136,12 +136,12 @@ class jobModel extends Model
         try {
             // Define base conditions
             $conditions = [
-                ['Status', '=', 'Pending']
+                ['Status', 'IN', ['Pending', 'Edited']]
             ];
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -167,7 +167,7 @@ class jobModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', JobID, CompanyID, Title, CompanyName, Email, DATE_FORMAT(jobs_create_at, '%Y-%m-%d'), Status, Category)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -343,7 +343,7 @@ class jobModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', Title, Category, Email, DATE_FORMAT(ActionDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -375,4 +375,242 @@ class jobModel extends Model
         }
     }
 
+    public function viewcount($jobId){
+        try{
+            $this->db->query("SELECT COUNT(*) AS viewCount FROM is_viewed_job WHERE jodId = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            $row = $this->db->single();
+            return $row->viewCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function addView($jobID, $companyID) {
+        try {
+            $this->db->query("INSERT  INTO is_viewed_job (CompanyID,UserID, JobID) VALUES (:CompanyID,:studentId, :jobID)");
+            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->bind(':jobID', $jobID);
+            $this->db->bind(':CompanyID', $companyID);
+            return $this->db->execute();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+
+    }
+    public function getApplicants($jobId)
+    {
+        try {
+            $this->db->query("SELECT count(*) FROM applications WHERE job_id = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            return $this->db->resultSet();
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getViewIncreasedPercentage($companyID) {
+        try {
+
+            // Get views this month
+            $thisMonthViews = $this->db->query("SELECT COUNT(*) AS thisMonthCount
+                                FROM is_viewed_job
+                                WHERE ViewedAt >= DATE_FORMAT(NOW(), '%Y-%m-01')
+                                AND ViewedAt <  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $thisMonthViews = $this->db->single();
+
+            // Get views last month
+            $lastMonthViews = $this->db->query("SELECT COUNT(*) AS lastMonthCount
+                                FROM is_viewed_job
+                                WHERE ViewedAt >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                AND ViewedAt < DATE_FORMAT(NOW(), '%Y-%m-01') AND companyID = :companyID");
+            $this->db->bind(':companyID', $companyID);  
+            $lastMonthViews = $this->db->single();
+                                
+            // Get percentage increase  
+            $thisMonthCount = $thisMonthViews->thisMonthCount;
+            $lastMonthCount = $lastMonthViews->lastMonthCount;
+            if ($lastMonthCount == 0) {
+                return 100; // Avoid division by zero
+            }
+            $percentageIncrease = (($thisMonthCount - $lastMonthCount) / $lastMonthCount) * 100;
+            return round($percentageIncrease, 1);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getViewDecreasedPercentage($companyID) {
+        try {
+
+            // Get views this month
+            $thisMonthViews = $this->db->query("SELECT COUNT(*) AS thisMonthCount
+                                FROM is_viewed_job
+                                WHERE ViewedAt >= DATE_FORMAT(NOW(), '%Y-%m-01')
+                                AND ViewedAt <  DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $thisMonthViews = $this->db->single();
+
+            // Get views last month
+            $lastMonthViews = $this->db->query("SELECT COUNT(*) AS lastMonthCount
+                                FROM is_viewed_job
+                                WHERE ViewedAt >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                AND ViewedAt < DATE_FORMAT(NOW(), '%Y-%m-01') AND companyID = :companyID;");  
+            $this->db->bind(':companyID', $companyID);
+            $lastMonthViews = $this->db->single();
+                                
+            // Get percentage increase  
+            $thisMonthCount = $thisMonthViews->thisMonthCount;
+            $lastMonthCount = $lastMonthViews->lastMonthCount;
+            if ($lastMonthCount == 0) {
+                return 100; // Avoid division by zero
+            }
+            $percentageDecrease = (($lastMonthCount - $thisMonthCount) / $lastMonthCount) * 100;
+            return round($percentageDecrease, 1);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    public function getRatingIncreasePercentage($companyID) {
+        try {
+            // Sum of ratings this month
+            $thisMonthRatings = $this->db->query("SELECT SUM(Rating) AS thisMonthSum
+                                FROM Review
+                                WHERE created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+                                AND created_at < DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND $companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $thisMonthRatings = $this->db->single();
+    
+            // Sum of ratings last month
+            $lastMonthRatings = $this->db->query("SELECT SUM(Rating) AS lastMonthSum
+                                FROM Review
+                                WHERE created_at >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                AND created_at < DATE_FORMAT(NOW(), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $lastMonthRatings = $this->db->single();
+    
+            $thisMonthSum = $thisMonthRatings->thisMonthSum ?? 0;
+            $lastMonthSum = $lastMonthRatings->lastMonthSum ?? 0;
+    
+            // Avoid division by zero
+            if ($lastMonthSum == 0) {
+                return 100;
+            }
+    
+            // Calculate percentage increase in sum of ratings
+            $percentageIncrease = (($thisMonthSum - $lastMonthSum) / $lastMonthSum) * 100;
+            return round($percentageIncrease, 1);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getRatingDecreasePercentage($companyID) {
+        try {
+            // Sum of ratings this month
+            $thisMonthRatings = $this->db->query("SELECT SUM(Rating) AS thisMonthSum
+                                FROM Review
+                                WHERE created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+                                AND created_at < DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND $companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $thisMonthRatings = $this->db->single();
+    
+            // Sum of ratings last month
+            $lastMonthRatings = $this->db->query("SELECT SUM(Rating) AS lastMonthSum
+                                FROM Review
+                                WHERE created_at >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                AND created_at < DATE_FORMAT(NOW(), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $lastMonthRatings = $this->db->single();
+    
+            $thisMonthSum = $thisMonthRatings->thisMonthSum ?? 0;
+            $lastMonthSum = $lastMonthRatings->lastMonthSum ?? 0;
+    
+            // Avoid division by zero
+            if ($lastMonthSum == 0) {
+                return 100;
+            }
+    
+            // Calculate percentage increase in sum of ratings
+            $percentageIncrease = (($lastMonthSum - $thisMonthSum) / $lastMonthSum) * 100;
+            return round($percentageIncrease, 1);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getReviewIncreasePercentage($companyID) {
+        try {
+            // Get review count for this month
+            $thisMonthQuery = $this->db->query("SELECT COUNT(*) AS thisMonthCount
+                FROM Review
+                WHERE created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+                AND created_at < DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $thisMonthResult = $this->db->single();
+            $thisMonthCount = $thisMonthResult->thisMonthCount;
+    
+            // Get review count for last month
+            $lastMonthQuery = $this->db->query("SELECT COUNT(*) AS lastMonthCount
+                FROM Review
+                WHERE created_at >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                AND created_at < DATE_FORMAT(NOW(), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $lastMonthResult = $this->db->single();
+            $lastMonthCount = $lastMonthResult->lastMonthCount;
+    
+            // Calculate percentage increase
+            if ($lastMonthCount == 0) {
+                return 100; // Avoid division by zero
+            }
+    
+            $percentageIncrease = (($thisMonthCount - $lastMonthCount) / $lastMonthCount) * 100;
+            return round($percentageIncrease, 1);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getReviewDecreasePercentage($companyID) {
+        try {
+            // Get review count for this month
+            $thisMonthQuery = $this->db->query("SELECT COUNT(*) AS thisMonthCount
+                FROM Review
+                WHERE created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')
+                AND created_at < DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $thisMonthResult = $this->db->single();
+            $thisMonthCount = $thisMonthResult->thisMonthCount;
+    
+            // Get review count for last month
+            $lastMonthQuery = $this->db->query("SELECT COUNT(*) AS lastMonthCount
+                FROM Review
+                WHERE created_at >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01')
+                AND created_at < DATE_FORMAT(NOW(), '%Y-%m-01') AND companyID = :companyID;");
+            $this->db->bind(':companyID', $companyID);
+            $lastMonthResult = $this->db->single();
+            $lastMonthCount = $lastMonthResult->lastMonthCount;
+    
+            // Calculate percentage increase
+            if ($lastMonthCount == 0) {
+                return 100; // Avoid division by zero
+            }
+    
+            $percentageIncrease = (($lastMonthCount - $thisMonthCount) / $lastMonthCount) * 100;
+            return round($percentageIncrease, 1);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
 }

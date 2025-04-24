@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (ID && role && reasonID) {
             window.location.href = `${urlRoot}/admin/user_${actionType}/${ID}/${role}/${email}?reason=${reasonID}`;
         } else {
-            alert("Invalid user ID or reason. Please try again.");
+            Flash.show("Invalid user ID or reason. Please try again.", "error");
         }
     }
 
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (ID) {
             window.location.href = `${urlRoot}/admin/job_${actionType}/${ID}/${category}`;
         } else {
-            alert("Invalid user ID. Please try again.");
+            Flash.show("Invalid user ID. Please try again.", "error");
         }
     }
 
@@ -85,11 +85,11 @@ async function fetchMessageDetails(id) {
             // Populate the popup with message details
             showMessageDetails(message);
         } else {
-            alert('Failed to fetch message details. Please check the network or server.');
+            Flash.show("Failed to fetch message details. Please check the network or server.", "error");
         }
     } catch (error) {
         console.error('Error fetching message details:', error);
-        alert('An error occurred while fetching message details.');
+        Flash.show("An error occurred while fetching message details.", "error");
     }
 }
 

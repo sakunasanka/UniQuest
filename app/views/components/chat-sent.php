@@ -9,7 +9,7 @@
                 if ($data['user']['Role'] == 'Company') {
                     echo $data['user']['CompanyName'];
                 } else {
-                    echo $data['user']['FirstName'];
+                    echo $data['user']['FirstName'] . ' ' . $data['user']['LastName'];
                 }
             }
             else {
@@ -48,7 +48,7 @@
             }elseif ($_SESSION['user_role'] == 'VT-Member') {
                     echo URLROOT . '/verification_team/sendMessage/' . $data['user']['UserID'];
             } elseif ($_SESSION['user_role'] == 'Student') {
-                echo URLROOT . '/jobs/sendMessage/' . $data['post']->JobID;
+                echo URLROOT . '/jobs/sendMessage/' . (!empty($data['post']->CompanyID) ? $data['post']->CompanyID : $data['post']->UserID);
             }
             ?>
         ">

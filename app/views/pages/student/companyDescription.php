@@ -111,7 +111,7 @@
                         </div>
                     <?php endif; ?>
                 </div>
-                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'): ?>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student' || $_SESSION['user_role'] == 'Admin'): ?>
                     <div class="buttons">
                         <button id="openPopupBtn" class="contact-btn-2">Contact</button>
                     </div>
@@ -249,7 +249,7 @@
             if (xhr.status === 200) {
                 iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
             } else {
-                alert('Failed to bookmark the company.');
+                Flash.show('Failed to bookmark company', 'error');
             }
         };
 

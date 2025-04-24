@@ -248,7 +248,7 @@
                     <?php endif; ?>
 
                     <?php if (isset($fields['linkedin'])): 
-                        $linkedinUrl = htmlspecialchars($data['application']['linkedin'], ENT_QUOTES, 'UTF-8');
+                        $linkedinUrl = ($data['application']['linkedin']);
                     ?>
                         <button class="document-button" 
                             <?php if (!empty($data['application']['nic_copy'])): ?>

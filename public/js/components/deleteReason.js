@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 closePopup();
                 refreshReasonPage();
             } else {
-                alert(result.message || 'Failed to delete reason.');
+                Flash.show(result.message || 'Failed to delete reason.', 'error');
             }
         } catch (error) {
             console.error('Delete error:', error);
-            alert('Failed to delete reason. Please try again.');
+            Flash.show('Failed to delete reason. Please try again.', 'error');
         }
     });
 

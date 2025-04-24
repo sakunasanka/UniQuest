@@ -60,7 +60,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', CompanyName, Address, Industry, Email)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -531,7 +531,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', UserID, Email, Role, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -558,7 +558,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', UserID, Email, Role, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];
@@ -663,7 +663,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField = ($role === 'Company')
                     ? "CONCAT_WS(' ', CompanyName, Email, ContactNo, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Status, Role)"
                     : "CONCAT_WS(' ', FullName, Email, ContactNo, Status, DATE_FORMAT(RegisterDate, '%Y-%m-%d'), Role)";
@@ -741,7 +741,7 @@ class userModel extends Model
 
             // Add search condition if a search term is provided
             if (!empty($search)) {
-                $searchTerm = '%' . $search . '%';
+                $searchTerm = $search . '%';
                 $searchField =  "CONCAT_WS(' ', Name, Email, DATE_FORMAT(ActionDate, '%Y-%m-%d'), Status, Role)";
 
                 $conditions[] = [$searchField, 'LIKE', $searchTerm];

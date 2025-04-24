@@ -2,7 +2,5 @@
 .DS_STORE
 uploads
 logs
-vendor
-composer.lock
-composer.json
+# vendor
 dompdf/

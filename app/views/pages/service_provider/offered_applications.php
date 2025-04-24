@@ -8,10 +8,19 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php
+        $columns = [
+            "StudentName" => "Name",
+            "StudentEmail" => "Email",
+            "StudentContact" => "Mobile Number",
+            "SubmissionDate" => "Date",
+            "Actions" => "Actions"
+        ];
+        ?>
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/service_provider/new_applications/<?php echo $data['jobID'];?>">Pending Applications</button>
-            <button class="tab" data-path="/UniQuest/service_provider/offered_applications/<?php echo $data['jobID'];?>">Offered Applications</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/service_provider/rejected_applications/<?php echo $data['jobID'];?>">Rejected Applications</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/service_provider/new_applications/<?php echo $data['jobID']; ?>">Pending Applications</button>
+            <button class="tab" data-path="/UniQuest/service_provider/offered_applications/<?php echo $data['jobID']; ?>">Offered Applications</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/service_provider/rejected_applications/<?php echo $data['jobID']; ?>">Rejected Applications</button>
         </div>
         <div class="job-details">
             <h2 class="job-title" onclick="goToJob(<?php echo $data['post']->JobID; ?>);">
@@ -26,20 +35,10 @@
         </div>
         <div class="table-block">
             <div class="content-header">
-                <?php 
-                // require APPROOT . '/views/components/tableSearchBar.php'; 
-                ?>
+                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
             <table>
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(1)">Name</th>
-                        <th onclick="sortTable(2)">Email</th>
-                        <th onclick="sortTable(3)">Mobile Number</th>
-                        <th onclick="sortTable(5)">Date</th>
-                        <th class="no-sort">Actions</th>
-                    </tr>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
                     <?php if (!empty($data['applications'])): ?>
                         <?php foreach ($data['applications'] as $application): ?>
@@ -47,7 +46,7 @@
                                 <td><?php echo $application->StudentName; ?></td>
                                 <td><?php echo $application->StudentEmail; ?></td>
                                 <td><?php echo $application->StudentContact; ?></td>
-                                <td><?php echo (date('M d, Y', strtotime($application->SubmissionDate))); ?></td>
+                                <td><?php echo (date('Y/m/d', strtotime($application->SubmissionDate))); ?></td>
                                 <td class="action">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_application/<?php echo $application->ApplicationID; ?>'">
                                         preview
@@ -68,15 +67,12 @@
                     <?php endif; ?>
                 </tbody>
             </table>
-            <?php 
-            // require APPROOT . '/views/components/pagination.php'; 
-            ?>
+            <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
@@ -84,4 +80,4 @@
     function goToJob(jobID) {
         window.location.href = '<?php echo URLROOT; ?>/jobs/jobsdescription/' + jobID;
     }
-</script>    
+</script>

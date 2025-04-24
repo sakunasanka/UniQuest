@@ -190,7 +190,7 @@
                 <table class="table">
                     <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                     <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
-                    <tr><td>Applicants:</td><td>26</td></tr>
+                    <tr><td>Applicants:</td><td><?php echo $data['applicationCount']; ?></td></tr>
                 </table>
 
                 <div class="social-media-icons">
@@ -273,7 +273,7 @@ function bookmarkJob(jobId, iconElement) {
         if (xhr.status === 200) {
             iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
         } else {
-            alert('Failed to bookmark the job.');
+            Flash.show('Failed to bookmark company', 'error');
         }
     };
 

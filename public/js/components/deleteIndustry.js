@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 closePopup();
                 refreshIndustryPage();
             } else {
-                alert(result.message || 'Failed to delete industry.');
+                Flaah.show(result.message || 'Failed to delete industry.', 'error');
             }
         } catch (error) {
             console.error('Delete error:', error);
-            alert('Failed to delete industry. Please try again.');
+            Flash.show('Failed to delete industry. Please try again.', 'error');
         }
     });
 
