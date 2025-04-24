@@ -37,13 +37,13 @@
                                 <td class="action">
                                 <?php if ($message->sender_role == 'Admin') : ?>
                                     <button class="open-btn-2 material-symbols-outlined action-btn view" 
-                                        onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
-                                        preview
+                                            onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
+                                            preview
                                     </button>
                                 <?php elseif ($message->receiver_role == 'Admin'):?>
                                     <button class="open-btn-2 material-symbols-outlined action-btn view" 
-                                        onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
-                                        preview
+                                            onclick="openChatPopup('<?php echo $message->sender_id; ?>', '<?php echo $message->id; ?>')">
+                                            preview
                                     </button>
                                 <?php endif; ?>
                                 </td>
