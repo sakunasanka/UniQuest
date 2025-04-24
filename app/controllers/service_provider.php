@@ -875,15 +875,12 @@ class Service_provider extends Controller
 
             if (
                 empty($data['job_name_err']) &&
-                empty($data['job_benifits_err']) &&
                 empty($data['job_location_err']) &&
-                empty($data['required_skills_err']) &&
-                empty($data['salary_range_err']) &&
-                empty($data['Description_err'])
+                empty($data['salary_range_err'])
             ) {
                 if ($this->model('M_jobpost')->edit($data)) {
                     flash('post-msg', 'post is updated');
-                    redirect('service_provider/active_jobs');
+                    redirect('service_provider/pending_jobs');
                 } else {
                     die('something went wrong');
                 }

@@ -56,7 +56,7 @@
 
                             <label for="jobLocation" class="required">Job Location:</label>
                             <div class="salary-container">
-                                <select id="districtID" name="job_district" required style="width: 50%;" data-preselected-city="<?php echo htmlspecialchars($data['job_district']); ?>">
+                                <select id="job_district" name="job_district" required style="width: 50%;">
                                     <option value="" disabled selected>Select District</option>
                                     <?php foreach ($data['districts'] as $district): ?>
                                         <option value="<?php echo $district->DistrictID; ?>" <?php echo ($data['job_district'] === $district->DistrictID) ? 'selected' : ''; ?>>
@@ -65,7 +65,7 @@
                                     <?php endforeach; ?>
                                 </select>
 
-                                <select id="cityID" name="job_city" required style="width: 50%;" data-preselected-city="<?php echo htmlspecialchars($data['job_city']); ?>">
+                                <select id="job_city" name="job_city" required style="width: 50%;">
                                     <option value="" disabled selected>Select City</option>
                                 </select>
                             </div>
@@ -371,5 +371,5 @@
 <script src="<?php echo URLROOT; ?>/js/components/formPagination.js"></script>
 <script src="<?php echo URLROOT; ?>/js/service_provider/date_time_validate.js"></script>
 <script src="<?php echo URLROOT; ?>/js/service_provider/jobPostValidation.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/register/citiesForDistrict.js"></script>
+<script src="<?php echo URLROOT; ?>/js/service_provider/citiesForDistrict.js"></script>
 <?php require APPROOT . '/views/components/footer.php'; ?>
