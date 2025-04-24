@@ -106,10 +106,14 @@
                                             id="<?php echo $fieldName; ?>"
                                             name="<?php echo $fieldName; ?>"
                                             value="<?php echo htmlspecialchars($fieldValue); ?>"
-                                            <?php if ($isRequired) echo 'required'; ?>>
+                                            >
                                 <?php endswitch; ?>
 
-                                <span class="error-message" id="<?php echo $fieldName; ?>-error"></span>
+                                <?php if (isset($data['errors'][$fieldName])): ?>
+                                    <div class="form-invalid" id="<?php echo $fieldName; ?>" style="color: red;">
+                                        <?php echo($data['errors'][$fieldName]); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                     <?php
                         endforeach;
@@ -150,7 +154,7 @@
                     <table class="table">
                         <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                         <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
-                        <tr><td>Applicants:</td><td>26</td></tr>
+                        <tr><td>Applicants:</td><td><?php echo $data['applicationCount']; ?></td></tr>
                     </table>
 
                     <div class="social-media-icons">
