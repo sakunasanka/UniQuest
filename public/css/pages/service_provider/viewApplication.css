@@ -161,6 +161,22 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    justify-content: space-between;
+}
+
+.accept-reject-btn {
+    display: flex !important;
+    gap: 10px;
+    flex-direction: row !important;
+}
+
+.contact-btn {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.contact-btn:hover {
+    background-color: #2980b9;
 }
 
 .action-button {
@@ -196,6 +212,35 @@
 
 .not-provided {
     color: #999 !important;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.view-job-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+}
+
+.view-job-button:hover {
+    background-color: #2980b9;
+}
+
+.view-job-button i {
+    font-size: 14px;
 }
 
 /* Responsive Design */

@@ -1,4 +1,5 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/viewApplication.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -15,9 +16,17 @@
     <?php endif; ?> 
 
     <div class="content-area">
-        <div class="header">
-            <h1>Application Details</h1>
-        </div>
+    <div class="header">
+        <h1>Application Details</h1>
+        <button class="view-job-button" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $data['application']['jobID']; ?>'">
+            <i class="fas fa-eye"></i> 
+            <?php if($data['category'] == 'Part-time'):?>
+            View Job
+            <?php else:?>
+            View Internship
+            <?php endif;?>
+        </button>
+    </div>
 
         <?php 
             $fields = $data['fields'];
@@ -364,12 +373,28 @@
             <!-- Footer with Action Buttons -->
             <?php if($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Pending'):?>
                 <div class="actions-section">
+                    <div>
+
+                    <?php if ($data['message']->sender_role == 'Student') : ?>
+                        <button class="action-button contact-btn" 
+                            onclick="openChatPopup('<?php echo($data['message']->sender_id);?>', '<?php echo($data['message']->id);?>')">
+                            Contact
+                        </button>
+                    <?php elseif ($data['message']->receiver_role == 'Student'):?>
+                        <button class="action-button contact-btn" 
+                            onclick="openChatPopup('<?php echo $message->receiver_id; ?>', '<?php echo($data['message']->id);?>')">
+                            Contact
+                        </button>
+                    <?php endif; ?>
+                    </div>    
+                    <div class="accept-reject-btn">
                     <button class="action-button reject-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/reject_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Reject
-                        <i class="fas fa-times-circle"></i> 
-                    </button>
-                    <button class="action-button approve-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/approve_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Approve
-                        <i class="fas fa-check-circle"></i> 
-                    </button>
+                            <i class="fas fa-times-circle"></i> 
+                        </button>
+                        <button class="action-button approve-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/approve_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Approve
+                            <i class="fas fa-check-circle"></i> 
+                        </button>
+                    </div>      
                 </div>
 
                 <?php elseif($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Accepted'):?>
@@ -390,11 +415,50 @@
     </div>
 </div>
 
-<?php require APPROOT . '/views/components/footer.php'; ?>
+<form id="chatForm" action="<?php echo URLROOT; ?>/service_provider/messages_stu" method="post" style="display: none;">
+    <input type="hidden" name="selectedUserID" id="selectedUserID" value="">
+</form>
 
 <script>
-    function notProvidedError() {
-        Flash.show('Not provided', 'error');
+
+function notProvidedError() {
+    Flash.show('Not provided', 'error');
+}
+
+function scrollToBottom() {
+    const messagesContainer = document.querySelector('.messages');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Only open the popup if a userID exists AND it came from a form submission
+    <?php if (isset($data['userID']) && isset($_POST['selectedUserID'])): ?>
+        document.getElementById('chatPopup').classList.remove('hidden');
+        document.getElementById('backgroundOverlay').classList.remove('hidden');
+        scrollToBottom();
+    <?php endif; ?>
+});
+
+//Refresh the page when the popup is closed
+closePopupBtn?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/service_provider/messages_stu";
+});
+
+backgroundOverlay?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/service_provider//<?php echo($data['applicationID'])?>";
+});
+
+function openChatPopup(userId, messageId = null) {
+
+    // Set the user ID in the hidden form
+    document.getElementById('selectedUserID').value = userId;
+    // Submit the form
+    document.getElementById('chatForm').submit();
+}
+
 </script>
+
+<?php require APPROOT . '/views/components/footer.php'; ?>
 

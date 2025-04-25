@@ -375,6 +375,8 @@ class Service_provider extends Controller
     {
         // Fetch application details
         $application = $this->model('M_applicationFields')->getApplicationByID($applicationID);
+        $messages_stu = $this->model('ContactModel')->getMessagesStuCom();
+        $message = $messages_stu[0];
 
         if (!$application) {
             // Handle the case where the application is not found
@@ -411,14 +413,35 @@ class Service_provider extends Controller
             'other2_type' => $application->other2_type ?? null,
             'other3_type' => $application->other3_type ?? null,
         ];
-
         $data = [
             'application' => $applicationData,
+            'category' => $application->JobCategory,
+            'message' => $message,
+            'applicationID' => $application->ApplicationID
+
         ];
         $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
 
         $data['fields'] = $fields;
 
+        $userID = $application->StudentID;
+        $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
+
+        if ($loadChatData) {
+            // Ensure session user ID exists before accessing
+            if (!isset($_SESSION['user_id'])) {
+                die("Unauthorized access. Please log in.");
+            }
+            // Fetch user details and chat messages
+            $data['userID'] = $userID;
+            $data['user'] = $this->model->getUserDetails($userID);
+            $data['sender_id'] = $_SESSION['user_id'];
+            $data['receiver_id'] = $userID;
+            $data['message'] = $message;
+            $data['messageInput'] = '';
+            $data['messageInput_err'] = '';
+        }
+        
         // Load the view
         $this->view('pages/service_provider/view_application', $data);
     }

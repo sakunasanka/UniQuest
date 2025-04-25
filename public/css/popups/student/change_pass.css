@@ -1,0 +1,128 @@
+.popup .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 101;
+    display: none;
+}
+
+.popup .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #ffffff;
+    width: 90%;
+    max-width: 500px;
+    z-index: 102;
+    text-align: left;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease-in-out;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.popup.active .overlay {
+    display: block;
+}
+
+.popup.active .content {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.changep_title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+.changep_form-group {
+    margin-bottom: 20px;
+}
+
+.changep_form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #222;
+}
+
+.changep_password-wrapper {
+    position: relative;
+}
+
+.changep_form-group input {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.2s ease;
+}
+
+.changep_form-group input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.changep_form-group input::placeholder {
+    color: #aaa;
+}
+
+.changep_password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+}
+
+.changep_change-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.changep_change-button:hover {
+    background-color: #0056b3;
+}
+
+.error-msg {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: 6px;
+    display: block;
+}
+
+.close-btn-container {
+    text-align: right;
+    margin-bottom: -10px;
+}
+
+.close-btn {
+    font-size: 1.4em;
+    color: #444;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #f44336;
+}
