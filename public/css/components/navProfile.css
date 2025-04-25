@@ -65,6 +65,11 @@
 
 .user-details1 {
     line-height: 1.4;
+    /* truncating execess0 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    
 }
 
 .user-details1 strong {
