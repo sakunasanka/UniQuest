@@ -189,8 +189,8 @@ body {
 }
 
 button.approve-btn {
-    background-color: #32a852;
-    color: #ffffff;
+    background-color: #299b63;
+    color: #fff;
 }
 
 button.reject-btn {
@@ -199,7 +199,7 @@ button.reject-btn {
 }
 
 button.approve-btn:hover {
-    background-color: #038a27;
+    background-color: #137d4a
 }
 
 button.reject-btn:hover:not(:disabled) {
