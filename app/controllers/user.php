@@ -237,8 +237,10 @@ class User extends Controller
                 $this->model->activateAccount($userID);
                 //send email to notify user that their account has been reactivated
                 MailHelper::sendEmailAccountReactivated($_SESSION['logged_user_email'], $_SESSION['logged_user_name']);
+                //get reasn id by type
+                $reasonID = $this->model('AdminModel')->getReasonByType('self_reactivate')->ReasonID;
                 //add user account log
-                $this->model('AdminModel')->addUserAccountLog($userID, 'Reactivate', 15);
+                $this->model('AdminModel')->addUserAccountLog($userID, 'Reactivate', $reasonID);
                 unset($_SESSION['logged_user_email']);
                 unset($_SESSION['logged_user_name']);
                 // Create session
@@ -399,8 +401,10 @@ class User extends Controller
                     LogHelper::logDebug('Password changed for user ID: ' . $_SESSION['user_id']);
                     // Send email to notify user that their password has been changed
                     // MailHelper::sendEmailPasswordChanged($user['Email'], $user['FirstName'] . ' ' . $user['LastName']);
-                    // Add user account log
-                    $this->model('AdminModel')->addUserAccountLog($_SESSION['user_id'], 'ChangePass', 14);
+                    //get reason id by type
+                    $reasonID = $this->model('AdminModel')->getReasonByType('password_change')->ReasonID;
+                    // // Add user account log
+                    $this->model('AdminModel')->addUserAccountLog($_SESSION['user_id'], 'ChangePass', $reasonID);
 
                     // Unset session variables
                     session_unset();
@@ -594,8 +598,10 @@ class User extends Controller
             LogHelper::logDebug('Password reset for user ID: ' . $userID);
             // send email to notify user that their password has been reset
             // MailHelper::sendEmailPasswordReset($data['email'], $data['name']);
+            //get reason id by type
+            $reasonID = $this->model('AdminModel')->getReasonByType('password_reset')->ReasonID;
             //add user account log
-            $this->model('AdminModel')->addUserAccountLog($userID, 'ResetPass', 13);
+            $this->model('AdminModel')->addUserAccountLog($userID, 'ResetPass', $reasonID);
 
             return true;
         } catch (Exception $e) {
@@ -627,6 +633,8 @@ class User extends Controller
                 $this->model->deactivateAccountByUser($_SESSION['user_id']);
                 //send email to notify user that their account
                 MailHelper::sendEmailAccountDeactivated($_SESSION['user_email'], $_SESSION['user_name']);
+                //get reason id by type
+                $reasonID = $this->model('AdminModel')->getReasonByType('self_deactivate')->ReasonID;
                 //add user account log
                 $this->model('AdminModel')->addUserAccountLog($_SESSION['user_id'], 'PendingDelete', 11);
                 // Logout

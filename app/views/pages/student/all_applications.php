@@ -31,8 +31,8 @@
                     <?php if ($data['applications']) : ?>
                         <?php foreach ($data['applications'] as $application) : ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($application->JobTitle); ?></td>
-                                <td><?php echo htmlspecialchars($application->CompanyName); ?></td>
+                                <td><?php echo ($application->JobTitle); ?></td>
+                                <td><?php echo ($application->CompanyName); ?></td>
                                 <td><?php echo htmlspecialchars($application->JobLocation); ?></td>
                                 <td><?php echo date('Y/m/d', strtotime($application->SubmissionDate)); ?></td>
                                 <td>
