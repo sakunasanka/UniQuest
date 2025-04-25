@@ -42,24 +42,3 @@
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
-<script>
-    function goToJobs() {
-        window.location.href = "/UniQuest/service_provider/active_jobs";
-    }
-
-    function goToApplications() {
-        window.location.href = "/UniQuest/service_provider/new_applications";
-    }
-
-    function goToAnalytics() {
-        window.location.href = "/UniQuest/service_provider/analytics";
-    }
-
-    function goToReviews() {
-        window.location.href = "/UniQuest/service_provider/reviews";
-    }
-
-    function goToPremiums() {
-        window.location.href = "/UniQuest/service_provider/premium";
-    }
-</script>

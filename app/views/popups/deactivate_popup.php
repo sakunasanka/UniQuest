@@ -8,7 +8,6 @@
                 <h2>Account Deactivated</h2>
                 <p>Your account has been deactivated. This could be due to<br> one of the following reasons:</p>
                 <ul class="deactivation-reasons">
-                    <li>Deactivation request made by you.</li>
                     <li>Action taken by a system administrator.</li>
                     <li>Prolonged inactivity on your account.</li>
                 </ul>
