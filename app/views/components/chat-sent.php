@@ -9,7 +9,7 @@
                 if ($data['user']['Role'] == 'Company') {
                     echo $data['user']['CompanyName'];
                 } else {
-                    echo $data['user']['FirstName'];
+                    echo $data['user']['FirstName'] . ' ' . $data['user']['LastName'];
                 }
             }
             else {
@@ -33,21 +33,8 @@
                     endif; ?>
                 <div class="message-container">
                     <div class="message1 <?php echo $message->sender_id == $_SESSION['user_id'] ? 'sent' : 'received'; ?>">
-                        <?php echo htmlspecialchars($message->message); ?>
+                        <?php echo ($message->message); ?>
                         <span class="message-time"> <?php echo $messageTime; ?> </span>
-
-                        <?php if ($message->sender_id == $_SESSION['user_id']): ?>
-                            <span class="message-actions">
-                                <?php 
-                                $timeDiff = time() - strtotime($message->created_at); 
-                                if ($timeDiff <= 600): ?>
-                                    <i class="fa fa-edit edit-message" data-message-id="<?php echo $message->id; ?>" title="Edit"></i>
-                                <?php endif; 
-                                if ($timeDiff <= 3600): ?>
-                                    <i class="fa fa-trash delete-message" data-message-id="<?php echo $message->id; ?>" title="Delete"></i>
-                                <?php endif; ?>
-                            </span>
-                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -59,9 +46,9 @@
             }elseif ($_SESSION['user_role'] == 'Company') {
                     echo URLROOT . '/service_provider/sendMessage/' . $data['user']['UserID'];
             }elseif ($_SESSION['user_role'] == 'VT-Member') {
-                    echo URLROOT . '/verification_team/contact_admin/' . $data['user']['UserID'];
+                    echo URLROOT . '/verification_team/sendMessage/' . $data['user']['UserID'];
             } elseif ($_SESSION['user_role'] == 'Student') {
-                echo URLROOT . '/jobs/sendMessage/' . $data['post']->JobID;
+                echo URLROOT . '/jobs/sendMessage/' . (!empty($data['post']->CompanyID) ? $data['post']->CompanyID : $data['post']->UserID);
             }
             ?>
         ">
@@ -69,11 +56,11 @@
             <input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $data['user']['UserID']; ?>" />
             
             <!-- Ensure topic and email is always set -->
-            <input type="hidden" name="topic" id="topic" value="<?php echo htmlspecialchars($data['topic'] ?? 'General Information'); ?>" />
-            <input type="hidden" name="email" id="email" value="<?php echo htmlspecialchars($data['email'] ?? null); ?>" />
+            <input type="hidden" name="topic" id="topic" value="<?php echo ($data['topic'] ?? 'General Information'); ?>" />
+            <input type="hidden" name="email" id="email" value="<?php echo ($data['email'] ?? null); ?>" />
 
             <div class="input-with-icon">
-                <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo htmlspecialchars($data['message_details'] ?? ''); ?>" />
+                <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo ($data['message_details'] ?? ''); ?>" />
                 <button type="submit" class="send-icon-btn">
                     <i class="fas fa-paper-plane"></i>
                 </button>

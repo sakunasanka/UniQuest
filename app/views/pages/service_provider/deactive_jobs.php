@@ -1,6 +1,7 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<?php require APPROOT . '/views/popups/student/deactivatepostjob_popup.php'; ?>
+<?php require APPROOT . '/views/popups/student/deletepostjob_popup.php'; ?>
+<?php require APPROOT . '/views/popups/service_provider/activepostjob_popup.php'; ?>
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
     <!-- Sidebar -->
@@ -42,18 +43,28 @@
                                 <td><?php echo $post->City; ?></td>
                                 <td><?php echo $post->Category; ?></td>
                                 <td><?php echo date('Y-m-d', strtotime($post->PublishDate)); ?></td>
-                                <td>35</td>
-                                <td>18</td>
+                                <td><?php echo $post->ViewCount; ?></td>
+                                <td><?php echo $post->ApplicationCount; ?></td>
                                 <td class="action">
+                                    <div class="tooltip">
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $post->JobID; ?>'">
                                         preview
                                     </span>
-                                    <span class="material-symbols-outlined action-btn edit" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/edit_job/<?php echo $post->JobID; ?>'">
-                                        edit_square
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+
+                                    <div class="tooltip">
+                                    <span class="material-symbols-outlined action-btn activate1" onclick="showActivatePostConfirm(<?= $post->JobID ?>)">
+                                        check_circle
                                     </span>
-                                    <span class="material-symbols-outlined action-btn deactivate" onclick=showdeletereviewconfirm(<?= $post->JobID ?>)>
-                                        block
+                                        <span class="tooltiptext activate">Activate</span>
+                                    </div> 
+                                    <div class="tooltip">                                        
+                                    <span class="material-symbols-outlined action-btn deactivate" onclick="showdeletereviewconfirm(<?= $post->JobID ?>)">
+                                        delete
                                     </span>
+                                        <span class="tooltiptext deactivate">Delete</span>
+                                    </div>        
                                 </td>
                             </tr>
                         <?php endforeach; ?>

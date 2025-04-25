@@ -13,7 +13,8 @@
             "Email" => "Company Email",
             "Category" => "Job Type",
             "ActionDate" => "Verified Date",
-            "Status" => "Status"
+            "Status" => "Status",
+            "Actions" => "Actions"
         ];
         ?>
         <div class="tabs-header">
@@ -40,9 +41,13 @@
                                     <td><span class="status inactive">Deactive</span></td>
                                 <?php endif; ?>
                                 <td class="action">
-                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_detail/<?php echo $job->JobID; ?>'">
-                                        preview
-                                    </span>
+                                    <div class="tooltip">
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/job_detail/<?php echo $job->JobID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+                                    
                                 </td>
                             </tr>
                         <?php endforeach; ?>

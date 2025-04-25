@@ -29,23 +29,23 @@
             <p>The number of job postings currently active on UniQuest.</p>
             <h1><?php echo $data['activeJobCount']; ?></h1>
         </div>
-        <div class="dashboard-card" onclick="goToComMng()">
+        <div class="dashboard-card" onclick="goToPopularCom()">
             <i class="fas fa-star icon-yellow"></i>
             <h3>Most Popular Company</h3>
-            <p>The most viewed company by the students.</p>
-            <h1><?php echo "Company 1"; ?></h1>
+            <p>The most reviewed company by the students.</p>
+            <h1><?php echo $data['mostPopularCompany']->CompanyName; ?></h1>
         </div>
-        <div class="dashboard-card" onclick="goToJobMng()">
+        <div class="dashboard-card" onclick="goToPopularJob()">
             <i class="fas fa-fire icon-red"></i>
             <h3>Most Popular Job</h3>
             <p>The most applied job by the students.</p>
-            <h1><?php echo "Job Title 1"; ?></h1>
+            <h1><?php echo $data['mostPopularJob']->Title; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToAnalytics()">
             <i class="fas fa-chart-line icon-green"></i>
             <h3>Revenue of the Month</h3>
             <p>The revenue gained by the premium users this month.</p>
-            <h1><?php echo 25000; ?></h1>
+            <h1>Rs. <?php echo $data['revenueOfMonth']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToUserVer()">
             <i class="fas fa-user-check icon-teal"></i>
@@ -77,12 +77,12 @@
         window.location.href = "<?php echo URLROOT; ?>/admin/students_mng";
     }
 
-    function goToComMng() {
-        window.location.href = "<?php echo URLROOT; ?>/admin/company_mng";
+    function goToPopularCom() {
+        window.location.href = "<?php echo URLROOT; ?>/jobs/companydescription/<?php echo $data['mostPopularCompany']->CompanyID; ?>";
     }
 
-    function goToJobMng() {
-        window.location.href = "<?php echo URLROOT; ?>/admin/ptjobs_mng";
+    function goToPopularJob() {
+        window.location.href = "<?php echo URLROOT; ?>/jobs/jobsdescription/<?php echo $data['mostPopularJob']->JobID; ?>";
     }
 
     function goToAnalytics() {
@@ -90,7 +90,7 @@
     }
 
     function goToComplaintMng() {
-        window.location.href = "<?php echo URLROOT; ?>/admin/job_complaints";
+        window.location.href = "<?php echo URLROOT; ?>/admin/all_complaints?search=pending";
     }
 
     function goToUserVer() {
@@ -99,5 +99,12 @@
 
     function goToJobsVer() {
         window.location.href = "<?php echo URLROOT; ?>/admin/job_ver_pending";
+    }
+
+    function goToComMng() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/company_mng";
+    }
+    function goToJobMng() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/ptjobs_mng";
     }
 </script>

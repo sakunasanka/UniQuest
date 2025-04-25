@@ -40,7 +40,7 @@
 
                     foreach ($descriptionArray as $desc) {
                         if (!empty(trim($desc))) {
-                            echo '<li>' . htmlspecialchars(trim($desc)) . '</li>';
+                            echo '<li>' . (trim($desc)) . '</li>';
                         }
                     }
                 } else {
@@ -59,7 +59,7 @@
 
                     foreach ($qualificationsArray as $qualification) {
                         if (!empty(trim($qualification))) {
-                            echo '<li>' . htmlspecialchars(trim($qualification)) . '</li>';
+                            echo '<li>' . (trim($qualification)) . '</li>';
                         }
                     }
                 } else {
@@ -78,7 +78,7 @@
 
                     foreach ($benefitArray as $benefit) {
                         if (!empty(trim($benefit))) {
-                            echo '<li>' . htmlspecialchars(trim($benefit)) . '</li>';
+                            echo '<li>' . (trim($benefit)) . '</li>';
                         }
                     }
                 } else {
@@ -103,12 +103,12 @@
                         <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
                                 <div class="review-header">
-                                    <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                    <p class="review-text">"<?php echo ($review->Comment ?? ''); ?>"</p>
                                     <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
                                 </div>
 
                                 <div class="review-details">
-                                    <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
+                                    <span class="reviewer-name">- <?php echo ($review->StudentName); ?></span>
                                     <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
                                 </div>
                                 <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company' && $_SESSION['user_id'] == $data['post']->CompanyID)): ?>
@@ -190,7 +190,7 @@
                 <table class="table">
                     <tr><td>Salary:</td><td>Rs.<?php echo $data['post']->SalaryRange; ?> <?php echo $data['post']->SalaryType; ?></td></tr>
                     <tr><td>Category:</td><td><?php echo $data['post']->Category; ?></td></tr>
-                    <tr><td>Applicants:</td><td>26</td></tr>
+                    <tr><td>Applicants:</td><td><?php echo $data['applicationCount']; ?></td></tr>
                 </table>
 
                 <div class="social-media-icons">
@@ -273,7 +273,7 @@ function bookmarkJob(jobId, iconElement) {
         if (xhr.status === 200) {
             iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
         } else {
-            alert('Failed to bookmark the job.');
+            Flash.show('Failed to bookmark company', 'error');
         }
     };
 
@@ -304,4 +304,37 @@ function goToCompanyDescription($companyID) {
 function goToApplications(jobId) {
     window.location.href = "/UniQuest/service_provider/new_applications/" + jobId;
 }
+
+function openChatPopup(userId) {
+    // Set the user ID in the hidden form
+    document.getElementById('selectedUserID').value = userId;
+    // Submit the form
+    document.getElementById('chatForm').submit();
+}
+
+function scrollToBottom() {
+    const messagesContainer = document.querySelector('.messages');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Only open the popup if a userID exists AND it came from a form submission
+    <?php if (isset($data['userID']) && isset($_POST['selectedUserID'])): ?>
+        document.getElementById('chatPopup').classList.remove('hidden');
+        document.getElementById('backgroundOverlay').classList.remove('hidden');
+        scrollToBottom();
+    <?php endif; ?>
+});
+
+//Refresh the page when the popup is closed
+closePopupBtn?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/jobs/jobsdescription/<?php echo $post->JobID; ?>";
+});
+
+backgroundOverlay?.addEventListener("click", function () {
+    window.location.href = "/UniQuest/jobs/jobsdescription/<?php echo $post->JobID; ?>";
+});
+
 </script>

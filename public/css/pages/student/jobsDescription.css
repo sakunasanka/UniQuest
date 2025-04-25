@@ -197,7 +197,7 @@ p{
     margin-top: 20px;
 }
 
-.apply-btn, .contact-btn {
+.apply-btn, .contact-btn, .contact-btn-2 {
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -241,7 +241,7 @@ p{
     color: #fff;
 }
 
-.contact-btn {
+.contact-btn, .contact-btn-2 {
     background-color: #6eb2fc;
     color: #fff;
 }
@@ -250,7 +250,7 @@ p{
     background-color: #137d4a;
 }
 
-.contact-btn:hover {
+.contact-btn:hover, .contact-btn-2:hover {
     background-color: #4aa1fd;
 }
 

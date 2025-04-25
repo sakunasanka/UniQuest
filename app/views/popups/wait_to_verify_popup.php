@@ -4,9 +4,10 @@
         <div class="overlay"></div>
         <div class="content">
             <div class="notification-message">
-                <h2><span class="material-symbols-outlined">check_circle</span> Your request to join UniQuest has been submitted successfully.</h2>
-                <p>Please wait until our team verifies your registration. <span class="material-symbols-outlined">hourglass_top</span></p>
-                <p>Verification may take up to 12 hours. </p>
+                <span class="material-symbols-outlined success-icon">check_circle</span>
+                <h2>Your request to join UniQuest has been submitted successfully.</h2>
+                <p>Please wait until our team verifies your registration.</p>
+                <p> Verification may take up to 12 hours.</p>
             </div>
             <a href="<?php echo URLROOT; ?>" class="go-home-btn">Go to Home Page</a>
         </div>

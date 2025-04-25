@@ -12,5 +12,5 @@ function goToAddReview() {
 }
 
 function goToCompany() {
-    window.location.href = "/UniQuest/student/companydescription"; 
+    window.location.href = "/UniQuest/jobs/companydescription"; 
 }

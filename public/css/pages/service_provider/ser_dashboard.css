@@ -90,6 +90,11 @@ body {
     margin-left: 10px;
 }
 
+.neutral {
+    color: #666; 
+    margin-left: 10px;
+}
+
 .card-subtext {
     color: #888; /* Light grey for subtext */
     font-size: 14px;

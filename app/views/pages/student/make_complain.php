@@ -20,12 +20,12 @@
                     <div class="input-container">
                         <input type="text" id="title" name="title" placeholder="Enter job posting details" value="<?php echo $data['title']; ?>" readonly>
                     </div>
-                    <label for="complaint">Complaint</label>
+                    <label for="complaint">Complaint<span class="req"> *</span></label>
                     <div class="input-container">
                         <textarea id="complaint" name="complaint" rows="5" placeholder="Describe the complaint" required><?php echo $data['complaint']; ?></textarea>
                         <span class="error-msg"><?php echo !empty($data['complaint_err']) ? $data['complaint_err'] : ''; ?></span>
                     </div>
-                    <label for="proof">Proof</label>
+                    <label for="proof">Proof<span class="req"> *</span></label>
                     <div class="input-container">
                         <div class="file-drop-area">
                             <div class="file-content">

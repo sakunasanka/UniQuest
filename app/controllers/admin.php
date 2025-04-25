@@ -55,7 +55,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $students = $this->model->getVerifiedUsersByRole('Student', $page, $limit, $sort, $order, $search);
@@ -90,7 +90,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
             // $page = $_GET['page'] ?? 1;
             // $limit = $_GET['limit'] ?? 2;
@@ -129,7 +129,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $vtMembers = $this->model->getVerifiedUsersByRole('VT-Member', $page, $limit, $sort, $order, $search);
@@ -425,6 +425,7 @@ class Admin extends Controller
                 'note' => trim($_POST['note']) ?? null,
                 'reasonID' => ($_POST['reasonID']) ?? null,
                 'jobID' => ($_POST['jobID']) ?? null,
+                'jobTitle' => ($_POST['jobTitle']) ?? null,
                 'companyID' => ($_POST['companyID']) ?? null,
                 'companyEmail' => trim($_POST['companyEmail']) ?? null,
                 'studentID' => ($_POST['studentID']) ?? null,
@@ -483,19 +484,21 @@ class Admin extends Controller
                     $this->model('jobModel')->deactivateJob($data['jobID']);
                     //todo : get correct reason by type
                     //add job log
-                    //todo : send notification to company about job deactivation
                 }
                 if ($data['deactivate_company'] == 1) {
                     $reason = $this->model('AdminModel')->getReasonByID($data['reasonID'])->Reason; //todo : get correct reason by type
                     $this->model->deactivateAccount($data['companyID']);
                     $this->model('AdminModel')->addUserAccountLog($data['companyID'], 'Deactivate', $data['reasonID']);
+                    notifyComAboutJobDeactivation($data['companyID'], $reason, $data['jobID'], $data['jobTitle']);
                     MailHelper::sendEmailAccountDeactivatedByAdmin($data['companyEmail'], $reason);
                 }
                 if ($data['send_warning'] == 1) {
-                    //todo : send warning notification to company
+                    sendWarningToCompany($data['companyID'], $data['jobID'], $data['jobTitle']);
                 }
                 if ($data['restrict_posting'] == 1) {
                     $this->model('AdminModel')->restrictPosting($data['companyID']);
+                    $notificationDate = date('Y-m-d H:i:s', strtotime('+7 days'));
+                    notifyComAboutCanPostAgain($data['companyID'], $notificationDate);
                 }
                 //set statusAfter to resolved
                 $data['statusAfter'] = 'Resolved';
@@ -522,7 +525,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $ptjobs = $this->model('jobModel')->getVerifiedJobsByCategory('Part-time', $page, $limit, $sort, $order, $search);
@@ -547,7 +550,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $interns = $this->model('jobModel')->getVerifiedJobsByCategory('Internship', $page, $limit, $sort, $order, $search);
@@ -583,15 +586,14 @@ class Admin extends Controller
             $email = null; // Default to null
 
             // 1. Check if the previous message has an email
-            if ($previousMessage && !empty($previousMessage->user_email)) {
+            if (!empty($previousMessage) && !empty($previousMessage->user_email)) {
                 $email = $previousMessage->user_email;
             }
             // 2. If previous message email is null, fetch email from the user table
-            elseif ($this->model->getUserDetails($userID)) {
+            else {
                 $userDetails = $this->model->getUserDetails($userID);
-                $email = $userDetails->email ?? null; // Use email if available, else null
+                $email = $userDetails['Email'] ?? null; // Use email if available, else null
             }
-
             $data = [
                 'userID' => $userID,
                 'email' => $email,
@@ -652,6 +654,19 @@ class Admin extends Controller
         }
     }
 
+    public function markMessageRead() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $messageId = $_POST['message_id'] ?? null;
+
+            if ($messageId) {
+                $this->model('chatModel')->updateReadStatus($messageId);
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Invalid message ID']);
+            }
+        }
+    }
+
     public function user_ver_pending($queryParam = [])
     {
         try {
@@ -659,7 +674,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $users = $this->model->getPendingStudentsAndCompanies($page, $limit, $sort, $order, $search);
@@ -684,7 +699,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'UserID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $users = $this->model->getNotVerifiedStudentsAndCompanies($page, $limit, $sort, $order, $search);
@@ -734,7 +749,7 @@ class Admin extends Controller
             // 2. If previous message email is null, fetch email from the user table
             elseif ($this->model->getUserDetails($userID)) {
                 $userDetails = $this->model->getUserDetails($userID);
-                $email = $userDetails->email ?? null; // Use email if available, else null
+                $email = $userDetails['Email'] ?? null; // Use email if available, else null
             }
 
             $data = [
@@ -839,8 +854,10 @@ class Admin extends Controller
                 MailHelper::sendEmailStuAccountApproved($email, $name);
                 notifyUserApproval($userID);
             }
+            //get reasonID by type
+            $reasonID = $this->model('AdminModel')->getReasonByType('user_approve')->ReasonID;
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', 10);
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', $reasonID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -943,7 +960,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
@@ -985,7 +1002,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getNotApprovedJobs($page, $limit, $sort, $order, $search);
@@ -1014,8 +1031,20 @@ class Admin extends Controller
             $this->model('jobModel')->approveJob($jobID);
             // Send email to user
             MailHelper::sendEmailJobApproved($email, $name, $title, $publishDate);
+
+            // Notify the user about the approval
+            notifyPostApproval($job->CompanyID, $job->Title);
+            notifyPostPublish($job->CompanyID, $jobID, $title, $publishDate);
+
+            // Notify students about the new job
+            $students = $this->model->getStudentIds();
+            foreach ($students as $student) {
+                notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
+            }
+            //get reasonID by type
+            $reasonID = $this->model('AdminModel')->getReasonByType('job_approve')->ReasonID;
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
+            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', $reasonID);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -1079,6 +1108,9 @@ class Admin extends Controller
             $pendingUserCount = $this->model->getCountPendingUsers();
             $pendingJobCount = $this->model('jobModel')->getCountPendingJobs();
             $pendingComplaintCount = $this->model('ComplaintModel')->getCountPendingComplaints();
+            $mostPopularJob = $this->model('M_applicationFields')->getMostAppliedJob();
+            $mostPopularCompany = $this->model('RateAndReviewModel')->getMostReviewedCompany();
+            $revenueOfMonth = $this->model('AdminModel')->getRevenueOfMonth();
 
             $data = [
                 'studentCount' => $studentCount,
@@ -1086,7 +1118,10 @@ class Admin extends Controller
                 'activeJobCount' => $activeJobCount,
                 'pendingUserCount' => $pendingUserCount,
                 'pendingJobCount' => $pendingJobCount,
-                'pendingComplaintCount' => $pendingComplaintCount
+                'pendingComplaintCount' => $pendingComplaintCount,
+                'mostPopularJob' => $mostPopularJob,
+                'mostPopularCompany' => $mostPopularCompany,
+                'revenueOfMonth' => $revenueOfMonth,
             ];
 
             $this->view('pages/admin/adminDash', $data);
@@ -1095,37 +1130,191 @@ class Admin extends Controller
         }
     }
 
+    public function reports()
+    {
+        try {
+            // System Overview Reports
+            $systemHealthMetrics = $this->model('reportModel')->getSystemHealthData();
+            $revenueSubscriptionStats = $this->model('reportModel')->getRevenueData();
+            // $executiveSummary = $this->model('reportModel')->getExecutiveSummaryData();
+
+            // User Activity Reports
+            $userGrowthTrends = $this->model('reportModel')->getUserGrowthData();
+            // $userActivityByRole = $this->model('reportModel')->getUserActivityByRoleData();
+            $verificationTeamPerformance = $this->model('reportModel')->getVerificationPerformanceData();
+
+            // Job Market Reports
+            $jobPostingPerformance = $this->model('reportModel')->getJobPerformanceData();
+            // $jobActivityByCategory = $this->model('reportModel')->getJobActivityByCategoryData();
+            $studentPlacementStats = $this->model('reportModel')->getStudentPlacementData();
+
+            // Complaint & Engagement Reports
+            $complaintResolutionMetrics = $this->model('reportModel')->getComplaintData();
+            $userEngagementBookmarks = $this->model('reportModel')->getBookmarkAnalysisData();
+
+            $data = [
+                // System Overview
+                'systemHealth' => $systemHealthMetrics,
+                'revenueStats' => $revenueSubscriptionStats,
+                // 'executiveSummary' => $executiveSummary,
+
+                // User Analytics
+                'userGrowth' => $userGrowthTrends,
+                // 'userActivityByType' => $userActivityByRole,
+                'verificationPerformance' => $verificationTeamPerformance,
+
+                // Job Analytics
+                'jobPerformance' => $jobPostingPerformance,
+                // 'jobsByCategory' => $jobActivityByCategory,
+                'placementStats' => $studentPlacementStats,
+
+                // Complaint & Engagement
+                'complaintResolution' => $complaintResolutionMetrics,
+                'bookmarkAnalysis' => $userEngagementBookmarks
+            ];
+
+            $this->view('pages/admin/reports', $data);
+        } catch (Exception $e) {
+            // TODO: Implement proper error handling
+            error_log("Reports Error: " . $e->getMessage());
+            $this->view('pages/error', ['message' => 'Failed to generate reports. Please try again later.']);
+        }
+    }
+
+    // View specific report
+    public function viewReport($reportName)
+    {
+        try {
+            $model = $this->model('ReportModel');
+            $method = 'get' . ucfirst($reportName) . 'Data';
+
+            if (!method_exists($model, $method)) {
+                throw new Exception("Report not found");
+            }
+
+            $data = [
+                'reportData' => $model->$method(),
+                'reportName' => ucwords(str_replace('-', ' ', $reportName)),
+                'reportSlug' => $reportName
+            ];
+
+            $this->view('pages/admin/report_view', $data);
+        } catch (Exception $e) {
+            $this->view('pages/error', ['message' => $e->getMessage()]);
+        }
+    }
+
+    // Download report
+    public function downloadReport($reportName)
+    {
+        try {
+            $model = $this->model('ReportModel');
+            $method = 'get' . ucfirst($reportName) . 'Data';
+
+            if (!method_exists($model, $method)) {
+                throw new Exception("Report not found");
+            }
+
+            $data = $model->$method();
+            $filename = $reportName . '_report_' . date('Y-m-d') . '.csv';
+
+            $this->generateCSV($data, $filename);
+        } catch (Exception $e) {
+            header('Content-Type: text/plain');
+            echo "Error generating report: " . $e->getMessage();
+        }
+    }
+
+    private function generateCSV($data, $filename)
+    {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $output = fopen('php://output', 'w');
+
+        // Write headers
+        if (!empty($data)) {
+            fputcsv($output, array_keys((array)$data[0]));
+        }
+
+        // Write data
+        foreach ($data as $row) {
+            fputcsv($output, (array)$row);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+   public function downloadPdf($reportSlug)
+{
+    try {
+        // Load report data
+        $model = $this->model('ReportModel');
+        $method = 'get' . ucfirst($reportSlug) . 'Data';
+
+        if (!method_exists($model, $method)) {
+            throw new Exception("Report not found");
+        }
+
+        $reportData = $model->$method();
+        $reportName = ucwords(str_replace('-', ' ', $reportSlug));
+
+        // Render HTML manually
+        $data = [
+            'reportName' => $reportName,
+            'reportData' => $reportData
+        ];
+
+        // Render the view into a string
+        ob_start();
+        extract($data);
+        require TEMPLATEROOT . '/pdf/report_view.php'; // Adjust the path as necessary
+        $html = ob_get_clean();
+
+        // Call the helper
+        require_once APPROOT . '/helpers/PDFHelper.php'; // Ensure this is loaded
+        PDFHelper::generate($html, "{$reportName}_Report_" . date('Y-m-d'));
+
+    } catch (Exception $e) {
+        error_log("PDF Generation Error: " . $e->getMessage());
+        redirect('admin/reports');
+    }
+}
+
+
     public function jobPost()
     {
         $this->view('pages/admin/jobPost');
     }
     // Add this method to your Admin controller class
 
-public function analytics() {
-    try {
-        $months = 5; // Number of months to show in charts
-        
-        $registrationStats = $this->model('AdminModel')->getRegistrationStats($months);
-        $jobStats = $this->model('AdminModel')->getJobListingStats($months);
-        $revenueStats = $this->model('AdminModel')->getRevenueStats($months);
-        $loginStats = $this->model('AdminModel')->getLoginStats();
-        $activeCounts = $this->model('AdminModel')->getActiveCounts();
-        
-        $data = [
-            'registrationStats' => $registrationStats,
-            'jobStats' => $jobStats,
-            'revenueStats' => $revenueStats,
-            'loginStats' => $loginStats,
-            'activeCounts' => $activeCounts
-        ];
-        
-        $this->view('pages/admin/analytics', $data);
-    } catch (Exception $e) {
-        // Handle error appropriately
-        error_log("Error in analytics: " . $e->getMessage());
-        $this->view('pages/admin/analytics', []);
+    public function analytics()
+    {
+        try {
+            $months = 5; // Number of months to show in charts
+
+            $registrationStats = $this->model('AdminModel')->getRegistrationStats($months);
+            $jobStats = $this->model('AdminModel')->getJobListingStats($months);
+            $revenueStats = $this->model('AdminModel')->getRevenueStats($months);
+            $loginStats = $this->model('AdminModel')->getLoginStats();
+            $activeCounts = $this->model('AdminModel')->getActiveCounts();
+
+            $data = [
+                'registrationStats' => $registrationStats,
+                'jobStats' => $jobStats,
+                'revenueStats' => $revenueStats,
+                'loginStats' => $loginStats,
+                'activeCounts' => $activeCounts
+            ];
+
+            $this->view('pages/admin/analytics', $data);
+        } catch (Exception $e) {
+            // Handle error appropriately
+            error_log("Error in analytics: " . $e->getMessage());
+            $this->view('pages/admin/analytics', []);
+        }
     }
-}
 
     public function notifications()
     {
@@ -1160,7 +1349,7 @@ public function analytics() {
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
-        
+
         // Fetch all student messages
         $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
@@ -1168,10 +1357,10 @@ public function analytics() {
         $data = [
             'messages_stu' => $messages_stu,
         ];
-        
+
         // Check if we need to load chat data only if userID is valid AND form was submitted
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
+
         // If we should load chat data, add the additional info
         if ($loadChatData) {
             // Ensure session user ID exists before accessing
@@ -1192,12 +1381,12 @@ public function analytics() {
     }
 
     public function messages_com($userID = null)
-    { 
+    {
         // Check if a user ID was submitted via POST
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
-        
+
         // Fetch all student messages
         $messages_com = $this->model('ContactModel')->getMessagesCom();
 
@@ -1205,10 +1394,10 @@ public function analytics() {
         $data = [
             'messages_com' => $messages_com,
         ];
-        
+
         // Check if we need to load chat data only if userID is valid AND form was submitted
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
+
         // If we should load chat data, add the additional info
         if ($loadChatData) {
             // Ensure session user ID exists before accessing
@@ -1224,7 +1413,7 @@ public function analytics() {
             $data['messageInput'] = '';
             $data['messageInput_err'] = '';
         }
-        
+
         $this->view('pages/admin/messages_com', $data);
     }
 
@@ -1235,7 +1424,7 @@ public function analytics() {
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
-        
+
         // Fetch all student messages
         $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
@@ -1243,10 +1432,10 @@ public function analytics() {
         $data = [
             'messages_ver' => $messages_ver,
         ];
-        
+
         // Check if we need to load chat data only if userID is valid AND form was submitted
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
-        
+
         // If we should load chat data, add the additional info
         if ($loadChatData) {
             // Ensure session user ID exists before accessing
@@ -1342,6 +1531,8 @@ public function analytics() {
                 'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data'],
                 'job_activate' => $this->model('AdminModel')->getReasonsByType('job_activate')['data'],
                 'job_deactivate' => $this->model('AdminModel')->getReasonsByType('job_deactivate')['data'],
+                'complaint_rejected' => $this->model('AdminModel')->getReasonsByType('complaint_rejected')['data'],
+                'complaint_resolved' => $this->model('AdminModel')->getReasonsByType('complaint_resolved')['data'],
                 'industries' => $this->model('AdminModel')->getIndustries()['data']
             ];
             $this->view('pages/admin/app_settings', $data);
@@ -1607,14 +1798,16 @@ public function analytics() {
         exit;
     }
 
-    public function markAllRead() {
+    public function markAllRead()
+    {
 
         $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
-        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/notifications';
+        $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/admin/dashboard';
         Redirect::to($previousURL);
     }
 
-    public function markAsRead($notificationId) {
+    public function markAsRead($notificationId)
+    {
         if ($this->model('NotificationModel')->markAsRead($notificationId)) {
             $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
             header('Content-Type: application/json');
@@ -1626,8 +1819,23 @@ public function analytics() {
         exit;
     }
 
-    public function getRecentNotifications() {
+    public function getRecentNotifications()
+    {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
+        $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'notifications' => $notifications,
+            'unreadCount' => $unreadCount
+        ]);
+        exit;
+    }
+
+    public function getAllNotifications() {
+
+        $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
         
         header('Content-Type: application/json');

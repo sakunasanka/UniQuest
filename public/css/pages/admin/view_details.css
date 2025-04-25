@@ -115,17 +115,18 @@ body {
     width: 100%;
     gap: 5px;
     margin-bottom: 10px;
-    padding: 0 10px;
+    /* padding: 0 5px; */
 }
 
 .detail-row .col {
-    padding: 0 10px;
+    padding: 0 5px;
     display: inline-block;
 }
 
 .detail-row span {
     font-size: 16px;
     display: inline-block;
+    padding: 0 5px;
 }
 
 .detail-row span a {

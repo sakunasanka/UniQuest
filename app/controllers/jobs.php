@@ -432,6 +432,8 @@ class Jobs extends Controller
 
     public function jobsDescription($id)
     {
+        //pass the every user in to the is_viewd table that is logged in to the page
+        
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
         } else {
@@ -444,8 +446,10 @@ class Jobs extends Controller
 
         // Get bookmarked jobs for the user
         $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $this->model('jobModel')->addView($id, $posts->CompanyID);
         $reviews = $this->model('RateAndReviewModel')->getReviewsByCompanyId($posts->CompanyID);
         $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
+        $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($id);
 
         if ($posts->Category == 'Internship') {
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
@@ -476,6 +480,7 @@ class Jobs extends Controller
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
                 'displayRating' => $displayRating,
+                'applicationCount' => $applicationCount,
                 'reviews' => $reviews,
                 'rating' => $_POST['rating'] ?? '',
                 'comment' => trim($_POST['comment'] ?? ''),
@@ -526,6 +531,7 @@ class Jobs extends Controller
                 'bookmarkedJobs' => $bookmarkedJobs,
                 'bookmarkedJobIds' => $bookmarkedJobIds,
                 'displayRating' => $displayRating,
+                'applicationCount' => $applicationCount,
                 'reviews' => $reviews,
                 'rating' => $existingReview ? $existingReview->Rating : '',
                 'comment' => $existingReview ? $existingReview->Comment : '',
@@ -539,21 +545,22 @@ class Jobs extends Controller
             if (isset($_SESSION['user_id'])) {
                 $data['sender_id'] = $_SESSION['user_id'];
                 $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID);
+
             }
 
             $this->view('pages/student/jobsDescription', $data);
         }
     }
 
-    public function sendMessage($id)
+    public function sendMessage($companyId)
     {
 
-        $posts = $this->model('M_jobpost')->getpostbyid($id);
+        $post = $this->model('M_jobpost')->getpostbycompanyid($companyId);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $posts->CompanyID);
+            $previousMessage = $this->model('chatModel')->getLastMessageBetween($_SESSION['user_id'], $companyId);
             $lastTopic = $previousMessage ? $previousMessage->topic : 'General Information';
             $submittedTopic = trim($_POST['topic'] ?? '');
 
@@ -561,17 +568,17 @@ class Jobs extends Controller
             $email = null;
             if ($previousMessage && !empty($previousMessage->user_email)) {
                 $email = $previousMessage->user_email;
-            } elseif ($this->model('userModel')->getUserDetails($posts->CompanyID)) {
-                $userDetails = $this->model('userModel')->getUserDetails($posts->CompanyID);
-                $email = $userDetails->email ?? null;
+            } elseif ($this->model('userModel')->getUserDetails($companyId)) {
+                $userDetails = $this->model('userModel')->getUserDetails($companyId);
+                $email = $userDetails['Email'] ?? null;
             }
             $data = [
                 'email' => $email,
-                'post' => $posts,
-                'user' => $this->model('userModel')->getUserDetails($posts->CompanyID),
+                'post' => $post,
+                'user' => $this->model('userModel')->getUserDetails($companyId),
                 'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $posts->CompanyID,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID),
+                'receiver_id' => $companyId,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $companyId),
                 'messageInput' => trim($_POST['messageInput'] ?? ''),
                 'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic,
                 'messageInput_err' => ''
@@ -584,8 +591,12 @@ class Jobs extends Controller
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
-                    Redirect::to(URLROOT . '/jobs/jobsdescription/' . $id);
+                    notifyMessageToCompanyFromStudent($data['receiver_id'], $data['messageInput'], $data['sender_id'], $_SESSION['user_name']);
+                    $_SESSION['show_contact_us_success'] = true;
+                    $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
+                    Redirect::to($previousURL);
                 } else {
+                    $_SESSION['show_contact_us_error'] = true;
                     die('Something went wrong while sending the message.');
                 }
             } else {
@@ -595,11 +606,11 @@ class Jobs extends Controller
         } else {
             $data = [
                 'email' => '',
-                'post' => $posts,
-                'user' => $this->model('userModel')->getUserDetails($posts->CompanyID),
+                'post' => $post,
+                'user' => $this->model('userModel')->getUserDetails($companyId),
                 'sender_id' => $_SESSION['user_id'],
-                'receiver_id' => $posts->CompanyID,
-                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->CompanyID),
+                'receiver_id' => $companyId,
+                'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $companyId),
                 'messageInput' => '',
                 'messageInput_err' => '',
                 'topic' => '',
@@ -687,18 +698,28 @@ class Jobs extends Controller
         } else {
             $data = [
                 'post' => $posts,
+                'user' => $this->model('userModel')->getUserDetails($posts->UserID),
+                'receiver_id' => $posts->UserID,
+                'messageInput' => '',
+                'messageInput_err' => '',
                 'jobs' => $jobs,
                 'bookmarkedCompanies' => $bookmarkedCompanies,
                 'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
                 'reviews' => $reviews,
                 'rating' => $existingReview ? $existingReview->Rating : '',
                 'comment' => $existingReview ? $existingReview->Comment : '',
-                'user_id' => '',
+                'user_id' => $userId,
                 'company_id' => $id,
                 'rating_err' => '',
                 'comment_err' => '',
                 'existingReview' => $existingReview
             ];
+
+            if (isset($_SESSION['user_id'])) {
+                $data['sender_id'] = $_SESSION['user_id'];
+                $data['messages'] = $this->model('chatModel')->getMessages($_SESSION['user_id'], $posts->UserID);
+
+            }
 
             $this->view('pages/student/companyDescription', $data);
         }

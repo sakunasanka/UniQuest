@@ -1,86 +1,90 @@
-.popup .overlay{
+/* Overlay */
+.popup .overlay {
     position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.7);
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
     z-index: 101;
     display: none;
-    
 }
 
-.popup .content{
+/* Content box */
+.popup .content {
     position: fixed;
-    top: 25%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: #fff;
-    width: 100vh;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: #ffffff;
+    width: 90%;
+    max-width: 600px;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     z-index: 102;
-    text-align: left;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    border-radius: 10px;
-    box-sizing: border-box;
-    margin: 0 auto;
-}
-
-.popup.active .overlay{
-    display:flex ;
-    backdrop-filter: blur(10px);
-}
-
-.popup.active .content{
+    opacity: 0;
     transition: all 300ms ease-in-out;
+}
+
+/* Active state */
+.popup.active .overlay {
+    display: block;
+    backdrop-filter: blur(5px);
+}
+
+.popup.active .content {
     transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+/* Message styling */
+.notification-message {
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 48px;
+    color: #299b63;
+    margin-bottom: 10px;
+    display: block;
 }
 
 .notification-message h2 {
-    color: #299b63;
-    font-size: 24px;
+    font-size: 22px;
+    color: #2e2e2e;
+    margin: 10px 0 15px;
+}
+
+.notification-message p {
+    font-size: 16px;
+    color: #555;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.notification-message h2 .material-icons {
-    font-size: 30px;
-    margin-right: 8px;
-    color: #299b63;
-}
-
-.notification-message p {
-    color: #555;
-    font-size: 16px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.notification-message p .material-icons {
+.notification-message p .material-symbols-outlined {
     font-size: 20px;
-    margin-left: 8px;
     color: #299b63;
+    margin-left: 8px;
 }
 
-/* Button to Go to Home Page */
+/* Button */
 .go-home-btn {
     background-color: #299b63;
-    color: #fff;
-    padding: 12px 20px;
+    color: white;
+    padding: 12px 24px;
     font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    border-radius: 6px;
+    margin: 20px auto 0;
     display: block;
-    margin: 20px auto 0; 
+    max-width: 220px;
     text-align: center;
-    max-width: 200px;
+    transition: background-color 0.3s ease;
 }
+
 
 .go-home-btn:hover {
     background-color: #137d4a;

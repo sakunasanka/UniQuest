@@ -18,7 +18,9 @@
             'user_reject' => 'User Reject',
             'job_activate' => 'Job Activate',
             'job_deactivate' => 'Job Deactivate',
-            'job_reject' => 'Job Reject'
+            'job_reject' => 'Job Reject',
+            'complaint_resolved' => 'Complaint Resolved',
+            'complaint_rejected' => 'Complaint Rejected'
         ];
 
         // Get the selected table type from GET parameter or default to first one
@@ -55,6 +57,16 @@
                 'Actions' => 'Actions'
             ],
             'job_reject' => [
+                'ReasonName' => 'Reason Name',
+                'Reason' => 'Reason',
+                'Actions' => 'Actions'
+            ],
+            'complaint_resolved' => [
+                'ReasonName' => 'Reason Name',
+                'Reason' => 'Reason',
+                'Actions' => 'Actions'
+            ],
+            'complaint_rejected' => [
                 'ReasonName' => 'Reason Name',
                 'Reason' => 'Reason',
                 'Actions' => 'Actions'

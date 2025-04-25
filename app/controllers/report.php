@@ -26,8 +26,7 @@ class Report extends Controller
     // Premium check
     if ($_SESSION['user_role'] == 'Company') {
         $companyInfo = $this->model('companyModel')->getCompanyInfo();
-        if (!in_array($companyInfo->subscription_plan, ['professional', 'enterprise']) || 
-            $companyInfo->subscription_status != 'active') {
+        if (!in_array($companyInfo->subscription_plan, ['professional', 'enterprise'])) {
             $_SESSION['show_report_error'] = true;
             Redirect::to(URLROOT . '/service_provider/dashboard');
             return;
@@ -35,7 +34,7 @@ class Report extends Controller
     }
 
     // Fetch data
-    $reportData = $this->reportModel->getJobPerformanceData($jobId);
+    $reportData = $this->reportModel->getJobPerformanceDataComp($jobId);
 
     // Validate report data
     if (!$reportData || empty($reportData['job'])) {
@@ -58,7 +57,7 @@ class Report extends Controller
 public function generatePdf($jobId)
 {
     // Get report data
-    $reportData = $this->reportModel->getJobPerformanceData($jobId);
+    $reportData = $this->reportModel->getJobPerformanceDataComp($jobId);
 
     if (!$reportData) {
         http_response_code(404);

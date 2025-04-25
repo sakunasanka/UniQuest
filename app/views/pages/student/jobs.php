@@ -1,18 +1,39 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<?php if (isset($_GET['pending'])): ?>
+    <?php if (isset($_SESSION['load_not_approved'])): ?>
+    <div id="notApprovedPopup" class="popup-overlay" style="display: none;">
+        <?php require APPROOT . '/views/popups/not_approved.php'; ?>
+    </div>
+
+    <?php elseif(isset($_SESSION['load_pending'])): ?> 
     <div id="pendingVerificationPopup" class="popup-overlay" style="display: none;">
         <?php require APPROOT . '/views/popups/wait_to_verify_popup.php'; ?>
     </div>
 
+    <?php elseif(isset($_SESSION['load_deactivate'])): ?> 
+    <div id="deacticatePopup" class="popup-overlay" style="display: none;">
+        <?php require APPROOT . '/views/popups/deactivate_popup.php'; ?>
+    </div>    
+
+    <?php unset($_SESSION['load_not_approved'])?>
+    <?php unset($_SESSION['load_pending'])?>
+    <?php unset($_SESSION['load_deactivate'])?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Get the popup element
-            const popup = document.getElementById('pendingVerificationPopup');
+            const popup1 = document.getElementById('notApprovedPopup');
+            const popup2 = document.getElementById('pendingVerificationPopup');
+            const popup3 = document.getElementById('deacticatePopup');
 
             // Show the popup
-            if (popup) {
-                popup.style.display = 'block';
+            if (popup1) {
+                popup1.style.display = 'block';
+            }
+            if (popup2) {
+                popup2.style.display = 'block';
+            }
+            if (popup3) {
+                popup3.style.display = 'block';
             }
         });
     </script>
@@ -47,7 +68,7 @@
 
             <?php $columns = [
                 'jobs_create_at' => 'Newest',
-                'Rating' => 'Highest Rating',
+                // 'Rating' => 'Highest Rating',
                 'SalaryRange' => 'Highest Salary'
             ]; ?>
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
@@ -190,7 +211,7 @@
             if (xhr.status === 200) {
                 iconElement.classList.toggle('bookmarked'); // Toggle the bookmark icon
             } else {
-                alert('Failed to bookmark the job.');
+                Flash.show('Failed to bookmark company', 'error');
             }
         };
 
