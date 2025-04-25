@@ -1407,6 +1407,7 @@ class Service_provider extends Controller
                     $new_user = $this->model->getUserDetails($new_user_id);
                     if($new_user['Role'] == 'Student') {
                         $this-> model('chatModel')->updateReadStatus($messageId);
+                        notifyMessageToStudentFromCompany($data['receiver_id'], $data['messageInput'], $data['sender_id'], $_SESSION['user_name']);
                     }
                         
                     // flash('message_sent', 'Message sent successfully');
