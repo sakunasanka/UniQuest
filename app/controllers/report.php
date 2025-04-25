@@ -104,26 +104,82 @@ class Report extends Controller
 
     public function generateJobReportPdf($jobId)
     {
-        // Check if user is authorized and has premium access
-        // (similar checks as in jobReport method)
+        try {
+            // 1. Input Validation
+            if (!isset($jobId) || !is_numeric($jobId) || $jobId <= 0) {
+                throw new InvalidArgumentException("Invalid Job ID");
+            }
 
-        $reportData = $this->model->getJobPerformanceDataComp($jobId);
+            // 2. Authorization Check
+            if (!isset($_SESSION['user_role'])) {
+                throw new RuntimeException("Unauthorized access");
+            }
 
-        if (!$reportData) {
-            http_response_code(404);
-            die('Report data not found');
+            // 3. Premium Feature Check
+            if ($_SESSION['user_role'] === 'Company') {
+                $companyInfo = $this->model('companyModel')->getCompanyInfo();
+
+                if (!$companyInfo) {
+                    throw new RuntimeException("Company information not found");
+                }
+
+                $allowedPlans = ['professional', 'enterprise'];
+                if (!in_array($companyInfo->subscription_plan, $allowedPlans)) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'Job reports are available in Professional and Enterprise plans only']);
+                    exit;
+                }
+            }
+
+            // 4. Data Fetching
+            $reportData = $this->model->getJobPerformanceDataComp($jobId);
+
+            if (!$reportData || empty($reportData['job'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'No performance data available for this job']);
+                exit;
+            }
+
+            // Log that we're generating PDF
+            error_log("Generating PDF for Job ID: " . $jobId);
+
+            // 5. Generate PDF
+            $html = $this->preparePdfHtml($reportData);
+            $filename = "job_report_" . $jobId . "_" . date('Y-m-d');
+
+            // Use PDFHelper to generate the PDF
+            PDFHelper::generate($html, $filename, true);
+        } catch (InvalidArgumentException $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            exit;
+        } catch (RuntimeException $e) {
+            error_log("Job Report PDF Error: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'An error occurred while generating the PDF report']);
+            exit;
+        } catch (Exception $e) {
+            error_log("Unexpected Error in PDF Generation: " . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'An unexpected error occurred']);
+            exit;
         }
-
-        $html = $this->preparePdfHtml($reportData);
-
-        // Use your PDFHelper to generate the PDF
-        PDFHelper::generate($html, "job_report_{$jobId}", true);
     }
 
     private function preparePdfHtml($reportData)
     {
+        // Start output buffering
         ob_start();
-        include TEMPLATEROOT . '/pdf/job_report_pdf.php'; // Path to your PDF template
-        return ob_get_clean();
+
+        // Store the report data in a variable accessible in the template
+        // This allows the template to access data as $reportData instead of $data
+
+        // Include the template
+        require_once TEMPLATEROOT . '/pdf/job_report_pdf.php';
+
+        // Get the buffered content and clean the buffer
+        $html = ob_get_clean();
+
+        return $html;
     }
 }
