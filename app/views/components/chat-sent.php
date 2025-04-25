@@ -33,7 +33,7 @@
                     endif; ?>
                 <div class="message-container">
                     <div class="message1 <?php echo $message->sender_id == $_SESSION['user_id'] ? 'sent' : 'received'; ?>">
-                        <?php echo htmlspecialchars($message->message); ?>
+                        <?php echo ($message->message); ?>
                         <span class="message-time"> <?php echo $messageTime; ?> </span>
                     </div>
                 </div>
@@ -56,10 +56,10 @@
             <input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $data['user']['UserID']; ?>" />
             
             <!-- Ensure topic and email is always set -->
-            <input type="hidden" name="topic" id="topic" value="<?php echo htmlspecialchars($data['topic'] ?? 'General Information'); ?>" />
-            <input type="hidden" name="email" id="email" value="<?php echo htmlspecialchars($data['email'] ?? null); ?>" />
+            <input type="hidden" name="topic" id="topic" value="<?php echo ($data['topic'] ?? 'General Information'); ?>" />
+            <input type="hidden" name="email" id="email" value="<?php echo ($data['email'] ?? null); ?>" />
 
-            <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo htmlspecialchars($data['message_details'] ?? ''); ?>" />
+            <input type="text" name="messageInput" id="messageInput" placeholder="Type a message" required value="<?php echo ($data['message_details'] ?? ''); ?>" />
             <button type="submit" class="send-btn">Send</button>
         </form>
     </div>

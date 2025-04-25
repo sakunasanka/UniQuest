@@ -31,12 +31,12 @@
                 <div class="detail-row">
                     <strong>First Name </strong>
                     <span class="col">:</span>
-                    <span><?php echo htmlspecialchars($data['user']['FirstName']); ?></span>
+                    <span><?php echo ($data['user']['FirstName']); ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>Last Name </strong>
                     <span class="col">:</span>
-                    <span><?php echo htmlspecialchars($data['user']['LastName']); ?></span>
+                    <span><?php echo ($data['user']['LastName']); ?></span>
                 </div>
                 <div class="detail-row">
                     <strong>DOB </strong>
