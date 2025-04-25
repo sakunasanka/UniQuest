@@ -8,12 +8,12 @@
             <input type="hidden" id="ID" value="">
             <input type="hidden" id="category" value="">
             <input type="hidden" id="email" value="">
-            <div class="btn-row">
-                <select id="deact-popup-reasons" class="deactreason" name="reason" required>
-                    <option value="" disabled selected>Select Reason</option>
-                </select>
-            </div>
             <div class="btn-container">
+                <div class="btn-row">
+                    <select id="deact-popup-reasons" class="deactreason" name="reason" required>
+                        <option value="" disabled selected>Select Reason</option>
+                    </select>
+                </div>
                 <button class="no-btn" onclick="closePopup('deact-popup')">No</button>
                 <button class="yes-btn-red" onclick="confirmDeactivationAcc()">Yes</button>
             </div>
@@ -30,12 +30,12 @@
             <input type="hidden" id="ID" value="">
             <input type="hidden" id="category" value="">
             <input type="hidden" id="email" value="">
-            <div class="btn-row">
-                <select id="act-popup-reasons" class="actreason" name="reason" required>
-                    <option value="" disabled selected>Select Reason</option>
-                </select>
-            </div>
             <div class="btn-container">
+                <div class="btn-row">
+                    <select id="act-popup-reasons" class="actreason" name="reason" required>
+                        <option value="" disabled selected>Select Reason</option>
+                    </select>
+                </div>
                 <button class="no-btn" onclick="closePopup('act-popup')">No</button>
                 <button class="yes-btn" onclick="confirmActivationAcc()">Yes</button>
             </div>
