@@ -107,6 +107,24 @@ backgroundOverlay?.addEventListener("click", function () {
 
 function openChatPopup(userId, messageId = null) {
 console.log("User ID:", userId);
+    if (messageId) {
+        fetch("<?php echo URLROOT; ?>/service_provider/markMessageRead", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `message_id=${messageId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Message marked as read");
+            }
+        })
+        .catch(error => {
+            console.error("Error updating read status:", error);
+        });
+    }
 
     // Set the user ID in the hidden form
     document.getElementById('selectedUserID').value = userId;
