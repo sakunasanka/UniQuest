@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/stu_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/contact_form.css">
 
 <div class="main-container">
@@ -8,24 +8,24 @@
         <div class="container">
             <div class="contact-left">
                 <h1>Contact Us</h1>
-                <form>
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" placeholder="Enter Your Name" required>
-
+                <form id="contactForm" action="<?php echo URLROOT; ?>/student/contact_admin" method="POST">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" placeholder="Enter Your Email" required>
-                    <span class="error-message" id="emailError"></span>
+                    <input type="text" id="email" name="email" placeholder="Enter Your Email" value="<?php echo $data['email']; ?>" readonly>
+                    <span class="error-message"><?php echo $data['email_err']; ?></span>
 
                     <label for="topic">Topic:</label>
-                    <select id="topic" required>
-                        <option value="job">Job</option>
-                        <option value="internship">Internship</option>
-                        <option value="general">General Information</option>
+                    <select id="topic" name="topic" required>
+                        <option value="job" <?php echo ($data['topic'] == 'job') ? 'selected' : ''; ?>>Job</option>
+                        <option value="internship" <?php echo ($data['topic'] == 'internship') ? 'selected' : ''; ?>>Internship</option>
+                        <option value="general information" <?php echo ($data['topic'] == 'general information') ? 'selected' : ''; ?>>General Information</option>
                     </select>
 
-                    <label for="message">Message:</label>
-                    <textarea id="message" placeholder="Message" required></textarea>
+                    <span class="error-message"><?php echo $data['topic_err']; ?></span>
 
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" placeholder="Message" required><?php echo $data['message']; ?></textarea>
+                    <span class="error-message"><?php echo $data['message_err']; ?></span>
+                    
                     <button type="submit">Send</button>
                 </form>
             </div>
@@ -44,20 +44,19 @@ document.getElementById("contactForm").addEventListener("submit", function(event
     let isValid = true;
 
     // Email validation
-    const email = document.getElementById("email").value;
-    const emailError = document.getElementById("emailError");
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
-    if (!emailPattern.test(email)) {
-        emailError.textContent = "Please enter a valid email address.";
-        emailError.style.display = "block";
-        isValid = false;
-    } else {
-        emailError.style.display = "none";
-    }
+    //const email = document.getElementById("email").value;
+    //const emailError = document.getElementById("emailError");
+    //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email regex
+    //if (!emailPattern.test(email)) {
+    //  emailError.textContent = "Please enter a valid email address.";
+    //  emailError.style.display = "block";
+    //isValid = false;
+    //} else {
+    //   emailError.style.display = "none";
+    // }
 
     // Submit the form if all fields are valid
     if (isValid) {
-        alert("Form submitted successfully!");
         this.submit();
     }
 });

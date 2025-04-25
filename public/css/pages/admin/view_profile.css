@@ -56,11 +56,13 @@ h3 {
     color: #0076cb;
     font-size: 16px;
     transition: color 0.3s;
+    text-decoration: none;
 }
 
 .profile-section ul li a:hover {
     color: #0056a8;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Info Section */
@@ -124,6 +126,22 @@ label {
     align-items: center;
     gap: 10px;
     padding: 10px 0; /* Add some padding for better spacing */
+}
+
+.btn-row .status-deact{
+    color: #ff4d4d;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ff4d4d50;
+}
+
+.btn-row .status-act{
+    color: #32a852;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #32a85250;
 }
 
 .btn-row button {

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/register/register.css">
+    <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
 </head>
 
 <body>
@@ -15,13 +16,13 @@
         <button class="back" onclick="window.history.back()">
             <span class="material-symbols-outlined">arrow_back</span>
         </button>
-        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/student';">
+        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/sendStuVeriEmail';">
             <div class="image-section">
                 <img src="<?php echo URLROOT; ?>/images/college students-amico.png" alt="Student Registration">
                 <h1>Student</h1>
             </div>
         </button>
-        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/company';">
+        <button class="reg-btn" onclick="window.location.href='<?php echo URLROOT; ?>/register/sendCompVeriEmail';">
             <div class="image-section">
                 <img src="<?php echo URLROOT; ?>/images/service.png" alt="Student Registration">
                 <h1>Company</h1>

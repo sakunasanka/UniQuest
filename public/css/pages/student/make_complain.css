@@ -17,7 +17,7 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     max-width: 1000px;
     gap: 20px;
-    margin: 5% auto;
+    margin: auto;
     justify-content: center;
     align-items: center;
 }
@@ -34,8 +34,13 @@ h2 {
 
 p {
     color: #555;
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 20px;
+}
+
+.req {
+    color: red;
+    font-size: 1.2rem;
 }
 
 label {
@@ -48,7 +53,7 @@ input[type="text"],
 textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
+    margin: 0px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
@@ -58,14 +63,21 @@ textarea {
     resize: vertical;
 }
 
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #32a852;
+}
+
 .complaint-submit-btn {
     background-color: #299b63;
     color: #fff;
     border: none;
     padding: 10px 15px;
-    border-radius: 5px;
+    margin-top: 10px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
     transition: background-color 0.3s ease;
     width: 100%;
@@ -86,7 +98,95 @@ textarea {
 .complaint-image-container img {
     max-width: 100%;
     height: auto;
-    max-height: 300px;
+    max-height: 350px;
+}
+
+.input-container {
+    padding: 0px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.input-container input[type="file"] {
+    font-size: 1rem;
+    padding: 8px 15px;
+}
+
+.input-container span {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.input-container .error-msg {
+    color: red;
+    font-size: 1rem;
+    padding-left: 0px;
+}
+
+.file-drop-area {
+    background-color: #fff;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    overflow: hidden;
+    margin: 0 auto;
+    border-radius: 10px;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #ddd;
+    transition: border-color 0.3s ease-in;
+    gap: 50px;
+}
+
+.file-drop-area:hover {
+    border-color: #32a852;
+}
+
+.file-drop-area input[type="file"] {
+    display: none;
+}
+
+.browse-btn {
+    background-color: #32a852;
+    color: white;
+    border: none;
+    padding: 8px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.browse-btn:hover {
+    background-color: #038a27;
+}
+
+.file-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.file-content span {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.file-name {
+    display: inline-block;
+    max-width: 160px; /* Adjust max width as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
 }
 
 #company{

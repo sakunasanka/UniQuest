@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/adm_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/student/deactivate_account.php'; ?>
 <?php require APPROOT . '/views/popups/student/changePassword.php'; ?>
 
@@ -17,12 +17,11 @@
                     <img
                         src="<?php echo empty($data['user']['ProfilePic'])
                                     ? URLROOT . '/images/profile_pic_preview.png'
-                                    : UPLOADROOT . '/profile_pictures/vT-Member/' . $data['user']['ProfilePic']; ?>"
+                                    : UPLOADROOT . '/profile_pictures/admin/' . $data['user']['ProfilePic']; ?>"
                         alt="Profile Picture">
                 </div>
                 <ul>
                     <li><a onclick="ToggleChangePasswordForm()">Change Password</a></li>
-                    <li><a onclick="showdeleteaccountconfirm()">Deactivate Account</a></li>
                 </ul>
             </div>
             <div class="info-section">

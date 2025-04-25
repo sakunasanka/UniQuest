@@ -31,7 +31,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    gap: 20px; 
+    gap: 10px; 
 }
 
 .total-count {
@@ -42,11 +42,12 @@ body {
 .add-btn-text {
     margin-left: 10px;
     font-size: medium;
+    white-space: nowrap;
 }
 
 .add-btn {
     background-color: #32a852;
-    padding: 10px 20px;
+    padding: 10px 15px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -69,22 +70,45 @@ table {
     margin-top: 20px;
 }
 
+/* table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+} */
+
 table th {
     padding: 15px;
     text-align: center;
     border-bottom: 2px solid #e2e2e2;
     background-color: #f5f5f5;
-    cursor: pointer;
+}
+
+table th.no-sort {
+    cursor: default;
 }
 
 tbody tr:hover {
     background-color: #f5f5f5;
 }
 
-table td {
+table td:not(.action) {
     padding: 12px 10px;
     text-align: center;
     border-bottom: 1px solid #e7e7e7;
+    /* Truncation styles */
+    max-width: 250px; /* Set a fixed or max width */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+table td.no-data {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #999999;
 }
 
 .action {
@@ -110,6 +134,13 @@ table td {
     border-radius: 5px;
     padding: 5px 10px;
     background-color: #E9992F50;
+}
+
+.status.in-review {
+    color: #0045FF;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #0045FF50;
 }
 
 .action-btn {
@@ -139,6 +170,10 @@ table td {
     margin-left: 5px;
 }
 
+.action-btn.activate1 {
+    color: #52CA20;
+}
+
 .hidden {
     display: none;
 }
@@ -161,4 +196,52 @@ table td {
     font-size: 22px;
     color: #999999;
     font-weight: 500;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltiptext {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 200px;
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 9999;
+    transition: opacity 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    user-select: none;
+    pointer-events: none;
+}
+
+.tooltiptext.view {
+    color: #0045FF;
+}
+
+.tooltiptext.edit {
+    color: #E9992F;
+}
+
+.tooltiptext.deactivate {
+    color: #ff0000;
+}
+
+.tooltiptext.activate {
+    color: #52CA20;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
 }

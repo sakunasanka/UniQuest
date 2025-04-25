@@ -90,6 +90,11 @@ body {
     margin-left: 10px;
 }
 
+.neutral {
+    color: #666; 
+    margin-left: 10px;
+}
+
 .card-subtext {
     color: #888; /* Light grey for subtext */
     font-size: 14px;
@@ -104,6 +109,15 @@ body {
 .black-icon {
     color: #000; /* Black for the Activate Premium icon */
     font-size: 30px;
+}
+
+.gold-icon {
+    color: #E9992F; 
+    font-size: 30px;
+}
+
+.activate-btn:hover .gold-icon {
+    color: white;
 }
 
 .activate-btn img, .activate-btn .white-icon {

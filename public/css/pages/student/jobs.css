@@ -89,13 +89,13 @@ body {
 }
 
 .card-logo img {
-    width: 120px;
+    width: 100px;
     height: 100px;
     margin-bottom: 10px;
 }
 
 .job-title, .company-titile {
-    font-size: 1.2em;
+    font-size: 1em;
     color: #333;
     margin-bottom: 10px;
     display: -webkit-box;
@@ -225,4 +225,15 @@ body {
     height: 0;
     overflow: hidden;
     position: absolute; /* Ensures it doesn't affect the layout */
+}
+
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #555;
+    font-size: 1.1rem;
+    line-height: 1.6;
 }

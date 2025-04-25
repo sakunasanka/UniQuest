@@ -78,6 +78,7 @@ p{
 .reviewer-name {
     font-style: italic;
     color: #333;
+    font-size: 14px;
 }
 
 .review-rating {
@@ -93,18 +94,23 @@ p{
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    height: 80%;
+    height: 80%; 
 }
 
 .job-logo img {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
+}
+
+.job-logo2 img {
+    width: 200px;
+    height: 200px;
     margin-bottom: 10px;
     margin-top: 10px;
 }
 
 .job-details h3 {
-    font-size: 1.7em;
+    font-size: 1.5em;
     color: #333;
     margin-bottom: 10px;
 }
@@ -118,29 +124,6 @@ p{
 .job-details .job-rating {
     font-size: 1.2em;
     color: #fbc02d;
-}
-
-.job-list {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    width: 100%;
-}
-
-.job-item {
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    align-items: center;
-    border: 2px solid #299b63;
-}
-
-.job-item h5 {
-    font-size: 1.3em;
-    color: #555;
-    margin-bottom: 5px;
 }
 
 .job-item p {
@@ -180,8 +163,8 @@ p{
 }
 
 .social-media-icons a i {
-    font-size: 20px;
     color: #555;
+    font-size: 18px;
     cursor: pointer;
     transition: color 0.3s, transform 0.2s ease-in-out;
 }
@@ -200,7 +183,7 @@ p{
 
 .table td {
     padding: 10px;
-    text-align: center; 
+    text-align: left; 
     color: #555;
     font-size: 1.1em;
     border-bottom: 1px solid #ddd;
@@ -214,7 +197,7 @@ p{
     margin-top: 20px;
 }
 
-.apply-btn, .contact-btn {
+.apply-btn, .contact-btn, .contact-btn-2 {
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
@@ -234,12 +217,12 @@ p{
     text-align: right;
     margin-top: -40px;
     margin-right: 20px;
-    font-size: 1.1em;
+    font-size: 1.1em !important;
     color: #4aa1fd !important;
 }
 
 .seemore p{
-    font-size: 1.1em;
+    font-size: 1.1em !important;
 }
 
 .seemore p:hover {
@@ -258,7 +241,7 @@ p{
     color: #fff;
 }
 
-.contact-btn {
+.contact-btn, .contact-btn-2 {
     background-color: #6eb2fc;
     color: #fff;
 }
@@ -267,25 +250,12 @@ p{
     background-color: #137d4a;
 }
 
-.contact-btn:hover {
+.contact-btn:hover, .contact-btn-2:hover {
     background-color: #4aa1fd;
-}
-
-.social-media-icons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
 }
 
 .social-media-icons a {
     text-decoration: none;
-}
-
-.social-media-icons a i {
-    font-size: 18px;
-    color: #555;
-    transition: color 0.3s;
 }
 
 .social-media-icons a:hover i {
@@ -388,6 +358,7 @@ p{
     border-radius: 8px;
     margin: 20px auto;
     max-width: 1200px;
+    justify-content: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     
@@ -414,7 +385,7 @@ p{
     padding: 10px 15px;
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
-    min-width: 250px; 
+    min-width: 300px; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -473,16 +444,12 @@ p{
     padding: 8px;
     font-size: 14px;
     border-radius: 5px;
-    border: none;
     cursor: pointer;
-    text-transform: uppercase;
-    transition: background-color 0.3s;
-}
-
-.details-btn {
     background-color: #ffffff;
     color: #007bff;
     border: 1px solid #007bff;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
 }
 
 .details-btn:hover {
@@ -522,4 +489,43 @@ p{
 
 .job-description  h2 {
     margin-bottom: -10px;
+}
+
+.liked .like-icon {
+    color: #299b63;
+}
+.disliked .dislike-icon {
+    color: #e74c3c;
+}
+
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.company-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    cursor: pointer;
+}
+
+.company-title:hover {
+    text-decoration: underline;
+}
+
+.review-date {
+    font-size: 0.9em;
+    color: #777;
+    font-style: italic;
 }

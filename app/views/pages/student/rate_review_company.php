@@ -1,5 +1,5 @@
 
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/rate_review_company.css">
 
@@ -46,7 +46,7 @@
                     <div class="review-card">
                         <h3><?php echo htmlspecialchars($review->CompanyID); ?></h3>
                         <div class="rating">Rating: <?php echo $review->Rating; ?> ★</div>
-                        <p><?php echo htmlspecialchars($review->Comment); ?></p>
+                        <p><?php echo ($review->Comment); ?></p>
                         <form action="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" method="POST" class="edit-form">
                             <button type="submit" class="edit-btn">Edit</button>
                         </form> 

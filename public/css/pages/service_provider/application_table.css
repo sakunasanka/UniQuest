@@ -1,0 +1,22 @@
+.job-details {
+    background-color: #f9f9fc;
+    margin: 20px 0;
+}
+
+.job-details h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+    display: inline;
+}
+
+.job-details p {
+    margin: 6px 0;
+    color: #555;
+    font-size: 15px;
+}
+
+.job-title:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

@@ -1,3 +1,6 @@
 .vscode
 .DS_STORE
 uploads
+logs
+# vendor
+dompdf/

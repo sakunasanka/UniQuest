@@ -25,9 +25,14 @@
             Jobs Verification
         </button>
 
-        <button class="nav-btn" data-paths="/UniQuest/admin/job_complaint,/UniQuest/admin/company_complaint">
+        <button class="nav-btn" data-paths="/UniQuest/admin/all_complaints,/UniQuest/admin/job_complaints,/UniQuest/admin/company_complaints">
             <span class="material-symbols-outlined"> problem </span>
             Complaints
+        </button>
+
+        <button class="nav-btn" data-paths="/UniQuest/admin/messages_stu">
+            <span class="material-symbols-outlined">sms</span>
+            Messages
         </button>
 
         <button class="nav-btn" data-path="/UniQuest/admin/analytics">
@@ -38,6 +43,11 @@
         <button class="nav-btn" data-path="/UniQuest/admin/reports">
             <span class="material-symbols-outlined"> summarize </span>
             Reports
+        </button>
+
+        <button class="nav-btn" data-path="/UniQuest/admin/app_settings">
+            <span class="material-symbols-outlined"> settings_applications </span>
+            Application Settings
         </button>
 
         <button class="nav-btn" data-path="/UniQuest/user/profile">

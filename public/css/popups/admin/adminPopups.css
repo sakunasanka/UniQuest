@@ -1,123 +1,202 @@
-.popup .overlay{
+/* General Overlay Styling */
+.popup .overlay {
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.8); /* Darker and more consistent fade */
     z-index: 101;
     display: none;
-    
+    transition: all 0.3s ease; /* Smooth transition for fade effect */
 }
 
-.popup .content{
+/* Popup Content Styling */
+.popup .content {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
+    transform: translate(-50%, -50%) scale(0); /* Smooth scaling effect */
     background: #fff;
-    width: 500px;
-    height: 200px;
-    z-index: 102;
-    text-align: left;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    border-radius: 10px;
-    box-sizing: border-box;
-}
-
-/* .popup .close-btn{
-    cursor: pointer;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    width: 30px;
-    height: 30px;
-    background: #222;
-    color: #fff;
-    font-size: 20px;
-    font-weight: 550;
-    line-height: 30px;
+    width: 90%;
+    max-width: 500px; /* Adjusted width */
+    min-height: 200px; /* Increased height for better spacing */
+    padding: 20px; /* Increased padding for content adjustment */
     text-align: center;
-    border-radius: 50%;
-} */
-
-.popup-text{
-    font-size: 20px;
-    font-weight: 560;
-    color: #222;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    box-sizing: border-box;
+    z-index: 102;
 }
 
-.red-text{
-    color: red;
-}
-
-.popup.active .overlay{
+/* Popup Transition for Active State */
+.popup.active .overlay {
     display: block;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px); /* Enhanced blur for better effect */
 }
 
-.popup.active .content{
-    transition: all 300ms ease-in-out;
+.popup.active .content {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     transform: translate(-50%, -50%) scale(1);
 }
 
-.btn-container{
-    margin-top: 40px;
-    display: flex;
-    justify-content: space-around;
-}   
-
-.no-btn, .yes-btn, .yes-btn-red{
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    padding: 10px 20px;
-    color: #fff;
-    margin: 20px 10px 0;
-    border-radius: 5px;
-    font-weight: 560;
-    font-size: 18px;
-    width: 80px;
-    text-align: center;
-}
-
-.no-btn{
-    background: #d9d9d9;
-    color: #222;
-}
-.yes-btn{
-    background: #52ca20;
-}
-
-.yes-btn-red{
-    background: #ff0000;
-}
-
-.yes-btn:hover{
-    background: #3e9e17;
-}
-
-.yes-btn-red:hover{
-    background: #ff3333;
-}
-
-.no-btn:hover{
-    background: #b3b3b3;
-}
-
+/* Close Button Styling */
 .close-btn {
     position: absolute;
-    top: 10px; /* Space from the top */
-    right: 10px; /* Space from the right edge */
+    top: 15px;
+    right: 15px;
     background: none;
     border: none;
-    font-size: 1.5em; 
+    font-size: 1.5em;
     color: #333;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .close-btn:hover {
-    color: #f44336; /* Change color to red on hover */
+    color: #f44336;
+}
+
+/* Popup Text Styling */
+.popup-text {
+    font-size: 20px;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 20px; /* Spacing below text */
+    line-height: 3.2; /* Better readability */
+}
+
+.red-text {
+    color: #e53935;
+}
+
+/* Button Container Styling */
+.btn-container {
+    margin-top: 25px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 20px; /* Space between buttons */
+}
+
+/* Button Styling */
+.no-btn, .yes-btn, .yes-btn-red {
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px 15px; /* Adjusted button size */
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-align: center;
+    border: none;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Individual Button Styles */
+.no-btn {
+    background: #d9d9d9;
+    color: #222;
+}
+
+.no-btn:hover {
+    background: #b3b3b3;
+    transform: scale(1.05);
+}
+
+.yes-btn {
+    background: #52ca20;
+    color: #fff;
+}
+
+.yes-btn:hover {
+    background: #3e9e17;
+    transform: scale(1.05);
+}
+
+.yes-btn-red {
+    background: #ff0000;
+    color: #fff;
+}
+
+.yes-btn-red:hover {
+    background: #ff3333;
+    transform: scale(1.05);
+}
+
+/* Popup Visibility */
+.popup-container .popup {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.popup-container .popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-row {
+    margin-top: 0px;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Space between buttons */
+}
+
+.btn-row select {
+    width: 200px; /* Adjust width as needed */
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #ffffff;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* When the dropdown is focused */
+.btn-row select.deactreason:focus {
+    border-color: #dc3545;
+    /* box-shadow: 0 0 5px rgba(50, 168, 82, 0.5); */
+}
+
+.btn-row select.actreason:focus {
+    border-color: #4CAF50;
+    /* box-shadow: 0 0 5px rgba(50, 168, 82, 0.5); */
+}
+
+/* Style dropdown arrow */
+.btn-row select::-ms-expand {
+    display: none;
+}
+
+.btn-row select {
+    margin-right: auto; /* Push buttons to the right */
+}
+
+/* Style options */
+.btn-row select option {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .popup .content {
+        width: 95%;
+        min-height: auto; /* Allow content to adapt */
+        padding: 20px;
+    }
+
+    .popup-text {
+        font-size: 16px;
+    }
+
+    .no-btn, .yes-btn, .yes-btn-red {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
 }

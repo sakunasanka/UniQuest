@@ -1,4 +1,5 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
+<?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 
@@ -18,39 +19,113 @@
         </div>
         <div class="view-card">
             <div class="view-card-pic">
-                <img src="<?php echo URLROOT . '/images/profile_pic_preview.png' ?>" alt="Profile Picture">
+                <img
+                    src="<?php echo empty($data['user']['CompanyLogo'])
+                                ? URLROOT . '/images/profile_pic_preview.png'
+                                : UPLOADROOT . '/profile_pictures/company/' . $data['user']['CompanyLogo']; ?>"
+                    alt="Profile Picture">
 
-            </div>
-
-            <div class="view-card-content">
-                <h1>Acme Inc</h1>
-                <h2>Software & Technology</h2>
-                <p>Acme Inc. is a leading company that specializes in developing innovative solutions for businesses of all sizes. With a team of talented engineers and designers, we are committed to delivering high-quality products that help our clients achieve their goals.</p>
-
-                <div class="view-card-info">
-                    <div>
-                        <span>Address</span>
-                        123, Main Street, Colombo 01
-                    </div>
-                    <div>
-                        <span>Contact No</span>
-                        0113452660
-                    </div>
-                    <div>
-                        <span>Email</span>
-                        info@academic.com
-                    </div>
-                    <div>
-                        <span>Website</span>
-                        <a href="" target="_blank">www.acmeinc.com</a>
-                    </div>
-                </div>
                 <div class="btn-row">
                     <!-- <button class="contact-btn" onclick="">Contact</button> -->
                     <?php require APPROOT . '/views/components/chat-sent.php'; ?>
                 </div>
             </div>
+
+            <div class="view-card-content">
+                <h1><?php echo $data['user']['CompanyName'] ?></h1>
+                <h2><?php echo $data['user']['Industry'] ?></h2>
+                <p><?php echo $data['user']['Description'] ?></p>
+
+                <div class="view-card-info">
+                    <div>
+                        <span>Address</span>
+                        <?php echo $data['user']['Address'] ?>
+                    </div>
+                    <div>
+                        <span>Contact No</span>
+                        <?php echo $data['user']['ContactNo'] ?>
+                    </div>
+                    <div>
+                        <span>Email</span>
+                        <?php echo $data['user']['Email'] ?>
+                    </div>
+                </div>
+                <div class="view-card-info">
+                    <?php if ($data['user']['Website']): ?>
+                        <div>
+                            <span>Website</span>
+                            <a href="<?php echo $data['user']['Website'] ?>" target="_blank"><?php echo $data['user']['Website'] ?></a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($data['user']['LinkedIn']): ?>
+                        <div>
+                            <span>LinkedIn</span>
+                            <a href="<?php echo $data['user']['LinkedIn'] ?>" target="_blank"><?php echo $data['user']['LinkedIn'] ?></a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($data['user']['Facebook']): ?>
+                        <div>
+                            <span>Facebook</span>
+                            <a href="<?php echo $data['user']['Facebook'] ?>" target="_blank"><?php echo $data['user']['Facebook'] ?></a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="btn-row">
+                    <?php if ($data['verifyDetails']->Action == 'Approve'): ?>
+                        <div class="status-act">
+                            <span>Approved By: </span>
+                            <?php if ($data['verifyDetails']->ActionByID == $_SESSION['user_id']): ?>
+                                <span><?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                            <?php else: ?>
+                                <span class="actionby-link" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['verifyDetails']->ActionByID; ?>'">
+                                    <?php echo $data['verifyDetails']->ActionByName ?>
+                                </span><br>
+                            <?php endif; ?>
+                            <span>Approved On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php elseif ($data['verifyDetails']->Action == 'Reject'): ?>
+                        <div class="status-deact">
+                            <span>Rejected By: </span>
+                            <?php if ($data['verifyDetails']->ActionByID == $_SESSION['user_id']): ?>
+                                <span><?php echo $data['verifyDetails']->ActionByName ?></span><br>
+                            <?php else: ?>
+                                <span class="actionby-link" onclick="window.location.href='<?php echo URLROOT; ?>/admin/user_detail/<?php echo $data['verifyDetails']->ActionByID; ?>'">
+                                    <?php echo $data['verifyDetails']->ActionByName ?>
+                                </span><br>
+                            <?php endif; ?>
+                            <span>Reason: <?php echo $data['verifyDetails']->Reason ?></span><br>
+                            <span>Rejected On: <?php echo substr($data['verifyDetails']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($data['user']['Status'] == 'Deactive' || $data['user']['Status'] == 'Pendind Deletion'): ?>
+                        <div class="status-deact">
+                            <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                            <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>
+                            <span>Deactivated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php elseif ($data['user']['Status'] == 'Active' && $data['acc_log'] != NULL): ?>
+                        <div class="status-act">
+                            <span>Status: <?php echo $data['user']['Status'] ?></span><br>
+                            <span>Reason: <?php echo $data['acc_log']->Reason ?></span><br>
+                            <span>Activated on: <?php echo substr($data['acc_log']->ActionDate, 0, 10); ?></span><br>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="btn-row">
+                    <div></div>
+                    <button id="openPopupBtn" class="open-btn">Contact</button>
+                </div>
+            </div>
         </div>
+        <!-- File Previews -->
+        <?php if ($data['user']['BRCertificate']): ?>
+            <div class="view-card file-preview">
+                <div class="detail-row">
+                    <strong>Business Registration </strong>
+                </div>
+                <iframe src="<?php echo UPLOADROOT; ?>/br_certificates/<?php echo htmlspecialchars($data['user']['BRCertificate']); ?>" frameborder="0"></iframe>
+            </div>
+        <?php endif; ?>
     </main>
 </div>
 

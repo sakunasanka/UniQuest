@@ -1,4 +1,4 @@
-<?php require APPROOT . '/views/components/ver_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -7,6 +7,16 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php
+        $columns = [
+            "UserID" => "UserID",
+            "Email" => "Email",
+            "Role" => "Account Type",
+            "RegisterDate" => "Registered Date",
+            "Status" => "Status",
+            "Actions" => "Actions"
+        ];
+        ?>
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/verification_team/user_ver_pending">Pending</button>
             <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/verification_team/user_ver_not">Not Approved</button>
@@ -16,31 +26,32 @@
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
             <table>
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">User ID</th>
-                        <th onclick="sortTable(1)">Email</th>
-                        <th onclick="sortTable(2)">Account Type</th>
-                        <th onclick="sortTable(3)">Requested Date</th>
-                        <th onclick="sortTable(4)">Status</th>
-                        <th class="no-sort">View</th>
-                    </tr>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <?php foreach ($data['users'] as $user) : ?>
+                    <?php if ($data['users']) : ?>
+                        <?php foreach ($data['users'] as $user) : ?>
+                            <tr>
+                                <td><?php echo $user->UserID; ?></td>
+                                <td><?php echo $user->Email; ?></td>
+                                <td><?php echo $user->Role; ?></td>
+                                <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
+                                <td><span class="status inactive">Not Approved</span></td>
+                                <td class="action">
+                                    <div class="tooltip">    
+                                        <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_detail/<?php echo $user->UserID; ?>'">
+                                            preview
+                                        </span>
+                                        <span class="tooltiptext view">View</span>
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
                         <tr>
-                            <td><?php echo $user->UserID; ?></td>
-                            <td><?php echo $user->Email; ?></td>
-                            <td><?php echo $user->Role; ?></td>
-                            <td><?php echo substr($user->RegisterDate, 0, 10); ?></td>
-                            <td><span class="status inactive">Not Approved</span></td>
-                            <td class="action">
-                                <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_detail/<?php echo $user->UserID; ?>'">
-                                    preview
-                                </span>
-                            </td>
+                            <td class="no-data" colspan="6">No data available</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>
@@ -50,7 +61,9 @@
 
 <!-- Footer -->
 
-
+<script>
+    const totalPages = <?php echo $data['totalPages']; ?>;
+</script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 

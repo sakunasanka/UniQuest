@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/register/reg_form.css">
+    <script src="<?php echo URLROOT; ?>/js/components/flash.js"></script>
 </head>
 
 <body>
@@ -57,15 +58,21 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="dob">Date Of Birth<span class="req"> *</span></label>
-                            <input type="date" id="dob" name="dob" value="<?php echo $data['dob']; ?>" placeholder="Enter Date of Birth" required>
+                            <input type="date" id="dob" name="dob" value="<?php echo $data['dob']; ?>" placeholder="Enter Date of Birth" max="<?php echo date('Y-m-d', strtotime('-18 years')); ?>" required>
                             <span class="error-msg"><?php echo !empty($data['dob_err']) ? $data['dob_err'] : ''; ?></span>
                         </div>
                         <div class="input-container">
                             <label for="gender">Gender</label>
-                            <input type="radio" id="male" name="gender" value="male">
-                            <span for="male">Male</span>
-                            <input type="radio" id="female" name="gender" value="female">
-                            <span for="female">Female</span> <br>
+                            <div style="display: flex; ">
+                                <input type="radio" id="male" name="gender" value="male"
+                                    <?php echo ($data['gender'] == 'male') ? 'checked' : ''; ?>>
+                                <label for="male">Male</label>
+
+                                <input type="radio" id="female" name="gender" value="female"
+                                    <?php echo ($data['gender'] == 'female') ? 'checked' : ''; ?>>
+                                <label for="female">Female</label>
+                                <br>
+                            </div>
                             <span class="error-msg"><?php echo !empty($data['gender_err']) ? $data['gender_err'] : ''; ?></span>
                         </div>
                     </div>
@@ -88,7 +95,7 @@
                                 <div class="file-content">
                                     <span>Drag & Drop to Upload NIC Scanned copy</span>
                                     <button type="button" class="browse-btn">Browse File
-                                        <input type="file" id="nicCopy" name="nicCopy" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" id="nicCopy" name="nicCopy" accept=".pdf,.doc,.docx">
                                     </button>
                                     <span class="file-name">No file selected</span>
                                 </div>
@@ -143,7 +150,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="university">University<span class="req"> *</span></label>
-                            <input type="text" id="university" name="university" value="<?php echo $data['university']; ?>" placeholder="Enter University" required>
+                            <input type="text" id="university" name="university" value="<?php echo $_SESSION['university'] ?>" placeholder="Enter University" required readonly>
                             <span class="error-msg"><?php echo !empty($data['university_err']) ? $data['university_err'] : ''; ?></span>
                         </div>
                         <div class="input-container">
@@ -159,7 +166,7 @@
                                 <div class="file-content">
                                     <span>Drag & Drop to Upload University ID Scanned Copy</span>
                                     <button type="button" class="browse-btn">Browse File
-                                        <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".pdf,.doc,.docx" required>
+                                        <input type="file" id="universityIDCopy" name="universityIDCopy" accept=".pdf,.doc,.docx">
                                     </button>
                                     <span class="file-name">No file selected</span>
                                 </div>
@@ -175,7 +182,7 @@
                     <div class="form-row">
                         <div class="input-container">
                             <label for="email">University Email<span class="req"> *</span></label>
-                            <input type="email" id="email" name="email" value="<?php echo $data['email']; ?>" placeholder="Enter University Email" required>
+                            <input type="email" id="email" name="email" value="<?php echo $_SESSION['verified_email'] ?>" placeholder="Enter University Email" required readonly>
                             <span class="error-msg"><?php echo !empty($data['email_err']) ? $data['email_err'] : ''; ?></span>
                         </div>
                         <div class="input-container"></div>

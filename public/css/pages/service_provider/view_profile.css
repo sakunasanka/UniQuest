@@ -32,6 +32,22 @@ body {
     gap: 50px; /* Add spacing between picture and content */
 }
 
+/* file previews */
+.view-card.file-preview {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.view-card.file-preview iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .view-card-2 {
     margin: auto;
     padding: 40px;
@@ -131,13 +147,64 @@ body {
     justify-content: space-between;
 }
 
+.view-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.view-card-title {
+    margin-right: 20px;
+}
+
+.plan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.subscription-plan {
+    margin-left: auto;
+    padding: 8px 16px;
+    background-color: #f0f7f4;
+    border: 1px solid #32a852;
+    color: #32a852;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.days-remaining {
+    color: #666; 
+    font-size: 16px;
+    padding: 2px 8px;
+    align-items: center;
+}
+
+.black-icon {
+    color: #000; 
+    font-size: 30px;
+}
+
+.gold-icon {
+    color: #E9992F; 
+    font-size: 30px;
+}
+
 .view-card-info div {
     font-size: 16px;
     color: #333;
     max-width: 200px;
-    /* flex: 1; */
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 
 .view-card-info div span {
     display: block;
@@ -147,13 +214,13 @@ body {
 }
 
 /* Link Styling */
-a {
+.view-card-info a {
     color: #3498db;
     text-decoration: none;
     font-weight: 500;
 }
 
-a:hover {
+.view-card-info a:hover {
     color: #2c8cc3;
     text-decoration: underline;
 }
@@ -243,12 +310,35 @@ a:hover {
 }
 
 .btn-row {
-    margin-top: 20px; /* Push the buttons to the bottom */
+    /* margin-top: 20px; Push the buttons to the bottom */
     display: flex;
-    justify-content: end; /* Spread the buttons evenly */
-    align-items: center;
+    justify-content: space-between; /* Spread the buttons evenly */
+    align-items: start;
     gap: 40px;
     padding: 10px 0; /* Add some padding for better spacing */
+}
+
+.btn-row .status-deact{
+    color: #ff4d4d;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #ff4d4d50;
+    line-height: 1.3;
+}
+
+.btn-row .status-act{
+    color: #32a852;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #32a85250;
+    line-height: 1.3;
+}
+
+.actionby-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .btn-row button {
@@ -274,8 +364,13 @@ button.approve-btn:hover {
     background-color: #038a27;
 }
 
-button.reject-btn:hover {
+button.reject-btn:hover:not(:disabled) {
     background-color: #c82333;
+}
+
+button.reject-btn:disabled, .btn-row select:disabled {
+    cursor: not-allowed;
+    opacity: 0.8; /* Optional: make it look disabled */
 }
 
 button.contact-btn {
@@ -285,6 +380,42 @@ button.contact-btn {
 
 button.contact-btn:hover {
     background-color: #0056b3;
+}
+
+.btn-row select {
+    width: 200px; /* Adjust width as needed */
+    padding: 8px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #ffffff;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* When the dropdown is focused */
+.btn-row select:focus {
+    border-color: #dc3545;
+    /* box-shadow: 0 0 5px rgba(50, 168, 82, 0.5); */
+}
+
+/* Style dropdown arrow */
+.btn-row select::-ms-expand {
+    display: none;
+}
+
+.btn-row select {
+    margin-right: auto; /* Push buttons to the right */
+}
+
+/* Style options */
+.btn-row select option {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px;
 }
 
 /* Responsive Adjustments */

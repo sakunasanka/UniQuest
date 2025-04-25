@@ -1,4 +1,5 @@
-<?php require APPROOT . '/views/components/ser_header.php'; ?>
+<?php require APPROOT . '/views/components/header.php'; ?>
+<link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/application_table.css">
 
 <!-- Sidebar and Content Layout -->
 <div class="main-container">
@@ -7,93 +8,84 @@
 
     <!-- Content Area -->
     <main class="content-area">
+        <?php
+        $columns = [
+            "StudentName" => "Name",
+            "StudentEmail" => "Email",
+            "StudentContact" => "Mobile Number",
+            "SubmissionDate" => "Date",
+            "Actions" => "Actions"
+        ];
+        ?>
+        <!-- Tabs Header -->
         <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/uniquest/service_provider/new_applications">New Applications</button>
-            <button class="tab" data-path="/uniquest/service_provider/offered_applications">Offered Applications</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/uniquest/service_provider/rejected_applications">Rejected Applications</button>
+            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/service_provider/new_applications/<?php echo $data['jobID']; ?>">Pending Applications</button>
+            <button class="tab" data-path="/UniQuest/service_provider/offered_applications/<?php echo $data['jobID']; ?>">Offered Applications</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/service_provider/rejected_applications/<?php echo $data['jobID']; ?>">Rejected Applications</button>
         </div>
+        <div class="job-details">
+            <h2 class="job-title" onclick="goToJob(<?php echo $data['post']->JobID; ?>);">
+                Job Title: <?php echo ($data['post']->Title); ?>
+            </h2>
+            <p>
+                Location: <?php echo $data['post']->City; ?>
+            </p>
+            <p>
+                Published On: <?php echo $data['posted']; ?>
+            </p>
+        </div>
+        <!-- Table Block -->
         <div class="table-block">
+            <!-- Content Header with Search Bar -->
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
+
+            <!-- Applications Table -->
             <table>
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">Job Title</th>
-                        <th onclick="sortTable(1)">Name</th>
-                        <th onclick="sortTable(2)">Email</th>
-                        <th onclick="sortTable(3)">Mobile Number</th>
-                        <th onclick="sortTable(4)">City</th>
-                        <th onclick="sortTable(5)">Date</th>
-                        <th class="no-sort">Actions</th>
-                    </tr>
-                </thead>
+                <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
-                    <tr>
-                        <td>Delivery Rider</td>
-                        <td>Sakith</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>0771702961</td>
-                        <td>Negombo</td>
-                        <td>2024/08/20</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sales Ref</td>
-                        <td>Damsara</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>0718544398</td>
-                        <td>Galle</td>
-                        <td>2024/08/25</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Delivery Rider</td>
-                        <td>Nipuna</td>
-                        <td>uniquest@gmail.com</td>
-                        <td>0769383889</td>
-                        <td>Colombo</td>
-                        <td>2024/08/15</td>
-                        <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                            <span class="material-symbols-outlined action-btn activate">
-                                check_circle
-                            </span>
-                            <span class="material-symbols-outlined action-btn deactivate">
-                                block
-                            </span>
-                        </td>
-                    </tr>
+                    <?php if (!empty($data['applications'])): ?>
+                        <?php foreach ($data['applications'] as $application): ?>
+                            <tr>
+                                <td><?php echo $application->StudentName; ?></td>
+                                <td><?php echo $application->StudentEmail; ?></td>
+                                <td><?php echo $application->StudentContact; ?></td>
+                                <td><?php echo (date('Y/m/d', strtotime($application->SubmissionDate))); ?></td>
+                                <td class="action">
+                                    <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_application/<?php echo $application->ApplicationID; ?>'">
+                                        preview
+                                    </span>
+                                    <!-- <span class="material-symbols-outlined action-btn activate">
+                                        check_circle
+                                    </span>
+                                    <span class="material-symbols-outlined action-btn deactivate">
+                                        block
+                                    </span> -->
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="no-applications">No pending applications to show.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
+
+            <!-- Pagination -->
             <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>
 
+<!-- Scripts -->
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
-<script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
+<script>
+    function goToJob(jobID) {
+        window.location.href = '<?php echo URLROOT; ?>/jobs/jobsdescription/' + jobID;
+    }
+</script>

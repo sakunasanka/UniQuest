@@ -31,7 +31,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0px;
-    gap: 20px; 
+    gap: 10px; 
 }
 
 .add-btn-text {
@@ -151,4 +151,11 @@ form h3 {
 
 .save-btn:hover {
     background-color: #038a27;
+}
+
+.error-msg {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    padding-left: 15px;
 }
