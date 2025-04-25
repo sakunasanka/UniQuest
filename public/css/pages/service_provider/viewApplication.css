@@ -93,24 +93,40 @@
 }
 
 .info-group {
+    display: flex;
+    align-items: center; /* Vertically center label and value */
     margin-bottom: 15px;
 }
 
 .info-group label {
     font-weight: bold;
     color: #555;
-    display: block;
-    margin-bottom: 5px;
+    margin-right: 10px; /* Space between label and vertical line */
+    padding-right: 10px; /* Additional space before the line */
+    position: relative;
+}
+
+/* Vertical line after the label */
+.info-group label::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%; /* Adjust height of the vertical line */
+    width: 1px;
+    background-color: #ccc; /* Color of the vertical line */
 }
 
 .info-group span {
     color: #333;
     line-height: 1.6;
+    padding-left: 10px; /* Space after the vertical line */
 }
 
 /* Skills List */
 .skills-list {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
     gap: 10px;
 }
@@ -161,6 +177,22 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    justify-content: space-between;
+}
+
+.accept-reject-btn {
+    display: flex !important;
+    gap: 10px;
+    flex-direction: row !important;
+}
+
+.contact-btn {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.contact-btn:hover {
+    background-color: #2980b9;
 }
 
 .action-button {
@@ -171,7 +203,7 @@
     cursor: pointer;
     min-width: 150px;
     height: 50px;
-    font-size: 1.2em;
+    font-size: 1.3em;
 }
 
 .reject-button {
@@ -194,6 +226,35 @@
 
 .not-provided {
     color: #999 !important;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.view-job-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+}
+
+.view-job-button:hover {
+    background-color: #2980b9;
+}
+
+.view-job-button i {
+    font-size: 14px;
 }
 
 /* Responsive Design */
