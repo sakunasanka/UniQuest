@@ -749,7 +749,7 @@ class Admin extends Controller
             // 2. If previous message email is null, fetch email from the user table
             elseif ($this->model->getUserDetails($userID)) {
                 $userDetails = $this->model->getUserDetails($userID);
-                $email = $userDetails->email ?? null; // Use email if available, else null
+                $email = $userDetails['Email'] ?? null; // Use email if available, else null
             }
 
             $data = [
@@ -854,8 +854,10 @@ class Admin extends Controller
                 MailHelper::sendEmailStuAccountApproved($email, $name);
                 notifyUserApproval($userID);
             }
+            //get reasonID by type
+            $reasonID = $this->model('AdminModel')->getReasonByType('user_approve')->ReasonID;
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', 10);
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', $reasonID);
             Redirect::to(URLROOT . '/admin/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -1039,9 +1041,10 @@ class Admin extends Controller
             foreach ($students as $student) {
                 notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
             }
-
+            //get reasonID by type
+            $reasonID = $this->model('AdminModel')->getReasonByType('job_approve')->ReasonID;
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
+            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', $reasonID);
             Redirect::to(URLROOT . '/admin/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -1528,6 +1531,8 @@ class Admin extends Controller
                 'job_reject' => $this->model('AdminModel')->getReasonsByType('job_reject')['data'],
                 'job_activate' => $this->model('AdminModel')->getReasonsByType('job_activate')['data'],
                 'job_deactivate' => $this->model('AdminModel')->getReasonsByType('job_deactivate')['data'],
+                'complaint_rejected' => $this->model('AdminModel')->getReasonsByType('complaint_rejected')['data'],
+                'complaint_resolved' => $this->model('AdminModel')->getReasonsByType('complaint_resolved')['data'],
                 'industries' => $this->model('AdminModel')->getIndustries()['data']
             ];
             $this->view('pages/admin/app_settings', $data);

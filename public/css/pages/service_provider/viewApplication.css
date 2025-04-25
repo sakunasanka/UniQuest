@@ -161,6 +161,22 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    justify-content: space-between;
+}
+
+.accept-reject-btn {
+    display: flex !important;
+    gap: 10px;
+    flex-direction: row !important;
+}
+
+.contact-btn {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.contact-btn:hover {
+    background-color: #2980b9;
 }
 
 .action-button {

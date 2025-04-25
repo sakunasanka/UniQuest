@@ -176,8 +176,10 @@ class Verification_team extends Controller
                 MailHelper::sendEmailStuAccountApproved($email, $name);
                 notifyUserApproval($userID);
             }
+            //get reason id by type
+            $reasonID = $this->model('AdminModel')->getReasonByType('user_approve')->ReasonID;
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve');
+            $this->model('AdminModel')->addVerificationLog($userID, 'User', 'Approve', $reasonID);
             Redirect::to(URLROOT . '/verification_team/user_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -312,10 +314,10 @@ class Verification_team extends Controller
             foreach ($students as $student) {
                 notifyPostPublishStu($student->StudentID, $jobID, $title, $publishDate);
             }
-
-
+            //get reason id by type
+            $reasonID = $this->model('AdminModel')->getReasonByType('job_approve')->ReasonID;
             //add verificationlogs
-            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', 16);
+            $this->model('AdminModel')->addVerificationLog($jobID, 'Job', 'Approve', $reasonID);
             Redirect::to(URLROOT . '/verification_team/job_ver_pending');
         } catch (Exception $e) {
             die($e->getMessage()); //TODO: Handle this
@@ -407,7 +409,7 @@ class Verification_team extends Controller
             // 2. If previous message email is null, fetch email from the user table
             elseif ($this->model->getUserDetails($userID)) {
                 $userDetails = $this->model->getUserDetails($userID);
-                $email = $userDetails->email ?? null; // Use email if available, else null
+                $email = $userDetails['Email'] ?? null; // Use email if available, else null
             }
 
             $data = [
