@@ -113,7 +113,7 @@
                 </div>
                 <div class="btn-row">
                     <div></div>
-                    <button id="openPopupBtn" class="open-btn">Contact</button>
+                    <button id="openPopupBtn" class="contact-btn">Contact</button>
                 </div>
             </div>
         </div>
