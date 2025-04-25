@@ -1,5 +1,5 @@
 .search-bar { 
-    position: relative;
+    /* position: relative; */
     display: flex;
     align-items: center;
     gap: 10px; /* Space between elements */
@@ -8,8 +8,8 @@
 
 .icon {
     position: absolute;
-    left: 10px;
-    top: 50%;
+    bottom: 195px; /* Adjusted to center vertically */
+    left: 320px; /* Adjusted to center horizontally */
     transform: translateY(-50%);
     color: #aaa;
 }

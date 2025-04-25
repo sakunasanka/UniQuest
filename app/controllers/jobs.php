@@ -570,7 +570,7 @@ class Jobs extends Controller
                 $email = $previousMessage->user_email;
             } elseif ($this->model('userModel')->getUserDetails($companyId)) {
                 $userDetails = $this->model('userModel')->getUserDetails($companyId);
-                $email = $userDetails->email ?? null;
+                $email = $userDetails['Email'] ?? null;
             }
             $data = [
                 'email' => $email,
