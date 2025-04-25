@@ -45,7 +45,7 @@
             <i class="fas fa-chart-line icon-green"></i>
             <h3>Revenue of the Month</h3>
             <p>The revenue gained by the premium users this month.</p>
-            <h1><?php echo $data['revenueOfMonth']; ?></h1>
+            <h1>Rs. <?php echo $data['revenueOfMonth']; ?></h1>
         </div>
         <div class="dashboard-card" onclick="goToUserVer()">
             <i class="fas fa-user-check icon-teal"></i>
@@ -99,5 +99,12 @@
 
     function goToJobsVer() {
         window.location.href = "<?php echo URLROOT; ?>/admin/job_ver_pending";
+    }
+
+    function goToComMng() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/company_mng";
+    }
+    function goToJobMng() {
+        window.location.href = "<?php echo URLROOT; ?>/admin/ptjobs_mng";
     }
 </script>

@@ -94,7 +94,7 @@ class Student extends Controller
                         notifyMessageToAdminFromStudent($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
                     }
                     $_SESSION['show_contact_us_success'] = true;
-                    
+
                     redirect('student/contact_admin');
                 } else {
                     $_SESSION['show_contact_us_error'] = true;
@@ -113,7 +113,7 @@ class Student extends Controller
                 'topic_err' => '',
                 'message_err' => '',
             ];
-            
+
             $this->view('pages/student/contact_admin', $data);
         }
     }
@@ -558,10 +558,9 @@ class Student extends Controller
                 $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
             }
 
-        $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
-        $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
-        } 
-        else {
+            $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        } else {
             $userId = null;
             $bookmarkedJobs = []; // No bookmarks if not logged in
         }
@@ -645,7 +644,7 @@ class Student extends Controller
             $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/jobs';
             Redirect::to($previousURL);
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
             $data = [
@@ -666,8 +665,8 @@ class Student extends Controller
             // Validate proof file
             if (empty($data['proof']['name'])) {
                 $data['proof_err'] = 'Please upload a proof file.';
-            } 
-            
+            }
+
             // Check for errors
             if (empty($data['complaint_err']) && empty($data['proof_err'])) {
                 // Handle file upload for proof
@@ -685,10 +684,10 @@ class Student extends Controller
                     foreach ($admins as $admin) {
                         notifyComplaintToAdmin($admin->AdminID, $job->Title, $_SESSION['user_name']);
                     }
-                    $_SESSION['complaint_submit_success'] = true;                 
+                    $_SESSION['complaint_submit_success'] = true;
                     Redirect::to(URLROOT . '/jobs'); // Adjust the redirect URL as needed
                 } else {
-                    $_SESSION['complaint_submit_error'] = true;   
+                    $_SESSION['complaint_submit_error'] = true;
                     die('Something went wrong'); // Improved error handling suggested
                 }
             } else {
@@ -878,6 +877,10 @@ class Student extends Controller
             $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
         }
         $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+        $userdetails = $this->model->getUserDetails($_SESSION['user_id']);
+        $userdetails = array_change_key_case($userdetails, CASE_LOWER);
+        $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($jobId);
+        // die(var_dump($userdetails));
 
         $data = [
             'fields' => $applicationFields,
@@ -886,6 +889,8 @@ class Student extends Controller
             'bookmarkedJobs' => $bookmarkedJobs,
             'bookmarkedJobIds' => $bookmarkedJobIds,
             'displayRating' => $displayRating,
+            'userdetails' => $userdetails,
+            'applicationCount' => $applicationCount,
         ];
         // Check if the user has already applied for this job
         if ($isApplied) {
@@ -907,6 +912,34 @@ class Student extends Controller
         $posts = $this->model('M_jobpost')->getpostbyid($jobId);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
+
+            if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id'];
+            } else {
+                $userId = null;
+                $bookmarkedJobs = [];
+                $posts = [];
+            }
+    
+            // Load model and get application fields
+            $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobId);
+    
+            // Fetch job details3
+            $job = $this->model('M_jobpost')->getpostbyid($jobId);
+    
+            $posts = $this->model('M_jobpost')->getpostbyid($jobId);
+            $displayRating = $this->model('RateAndReviewModel')->getDisplayRating($posts->CompanyID);
+            $isApplied = $this->model('jobModel')->isApplied($jobId);
+    
+            if ($posts->Category == 'Internship') {
+                $bookmarkedJobs = $this->model('jobModel')->getBookmarkedInternships($userId);
+            } else {
+                $bookmarkedJobs = $this->model('jobModel')->getBookmarkedJobs($userId);
+            }
+            $bookmarkedJobIds = array_column($bookmarkedJobs, 'JobID');
+            $userdetails = $this->model->getUserDetails($_SESSION['user_id']);
+            $userdetails = array_change_key_case($userdetails, CASE_LOWER);
+            $applicationCount = $this->model('M_applicationFields')->getApplicationCountForJob($jobId);
 
             // Initialize data array and validation
             $data = [
@@ -978,8 +1011,7 @@ class Student extends Controller
                 }    
             } else {
                 // GET request - show the application form
-                $jobModel = $this->model('M_jobpost');
-                $job = $jobModel->getJobById($jobId);
+                $job = $this->model('M_jobpost')->getpostbyid($jobId);
 
                 if (!$job) {
                     redirect('pages/error');
@@ -987,14 +1019,22 @@ class Student extends Controller
 
                 $data = [
                     'job' => $job,
-                    'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId)
+                    'fields' => $this->model('M_applicationFields')->getFieldsByJobId($jobId),
+                    'errors' => $data['errors'],
+                    'fields' => $applicationFields,
+                    'post' => $posts,
+                    'bookmarkedJobs' => $bookmarkedJobs,
+                    'bookmarkedJobIds' => $bookmarkedJobIds,
+                    'displayRating' => $displayRating,
+                    'userdetails' => $userdetails,
+                    'applicationCount' => $applicationCount,
                 ];
 
                 $this->view('pages/student/jobsApply', $data);
             }
         }
     }
-    
+
     private function handleFileUpload($file, $fieldName)
     {
         $result = [
@@ -1005,7 +1045,7 @@ class Student extends Controller
 
         // Define allowed file types based on field
         $allowedTypes = [
-            'cvs' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            'cv' => ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             'photo' => ['image/jpeg', 'image/png'],
             'nic_copy' => ['application/pdf', 'image/jpeg', 'image/png'],
             'other1' => ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'],
@@ -1086,7 +1126,7 @@ class Student extends Controller
             'qualifications' => $application->Qualifications ?? null,
             'experience' => $application->Experience ?? null,
             'skills' => $application->Skills ?? null,
-            'cv' => $application->cv ?? null,
+            'cv' => $application->StudentResume ?? null,
             'nic_copy' => $application->nic_copy ?? null,
             'linkedin' => $application->linkedin ?? null,
             'other1' => $application->other1 ?? null,
@@ -1099,6 +1139,7 @@ class Student extends Controller
 
         $data = [
             'application' => $applicationData,
+            'category' => $application->JobCategory
         ];
         $fields = $this->model('M_applicationFields')->getFieldsByJobId($data['application']['jobID']);
 
@@ -1148,14 +1189,16 @@ class Student extends Controller
         $this->view('pages/student/myreviews', $data);
     }
 
-    public function markAllRead() {
+    public function markAllRead()
+    {
 
         $this->model('NotificationModel')->markAllAsRead($_SESSION['user_id']);
         $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/student/notifications';
         Redirect::to($previousURL);
     }
 
-    public function markAsRead($notificationId) {
+    public function markAsRead($notificationId)
+    {
         if ($this->model('NotificationModel')->markAsRead($notificationId)) {
             $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
             header('Content-Type: application/json');
@@ -1167,31 +1210,32 @@ class Student extends Controller
         exit;
     }
 
-    public function getRecentNotifications() {
+    public function getRecentNotifications()
+    {
         $notifications = $this->model('NotificationModel')->getRecentNotifications($_SESSION['user_id'], 5);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
-        
+
         header('Content-Type: application/json');
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'notifications' => $notifications,
             'unreadCount' => $unreadCount
         ]);
         exit;
     }
 
-    public function getAllNotifications() {
+    public function getAllNotifications()
+    {
 
         $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
-        
+
         header('Content-Type: application/json');
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'notifications' => $notifications,
             'unreadCount' => $unreadCount
         ]);
         exit;
     }
-
 }
