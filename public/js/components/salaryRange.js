@@ -13,18 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let min = parseInt(minSlider.value);
         let max = parseInt(maxSlider.value);
 
-        // Prevent min from exceeding max
-        if (min >= max) {
-            min = max - 5000;
-            minSlider.value = min;
-        }
-
-        // Prevent max from going below min
-        if (max <= min) {
-            max = min + 5000;
-            maxSlider.value = max;
-        }
-
         // Update displayed values
         minSalaryValue.textContent = min.toLocaleString();
         maxSalaryValue.textContent = max.toLocaleString();
