@@ -263,7 +263,7 @@
 }
 
 .send-btn {
-    background-color: #32a852;
+    background-color: #299b63;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -274,7 +274,7 @@
 }
 
 .send-btn:hover {
-    background-color: #038a27;
+    background-color: #137d4a;
     transform: scale(1.05);
 }
 
@@ -375,4 +375,51 @@
 
 .message-input-container button:hover {
     background-color: #0056b3;
+}
+
+/* Add to your chat.css file */
+
+.input-with-icon {
+    position: relative;
+    flex-grow: 1;
+}
+
+.input-with-icon input {
+    padding-right: 40px; /* Make space for the icon */
+    width: 100%;
+}
+
+.send-icon-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #299b63;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    transition: color 0.3s;
+}
+
+.send-icon-btn:hover {
+    color: #137d4a;
+}
+
+/* Hide the regular send button on larger screens */
+@media (min-width: 768px) {
+    .send-btn {
+        display: none;
+    }
+}
+
+/* Show the regular send button on mobile */
+@media (max-width: 767px) {
+    .send-icon-btn {
+        display: none;
+    }
+    .send-btn {
+        display: block;
+    }
 }

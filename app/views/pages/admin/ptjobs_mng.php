@@ -20,7 +20,7 @@
         ?>
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/admin/ptjobs_mng">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/intern_mng">Interships</button>
+            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/admin/intern_mng">Internships</button>
         </div>
         <div class="table-block">
             <div class="content-header">

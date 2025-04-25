@@ -133,9 +133,9 @@ table td.no-data {
 }
 
 /* Add Button Styles - Unchanged */
-.add-btn {
-    background-color: #4CAF50;
-    color: white;
+.post-btn {
+    background-color: #299b63;
+    color: #fff;
     border: none;
     padding: 8px 10px;
     border-radius: 10px;
@@ -152,8 +152,8 @@ table td.no-data {
     font-size: 14px;
 }
 
-.add-btn:hover {
-    background-color: #45a049;
+.post-btn:hover {
+    background-color: #137d4a;
 }
 
 .add-btn .material-symbols-outlined {

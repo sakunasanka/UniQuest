@@ -151,3 +151,84 @@ body {
 .active-stat{
     margin-left: 20px;
 }
+
+.blue-icon { 
+    color: #4285F4;
+    background-color: rgba(66, 133, 244, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+.orange-icon { 
+    color: #FBBC05;
+    background-color: rgba(251, 188, 5, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+.purple-icon { 
+    color: #9C27B0;
+    background-color: rgba(156, 39, 176, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+.yellow-icon { 
+    color: #FFC107;
+    background-color: rgba(255, 193, 7, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+.red-icon { 
+    color: #EA4335;
+    background-color: rgba(234, 67, 53, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+.green-icon { 
+    color: #34A853;
+    background-color: rgba(52, 168, 83, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+.teal-icon { 
+    color: #009688;
+    background-color: rgba(0, 150, 136, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+.indigo-icon { 
+    color: #3F51B5;
+    background-color: rgba(63, 81, 181, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+.pink-icon { 
+    color: #E91E63;
+    background-color: rgba(233, 30, 99, 0.1);
+    font-size: 50px;
+    margin-bottom: 10px; 
+}
+
+
+
+/* Premium Button Styling */
+.activate-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #f1f8e9 0%, #a5d6a7 100%);
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.activate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.gold-icon { color: #FFD700; }
+.black-icon { color: #333; }
+

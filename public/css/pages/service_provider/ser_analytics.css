@@ -48,15 +48,42 @@ body {
 
 /* Right section for the icon */
 .stat-card .icon_ {
-    font-size: 100px; 
-    width: 80px; 
-    height: 80px; 
-    color: #299b63;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+/* Icon Colors by Semantic Meaning */
+.stat-card:nth-child(1) .icon_ { /* Total Jobs */
+    background-color: rgba(41, 155, 99, 0.1); /* Your brand green */
+}
+.stat-card:nth-child(1) .large-icon {
+    color: #299b63;
+    content: "work_history"; /* Briefcase with clock */
 }
 
+.stat-card:nth-child(2) .icon_ { /* Active Jobs */
+    background-color: rgba(3, 169, 244, 0.1); /* Active blue */
+}
+.stat-card:nth-child(2) .large-icon {
+    color: #03a9f4;
+    content: "electric_bolt"; /* Lightning bolt */
+}
+
+.stat-card:nth-child(3) .icon_ { /* Applicants */
+    background-color: rgba(156, 39, 176, 0.1); /* Purple */
+}
+.stat-card:nth-child(3) .large-icon {
+    color: #9c27b0;
+    content: "diversity_3"; /* Group of people */
+}
+
+/* Alternative Professional Icons */
+/* .stat-card:nth-child(1) .large-icon { content: "business_center"; } */
+/* .stat-card:nth-child(2) .large-icon { content: "trending_up"; } */
+/* .stat-card:nth-child(3) .large-icon { content: "person_search"; } */
 /* Charts section */
 .charts {
     display: flex;

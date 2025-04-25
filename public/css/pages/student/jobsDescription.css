@@ -439,22 +439,30 @@ p{
 }
 
 .details-btn {
-    flex: 1;
-    text-align: center;
-    padding: 8px;
-    font-size: 14px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border: 2px solid #299b63; /* Border color matching primary button */
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    background-color: #ffffff;
-    color: #007bff;
-    border: 1px solid #007bff;
-    text-transform: uppercase;
-    transition: background-color 0.3s;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+    background-color: transparent; /* Transparent background for secondary look */
+    color: #299b63; /* Text color matching primary button */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+
 }
 
 .details-btn:hover {
-    background-color: #007bff;
-    color: #ffffff;
+    background-color: #299b63; /* Primary button color on hover */
+    color: #fff; /* White text on hover */
+    border-color: #299b63; /* Maintain border color consistency */
+}
+
+.details-btn:active {
+    background-color: #137d4a; /* Darker shade when clicked */
+    border-color: #137d4a;
+    cursor: pointer; /* Ensure cursor remains pointer when clicking */
 }
 
 .card-icons {
@@ -528,4 +536,24 @@ p{
     font-size: 0.9em;
     color: #777;
     font-style: italic;
+}
+
+.apply-btn2 {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+}
+
+.apply-btn2{
+    background-color: #299b63;
+    color: #fff;
+}
+
+.apply-btn2:hover {
+    background-color: #137d4a;
 }
