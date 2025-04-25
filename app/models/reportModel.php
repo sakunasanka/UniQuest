@@ -426,32 +426,55 @@ class ReportModel extends Model
         }
     }
 
-    public function getStudentPlacementData()
+    public function getStudentPlacementData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-            SELECT 
-                s.University,
-                COUNT(DISTINCT s.StudentID) AS total_students,
-                COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END) AS placed_students,
-                COUNT(DISTINCT a.job_id) AS distinct_jobs,
-                GROUP_CONCAT(DISTINCT c.CompanyName) AS hiring_companies,
-                ROUND(COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END)*100.0/
-                      COUNT(DISTINCT s.StudentID),2) AS placement_rate
-            FROM student s
-            LEFT JOIN applications a ON s.StudentID = a.user_id
-            LEFT JOIN jobs j ON a.job_id = j.JobID
-            LEFT JOIN company c ON j.CompanyID = c.CompanyID
-            GROUP BY s.University
-            ORDER BY placement_rate DESC
+        SELECT 
+            s.University,
+            COUNT(DISTINCT s.StudentID) AS total_students,
+            COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END) AS placed_students,
+            COUNT(DISTINCT a.job_id) AS distinct_jobs,
+            GROUP_CONCAT(DISTINCT c.CompanyName SEPARATOR ', ') AS hiring_companies,
+            ROUND(COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END)*100.0/
+                  NULLIF(COUNT(DISTINCT s.StudentID), 0), 2) AS placement_rate
+        FROM student s
+        LEFT JOIN applications a ON s.StudentID = a.user_id
+        LEFT JOIN jobs j ON a.job_id = j.JobID
+        LEFT JOIN company c ON j.CompanyID = c.CompanyID
+        WHERE 1=1
         ";
+
+            // Add date filters if provided
+            if ($startDate) {
+                $query .= " AND a.created_at >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND a.created_at <= :endDate";
+            }
+
+            $query .= "
+        GROUP BY s.University
+        ORDER BY placement_rate DESC
+        ";
+
             $this->db->query($query);
+
+            // Bind parameters if dates are provided
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getStudentPlacementData: " . $e->getMessage());
             return null;
         }
     }
+
 
     public function getBookmarkAnalysisData()
     {
