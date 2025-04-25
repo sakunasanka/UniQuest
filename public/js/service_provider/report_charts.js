@@ -145,13 +145,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('locationChart').getContext('2d');
         const labels = Object.keys(data);
         const values = Object.values(data);
-        
-        // Show a message if only "Other" with 100% is available
-        if (labels.length === 1 && labels[0] === 'Other' && values[0] === 100) {
-            displayNoDataMessage(ctx, 'No specific location data available');
+    
+        if (labels.length === 0 || (labels.length === 1 && values[0] === 100 && labels[0].toLowerCase() === 'other')) {
+            displayNoDataMessage(ctx, 'No university data available');
             return;
         }
-        
+    
         new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -179,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Location Distribution',
+                        text: 'University Distribution', // changed
                         font: {
                             size: 16
                         }
@@ -202,6 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
             plugins: [ChartDataLabels]
         });
     }
+    
     
     // Helper function to display a message when no data is available
     function displayNoDataMessage(ctx, message) {

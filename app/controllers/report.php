@@ -73,9 +73,9 @@ class Report extends Controller
                     'data' => array_values($reportData['demographics']['age']),
                     'backgroundColor' => '#4bc0c0'
                 ],
-                'location' => [
-                    'labels' => array_keys($reportData['demographics']['location']),
-                    'data' => array_values($reportData['demographics']['location']),
+                'university' => [
+                    'labels' => array_keys($reportData['demographics']['university']),
+                    'data' => array_values($reportData['demographics']['university']),
                     'backgroundColor' => '#9966ff'
                 ]
             ];
@@ -90,6 +90,7 @@ class Report extends Controller
                 'reportGeneratedAt' => date('F j, Y \a\t H:i:s')
             ];
 
+            // die(var_dump($data)); // Debugging line to check the report data
             // 6. View Rendering
             $this->view('pages/service_provider/job_report', $data);
         } catch (InvalidArgumentException $e) {
@@ -140,6 +141,7 @@ class Report extends Controller
                 exit;
             }
 
+            // die(var_dump($reportData)); // Debugging line to check the report data
             // Log that we're generating PDF
             error_log("Generating PDF for Job ID: " . $jobId);
 

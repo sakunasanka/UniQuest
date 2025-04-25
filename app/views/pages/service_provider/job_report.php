@@ -88,12 +88,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script src="<?php echo URLROOT; ?>/js/service_provider/report_charts.js"></script>
 <script>
-    // Pass PHP data to JavaScript
     const reportData = {
         gender: <?php echo json_encode($data['demographics']['gender']); ?>,
         age: <?php echo json_encode($data['demographics']['age']); ?>,
-        location: <?php echo json_encode($data['demographics']['location']); ?>,
+        location: <?php echo json_encode($data['demographics']['university']); ?>, // changed from `location`
         totalApplicants: <?php echo json_encode($data['totalApplicants']); ?>
     };
 </script>
+
 <?php require APPROOT . '/views/components/footer.php'; ?>
