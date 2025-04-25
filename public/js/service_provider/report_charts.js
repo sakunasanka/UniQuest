@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeAgeChart(reportData.age);
     }
     
-    if (document.getElementById('locationChart')) {
+    if (document.getElementById('universityChart')) {
         // Update this to match the new field name if needed
         // (if you changed from location to university in the backend)
-        initializeLocationChart(reportData.location);
+        initializeUniversityChart(reportData.location);
     }
 
     // Function to initialize gender distribution chart
@@ -141,8 +141,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to initialize location distribution chart
-    function initializeLocationChart(data) {
-        const ctx = document.getElementById('locationChart').getContext('2d');
+    function initializeUniversityChart(data) {
+        const ctx = document.getElementById('universityChart').getContext('2d');
         const labels = Object.keys(data);
         const values = Object.values(data);
     

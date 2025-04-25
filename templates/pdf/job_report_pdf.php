@@ -127,6 +127,8 @@
             border: 1px solid #ddd;
             font-size: 10.5px;
             word-break: break-word;
+            margin-bottom: 10px;
+
         }
 
         .card strong {
@@ -161,12 +163,20 @@
             color: #34495e;
         }
 
+        .chart-container .chart-heading {
+            font-size: 13px;
+            margin: 0;
+            font-weight: 500;
+            color: #34495e;
+        }
+
         /* Charts */
         .chart-container {
             background-color: #fcfcfc;
             border-radius: 8px;
             box-shadow: none;
             padding: 10px;
+            margin-top: 20px;
             margin-bottom: 20px;
             border: 1px solid #ddd;
             font-size: 10.5px;
@@ -176,7 +186,6 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-top: 10px;
         }
 
         .chart-data-item {
@@ -287,6 +296,13 @@
 
         .break-before {
             page-break-before: always;
+        }
+
+        .chart-image {
+            max-width: 50%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 10px;
         }
     </style>
 
@@ -427,73 +443,42 @@
             <h2>Applicant Demographics</h2>
 
             <?php if ($reportData['totalApplicants'] > 0): ?>
-                <!-- Gender Distribution -->
-                <h3>Gender Distribution</h3>
-                <div class="chart-container">
-                    <div class="chart-data">
-                        <?php foreach ($reportData['demographics']['gender'] as $gender => $percentage): ?>
-                            <?php
-                            $count = round(($percentage / 100) * $reportData['totalApplicants']);
-                            $class = strtolower($gender);
-                            ?>
-                            <div class="chart-data-item <?= $class ?>"><?= $gender ?>: <?= $count ?> (<?= $percentage ?>%)</div>
-                        <?php endforeach; ?>
+
+                <!-- Gender Chart -->
+                <?php if (!empty($reportData['chartImages']['gender'])): ?>
+                    <div class="chart-container">
+                        <h3 class="chart-heading">Gender Distribution</h3>
+                        <img src="<?= $reportData['chartImages']['gender'] ?>" class="chart-image" alt="Gender Chart">
                     </div>
+                <?php endif; ?>
+        </div>
+        <div class="section">
+            <!-- Age Chart -->
+            <?php if (!empty($reportData['chartImages']['age'])): ?>
+                <div class="chart-container">
+                    <h3 class="chart-heading">Age Distribution</h3>
+                    <img src="<?= $reportData['chartImages']['age'] ?>" class="chart-image" alt="Age Chart">
                 </div>
+            <?php endif; ?>
 
-                <!-- Age Distribution -->
-                <h3>Age Distribution</h3>
+        </div>
+        <div class="section">
+            <!-- University Chart -->
+            <?php if (!empty($reportData['chartImages']['university'])): ?>
                 <div class="chart-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Age</th>
-                                <th>Applicants</th>
-                                <th>Percentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($reportData['demographics']['age'] as $age => $percentage): ?>
-                                <?php $count = round(($percentage / 100) * $reportData['totalApplicants']); ?>
-                                <tr>
-                                    <td><?= $age ?></td>
-                                    <td><?= $count ?></td>
-                                    <td><?= $percentage ?>%</td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- University Distribution -->
-                <h3>University Distribution</h3>
-                <div class="chart-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>University</th>
-                                <th>Applicants</th>
-                                <th>Percentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($reportData['demographics']['university'] as $uni => $percentage): ?>
-                                <?php $count = round(($percentage / 100) * $reportData['totalApplicants']); ?>
-                                <tr>
-                                    <td><?= $uni ?></td>
-                                    <td><?= $count ?></td>
-                                    <td><?= $percentage ?>%</td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <div class="chart-container">
-                    <p class="text-muted">No applicants found for this job posting.</p>
+                    <h3 class="chart-heading">University Distribution</h3>
+                    <img src="<?= $reportData['chartImages']['university'] ?>" class="chart-image" alt="University Chart">
                 </div>
             <?php endif; ?>
         </div>
+        <div class="section">
+        <?php else: ?>
+            <div class="chart-container">
+                <p class="text-muted">No applicants found for this job posting.</p>
+            </div>
+        <?php endif; ?>
+        </div>
+
 
         <!-- Summary Analysis Section -->
         <div class="section">

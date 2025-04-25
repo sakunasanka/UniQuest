@@ -135,6 +135,12 @@ class Report extends Controller
             // 4. Data Fetching
             $reportData = $this->model->getJobPerformanceDataComp($jobId);
 
+            $reportData['chartImages'] = [
+                'gender' => $_POST['chart_gender'] ?? null,
+                'age' => $_POST['chart_age'] ?? null,
+                'university' => $_POST['chart_university'] ?? null,
+            ];
+
             if (!$reportData || empty($reportData['job'])) {
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => 'No performance data available for this job']);

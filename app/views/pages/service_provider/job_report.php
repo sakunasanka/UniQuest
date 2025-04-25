@@ -13,10 +13,15 @@
     <div class="report-header">
         <h1>Job Posting Performance Report</h1>
         <p>Insights on the performance of your job posting.</p>
-        <button onclick="window.location.href='<?php echo URLROOT; ?>/report/generateJobReportPdf/<?php echo $data['job']->JobID; ?>'" class="download-btn">
-            <span class="material-symbols-outlined">download</span> Download PDF
+        <form id="generatePdfForm" method="POST" action="<?php echo URLROOT; ?>/report/generateJobReportPdf/<?php echo $data['job']->JobID; ?>">
+            <input type="hidden" name="chart_gender" id="chart_gender">
+            <input type="hidden" name="chart_age" id="chart_age">
+            <input type="hidden" name="chart_university" id="chart_university">
+            <button class="download-btn">
+                <span class="material-symbols-outlined">download</span> Download PDF
+            </button>
+        </form>
 
-        </button>
     </div>
     <!-- Copy this part and above button for every report -->
 
@@ -72,7 +77,7 @@
                         <canvas id="ageChart"></canvas>
                     </div>
                     <div class="demographic-card">
-                        <canvas id="locationChart"></canvas>
+                        <canvas id="universityChart"></canvas>
                     </div>
                 </div>
             </section>
@@ -95,5 +100,23 @@
         totalApplicants: <?php echo json_encode($data['totalApplicants']); ?>
     };
 </script>
+<script>
+document.getElementById('generatePdfForm').addEventListener('submit', function (e) {
+    const genderCanvas = document.getElementById('genderChart');
+    const ageCanvas = document.getElementById('ageChart');
+    const uniCanvas = document.getElementById('universityChart');
+
+    if (genderCanvas) {
+        document.getElementById('chart_gender').value = genderCanvas.toDataURL("image/png");
+    }
+    if (ageCanvas) {
+        document.getElementById('chart_age').value = ageCanvas.toDataURL("image/png");
+    }
+    if (uniCanvas) {
+        document.getElementById('chart_university').value = uniCanvas.toDataURL("image/png");
+    }
+});
+</script>
+
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
