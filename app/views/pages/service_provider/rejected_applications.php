@@ -24,7 +24,7 @@
         </div>
         <div class="job-details">
             <h2 class="job-title" onclick="goToJob(<?php echo $data['post']->JobID; ?>);">
-                Job Title: <?php echo htmlspecialchars($data['post']->Title); ?>
+                Job Title: <?php echo ($data['post']->Title); ?>
             </h2>
             <p>
                 Location: <?php echo $data['post']->City; ?>

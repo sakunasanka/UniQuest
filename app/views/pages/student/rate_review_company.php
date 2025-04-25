@@ -46,7 +46,7 @@
                     <div class="review-card">
                         <h3><?php echo htmlspecialchars($review->CompanyID); ?></h3>
                         <div class="rating">Rating: <?php echo $review->Rating; ?> ★</div>
-                        <p><?php echo htmlspecialchars($review->Comment); ?></p>
+                        <p><?php echo ($review->Comment); ?></p>
                         <form action="<?php echo URLROOT; ?>/student/editReview/<?php echo $review->id; ?>" method="POST" class="edit-form">
                             <button type="submit" class="edit-btn">Edit</button>
                         </form> 

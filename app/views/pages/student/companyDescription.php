@@ -166,9 +166,9 @@
                     <?php foreach ($data['reviews'] as $index => $review): ?>
                         <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
-                                <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                                <p class="review-text">"<?php echo ($review->Comment ?? ''); ?>"</p>
                                 <div class="review-details">
-                                    <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName); ?></span>
+                                    <span class="reviewer-name">- <?php echo ($review->StudentName); ?></span>
                                     <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? ''); ?></span>
                                 </div>
                                 <?php if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') || (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company')): ?>
