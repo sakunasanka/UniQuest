@@ -12,11 +12,11 @@
                 <?php foreach ($data['reviews'] as $index => $review): ?>
                     <div class="review">
                         <div class="review-header">
-                            <p class="review-text">"<?php echo htmlspecialchars($review->Comment ?? ''); ?>"</p>
+                            <p class="review-text">"<?php echo ($review->Comment ?? ''); ?>"</p>
                             <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
                         </div>
                         <div class="review-details">
-                            <span class="reviewer-name">- <?php echo htmlspecialchars($review->StudentName ?? 'Anonymous'); ?></span>
+                            <span class="reviewer-name">- <?php echo ($review->StudentName ?? 'Anonymous'); ?></span>
                             <span class="review-rating"><i class="fa fa-star"></i> <?php echo htmlspecialchars($review->Rating ?? '0'); ?></span>
                         </div>
                         <?php  if ((isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student') ||(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Company')):?>

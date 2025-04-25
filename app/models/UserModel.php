@@ -1,6 +1,7 @@
 <?php
 class userModel extends Model
 {
+    
     public function findUserByEmail($email)
     {
         try {

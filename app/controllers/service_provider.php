@@ -1387,12 +1387,12 @@ class Service_provider extends Controller
                 'user' => $this->model->getUserDetails($userID),
                 'sender_id' => $_SESSION['user_id'],
                 'receiver_id' => $userID,
+                'receiver_role' => $this->model->getUserDetails($userID)['Role'],
                 'messages' => $this->model('chatModel')->getMessages($_SESSION['user_id'], $userID),
                 'messageInput' => trim($_POST['messageInput'] ?? ''),
                 'topic' => !empty($submittedTopic) ? $submittedTopic : $lastTopic, // Ensure topic is never empty
                 'messageInput_err' => '',
             ];
-
             // Validation
             if (empty($data['messageInput'])) {
                 $data['messageInput_err'] = 'Message cannot be empty';
@@ -1401,6 +1401,14 @@ class Service_provider extends Controller
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
+                    //get last message
+                    $messageId = $this->model('chatModel')->getLastMessageId($data['sender_id'], $data['receiver_id']);
+                    $new_user_id = $this->model('chatModel')->getMessageById($messageId)->receiver_id;
+                    $new_user = $this->model->getUserDetails($new_user_id);
+                    if($new_user['Role'] == 'Student') {
+                        $this-> model('chatModel')->updateReadStatus($messageId);
+                    }
+                        
                     // flash('message_sent', 'Message sent successfully');
                     redirect('service_provider/messages_stu/' . $userID);
                 } else {
