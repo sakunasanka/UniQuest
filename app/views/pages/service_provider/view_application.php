@@ -383,7 +383,7 @@
                     <?php elseif ($data['message']->receiver_role == 'Student'):?>
                         <button class="action-button contact-btn" 
                             onclick="openChatPopup('<?php echo $message->receiver_id; ?>', '<?php echo($data['message']->id);?>')">
-                            preview
+                            Contact
                         </button>
                     <?php endif; ?>
                     </div>    
