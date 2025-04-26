@@ -17,7 +17,7 @@
 
                     <div class="form-group">
                         <label for="job_title">Job Title:</label>
-                        <input type="text" id="job_title" name="jobName" value="<?php echo $data['job_name']; ?>">
+                        <input type="text" id="job_title" name="jobName" value="<?php echo $data['job_name']; ?>" readonly>
                     </div>
                     <span class="form-invalid"><?php echo $data['job_name_err']; ?></span>
 
@@ -29,18 +29,8 @@
 
                     <div class="form-group">
                         <label for="jobLocation" class="required">Job Location:</label>
-                        <select id="districtID" name="job_district" required style="margin-right : 40px;" data-preselected-district="<?php echo htmlspecialchars($data['job_district']); ?>">
-                            <option value="" disabled selected>Select District</option>
-                            <?php foreach ($data['districts'] as $district): ?>
-                                <option value="<?php echo $district->DistrictID; ?>" <?php echo ($data['job_district'] === $district->DistrictID) ? 'selected' : ''; ?>>
-                                    <?php echo $district->DistrictName; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-
-                        <select id="cityID" name="job_city" required style="width: 50%;" data-preselected-city="<?php echo htmlspecialchars($data['job_city']); ?>">
-                            <option value="" disabled selected>Select City</option>
-                        </select>
+                        <input type="text" id="jobDistrict" name="job_district" value="<?php echo $data['job_district']; ?>" style="margin-right : 40px;" readonly>
+                        <input type="text" id="jobCity" name="job_city" value="<?php echo $data['job_city']; ?>" readonly>
                     </div>
                     <span class="form-invalid"><?php echo $data['job_location_err']; ?></span>
 
@@ -50,7 +40,7 @@
                     <div class="form-group">
                         <label for="salary_range">Salary Range:</label>
                         <input type="text" id="salary_range" name="salaryRange" value="<?php echo $data['salary_range']; ?>" style="margin-right : 40px;">
-                        <select name="salaryType" id="salaryType">
+                        <select name="salaryType" id="salaryType" disabled>
                             <option value="Per Hour" <?php echo ($data['salary_type'] === 'Per Hour') ? 'selected' : ''; ?>>Per Hour</option>
                             <option value="Per Day" <?php echo ($data['salary_type'] === 'Per Day') ? 'selected' : ''; ?>>Per Day</option>
                             <option value="Per Week" <?php echo ($data['salary_type'] === 'Per Week') ? 'selected' : ''; ?>>Per Week</option>
