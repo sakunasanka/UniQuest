@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const addButton = document.querySelector(".add-btn");
+    const addButton = document.getElementById("add-btn");
 
     if (addButton) {
         const targetPath = addButton.dataset.path;
