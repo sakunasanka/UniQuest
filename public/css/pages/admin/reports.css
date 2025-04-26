@@ -51,6 +51,31 @@ body {
     color: #28a745;
 }
 
+.time-period-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.time-period-filter select {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+#customDateRange {
+    gap: 10px;
+    align-items: center;
+}
+
+#customDateRange input {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
 .main-container {
     display: flex;
     justify-content: center;
@@ -156,24 +181,29 @@ body {
 }
 
 .report-actions a,
-.report-actions button {
-    display: flex;
+.report-actions button,
+.time-period-filter button {
     align-items: center;
     gap: 5px;
-    padding: 8px 14px;
+    padding: 10px 20px;
     font-size: 14px;
     color: #fff;
     background-color: #2d9c80;
     border: none;
-    border-radius: 6px;
-    text-decoration: none;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+    background-color: #299b63;
+    color: #fff;
+
 }
 
 .report-actions a:hover,
 .report-actions button:hover {
-    background-color: #22735f;
+    background-color: #137d4a;
 }
 
 .report-actions button {
@@ -192,6 +222,7 @@ body {
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
+    justify-content: space-between;
 }
 
 .summary-card {

@@ -53,7 +53,7 @@ class TableSearcher
 
         // Search Bar form
         $searchBarHtml = "<form class='search-bar' method='GET' action='$baseUrlEscaped'>";
-        $searchBarHtml .= "<span class='material-symbols-outlined icon'>search</span>";
+        // $searchBarHtml .= "<span class='material-symbols-outlined icon'>search</span>";
         $searchBarHtml .= "<input type='text' class='search' name='search' placeholder='Search...' value='$searchTermEscaped'>";
 
         // Search Button

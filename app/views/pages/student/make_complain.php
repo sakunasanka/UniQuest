@@ -11,8 +11,8 @@
         <div class="complaint-container">
             <!-- Complaint Form Section -->
             <div class="complaint-form-container">
-                <h2>Report an Issue</h2>
-                <p>Let us know about any problem with this job</p>
+                <h1>Report an Issue</h1>
+                <h3>Let us know about any problem with this job</h3>
 
                 <!-- Form -->
                 <form action="<?php echo URLROOT; ?>/student/make_complain/<?php echo $data['jobID'] ?>" method="POST" enctype="multipart/form-data">

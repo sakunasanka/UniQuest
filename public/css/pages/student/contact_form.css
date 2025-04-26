@@ -61,10 +61,10 @@ body {
 }
 
 .contact-left input:focus,
-.contact-left textarea:focus {
-    border-color:  #299b63;
+.contact-left textarea:focus,
+.contact-left select:focus {
     outline: none;
-    border-width:0.15rem;
+    border: 2px solid #32a852;
 }
 
 .contact-left textarea {

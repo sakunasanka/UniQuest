@@ -22,7 +22,7 @@
 
                 </div>
                 <div class="icon_">
-                    <span class="material-symbols-outlined large-icon">work</span>
+                    <span class="material-symbols-outlined large-icon">business_center</span>
                 </div>
             </div>
             <div class="card stat-card">
@@ -31,7 +31,7 @@
                     <p><?php echo $data['activeJobCount']; ?></p>
                 </div>
                 <div class="icon_">
-                    <span class="material-symbols-outlined large-icon">work</span>
+                    <span class="material-symbols-outlined large-icon">work_history</span>
                 </div>
             </div>
             <div class="card stat-card">
@@ -40,7 +40,7 @@
                     <p><?php echo $data['applicationCount'];?></p>
                 </div>
                 <div class="icon_">
-                    <span class="material-symbols-outlined large-icon">school</span>
+                    <span class="material-symbols-outlined large-icon">groups</span>
                 </div>
             </div>
         </div>

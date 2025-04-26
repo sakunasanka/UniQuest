@@ -16,7 +16,7 @@
 
 .search {
     font-size: 16px;
-    padding: 12px 20px 12px 40px; 
+    padding: 12px 20px 12px 20px; 
     border: 2px solid #e0e0e0;
     border-radius: 10px;
     flex-grow: 1; /* Take the remaining width */
@@ -33,7 +33,7 @@
     color: #333;
 }
 
-.search-button, .clear-button {
+.search-button, .clear-button, .post-btn {
     font-size: 16px;
     padding: 12px 15px;
     border: none;
@@ -47,8 +47,8 @@
 }
 
 .search-button {
-    background-color: #32a852;
-    color: white;
+    background-color: #299b63;
+    color: #fff;
 }
 
 .clear-button {
@@ -58,7 +58,7 @@
 }
 
 .search-button:hover {
-    background-color: #289043;
+    background-color:#137d4a;
 }
 
 .clear-button:hover {
@@ -88,4 +88,31 @@
 .column-select option:hover {
     background-color: #32a852;
     color: #fff;
+}
+
+.post-btn {
+    border: 2px solid #299b63; 
+    border-radius: 10px; 
+    background-color: transparent;
+    color: #299b63; 
+}
+
+.post-btn:hover {
+    background-color: #299b63;
+    color: #fff; 
+    border-color: #299b63; 
+}
+.post-btn:active {
+    background-color: #137d4a; 
+    border-color: #137d4a;
+    cursor: pointer; 
+}
+
+.material-symbols-outlined {
+    font-size: 20px; /* Slightly larger icon */
+    vertical-align: middle;
+}
+
+.add-btn-text {
+    vertical-align: middle;
 }

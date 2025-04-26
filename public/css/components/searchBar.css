@@ -32,7 +32,7 @@
 .search {
     flex-grow: 1;
     font-size: 16px;
-    padding: 10px 20px 10px 40px;
+    padding: 10px 20px 10px 20px;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
     outline: none;
@@ -115,8 +115,8 @@
 }
 
 .search-button {
-    background-color: #32a852;
-    color: white;
+    background-color: #299b63;
+    color: #fff;
 }
 
 .clear-button {
@@ -134,7 +134,7 @@
 
 /* Adjust search button spacing */
 .search-button:hover {
-    background-color: #289043;
+    background-color: #137d4a;
 }
 
 .clear-button:hover {
