@@ -99,11 +99,12 @@ label input[type="checkbox"] {
 }
 
 .cancel-btn {
-    background-color: #333;
-    color: #fff;
+    background-color: #f0f0f0;
+    color: #333;
     margin-top: 30px;;
     text-decoration: none;
     padding: 10px 20px;
+    border: 2px solid #6c757d;
     border-radius: 5px;
     font-size: 16px;
     text-align: center;
@@ -111,7 +112,9 @@ label input[type="checkbox"] {
 }
 
 .cancel-btn:hover {
-    background-color: #555;
+    background-color: #6c757d;
+    color: #fff;
+    border-color: #6c757d;
 }
 
 

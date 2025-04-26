@@ -114,20 +114,20 @@ label {
 }
 
 .edit-btn {
-    background-color: #04AA6D;
+    background-color: #299b63;
     color: #fff;
-    border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    font-size: 14px;
-    display: block;
-    margin: 0 0 0 auto; 
-    transition: background-color 0.3s;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
 }
 
 .edit-btn:hover {
-    background-color: #218838;
+    background-color: #137d4a;
 }
 
 .changep_password-form-container {

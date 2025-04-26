@@ -33,12 +33,14 @@ p {
 .download-btn {
     background-color: #299b63;
     color: #fff;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
 }
 
 .download-btn:hover {
@@ -110,7 +112,6 @@ h2 {
     border: 2px solid;
     border-color: #32a852;
     border-radius: 8px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

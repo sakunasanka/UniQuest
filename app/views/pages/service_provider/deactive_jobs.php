@@ -28,7 +28,7 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <button class="add-btn" onclick="goToPostJob()">
+                <button class="post-btn" onclick="goToPostJob()">
                     <span class="material-symbols-outlined">post_add</span>
                     <span class="add-btn-text">Post Job</span>
                 </button>

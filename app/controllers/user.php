@@ -83,7 +83,8 @@ class User extends Controller
                         //add login log
                         $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Deactive', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
-                            $this->view('pages/login/deactivate_stu');
+                            $_SESSION['load_deactivate'] = true;
+                            Redirect::to(URLROOT . '/jobs'); 
                         } else if ($loggedInUser->Role === 'Company') {
                             $this->view('pages/login/deactivate_ser');
                         }
@@ -91,7 +92,8 @@ class User extends Controller
                         //add login log
                         $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Pending', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
-                            $this->view('pages/login/wait_to_verify_stu');
+                            $_SESSION['load_pending'] = true;
+                            Redirect::to(URLROOT . '/jobs'); 
                         } else if ($loggedInUser->Role === 'Company') {
                             $this->view('pages/login/wait_to_verify_ser');
                         }
@@ -99,7 +101,8 @@ class User extends Controller
                         //add login log
                         $this->model->addLoginLog($loggedInUser->UserID, 'Failed', 'Login failed : Not Approved', $loggedInUser->Role);
                         if ($loggedInUser->Role === 'Student') {
-                            $this->view('pages/login/not_approved_stu');
+                            $_SESSION['load_not_approved'] = true;
+                            Redirect::to(URLROOT . '/jobs');   
                         } else if ($loggedInUser->Role === 'Company') {
                             $this->view('pages/login/not_approved_ser');
                         }

@@ -147,10 +147,12 @@ label {
 .btn-row button {
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
+    min-width: 200px;
+    height: 50px;
+    font-size: 1.3em;
 }
 
 button.contact-btn {
@@ -159,8 +161,9 @@ button.contact-btn {
 }
 
 button.contact-btn:hover {
-    background-color: #0056b3;
+    background-color: #0056b3;;
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

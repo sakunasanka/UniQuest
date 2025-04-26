@@ -229,18 +229,20 @@ body {
     cursor: pointer;
 }
 
-.btn-row button {
+.btn-row button, .btn-row select{
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
 }
 
 button.approve-btn {
-    background-color: #32a852;
-    color: #ffffff;
+    background-color: #299b63;
+    color: #fff;
 }
 
 button.reject-btn {
@@ -249,7 +251,7 @@ button.reject-btn {
 }
 
 button.approve-btn:hover {
-    background-color: #038a27;
+    background-color: #137d4a;
 }
 
 button.reject-btn:hover:not(:disabled) {
@@ -262,23 +264,21 @@ button.reject-btn:disabled, .btn-row select:disabled {
 }
 
 .btn-row select {
-    width: 150px; /* Adjust width as needed */
-    padding: 8px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    background-color: #ffffff;
-    color: #333;
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    flex: 1;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 0 15px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
 }
 
-/* When the dropdown is focused */
 .btn-row select:focus {
-    border-color: #dc3545;
-    /* box-shadow: 0 0 5px rgba(50, 168, 82, 0.5); */
+    outline: none;
+    border-color: #32a852;
+    box-shadow: 0 0 0 2px rgba(50, 168, 82, 0.2);
 }
 
 /* Style dropdown arrow */
@@ -322,3 +322,4 @@ button.reject-btn:disabled, .btn-row select:disabled {
         margin-top: 20px;
     }
 }
+
