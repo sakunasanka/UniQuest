@@ -67,14 +67,13 @@
                                             </span>
                                             <span class="tooltiptext view">View</span>
                                         </div>
-                                        
-                                        <div class="tooltip"> 
-                                            <span class="material-symbols-outlined action-btn activate" onclick="activateJob(<?php echo $job->JobID; ?>, 'Part-time')">
-                                                check_circle
-                                            </span>
-                                            <span class="tooltiptext activate">Activate</span>
-                                        </div> 
-                                        
+
+                                        <div class="tooltip">                                        
+                                        <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateJob(<?php echo $job->JobID; ?>, 'Part-time')">
+                                            block
+                                        </span>
+                                            <span class="tooltiptext deactivate">Deactivate</span>
+                                        </div>
                                     </td>
                                 <?php elseif ($job->Status == 'Admin-Deactive') : ?>
                                     <td><span class="status inactive">A-Deactivated</span></td>
@@ -112,3 +111,4 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>
+
