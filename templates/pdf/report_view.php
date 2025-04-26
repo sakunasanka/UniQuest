@@ -150,6 +150,21 @@
             <p class="content-subtitle">Generated on <?= date('F j, Y \a\t H:i') ?></p>
         </div>
 
+        <!-- Report Info -->
+        <div class="report-info">
+            <!-- <span class="report-info-item">Total Records: <?= count($reportData) ?></span> -->
+            <?php if (isset($timePeriod) && $timePeriod !== 'all'): ?>
+                <span class="report-info-item">Time Period: 
+                    <?php if ($timePeriod === 'custom'): ?>
+                        <?= date('M j, Y', strtotime($startDate)) ?> to <?= date('M j, Y', strtotime($endDate)) ?>
+                    <?php else: ?>
+                        Last <?= str_replace(['1month', '3months', '6months', '1year'], 
+                                           ['1 Month', '3 Months', '6 Months', '1 Year'], $timePeriod) ?>
+                    <?php endif; ?>
+                </span>
+            <?php endif; ?>
+        </div>
+
         <table>
             <thead>
                 <tr>

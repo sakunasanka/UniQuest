@@ -250,16 +250,34 @@ class Register extends Controller
                     // Redirect to register page
                     Redirect::to(URLROOT . '/register/company');
                 } else {
-                    //error message for expired token
-                    die('Token expired');
+                    // Init data
+                    $data = [
+                        'email' => '',
+                        'email_err' => ' Token expired'
+                    ];
+
+                    // Load view
+                    $this->view('pages/register/send_verification_comp', $data);
                 }
             } else {
-                //error message for invalid token
-                die('Invalid token');
+                // Init data
+                $data = [
+                    'email' => '',
+                    'email_err' => 'Invalid token'
+                ];
+
+                // Load view
+                $this->view('pages/register/send_verification_comp', $data);
             }
         } else {
-            //TODO: Handle this
-            die('Token not found');
+            // Init data
+            $data = [
+                'email' => '',
+                'email_err' => 'Token not found'
+            ];
+
+            // Load view
+            $this->view('pages/register/send_verification_comp', $data);
         }
     }
 
@@ -348,16 +366,34 @@ class Register extends Controller
                     // Redirect to register page
                     Redirect::to(URLROOT . '/register/student');
                 } else {
-                    //error message for expired token
-                    die('Token expired');
+                    // Init data
+                    $data = [
+                        'email' => '',
+                        'email_err' => ' Token expired'
+                    ];
+
+                    // Load view
+                    $this->view('pages/register/send_verification_comp', $data);
                 }
             } else {
-                //error message for invalid token
-                die('Invalid token');
+                // Init data
+                $data = [
+                    'email' => '',
+                    'email_err' => 'Invalid token'
+                ];
+
+                // Load view
+                $this->view('pages/register/send_verification_comp', $data);
             }
         } else {
-            //TODO: Handle this
-            die('Token not found');
+            // Init data
+            $data = [
+                'email' => '',
+                'email_err' => 'Token not found'
+            ];
+
+            // Load view
+            $this->view('pages/register/send_verification_comp', $data);
         }
     }
 

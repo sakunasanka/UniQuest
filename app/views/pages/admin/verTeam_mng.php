@@ -25,7 +25,7 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <button class="post-btn" data-path="/UniQuest/admin/add_member">
+                <button class="post-btn" id="add-btn" data-path="/UniQuest/admin/add_member">
                     <span class="material-symbols-outlined">person_add</span>
                     <span class="add-btn-text">Add Member</span>
                 </button>
