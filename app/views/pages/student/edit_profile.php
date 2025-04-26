@@ -97,8 +97,9 @@
                     <!-- Save Changes button -->
                     <div class="form-row">
                         <div class="form-group">
-                            <button type="button" class="cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/user/profile'">Cancel</button>
                             <button type="submit" class="save-button">Save Changes</button>
+                            <button type="button" class="cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/user/profile'">Cancel</button>
+                            
                             <!-- <button type="button" class="change-password-btn" onclick="ToggleChangePasswordForm()">change password</button> -->
                         </div>
                     </div>

@@ -32,14 +32,16 @@ h1 {
 
 /* Button Styles */
 .btn-primary {
-    background-color: #3cb56e;
-    color: white;
+    background-color: #299b63;
+    color: #fff;
+    padding: 10px 20px;
     border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
-    font-weight: 600;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
 }
 
 .btn-primary:hover {
@@ -47,18 +49,29 @@ h1 {
 }
 
 .btn-secondary {
-    background-color: #f1f5f9;
-    color: #4a5568;
-    border: 1px solid #e2e8f0;
-    padding: 12px 20px;
-    border-radius: 5px;
-    font-weight: 600;
+    padding: 10px 20px;
+    border: 2px solid #299b63; 
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+    background-color: transparent; 
+    color: #299b63; 
+    transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
-    background-color: #e2e8f0;
+    background-color: #299b63;
+    color: #fff; 
+    border-color: #299b63;
+}
+
+.btn-secondary:active {
+    background-color: #137d4a; 
+    border-color: #137d4a;
+    cursor: pointer; 
 }
 
 /* Job Card Styles */

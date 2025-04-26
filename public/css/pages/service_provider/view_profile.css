@@ -165,19 +165,27 @@ body {
     gap: 4px;
 }
 
-.subscription-plan {
-    margin-left: auto;
-    padding: 8px 16px;
-    background-color: #f0f7f4;
-    border: 1px solid #32a852;
-    color: #32a852;
+.subscription-plan{
     display: flex;
     align-items: center;
-    gap: 10px;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
+
+.subscription-plan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.gold-icon { color: #FFD700; }
+.black-icon { color: #333; }
 
 .days-remaining {
     color: #666; 
@@ -288,21 +296,20 @@ body {
 }
 
 .edit-btn button {
-    background-color: #299b63; 
-    color: white;
-    border: none;
+    background-color: #299b63;
+    color: #fff;
     padding: 10px 20px;
-    border-radius: 4px;
+    border: none;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: background-color 0.3s ease;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
 }
 
 .edit-btn button:hover {
-    background-color: #3cb56e; 
+    background-color: #137d4a; 
 }
 
 .edit-btn .material-symbols-outlined {

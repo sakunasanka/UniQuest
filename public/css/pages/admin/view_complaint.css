@@ -282,7 +282,7 @@ select.reason-select.reject {
     border-left: 4px solid #dc3545;
 }
 select.reason-select.approve {
-    border-left: 4px solid #28a745;
+    border-left: 4px solid #299b63;
 }
 
 /* ==================== */
@@ -304,11 +304,11 @@ button {
 
 /* Solid Buttons */
 button.approve-btn {
-    background-color: #32a852;
-    color: #ffffff;
+    background-color: #299b63;
+    color: #fff;
 }
 button.approve-btn:hover {
-    background-color: #038a27;
+    background-color: #137d4a;
 }
 
 button.reject-btn {

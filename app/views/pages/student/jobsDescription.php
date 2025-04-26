@@ -226,7 +226,7 @@
                 </div>
             </div>
             <div class="buttons">
-                <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
+                <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn2">View Company</button>
             </div>
         </div>    
     </div>

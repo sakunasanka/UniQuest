@@ -116,7 +116,7 @@ class Filter
     private function renderSalaryInputs()
     {
         $minSalaryEscaped = $this->minSalary ?: 0;
-        $maxSalaryEscaped = $this->maxSalary ?: 500000;
+        $maxSalaryEscaped = $this->maxSalary ?: 250000;
         $salaryType = $this->salaryType ?: '';
 
         $html = "<div class='salary-filter'>";
@@ -138,8 +138,8 @@ class Filter
 
         // Range slider with two handles
         $html .= "<div class='range-slider'>";
-        $html .= "<input type='range' id='minSalaryRange' min='0' max='500000' step='2500' value='$minSalaryEscaped'>";
-        $html .= "<input type='range' id='maxSalaryRange' min='0' max='500000' step='2500' value='$maxSalaryEscaped'>";
+        $html .= "<input type='range' id='minSalaryRange' min='0' max='250000' step='2500' value='$minSalaryEscaped'>";
+        $html .= "<input type='range' id='maxSalaryRange' min='0' max='250000' step='2500' value='$maxSalaryEscaped'>";
         $html .= "</div>";
 
         // Hidden inputs for form submission

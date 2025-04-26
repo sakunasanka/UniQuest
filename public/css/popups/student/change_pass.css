@@ -86,20 +86,20 @@
 }
 
 .changep_change-button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 12px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 6px;
-    font-size: 16px;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    width: 100%;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+    background-color: #299b63;
+    color: #fff;
 }
 
 .changep_change-button:hover {
-    background-color: #0056b3;
+    background-color: #137d4a;
 }
 
 .error-msg {

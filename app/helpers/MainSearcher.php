@@ -60,7 +60,7 @@ class MainSearcher
 
         $searchBarHtml = "<div class='search-bar-container'>";
         $searchBarHtml .= "<form class='search-bar' method='GET' action='$baseUrlEscaped'>";
-        $searchBarHtml .= "<span class='material-symbols-outlined icon'>search</span>";
+        // $searchBarHtml .= "<span class='material-symbols-outlined icon'>search</span>";
         $searchBarHtml .= "<input type='text' class='search' name='search' id='searchInput' placeholder='$placeHolder' value='$searchTermEscaped'>";
         $searchBarHtml .= "<span class='clear-icon' onclick=\"window.location.href='$baseUrlEscaped'\" id='clearSearch'>&times;</span>"; // Cross icon for clearing
         $searchBarHtml .= "<button type='submit' class='search-button'>Search</button>";
