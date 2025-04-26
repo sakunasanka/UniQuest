@@ -98,7 +98,7 @@ class jobModel extends Model
         try {
             // Define base conditions
             $conditions = [
-                ['Status', 'IN', ['Active', 'Deactive']],
+                ['Status', 'IN', ['Active', 'Deactive', 'Admin-Deactive']],
                 ['Category', '=', $category]
             ];
 
@@ -288,7 +288,7 @@ class jobModel extends Model
     {
         try {
             $jobData = [
-                'Status' => 'Deactive'
+                'Status' => 'Admin-Deactive'
             ];
             if ($this->update('Jobs', $jobData, ['JobID' => $jobId])) {
                 return true;

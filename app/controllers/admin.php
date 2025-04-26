@@ -959,7 +959,7 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'Status';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
