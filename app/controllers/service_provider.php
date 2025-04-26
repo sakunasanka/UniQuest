@@ -199,8 +199,8 @@ class Service_provider extends Controller
             // Get the requested data from query params
             $pageNumber = isset($queryParam['page']) ? (int)$queryParam['page'] : 1;
             $rowsPerPage = isset($queryParam['limit']) ? (int)$queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'Status';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
             $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search);
             $data = [

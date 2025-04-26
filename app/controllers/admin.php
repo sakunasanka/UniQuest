@@ -959,8 +959,8 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'Status';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
@@ -1001,7 +1001,7 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'PublishDate';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
