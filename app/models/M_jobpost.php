@@ -139,7 +139,7 @@ class M_jobpost extends Model
             // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                ['Status', '=', 'Deactive']
+                ['Status', 'IN', ['Deactive', 'Admin-Deactive']]
             ];
 
             // Add search condition if a search term is provided
