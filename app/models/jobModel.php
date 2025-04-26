@@ -388,8 +388,8 @@ class jobModel extends Model
     }
     public function addView($jobID, $companyID) {
         try {
-            $this->db->query("INSERT  INTO is_viewed_job (CompanyID,UserID, JobID) VALUES (:CompanyID,:studentId, :jobID)");
-            $this->db->bind(':studentId', $_SESSION['user_id']);
+            $this->db->query("INSERT  INTO is_viewed_job (CompanyID, UserID, JobID) VALUES (:CompanyID,:userID, :jobID)");
+            $this->db->bind(':userID', $_SESSION['user_id'] ?? null);
             $this->db->bind(':jobID', $jobID);
             $this->db->bind(':CompanyID', $companyID);
             return $this->db->execute();
