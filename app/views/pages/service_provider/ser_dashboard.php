@@ -57,7 +57,7 @@
                     </div>
                     <div class="active">
                         <span class="active-stat"><?php echo $data['companyInfo']->AcceptedApplicationCount; ?></span>
-                        <span class="active-label">Active</span>
+                        <span class="active-label">Accepted</span>
                     </div>  
                 </div>
             </div>
