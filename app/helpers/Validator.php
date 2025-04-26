@@ -28,8 +28,9 @@ class Validator
     //validate the company name
     public static function isValidCompanyName($companyName): bool
     {
-        return preg_match('/^[a-zA-Z0-9\s\-\.\&]+$/', $companyName);
+        return preg_match('/^[a-zA-Z0-9\s\-\.\&\,\'\(\)\/\+]+$/', $companyName);
     }
+
 
     //validate the password
     public static function isValidPassword($password): bool

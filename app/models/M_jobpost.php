@@ -349,7 +349,7 @@ class M_jobpost extends Model
             $conditions = array_merge($conditions, $filterConditions);
 
             // Get the jobs with applied filters
-            $jobs = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $jobs = $this->select('v_jobs', $conditions, '*', 'AND', '', 'CompanyPlan ASC,' . $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
 
             return $jobs;
         } catch (PDOException $e) {
@@ -382,7 +382,7 @@ class M_jobpost extends Model
             $filterConditions = $this->buildFilterConditions($filters);
             $conditions = array_merge($conditions, $filterConditions);
 
-            $interns = $this->select('v_jobs', $conditions, '*', 'AND', '', $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
+            $interns = $this->select('v_jobs', $conditions, '*', 'AND', '', 'CompanyPlan ASC,' .  $sort . ' ' . $order, $rowsPerPage, $pageNumber, true);
             return $interns;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
