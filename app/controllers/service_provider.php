@@ -200,7 +200,7 @@ class Service_provider extends Controller
             $pageNumber = isset($queryParam['page']) ? (int)$queryParam['page'] : 1;
             $rowsPerPage = isset($queryParam['limit']) ? (int)$queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'Status';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
             $posts = $this->model('M_jobpost')->getPendingPost($pageNumber, $rowsPerPage, $sort, $order, $search);
             $data = [

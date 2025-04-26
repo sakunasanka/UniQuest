@@ -960,7 +960,7 @@ class Admin extends Controller
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
             $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'Status';
-            $order = isset($queryParam['order']) ? $queryParam['order'] : 'ASC';
+            $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
             $jobs = $this->model('jobModel')->getPendingJobs($page, $limit, $sort, $order, $search);
