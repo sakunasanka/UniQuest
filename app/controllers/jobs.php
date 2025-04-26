@@ -808,6 +808,13 @@ class Jobs extends Controller
             // Get bookmarked companies for the user
             $bookmarkedCompanies = $this->model('jobModel')->getBookmarkedCompanies($userId);
             $bookmarkedCompanyIds = array_column($bookmarkedCompanies, 'CompanyID');
+
+            $displayRatings = [];
+        // Loop through each job post to get the display rating for the associated company
+        foreach ($trendy_companies as $trending_company) {
+            $companyID = $trending_company['CompanyID']; 
+            $displayRatings[$companyID] = $this->model('RateAndReviewModel')->getDisplayRating($companyID);
+        }
         } else {
             $userId = null;
             $bookmarkedCompanies = []; // No bookmarks if not logged in
@@ -816,7 +823,8 @@ class Jobs extends Controller
         $data = [
             'trendy_companies' => $trendy_companies,
             'bookmarkedCompanies' => $bookmarkedCompanies,
-            'bookmarkedCompanyIds' => $bookmarkedCompanyIds
+            'bookmarkedCompanyIds' => $bookmarkedCompanyIds,
+            'displayRatings' => $displayRatings,
         ];
 
         if (isset($_SESSION['user_role'])) {
