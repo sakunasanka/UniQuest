@@ -173,7 +173,7 @@ body {
 .user-details .btn-row {
     margin-top: auto; /* Push the buttons to the bottom */
     display: flex;
-    justify-content: space-between; /* Spread the buttons evenly */
+    justify-content: end; /* Spread the buttons evenly */
     align-items: center;
     gap: 10px;
     padding: 10px 0; /* Add some padding for better spacing */
@@ -182,7 +182,7 @@ body {
 .user-details .btn-row button {
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
@@ -191,6 +191,7 @@ body {
 button.approve-btn {
     background-color: #299b63;
     color: #fff;
+    margin-left: 100px;
 }
 
 button.reject-btn {
