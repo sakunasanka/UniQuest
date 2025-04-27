@@ -50,7 +50,7 @@
                 <hr class="option-bar">
                 <ul>
                     <li>✓ Post up to 5 job listings</li>
-                    <li>✓ 50 candidate applications</li>
+                    <li>✓ 50 candidate applications per job</li>
                     <li>✓ Generate Job Report</li>
                     <li>✓ Edit Active Jobs</li>
                 </ul>

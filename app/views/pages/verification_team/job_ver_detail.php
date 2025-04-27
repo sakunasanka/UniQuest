@@ -54,6 +54,26 @@
                         <?php echo $data['job']->JobBenefits ?>
                     </div>
                 </div>
+                <div class="view-card-info" style="gap: 20px; row-gap: 10px;">
+                    <h3 style="width: 100%;">Application Form Structure:</h3>
+                    <?php
+                    $fields = $data['fields'];
+                    if ($fields):
+                        foreach ($fields as $fieldName => $fieldConfig):
+                            $isRequired = isset($fieldConfig['required']) && $fieldConfig['required'];
+                    ?>
+
+                            <div class="form-group">
+                                <label for="<?php echo $fieldName; ?>">
+                                    <?php echo $fieldConfig['label']; ?>
+                                    <span class="required-asterik" <?php if ($isRequired) echo 'style="display:inline;"'; ?>>*</span>
+                                </label>
+                            </div>
+                    <?php
+                        endforeach;
+                    endif;
+                    ?>
+                </div>
                 <div class="btn-row">
                     <?php if ($data['verifyDetails']): ?>
                         <?php if ($data['verifyDetails']->Action == 'Approve'): ?>

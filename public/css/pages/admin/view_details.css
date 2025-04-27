@@ -227,8 +227,8 @@ button.contact-btn:hover {
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    min-width: 150px;
-    height: 50px;
+    min-width: 100px;
+    height: 40px;
     font-size: 1.3em;
 }
 
@@ -260,8 +260,8 @@ button.contact-btn:hover {
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    min-width: 150px;
-    height: 50px;
+    min-width: 100px;
+    height: 40px;
     font-size: 1.3em;
 }
 
@@ -315,8 +315,8 @@ button.contact-btn:hover {
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    min-width: 150px;
-    height: 50px;
+    min-width: 100px;
+    height: 40px;
     font-size: 1.2em;
 }
 
