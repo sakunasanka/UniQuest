@@ -43,7 +43,7 @@ class Report extends Controller
                         'Job reports are available in Professional and Enterprise plans only',
                         'alert alert-warning'
                     );
-                    Redirect::to(URLROOT . '/service_provider/dashboard');
+                    Redirect::to(URLROOT . '/service_provider/premium');
                     return;
                 }
             }
