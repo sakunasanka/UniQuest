@@ -943,10 +943,13 @@ class Admin extends Controller
             $job = $this->model('jobModel')->getJobDetails($jobID);
             $rejectReasons = $this->model('AdminModel')->getReasonsByType('job_reject');
             $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($jobID);
+            $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobID);
+            
             $data = [
                 'job' => $job,
                 'rejectReasons' => $rejectReasons['data'],
                 'verifyDetails' => $verifyDetails,
+                'fields' => $applicationFields
             ];
             $this->view('pages/admin/job_detail', $data);
         } catch (Exception $e) {
