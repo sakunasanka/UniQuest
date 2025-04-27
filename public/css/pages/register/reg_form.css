@@ -342,21 +342,29 @@ button[type="submit"]:hover {
 }
 
 .browse-btn {
-    background-color: #32a852;
-    color: white;
-    border: none;
-    padding: 8px;
-    font-size: 0.9rem;
+    padding:5px 10px;
+    border: 2px solid #299b63; 
     border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    font-size: 1em;
+    background-color: transparent; 
+    color: #299b63;
+    transition: all 0.3s ease; 
 }
 
 .browse-btn:hover {
-    background-color: #038a27;
+    background-color: #299b63; 
+    color: #fff; 
+    border-color: #299b63; 
 }
+
+.browse-btn:active {
+    background-color: #137d4a;
+    border-color: #137d4a;
+    cursor: pointer; 
+}
+
 
 .file-content {
     padding: 10px;

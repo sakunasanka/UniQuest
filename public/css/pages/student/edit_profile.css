@@ -365,22 +365,20 @@ textarea {
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    min-width: 150px;
-    height: 50px;
-    font-size: 1.2em;
+    font-size: 1em;
     background-color: transparent; 
-    color: #299b63; 
+    color: #299b63;
     transition: all 0.3s ease; 
 }
 
 .browse-btn:hover {
-    background-color: #299b63;
+    background-color: #299b63; 
     color: #fff; 
     border-color: #299b63; 
 }
 
 .browse-btn:active {
-    background-color: #137d4a; 
+    background-color: #137d4a;
     border-color: #137d4a;
     cursor: pointer; 
 }

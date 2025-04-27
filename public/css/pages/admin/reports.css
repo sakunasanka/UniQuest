@@ -51,7 +51,7 @@ body {
     color: #28a745;
 }
 
-.time-period-filter {
+.timeFilterForm {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -59,10 +59,23 @@ body {
     flex-direction: row;
 }
 
-.time-period-filter select {
-    padding: 8px 12px;
-    border-radius: 4px;
+.timeFilterForm select {
     border: 1px solid #ddd;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+}
+
+.timeFilterForm select:focus {
+    outline: none;
+    border: 2px solid #32a852;
 }
 
 #customDateRange {
@@ -195,9 +208,10 @@ body {
     cursor: pointer;
     min-width: 150px;
     height: 50px;
-    font-size: 1.2em;
+    font-size: 1.3em;
     background-color: #299b63;
     color: #fff;
+    text-decoration: none;
 
 }
 
@@ -269,6 +283,14 @@ body {
 
 .report-table tr:hover {
     background-color: #f5f5f5;
+}
+
+.timeFilterForm{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
