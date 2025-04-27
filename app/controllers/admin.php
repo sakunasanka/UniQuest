@@ -614,7 +614,8 @@ class Admin extends Controller
             // Ensure no errors before proceeding
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
-                    // flash('message_sent', 'Message sent successfully');
+                    $messageId = $this->model('chatModel')->getLastMessageId($data['sender_id'], $data['receiver_id']);
+                    $this-> model('chatModel')->updateReadStatus($messageId);
                     if ($_SESSION['user_role'] == 'Admin') {
                         notifyMessageFromAdmin($data['receiver_id'], $data['messageInput']);
                         if ($userRole == 'Student') {
