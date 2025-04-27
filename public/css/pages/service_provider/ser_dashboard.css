@@ -16,24 +16,6 @@ body {
     margin-bottom: 20px;
 }
 
-.activate-btn {
-    background-color: #f0f7f4; /* Light green for button background */
-    border: 1px solid #32a852; /* Green border to match theme */
-    padding: 10px 20px;
-    color: #32a852; /* Green text */
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1em;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.activate-btn:hover {
-    background-color: #32a852; /* Hover changes to solid green */
-    color: white; /* Text turns white on hover */
-}
 
 .grid-container {
     display: grid;
@@ -220,6 +202,7 @@ body {
     background: linear-gradient(135deg, #f1f8e9 0%, #a5d6a7 100%);
     color: #333;
     font-weight: bold;
+    font-size: 1em;
     cursor: pointer;
     transition: all 0.3s ease;
 }

@@ -25,18 +25,20 @@
 
 .activate-btn {
     margin-top: 30px;
-    background-color: #4caf50;
+    background-color: #299b63;
     color: #fff;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 8px;
+    min-width: 150px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 1.2em;
+    height: 50px;
     transition: background-color 0.3s;
 }
 
 .activate-btn:hover {
-    background-color: #388e3c;
+    background-color: #137d4a;
 }
 
 /* Inherit button styles from delete_account.css */
@@ -48,18 +50,23 @@
 }
 
 .cancel-btn {
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
+    background-color: #f0f0f0; 
+    color: #333;
     padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
+    border: 2px solid #6c757d; 
+    border-radius: 8px; 
+    font-size: 1.2em; 
+    cursor: pointer;
+    min-width: 150px; 
+    height: 50px; 
     text-align: center;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease; 
 }
 
 .cancel-btn:hover {
-    background-color: #555;
+    background-color: #6c757d; 
+    color: #fff; 
+    border-color: #6c757d; 
 }
 
 /* Inherit label styles from delete_account.css */
