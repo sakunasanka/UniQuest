@@ -70,7 +70,7 @@ function flash($name) {
 <?php if(isset($_SESSION['show_job_edit_error'])): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Flash.show("Please upgrade to a premium plan to access this feature.", "error");
+        Flash.show("Your job post editing is failed. Please try again later.", "error");
     });
 </script>
 <?php unset($_SESSION['show_job_edit_error']); ?>
@@ -180,7 +180,7 @@ function flash($name) {
 <?php if(isset($_SESSION['job_edit_success'])): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Flash.show("Your job post will be published soon after verification.", "success");
+        Flash.show("Your job post has been edited successfully", "success");
     });
 </script>
 <?php unset($_SESSION['job_edit_success']); ?>

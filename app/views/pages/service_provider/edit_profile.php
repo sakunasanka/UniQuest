@@ -34,12 +34,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="company-name">Company Name</label>
-                            <input type="text" id="company-name" name="companyName" value="<?php echo $data['companyName']; ?>" required>
+                            <input type="text" id="company-name" name="companyName" value="<?php echo $data['companyName']; ?>" readonly>
                             <span class="error-msg"><?php echo !empty($data['companyName_err']) ? $data['companyName_err'] : '' ?></span>
                         </div>
                         <div class="form-group">
                             <label for="industry">Industry</label>
-                            <select id="industryID" name="industryID" required>
+                            <select id="industryID" name="industryID" disabled>
                                 <option value="" disabled selected>Select Industry</option>
                                 <?php foreach ($data['industries'] as $industry) : ?>
                                     <option value="<?php echo $industry->IndustryID; ?>" <?php echo ($data['industryID'] == $industry->IndustryID) ? 'selected' : ''; ?>><?php echo $industry->IndustryName; ?></option>
