@@ -57,7 +57,7 @@
             </a>
 
             <!-- Complaint Reports -->
-            <a href="/UniQuest/admin/viewReport/Complaint" class="report-card">
+            <!-- <a href="/UniQuest/admin/viewReport/Complaint" class="report-card">
                 <i class="fas fa-exclamation-triangle icon-orange"></i>
                 <h3>Complaint Analysis</h3>
                 <p>Resolution times and frequent issues</p>
@@ -65,10 +65,10 @@
                     <span><i class="fas fa-stopwatch"></i> Resolution time</span>
                     <span><i class="fas fa-building"></i> By company</span>
                 </div>
-            </a>
+            </a> -->
 
             <!-- Verification Reports -->
-            <a href="/UniQuest/admin/viewReport/VerificationPerformance" class="report-card">
+            <!-- <a href="/UniQuest/admin/viewReport/VerificationPerformance" class="report-card">
                 <i class="fas fa-user-check icon-teal"></i>
                 <h3>Verification Activity</h3>
                 <p>Team performance and processing times</p>
@@ -76,7 +76,7 @@
                     <span><i class="fas fa-users-cog"></i> By staff</span>
                     <span><i class="fas fa-hourglass-half"></i> Speed</span>
                 </div>
-            </a>
+            </a> -->
 
             <!-- Placement Reports -->
             <a href="/UniQuest/admin/viewReport/StudentPlacement" class="report-card">
@@ -90,7 +90,7 @@
             </a>
 
             <!-- Engagement Reports -->
-            <a href="/UniQuest/admin/viewReport/BookmarkAnalysis" class="report-card">
+            <!-- <a href="/UniQuest/admin/viewReport/BookmarkAnalysis" class="report-card">
                 <i class="fas fa-bookmark icon-pink"></i>
                 <h3>User Engagement</h3>
                 <p>Bookmarking behavior and favorites</p>
@@ -98,7 +98,7 @@
                     <span><i class="fas fa-bookmark"></i> Bookmarks</span>
                     <span><i class="fas fa-eye"></i> Popular items</span>
                 </div>
-            </a>
+            </a> -->
 
             <!-- Executive Summary Reports-->
             <a href="/UniQuest/admin/viewReport/ExecutiveSummary" class="report-card">

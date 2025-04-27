@@ -49,14 +49,14 @@
                                             </span>
                                             <span class="tooltiptext view">View</span>
                                         </div>
-                                        
-                                        <div class="tooltip"> 
+
+                                        <div class="tooltip">
                                             <span class="material-symbols-outlined action-btn deactivate" onclick="deactivateJob(<?php echo $job->JobID; ?>, 'Internship')">
                                                 block
                                             </span>
                                             <span class="tooltiptext deactivate">Deactivate</span>
                                         </div>
-                                        
+
                                     </td>
                                 <?php elseif ($job->Status == 'Deactive') : ?>
                                     <td><span class="status inactive">Deactive</span></td>
@@ -67,14 +67,32 @@
                                             </span>
                                             <span class="tooltiptext view">View</span>
                                         </div>
-                                        
-                                        <div class="tooltip"> 
+
+                                        <div class="tooltip">
                                             <span class="material-symbols-outlined action-btn activate" onclick="activateJob(<?php echo $job->JobID; ?>, 'Internship')">
                                                 check_circle
                                             </span>
                                             <span class="tooltiptext activate">Activate</span>
-                                        </div> 
-                                        
+                                        </div>
+
+                                    </td>
+                                <?php elseif ($job->Status == 'Admin-Deactive') : ?>
+                                    <td><span class="status inactive">A-Deactivated</span></td>
+                                    <td class="action">
+                                        <div class="tooltip">
+                                            <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_detail/<?php echo $job->JobID; ?>'">
+                                                preview
+                                            </span>
+                                            <span class="tooltiptext view">View</span>
+                                        </div>
+
+                                        <div class="tooltip">
+                                            <span class="material-symbols-outlined action-btn activate" onclick="activateJob(<?php echo $job->JobID; ?>, 'Part-time')">
+                                                check_circle
+                                            </span>
+                                            <span class="tooltiptext activate">Activate</span>
+                                        </div>
+
                                     </td>
                                 <?php endif; ?>
                             </tr>
@@ -85,8 +103,8 @@
                         </tr>
                     <?php endif; ?>
                 </tbody>
-                </table>
-                <?php require APPROOT . '/views/components/pagination.php'; ?>
+            </table>
+            <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>

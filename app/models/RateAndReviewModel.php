@@ -194,7 +194,7 @@ class RateAndReviewModel extends Model
         // Step 3: Calculate the average rating for companies with more than 0 reviews
         $trendyCompanies = [];
         foreach ($companyReviews as $companyID => $ratings) {
-            if (count($ratings) >= 1) {
+            if (count($ratings) >= 5) {
                 $averageRating = array_sum($ratings) / count($ratings);
 
                 // Fetch additional company details (CompanyLogo and City) from the companies table

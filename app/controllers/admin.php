@@ -615,18 +615,17 @@ class Admin extends Controller
             if (empty($data['messageInput_err'])) {
                 if ($this->model('chatModel')->sendMessage($data['email'], $data['sender_id'], $data['receiver_id'], $data['topic'], $data['messageInput'], $data['email'])) {
                     // flash('message_sent', 'Message sent successfully');
-                    if($_SESSION['user_role'] == 'Admin') {
+                    if ($_SESSION['user_role'] == 'Admin') {
                         notifyMessageFromAdmin($data['receiver_id'], $data['messageInput']);
-                        if($userRole == 'Student') {
+                        if ($userRole == 'Student') {
                             Redirect::to(URLROOT . '/admin/messages_stu');
                         } elseif ($userRole == 'Company') {
                             Redirect::to(URLROOT . '/admin/messages_com');
                         } elseif ($userRole == 'VT-Member') {
                             Redirect::to(URLROOT . '/admin/messages_ver');
+                        } else {
+                            die('Something went wrong');
                         }
-                    else{
-                        die('Something went wrong');
-                    }    
                     }
                 } else {
                     die('Something went wrong while sending the message.');
@@ -654,7 +653,8 @@ class Admin extends Controller
         }
     }
 
-    public function markMessageRead() {
+    public function markMessageRead()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $messageId = $_POST['message_id'] ?? null;
 
@@ -1001,7 +1001,7 @@ class Admin extends Controller
             // Get the requested data from query params
             $page = isset($queryParam['page']) ? $queryParam['page'] : 1;
             $limit = isset($queryParam['limit']) ? $queryParam['limit'] : 10;
-            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'JobID';
+            $sort = isset($queryParam['sort']) ? $queryParam['sort'] : 'PublishDate';
             $order = isset($queryParam['order']) ? $queryParam['order'] : 'DESC';
             $search = isset($queryParam['search']) ? $queryParam['search'] : '';
 
@@ -1192,16 +1192,60 @@ class Admin extends Controller
                 throw new Exception("Report not found");
             }
 
+            // Get time period filter from query params
+            $timePeriod = $_GET['timePeriod'] ?? 'all';
+            $startDate = $_GET['startDate'] ?? null;
+            $endDate = $_GET['endDate'] ?? null;
+
+            // Calculate dates based on time period
+            $dateRange = $this->calculateDateRange($timePeriod, $startDate, $endDate);
+
             $data = [
-                'reportData' => $model->$method(),
+                'reportData' => $model->$method($dateRange['startDate'], $dateRange['endDate']),
                 'reportName' => ucwords(str_replace('-', ' ', $reportName)),
-                'reportSlug' => $reportName
+                'reportSlug' => $reportName,
+                'timePeriod' => $timePeriod,
+                'startDate' => $dateRange['startDate'],
+                'endDate' => $dateRange['endDate']
             ];
 
             $this->view('pages/admin/report_view', $data);
         } catch (Exception $e) {
             $this->view('pages/error', ['message' => $e->getMessage()]);
         }
+    }
+
+    private function calculateDateRange($timePeriod, $customStart = null, $customEnd = null)
+    {
+        $endDate = $customEnd ? new DateTime($customEnd) : new DateTime();
+        $startDate = new DateTime();
+
+        switch ($timePeriod) {
+            case '1month':
+                $startDate->modify('-1 month');
+                break;
+            case '3months':
+                $startDate->modify('-3 months');
+                break;
+            case '6months':
+                $startDate->modify('-6 months');
+                break;
+            case '1year':
+                $startDate->modify('-1 year');
+                break;
+            case 'custom':
+                $startDate = $customStart ? new DateTime($customStart) : $startDate;
+                break;
+            case 'all':
+            default:
+                $startDate = null; // No date filtering
+                break;
+        }
+
+        return [
+            'startDate' => $startDate ? $startDate->format('Y-m-d') : null,
+            'endDate' => $endDate->format('Y-m-d')
+        ];
     }
 
     // Download report
@@ -1246,42 +1290,63 @@ class Admin extends Controller
         exit;
     }
 
-   public function downloadPdf($reportSlug)
-{
-    try {
-        // Load report data
-        $model = $this->model('ReportModel');
-        $method = 'get' . ucfirst($reportSlug) . 'Data';
+    public function downloadPdf($reportSlug)
+    {
+        try {
+            // Load report data
+            $model = $this->model('ReportModel');
+            $method = 'get' . ucfirst($reportSlug) . 'Data';
 
-        if (!method_exists($model, $method)) {
-            throw new Exception("Report not found");
+            if (!method_exists($model, $method)) {
+                throw new Exception("Report not found");
+            }
+
+            // Get time period filter from query params
+            $timePeriod = $_GET['timePeriod'] ?? 'all';
+            $startDate = $_GET['startDate'] ?? null;
+            $endDate = $_GET['endDate'] ?? null;
+
+            // Calculate dates based on time period
+            $dateRange = $this->calculateDateRange($timePeriod, $startDate, $endDate);
+
+            // Get filtered report data
+            $reportData = $model->$method($dateRange['startDate'], $dateRange['endDate']);
+            $reportName = ucwords(str_replace('-', ' ', $reportSlug));
+
+            // Prepare data for PDF
+            $data = [
+                'reportName' => $reportName,
+                'reportData' => $reportData,
+                'timePeriod' => $timePeriod,
+                'startDate' => $dateRange['startDate'],
+                'endDate' => $dateRange['endDate'],
+                'reportGeneratedAt' => date('F j, Y \a\t H:i:s')
+            ];
+
+            // Render the view into a string
+            ob_start();
+            extract($data);
+            require TEMPLATEROOT . '/pdf/report_view.php'; // Path to your PDF template
+            $html = ob_get_clean();
+
+            // Generate PDF filename with time period info
+            $filename = "{$reportName}_Report";
+            if ($timePeriod !== 'all') {
+                $filename .= "_" . str_replace(' ', '', ucfirst($timePeriod));
+            }
+            if ($timePeriod === 'custom' && $startDate && $endDate) {
+                $filename .= "_" . date('Y-m-d', strtotime($startDate)) . "_to_" . date('Y-m-d', strtotime($endDate));
+            }
+            $filename .= "_" . date('Y-m-d');
+
+            // Generate the PDF
+            PDFHelper::generate($html, $filename);
+        } catch (Exception $e) {
+            error_log("PDF Generation Error: " . $e->getMessage());
+            flash('pdf_error', 'Failed to generate PDF: ' . $e->getMessage(), 'alert alert-danger');
+            redirect('admin/reports');
         }
-
-        $reportData = $model->$method();
-        $reportName = ucwords(str_replace('-', ' ', $reportSlug));
-
-        // Render HTML manually
-        $data = [
-            'reportName' => $reportName,
-            'reportData' => $reportData
-        ];
-
-        // Render the view into a string
-        ob_start();
-        extract($data);
-        require TEMPLATEROOT . '/pdf/report_view.php'; // Adjust the path as necessary
-        $html = ob_get_clean();
-
-        // Call the helper
-        require_once APPROOT . '/helpers/PDFHelper.php'; // Ensure this is loaded
-        PDFHelper::generate($html, "{$reportName}_Report_" . date('Y-m-d'));
-
-    } catch (Exception $e) {
-        error_log("PDF Generation Error: " . $e->getMessage());
-        redirect('admin/reports');
     }
-}
-
 
     public function jobPost()
     {
@@ -1833,14 +1898,15 @@ class Admin extends Controller
         exit;
     }
 
-    public function getAllNotifications() {
+    public function getAllNotifications()
+    {
 
         $notifications = $this->model('NotificationModel')->getAllNotifications($_SESSION['user_id']);
         $unreadCount = $this->model('NotificationModel')->getUnreadCount($_SESSION['user_id']);
-        
+
         header('Content-Type: application/json');
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'notifications' => $notifications,
             'unreadCount' => $unreadCount
         ]);

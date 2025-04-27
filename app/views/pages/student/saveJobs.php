@@ -31,12 +31,12 @@
                 </div>
             </div> -->
             <div class="cards-container">
-                <?php if(empty($data['posts'])): ?>
+                <?php if (empty($data['posts'])): ?>
                     <div class="no-results">No results found.</div>
                 <?php endif; ?>
                 <?php foreach ($data['posts'] as $post): ?>
                     <div class="card">
-                    <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
+                        <div class="card-logo" onclick="goToJobDescription(<?php echo $post->JobID; ?>)">
                             <img src="<?php echo empty($post->CompanyLogo)
                                             ? URLROOT . '/images/profile_pic_preview.png'
                                             : UPLOADROOT . '/profile_pictures/company/' . $post->CompanyLogo; ?>"
@@ -47,18 +47,18 @@
                                 <div class="title-content">
                                     <h3 class="job-title"><?php echo $post->Title; ?></h3>
                                     <div class="job-rating">
-                                        <i class="fa fa-star"></i> 
-                                        <?php 
-                                            if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
-                                                echo round($data['displayRatings'][$post->CompanyID], 2);
-                                            } else {
-                                                echo 'N/A';
-                                            }
+                                        <i class="fa fa-star"></i>
+                                        <?php
+                                        if (isset($data['displayRatings'][$post->CompanyID]) && $data['displayRatings'][$post->CompanyID] != 0) {
+                                            echo round($data['displayRatings'][$post->CompanyID], 2);
+                                        } else {
+                                            echo 'N/A';
+                                        }
                                         ?>
                                     </div>
                                 </div>
                                 <p class="company-name"><b><?php echo $post->CompanyName; ?></b></p>
-                                <p class="job-salary"><?php echo 'Rs.'?><?php echo $post->SalaryRange; ?> <?php echo $post->SalaryType; ?></p>
+                                <p class="job-salary"><?php echo 'Rs.' ?><?php echo $post->SalaryRange; ?> <?php echo $post->SalaryType; ?></p>
                                 <p class="job-days-left"><?php echo converttimetoreadableformat($post->jobs_create_at); ?></p>
 
                                 <div class="job-location-details">
@@ -106,6 +106,7 @@
                 <?php endforeach; ?>
             </div>
         </div>
+        <?php require APPROOT . '/views/components/pagination.php'; ?>
     </div>
 </div>
 
@@ -159,7 +160,7 @@
 
     function shareJob(jobId) {
         const jobURL = `${window.location.origin}/UniQuest/jobs/jobsdescription/${jobId}`;
-        
+
         navigator.clipboard.writeText(jobURL).then(() => {
             Flash.show('Job link copied to clipboard!', 'success');
         }).catch(err => {

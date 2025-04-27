@@ -14,15 +14,13 @@
                 <h1>Reports</h1>
             </button>
             <div class="report-actions">
-                <a href="<?= URLROOT ?>/admin/downloadReport/<?= $data['reportSlug'] ?>">
+
+                <a href="<?= URLROOT ?>/admin/downloadReport/<?= $data['reportSlug'] ?>?timePeriod=<?= $data['timePeriod'] ?>&startDate=<?= $data['startDate'] ?>&endDate=<?= $data['endDate'] ?>">
                     <i class="fas fa-download"></i> Download CSV
                 </a>
-                <a href="<?= URLROOT ?>/admin/downloadPdf/<?= $data['reportSlug'] ?>">
+                <a href="<?= URLROOT ?>/admin/downloadPdf/<?= $data['reportSlug'] ?>?timePeriod=<?= $data['timePeriod'] ?>&startDate=<?= $data['startDate'] ?>&endDate=<?= $data['endDate'] ?>">
                     <i class="fas fa-download"></i> Download PDF
                 </a>
-                <!-- <button onclick="generatePDF()">
-                    <i class="fas fa-file-pdf"></i> Save as PDF
-                </button> -->
             </div>
         </div>
 
@@ -36,6 +34,27 @@
                 <div class="summary-card">
                     <h3>Total Records</h3>
                     <p><?= count($data['reportData']) ?></p>
+                </div>
+                
+                <div class="time-period-filter">
+                    <form id="timeFilterForm" method="get">
+                        <select name="timePeriod" id="timePeriod" onchange="updateTimeFilter()">
+                            <option value="all" <?= $data['timePeriod'] === 'all' ? 'selected' : '' ?>>All Time</option>
+                            <option value="1month" <?= $data['timePeriod'] === '1month' ? 'selected' : '' ?>>Last 1 Month</option>
+                            <option value="3months" <?= $data['timePeriod'] === '3months' ? 'selected' : '' ?>>Last 3 Months</option>
+                            <option value="6months" <?= $data['timePeriod'] === '6months' ? 'selected' : '' ?>>Last 6 Months</option>
+                            <option value="1year" <?= $data['timePeriod'] === '1year' ? 'selected' : '' ?>>Last 1 Year</option>
+                            <option value="custom" <?= $data['timePeriod'] === 'custom' ? 'selected' : '' ?>>Custom Range</option>
+                        </select>
+
+                        <div id="customDateRange" style="display: <?= $data['timePeriod'] === 'custom' ? 'flex' : 'none' ?>;">
+                            <input type="date" name="startDate" value="<?= $data['startDate'] ?>">
+                            <span>to</span>
+                            <input type="date" name="endDate" value="<?= $data['endDate'] ?>">
+                        </div>
+
+                        <button type="submit">Apply</button>
+                    </form>
                 </div>
                 <!-- Add more summary cards as needed -->
             </div>
@@ -71,7 +90,19 @@
 
 <!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>
-
+<script>
+function updateTimeFilter() {
+    const timePeriod = document.getElementById('timePeriod').value;
+    const customRange = document.getElementById('customDateRange');
+    
+    if (timePeriod === 'custom') {
+        customRange.style.display = 'flex';
+    } else {
+        customRange.style.display = 'none';
+    }
+}
+</script>
+<!-- 
 <script>
     function generatePDF() {
         // Store original styles
@@ -115,4 +146,4 @@
             printStyle.remove();
         }, 500);
     }
-</script>
+</script> -->

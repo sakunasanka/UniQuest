@@ -27,9 +27,9 @@
 }
 
 .tab.active {
-    background-color: #32a852;
+    background-color: #299b63;
     color: white;
-    border-color: #32a852;
+    border-color: #299b63;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     font-weight: bold;
 }

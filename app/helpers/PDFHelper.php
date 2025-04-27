@@ -21,76 +21,45 @@ class PDFHelper
      * @return mixed Returns PDF content if download=false, otherwise outputs to browser
      * @throws Exception On PDF generation failure
      */
-    public static function generate(string $html, string $filename = 'document', array $options = [])
+    public static function generate($html, $filename = 'document', $download = true)
     {
-        // Merge default options
-        $defaults = [
-            'download' => true,
-            'paper' => 'A4',
-            'orientation' => 'portrait',
-            'watermark' => null,
-            'password' => null
-        ];
-        $options = array_merge($defaults, $options);
-
         try {
-            // Configure DomPDF
-            $dompdfOptions = new Options();
-            $dompdfOptions->set([
+            // Clear any existing output
+            if (ob_get_length()) ob_end_clean();
+
+            $options = new Options();
+            $options->set([
                 'isRemoteEnabled' => true,
                 'defaultFont' => 'DejaVu Sans',
                 'isPhpEnabled' => true,
                 'isHtml5ParserEnabled' => true,
                 'isFontSubsettingEnabled' => true,
-                'debugKeepTemp' => false,
-                'tempDir' => sys_get_temp_dir()
+                'isPdfA' => true,  // PDF/A compliance for Chrome
+                'debugKeepTemp' => false
             ]);
 
-            $dompdf = new Dompdf($dompdfOptions);
+            $dompdf = new Dompdf($options);
             $dompdf->loadHtml($html);
-            $dompdf->setPaper($options['paper'], $options['orientation']);
+            $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
 
-            // Add watermark if specified
-            if ($options['watermark']) {
-                $canvas = $dompdf->getCanvas();
-                $font = "DejaVu Sans";
-                $canvas->page_text(
-                    72, 18, 
-                    $options['watermark'], 
-                    $font, 
-                    8, 
-                    [0.75, 0.75, 0.75], // Light gray color
-                    0.5,                // Opacity
-                    45,                 // Angle
-                    'center'             // Alignment
-                );
-            }
+            // Watermark (optional)
+            // $canvas = $dompdf->getCanvas();
+            // $canvas->page_text(72, 18, "Confidential", "DejaVu Sans", 8, [0.8, 0.8, 0.8], 0.5, 45);
 
-            // Set password if specified
-            // if ($options['password']) {
-            //     $dompdf->getCanvas()->get_cpdf()->setEncryption(
-            //         $options['password'],
-            //         null,
-            //         ['copy', 'print'] // Allowed permissions
-            //     );
-            // }
-
-            if ($options['download']) {
-                // Output as downloadable PDF
-                $dompdf->stream("{$filename}.pdf", [
-                    'Attachment' => 1,
-                    'compress' => 1
-                ]);
+            if ($download) {
+                // Explicit headers
+                header('Content-Type: application/pdf');
+                header('Content-Disposition: attachment; filename="' . $filename . '.pdf"');
+                header('Cache-Control: private, max-age=0, must-revalidate');
+                echo $dompdf->output();
                 exit;
             }
 
-            // Return PDF as string
             return $dompdf->output();
-
         } catch (Exception $e) {
             error_log("PDF Generation Error: " . $e->getMessage());
-            throw new Exception("Failed to generate PDF: " . $e->getMessage());
+            throw new Exception("PDF generation failed: " . $e->getMessage());
         }
     }
 }
