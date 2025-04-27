@@ -128,7 +128,7 @@ form h3 {
 }
 
 .form-row .input-container {
-    flex-basis: 50%; /* Makes two input containers fit in one row */
+    flex-basis: 50%;
 }
 
 .input-container input:focus {

@@ -1,14 +1,12 @@
 <?php
-//load config
+
 require_once 'config/config.php';
 
-//load libraries
 require_once 'libraries/Core.php';
 require_once 'libraries/Controller.php';
 require_once 'libraries/Database.php';
 require_once 'libraries/Model.php';
 
-//load helpers
 require_once 'helpers/Redirect.php';
 require_once 'helpers/Validator.php';
 require_once 'helpers/FileUploadHelper.php';
@@ -27,12 +25,9 @@ require_once 'helpers/Filter.php';
 require_once 'helpers/URLNormalizer.php';
 require_once 'helpers/PDFHelper.php';
 
-
-//load middlewares
 require_once 'middlewares/AuthMiddleware.php';
 require_once 'middlewares/URLMiddleware.php';
 
-//load dompdf
 require_once __DIR__ . '/../dompdf/autoload.inc.php';
 
 

@@ -70,13 +70,7 @@ table {
     margin-top: 20px;
 }
 
-/* table thead {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: #f5f5f5;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-} */
+
 
 table th {
     padding: 15px;
@@ -97,8 +91,8 @@ table td:not(.action) {
     padding: 12px 10px;
     text-align: center;
     border-bottom: 1px solid #e7e7e7;
-    /* Truncation styles */
-    max-width: 250px; /* Set a fixed or max width */
+   
+    max-width: 250px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

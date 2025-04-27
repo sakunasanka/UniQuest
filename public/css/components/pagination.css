@@ -1,26 +1,22 @@
-/* Main pagination container */
 .pagination {
     display: flex;
-    justify-content: space-between; /* Space out children to opposite ends */
+    justify-content: space-between; 
     align-items: center;
     margin-top: 15px;
 }
 
-/* Limit selection container */
 .limit-container {
     display: flex;
     align-items: center;
-    gap: 8px; /* Space between "Rows per page:" text and the dropdown */
-    padding-left: 10px; /* Space from the left edge */
+    gap: 8px; 
+    padding-left: 10px; 
 }
 
-/* Text for "Rows per page:" */
 .rows-text {
     font-weight: 500;
     color: #000;
 }
 
-/* Limit select dropdown */
 .limit-select {
     padding: 10px 16px;
     color: #000;
@@ -30,34 +26,30 @@
     transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     font-weight: 500;
     border-radius: 10px;
-    appearance: none; /* Remove default arrow */
-    -webkit-appearance: none; /* Remove default arrow for Safari */
-    -moz-appearance: none; /* Remove default arrow for Firefox */
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none; 
     background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
     background-repeat: no-repeat;
     background-position: right 8px center;
-    padding-right: 32px; /* Space for the custom arrow */
+    padding-right: 32px;
 }
 
-/* Focus state for the limit select dropdown */
 .limit-select:focus {
     outline: none;
     border-color: #32a852;
 }
 
-/* Hover effect for the limit select dropdown */
 .limit-select:hover {
     background-color: #f0f0f0;
 }
 
-/* Pagination buttons container */
 .pagination-buttons {
     display: flex;
     align-items: center;
-    gap: 8px; /* Space between buttons */
+    gap: 8px; 
 }
 
-/* Base styles for pagination buttons */
 .page-btn {
     padding: 10px 16px;
     color: #000;
@@ -68,7 +60,6 @@
     font-weight: 500;
 }
 
-/* Active pagination button */
 .page-btn.active {
     background-color: #32a852; 
     color: white;
@@ -78,14 +69,12 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Hover effect for pagination buttons (excluding active and disabled buttons) */
 .page-btn:hover:not(.active):not(:disabled) {
     color: #000;
     font-weight: bold;
     text-shadow: 0 0 3px #e7e7e7;
 }
 
-/* Disabled pagination button */
 .page-btn:disabled {
     color: #aaa;
     cursor: not-allowed; 

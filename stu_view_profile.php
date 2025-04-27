@@ -1,5 +1,5 @@
 <?php
-// Mock data for user profile
+
 $user = [
     'full_name' => 'kaveesha rathnayake',
     'email' => 'kaveesha123@gmail.com',

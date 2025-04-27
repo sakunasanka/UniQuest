@@ -1,6 +1,6 @@
-/* Simple Footer Styles */
+
 .footer {
-    background-color: #F4F4F4; /* Light grey background */
+    background-color: #F4F4F4;
     padding: 20px 50px;
     display: flex;
     justify-content: center;
@@ -34,7 +34,7 @@
     text-decoration: underline;
 }
 
-/* Responsive Footer for Small Screens */
+
 @media (max-width: 768px) {
     .footer-container {
         flex-direction: column;

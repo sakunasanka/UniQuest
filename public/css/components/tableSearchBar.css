@@ -1,15 +1,14 @@
 .search-bar { 
-    /* position: relative; */
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between elements */
-    width: 100%; /* Full width */
+    gap: 10px; 
+    width: 100%; 
 }
 
 .icon {
     position: absolute;
-    bottom: 195px; /* Adjusted to center vertically */
-    left: 320px; /* Adjusted to center horizontally */
+    bottom: 195px; 
+    left: 320px;
     transform: translateY(-50%);
     color: #aaa;
 }
@@ -19,8 +18,8 @@
     padding: 12px 20px 12px 20px; 
     border: 2px solid #e0e0e0;
     border-radius: 10px;
-    flex-grow: 1; /* Take the remaining width */
-    min-width: 150px; /* Prevent it from becoming too small */
+    flex-grow: 1; 
+    min-width: 150px; 
 }
 
 .column-select {
@@ -109,7 +108,7 @@
 }
 
 .material-symbols-outlined {
-    font-size: 20px; /* Slightly larger icon */
+    font-size: 20px;
     vertical-align: middle;
 }
 

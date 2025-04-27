@@ -1,4 +1,4 @@
-/* Notification Bell and Button */
+
 .notification-bell {
     position: relative;
     display: inline-block;
@@ -20,7 +20,7 @@
     color: #3498db;
 }
 
-/* Notification Badge */
+
 .notification-badge {
     position: absolute;
     top: -5px;
@@ -38,7 +38,7 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Dropdown Container */
+
 .notification-dropdown {
     display: none;
     position: absolute;
@@ -61,7 +61,7 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Header */
+
 .notification-header {
     padding: 15px;
     border-bottom: 1px solid #eee;
@@ -92,7 +92,7 @@
     text-decoration: underline;
 }
 
-/* Notification Items */
+
 .notification-items {
     padding: 0;
 }
@@ -117,7 +117,7 @@
     background-color: #fff;
 }
 
-/* Notification Types (Borders) */
+
 .notification-item.success {
     border-left: 4px solid #23d160;
 }
@@ -143,7 +143,7 @@
     color: #0d6efd; 
 }
 
-/* Notification Content */
+
 .notification-content {
     flex: 1;
     margin-right: 10px;
@@ -172,7 +172,7 @@
 }
 
 
-/* Footer */
+
 .notification-footer {
     padding: 10px 15px;
     text-align: center;
@@ -194,7 +194,7 @@
     text-decoration: underline;
 }
 
-/* Empty State */
+
 .empty-notification {
     padding: 30px 15px;
     text-align: center;
@@ -203,7 +203,7 @@
     font-size: 14px;
 }
 
-/* Icon Styling */
+
 .notification-icon {
     margin-right: 10px;
     margin-left: -5px;
@@ -236,7 +236,7 @@
     opacity: 0.9;
 }
 
-/* Hover effects for notification items */
+
 .notification-item {
     transition: all 0.2s ease;
 }
@@ -246,7 +246,7 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Icon colors based on type */
+
 .notification-item.success .notification-icon {
     color: #23d160;
 }
@@ -268,14 +268,14 @@
     color: #ff3860;
 }
 
-/* Expanded notification dropdown */
+
 .notification-dropdown.expanded {
     max-height: 80vh; 
     overflow-y: auto; 
     width: 400px; 
 }
 
-/* Prevent body scrolling when dropdown is expanded */
+
 body.dropdown-open {
     overflow: hidden;
 }
@@ -291,11 +291,11 @@ body.dropdown-open {
 }
 
 .notification-content {
-    pointer-events: auto; /* Ensure clicks work on the content */
+    pointer-events: auto;
 }
 
 .notification-title {
-    font-weight: 700; /* Bold */
+    font-weight: 700;
     margin-bottom: 4px;
     font-size: 14px;
 }
@@ -305,11 +305,11 @@ body.dropdown-open {
 }
 
 .notification-title.info {
-    color: #209cee; /* Same as info icon */
+    color: #209cee;
 }
 
 .notification-title.warning {
-    color: #e9992f; /* Same as warning icon */
+    color: #e9992f;
 }
 
 .notification-title.message {

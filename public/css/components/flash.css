@@ -1,4 +1,4 @@
-/* Flash Message Container */
+
 .flash-container {
     position: fixed;
     top: 20px;
@@ -9,7 +9,7 @@
     gap: 10px;
 }
 
-/* Individual Flash Message */
+
 .flash-message {
     padding: 15px 25px;
     border-radius: 5px;
@@ -27,7 +27,7 @@
     opacity: 1;
 }
 
-/* Message Types */
+
 .flash-message.success {
     background: #299b63;
     color: white;
@@ -48,7 +48,7 @@
     color: white;
 }
 
-/* Message Content */
+
 .flash-message i {
     margin-right: 10px;
     font-size: 1.2em;
@@ -58,7 +58,7 @@
     flex-grow: 1;
 }
 
-/* Close Button */
+
 .flash-close {
     margin-left: 15px;
     background: transparent;

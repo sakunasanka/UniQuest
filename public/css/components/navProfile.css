@@ -1,4 +1,4 @@
-/* Profile Dropdown */
+
 .profile-dropdown {
     position: relative;
     margin: 0 15px;
@@ -46,7 +46,7 @@
     display: flex;
     align-items: center;
     padding: 10px;
-    /* background: linear-gradient(to right, #2e7d32, #43a047); */
+   
     background-color: #299b63;
     color: white;
 }
@@ -65,7 +65,7 @@
 
 .user-details1 {
     line-height: 1.4;
-    /* truncating execess0 */
+   
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

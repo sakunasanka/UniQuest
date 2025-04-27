@@ -132,7 +132,7 @@
     margin: 0;
 }
 
-/* Adjust search button spacing */
+
 .search-button:hover {
     background-color: #137d4a;
 }
@@ -145,16 +145,16 @@
     background-color: #0056b3;
 }
 
-/* Filter Panel */
+
 .filter-row {
     display: none;
     flex-wrap: wrap;
-    gap: 15px; /* Added spacing between filters */
+    gap: 15px;
     width: 100%;
-    /* padding: 10px; */
-    /* background: #f9f9f9; */
-    /* border-radius: 10px; */
-    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+   
+   
+   
+   
 }
 
 .filter-row.visible {
@@ -204,11 +204,11 @@
     grid-template-columns: 1fr 2fr;
     align-items: center;
     gap: 10px;
-    /* width: 100%; */
+   
 }
 
 .salary-label {
-    /* font-weight: bold; */
+   
     white-space: nowrap;
 }
 

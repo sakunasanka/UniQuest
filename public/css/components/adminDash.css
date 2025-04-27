@@ -1,11 +1,11 @@
-/* Icon styles */
+
 .dashboard-card i {
     font-size: 1.8rem;
     margin-bottom: 12px;
     display: block;
 }
 
-/* Icon color classes */
+
 .icon-blue { color: #4285F4; }
 .icon-orange { color: #FF7043; }
 .icon-purple { color: #9C27B0; }
@@ -30,16 +30,16 @@ body {
     min-height: 100vh;
 }
 
-/* Dashboard Container */
+
 .dashboard-container {
     max-width: 1200px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
     margin: 30px auto;
 }
 
-/* Card Styles */
+
 .dashboard-card {
     background-color: #ffffff;
     border-radius: 15px;
@@ -55,7 +55,7 @@ body {
     transform: translateY(-5px);
 }
 
-/* Card Text Styles */
+
 .dashboard-card h3 {
     font-size: 1.4rem;
     color: #333;
@@ -82,15 +82,15 @@ body {
     
 }
 
-/* Responsive Design for Smaller Screens */
+
 @media (max-width: 992px) {
     .dashboard-container {
-        grid-template-columns: repeat(2, 1fr); /* 2 cards per row on medium screens */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
     .dashboard-container {
-        grid-template-columns: repeat(1, 1fr); /* 1 card per row on small screens */
+        grid-template-columns: repeat(1, 1fr);
     }
 }

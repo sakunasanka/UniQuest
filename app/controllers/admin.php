@@ -5,9 +5,7 @@ class Admin extends Controller
 
     public function __construct()
     {
-        // Check if user is logged in
         AuthMiddleware::requireAuth();
-        // Check if user has the required role
         AuthMiddleware::requireRole('Admin');
 
         // Load model

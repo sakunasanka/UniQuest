@@ -1,4 +1,4 @@
-/* Navbar Styles */
+
 
 * {
     margin: 0;
@@ -20,7 +20,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo Styling */
+
 .logo {
     display: flex;
     align-items: center;
@@ -34,7 +34,7 @@
     margin-right: 15px;
 }
 
-/* Navbar Container */
+
 .navbar-container {
     display: flex;
     justify-content: space-between;
@@ -42,12 +42,12 @@
     width: 100%;
 }
 
-/* Navbar Links (adjusted to right) */
+
 .nav-links {
     list-style: none;
     display: flex;
     align-items: center;
-    margin-left: auto; /* Moves the links to the right side */
+    margin-left: auto;
 }
 
 .nav-links li {
@@ -71,7 +71,7 @@
     background-color: #137d4a;
 }
 
-/* Dropdown */
+
 .dropdown {
     position: relative;
 }
@@ -103,18 +103,18 @@
     display: block;
 }
 
-/* Style for the expand_more icon */
+
 .dropbtn .material-symbols-outlined {
     vertical-align: middle;
 }
 
-/* Material Icons */
+
 .nav-icons .material-symbols-outlined {
     color: white;
     font-size: 30px;
 }
 
-/* Icons Container Styling */
+
 .nav-icons {
     display: flex;
     align-items: center;
@@ -122,7 +122,7 @@
     margin-left: 20px;
 }
 
-/* Notification Badge */
+
 .notification-badge {
     position: absolute;
     top: 25px;
@@ -134,9 +134,9 @@
     padding: 2px 5px;
 }
 
-/* Navbar Button */
+
 .nav-button a {
-    background-color: #299b63; /* Green color for the button */
+    background-color: #299b63;
     color: white;
     padding: 12px 25px;
     text-decoration: none;
@@ -147,14 +147,14 @@
 }
 
 .nav-button {
-    margin-left: 20px; /* Space between button and icons */
+    margin-left: 20px;
 }
 
 .nav-button a:hover {
-    background-color: #137d4a; /* Slightly darker green on hover */
+    background-color: #137d4a;
 }
 
-/* Responsive Navbar */
+
 @media (max-width: 768px) {
     .navbar-container {
         flex-direction: column;
@@ -163,7 +163,7 @@
 
     .nav-links {
         flex-direction: column;
-        margin-left: 0; /* Remove auto margin for mobile */
+        margin-left: 0;
     }
 
     .nav-links li {
