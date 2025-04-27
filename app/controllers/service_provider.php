@@ -881,9 +881,10 @@ class Service_provider extends Controller
             if (
                 empty($data['salary_range_err'])
             ) {
+                // die(var_dump($data));
                 if ($this->model('M_jobpost')->edit($data)) {
                     $_SESSION['job_edit_success'] = true;
-                    $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/sservice_provider/dashboard';
+                    $previousURL = $_SERVER['HTTP_REFERER'] ?? URLROOT . '/service_provider/dashboard';
                     Redirect::to($previousURL);
                 } else {
                     die('something went wrong');
