@@ -149,7 +149,7 @@ class companyModel extends Model
             $this->addSubscriptionNotification(
                 $user_id,
                 'Subscription Expiry Warning',
-                'Your subscription plan has expired.',
+                "Your subscription has expired. Reactivate within 7 days to keep all posts active; otherwise, only the latest 2 posts will remain.",
                 $end_date
             );
             
