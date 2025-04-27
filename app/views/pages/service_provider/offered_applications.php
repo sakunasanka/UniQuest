@@ -1,12 +1,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/application_table.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php
         $columns = [
@@ -51,12 +48,6 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_application/<?php echo $application->ApplicationID; ?>'">
                                         preview
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn activate">
-                                        check_circle
-                                    </span>
-                                    <span class="material-symbols-outlined action-btn deactivate">
-                                        block
-                                    </span> -->
                                 </td>
                             </tr>
                         <?php endforeach; ?>

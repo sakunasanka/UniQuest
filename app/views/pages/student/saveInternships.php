@@ -18,18 +18,6 @@
                 'SalaryRange' => 'Highest Salary'
             ]; ?>
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
-            <!-- <div class="search-bar-container">
-                <div class="search-bar">
-                    <div class="search-icon">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                    <input type="text" placeholder="Search jobs, internships..." class="search-input">
-                    <div class="filters-button">
-                        <i class="fa-solid fa-filter"></i>
-                        <span>Filters</span>
-                    </div>
-                </div>
-            </div> -->
             <div class="cards-container">
                 <?php if(empty($data['posts'])): ?>
                     <div class="no-results">No results found.</div>

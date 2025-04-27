@@ -23,7 +23,6 @@
             </div>
             <div class="form-section">
                 <form action="<?php echo URLROOT ?>/register/company" method="POST" enctype="multipart/form-data">
-                    <!-- Company Details -->
                     <h2>Company Details</h2>
                     <div class="form-row">
                         <div class="input-profile-pic">
@@ -110,7 +109,6 @@
                             <span class="req-msg">Only PDF, DOC, DOCX files are allowed, and maximum file size is 5MB</span>
                             <span class="error-msg"><?php echo !empty($data['brCertificate_err']) ? $data['brCertificate_err'] : ''; ?></span>
                         </div>
-                        <!-- <div class="input-container"></div> -->
                     </div>
 
                     <div class="form-row">
@@ -158,7 +156,6 @@
                         </div>
                     </div>
 
-                    <!-- Login Credentials -->
                     <h2>Login Credentials</h2>
                     <div class="form-row">
                         <div class="input-container">

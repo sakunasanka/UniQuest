@@ -5,10 +5,9 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/myReviews.css">
 <div class="main-container">
     <div class="content-area">
-        <!-- Sidebar -->
+
         <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
-        <!-- Content Area -->
         <div class="container">
             <h2>Your Ratings and Reviews</h2>
             <?php if (empty($data['reviews'])): ?>
@@ -19,16 +18,13 @@
             <div class="view-card view-card-2">
             
                 <div class="reviews-section">
-                    
-                        <!-- Reviews on Main Page -->
                         <?php foreach ($data['reviews'] as $index => $review): ?>
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
-                                <!-- Review Header: Company Name and Date -->
                                 <div class="review-header">
                                     <p class="company-title" onclick="goToCompany(<?php echo $review->CompanyID; ?>)"><?php echo $review->CompanyName; ?></p>
                                     <span class="review-date"><?php echo date('F j, Y', strtotime($review->created_at)); ?></span>
                                 </div>
-                                <!-- Review Comment -->
+
                                 <div class="review-details">
                                     <p class="review-text"><?php echo $review->Comment; ?></p>
                                     <span class="review-rating"><i class="fa fa-star"></i> <?php echo $review->Rating; ?></span>

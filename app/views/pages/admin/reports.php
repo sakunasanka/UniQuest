@@ -1,18 +1,11 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/reports.css">
-
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
-        <!-- <h1 class="report-title">System Reports</h1>
-        <p class="report-subtitle">Select a report to view detailed analytics</p> -->
 
         <div class="report-container">
-            <!-- System Reports -->
             <a href="/UniQuest/admin/viewReport/SystemHealth" class="report-card">
                 <i class="fas fa-heartbeat icon-red"></i>
                 <h3>System Health</h3>
@@ -23,7 +16,6 @@
                 </div>
             </a>
 
-            <!-- User Reports -->
             <a href="/UniQuest/admin/viewReport/UserGrowth" class="report-card">
                 <i class="fas fa-users icon-blue"></i>
                 <h3>User Growth</h3>
@@ -34,7 +26,6 @@
                 </div>
             </a>
 
-            <!-- Job Reports -->
             <a href="/UniQuest/admin/viewReport/JobPerformance" class="report-card">
                 <i class="fas fa-briefcase icon-purple"></i>
                 <h3>Job Performance</h3>
@@ -45,7 +36,6 @@
                 </div>
             </a>
 
-            <!-- Financial Reports -->
             <a href="/UniQuest/admin/viewReport/Revenue" class="report-card">
                 <i class="fas fa-money-bill-wave icon-green"></i>
                 <h3>Revenue Analytics</h3>
@@ -55,30 +45,6 @@
                     <span><i class="fas fa-clock"></i> Retention</span>
                 </div>
             </a>
-
-            <!-- Complaint Reports -->
-            <!-- <a href="/UniQuest/admin/viewReport/Complaint" class="report-card">
-                <i class="fas fa-exclamation-triangle icon-orange"></i>
-                <h3>Complaint Analysis</h3>
-                <p>Resolution times and frequent issues</p>
-                <div class="report-meta">
-                    <span><i class="fas fa-stopwatch"></i> Resolution time</span>
-                    <span><i class="fas fa-building"></i> By company</span>
-                </div>
-            </a> -->
-
-            <!-- Verification Reports -->
-            <!-- <a href="/UniQuest/admin/viewReport/VerificationPerformance" class="report-card">
-                <i class="fas fa-user-check icon-teal"></i>
-                <h3>Verification Activity</h3>
-                <p>Team performance and processing times</p>
-                <div class="report-meta">
-                    <span><i class="fas fa-users-cog"></i> By staff</span>
-                    <span><i class="fas fa-hourglass-half"></i> Speed</span>
-                </div>
-            </a> -->
-
-            <!-- Placement Reports -->
             <a href="/UniQuest/admin/viewReport/StudentPlacement" class="report-card">
                 <i class="fas fa-graduation-cap icon-indigo"></i>
                 <h3>Student Placements</h3>
@@ -88,19 +54,6 @@
                     <span><i class="fas fa-percent"></i> Placement rate</span>
                 </div>
             </a>
-
-            <!-- Engagement Reports -->
-            <!-- <a href="/UniQuest/admin/viewReport/BookmarkAnalysis" class="report-card">
-                <i class="fas fa-bookmark icon-pink"></i>
-                <h3>User Engagement</h3>
-                <p>Bookmarking behavior and favorites</p>
-                <div class="report-meta">
-                    <span><i class="fas fa-bookmark"></i> Bookmarks</span>
-                    <span><i class="fas fa-eye"></i> Popular items</span>
-                </div>
-            </a> -->
-
-            <!-- Executive Summary Reports-->
             <a href="/UniQuest/admin/viewReport/ExecutiveSummary" class="report-card">
                 <i class="fas fa-chart-pie icon-yellow"></i>
                 <h3>Executive Summary</h3>
@@ -114,5 +67,4 @@
     </main>
 </div>
 
-<!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>

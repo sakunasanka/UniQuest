@@ -2,15 +2,11 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/reason_mng.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php
-        // Define all table types and their display names
         $tableTypes = [
             'industries' => 'Industries',
             'user_activate' => 'User Activate',
@@ -23,13 +19,11 @@
             'complaint_rejected' => 'Complaint Rejected'
         ];
 
-        // Get the selected table type from GET parameter or default to first one
         $selectedTable = $_GET['table'] ?? 'industries';
         if (!array_key_exists($selectedTable, $tableTypes)) {
             $selectedTable = 'industries';
         }
 
-        // Define columns for each table type
         $columns = [
             'user_activate' => [
                 'ReasonName' => 'Reason Name',
@@ -84,7 +78,6 @@
                 <h2 class="table-title"><?php echo $tableTypes[$selectedTable]; ?></h2>
 
                 <div class="header-actions-container">
-                    <!-- Table Type Selector Form -->
                     <form method="get" class="table-selector-form">
                         <select id="table-type" name="table" onchange="this.form.submit()">
                             <?php foreach ($tableTypes as $key => $name): ?>
@@ -102,9 +95,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Single Table Card -->
             <div class="table-card">
-                <!-- Dynamic Table -->
                 <table data-item-type="<?php echo $selectedTable; ?>">
                     <thead>
                         <tr>
@@ -156,7 +147,6 @@
             </div>
         </div>
 
-        <!-- Popup Overlays -->
         <?php require APPROOT . '/views/popups/admin/addReason.php'; ?>
         <?php require APPROOT . '/views/popups/admin/deleteReason.php'; ?>
         <?php require APPROOT . '/views/popups/admin/addIndustry.php'; ?>

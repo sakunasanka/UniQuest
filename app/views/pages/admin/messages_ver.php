@@ -1,12 +1,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/components/chat-sent.php'; ?>
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php
         $columns = [
@@ -69,7 +66,6 @@
     </main>
 </div>
 
-<!-- Create a hidden form to submit the user ID -->
 <form id="chatForm" action="<?php echo URLROOT; ?>/admin/messages_ver" method="post" style="display: none;">
     <input type="hidden" name="selectedUserID" id="selectedUserID" value="">
 </form>
@@ -80,7 +76,6 @@
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminSortTable.js"></script>
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminAddButton.js"></script>
 
-<!-- Add simple script for opening the chat popup -->
 <script>
 
 function scrollToBottom() {

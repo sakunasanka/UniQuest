@@ -3,13 +3,9 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 
-<!-- Sidebar and Content Layout -->
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
             <button class="back-btn">
@@ -26,7 +22,6 @@
                     alt="Profile Picture">
 
                 <div class="btn-row">
-                    <!-- <button class="contact-btn" onclick="">Contact</button> -->
                     <?php require APPROOT . '/views/components/chat-sent.php'; ?>
                 </div>
             </div>
@@ -117,7 +112,6 @@
                 </div>
             </div>
         </div>
-        <!-- File Previews -->
         <?php if ($data['user']['BRCertificate']): ?>
             <div class="view-card file-preview">
                 <div class="detail-row">

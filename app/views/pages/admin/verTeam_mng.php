@@ -1,12 +1,7 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
-
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
-
-    <!-- Content Area -->
     <main class="content-area">
         <?php $columns = [
             "FullName" => "Full Name",

@@ -12,7 +12,7 @@
         <p>Please fill out the details below to submit your application</p>
         
         <div class="form-section">
-            <!-- Form Container -->
+
             <div class="form-container">
                 <form action="<?php echo URLROOT; ?>/student/jobsApply/<?php echo $data['job']->JobID; ?>" 
             method="POST" 
@@ -21,9 +21,9 @@
             <?php
                     $fields = $data['fields'];
                     if ($fields):
-                        // Create a mapping between form field names and userdetails keys
+
                         $fieldMapping = [
-                            'fullname' => ['firstname', 'lastname'], // Combine first and last name
+                            'fullname' => ['firstname', 'lastname'], 
                             'photo' => 'profilepic',
                             'email' => 'email',
                             'contact' => 'contactno',
@@ -93,11 +93,6 @@
                                             name="<?php echo $fieldName; ?>"
                                             accept="<?php echo $fieldConfig['accept']; ?>"
                                             <?php if ($isRequired) echo 'required'; ?>>
-                                        <!-- <?php if ($fieldValue): ?>
-                                            <div class="current-file">
-                                                Current file: <?php echo basename($fieldValue); ?>
-                                            </div>
-                                        <?php endif; ?> -->
                                     <?php break;
 
                                     default: ?>
@@ -125,8 +120,6 @@
             <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
-
-            <!-- Job Information Card -->
             <div class="job-card">
                 <?php  if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Student'):?>
                     <div class="card-icons">

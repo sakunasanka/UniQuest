@@ -1,15 +1,11 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/adminDash.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?> 
     
-    <!-- Content Area -->
     <main class="content-area">
     <div class="dashboard-container">
-        <!-- Dashboard stats -->
         
         <div class="dashboard-card" onclick="goToStuMng()">
             <i class="fas fa-users icon-blue"></i>
@@ -69,7 +65,6 @@
     </main>
 </div>
 
-<!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>
 
 <script>

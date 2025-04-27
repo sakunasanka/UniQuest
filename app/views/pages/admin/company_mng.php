@@ -1,12 +1,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateAcc.php'; ?>
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php $columns = [
             "CompanyName" => "Company Name",
@@ -25,10 +22,6 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <!-- <button class="add-btn" data-path="/UniQuest/admin/add_company">
-                    <span class="material-symbols-outlined">person_add</span>
-                    <span class="add-btn-text">Add Company</span>
-                </button> -->
             </div>
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>

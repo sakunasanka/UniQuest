@@ -58,7 +58,6 @@
         </div>
     </section>
 
-    <!-- Summary Analysis Section -->
     <section class="summary-analysis">
         <h2>Summary Analysis</h2>
         <div class="summary-content">
@@ -116,7 +115,6 @@
         </div>
     </section>
 
-    <!-- Recommendations Section -->
     <section class="recommendations">
         <h2>Recommendations</h2>
         <div class="recommendations-content">

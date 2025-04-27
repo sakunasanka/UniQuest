@@ -15,18 +15,6 @@
 
     <div class="content-area">
         <div class="container">
-            <!-- <div class="search-bar-container">
-                <div class="search-bar">
-                    <div class="search-icon">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                    <input type="text" placeholder="Search company..." class="search-input">
-                    <div class="filters-button">
-                        <i class="fa-solid fa-filter"></i>
-                        <span>Filters</span>
-                    </div>
-                </div>
-            </div> -->
             <div class="header-text">
             <h1 >Trending Companies</h1>
             <h3>Check out the top-rated companies based on the student reviews</h3>

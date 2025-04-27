@@ -2,14 +2,11 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/delete.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="content-area">
-    <!-- Sidebar -->
+
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <div class="page-wrapper">
-    <!-- Sidebar -->
     <div class="sidebr">
         <img src="<?php echo URLROOT; ?>/public/images/user.png" alt="Profile Picture" class="profile-pic">
         <ul>
@@ -18,7 +15,6 @@
         </ul>
     </div>
 
-    <!-- Main content area -->
     <div class="container">
         <h2>Delete Account</h2>
         <form action="delete_account.php" method="post">

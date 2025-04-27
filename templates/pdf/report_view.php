@@ -124,14 +124,12 @@
             background-color: #fafafa;
         }
 
-        /* Utilities */
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         .page-break { page-break-after: always; }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="pdf-header">
         <div class="logo-container">
             <img src="<?= URLROOT ?>/images/UniQuest3.jpg" class="logo" alt="UniQuest Logo">
@@ -139,20 +137,16 @@
         <div class="header-info">
             <div class="report-title">UniQuest Reports</div>
             <div class="report-subtitle">Administrative Dashboard</div>
-            <!-- <div class="report-subtitle"><?= date('F j, Y') ?> | <?= date('H:i') ?></div> -->
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="report-content">
         <div class="content-header">
             <h1 class="content-title"><?= $reportName ?> Report</h1>
             <p class="content-subtitle">Generated on <?= date('F j, Y \a\t H:i') ?></p>
         </div>
 
-        <!-- Report Info -->
         <div class="report-info">
-            <!-- <span class="report-info-item">Total Records: <?= count($reportData) ?></span> -->
             <?php if (isset($timePeriod) && $timePeriod !== 'all'): ?>
                 <span class="report-info-item">Time Period: 
                     <?php if ($timePeriod === 'custom'): ?>
@@ -185,9 +179,7 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </div>
 
-    <!-- Footer -->
     <div class="pdf-footer">
         <div>Confidential - For internal use only</div>
         <div class="page-number"></div>

@@ -100,7 +100,7 @@
                 <h3>Reviews and Ratings about this company</h3>
                 <?php if (!empty($data['reviews'])): ?>
                     <?php foreach ($data['reviews'] as $index => $review): ?>
-                        <?php if ($index < 3): ?> <!-- Display only the first 3 reviews -->
+                        <?php if ($index < 3): ?> 
                             <div class="review" id="page-review-<?php echo $index; ?>" data-id="<?php echo $index; ?>">
                                 <div class="review-header">
                                     <p class="review-text">"<?php echo ($review->Comment ?? ''); ?>"</p>

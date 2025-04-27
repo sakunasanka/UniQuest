@@ -1,12 +1,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/application_table.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php
         $columns = [
@@ -17,7 +14,6 @@
             "Actions" => "Actions"
         ];
         ?>
-        <!-- Tabs Header -->
         <div class="tabs-header">
             <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/service_provider/new_applications/<?php echo $data['jobID']; ?>">Pending Applications</button>
             <button class="tab" data-path="/UniQuest/service_provider/offered_applications/<?php echo $data['jobID']; ?>">Offered Applications</button>
@@ -34,14 +30,11 @@
                 Published On: <?php echo $data['posted']; ?>
             </p>
         </div>
-        <!-- Table Block -->
         <div class="table-block">
-            <!-- Content Header with Search Bar -->
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
 
-            <!-- Applications Table -->
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>
                 <tbody>
@@ -56,12 +49,6 @@
                                     <span class="material-symbols-outlined action-btn view" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/view_application/<?php echo $application->ApplicationID; ?>'">
                                         preview
                                     </span>
-                                    <!-- <span class="material-symbols-outlined action-btn activate">
-                                        check_circle
-                                    </span>
-                                    <span class="material-symbols-outlined action-btn deactivate">
-                                        block
-                                    </span> -->
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -73,13 +60,11 @@
                 </tbody>
             </table>
 
-            <!-- Pagination -->
             <?php require APPROOT . '/views/components/pagination.php'; ?>
         </div>
     </main>
 </div>
 
-<!-- Scripts -->
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/adminTopPanel.js"></script>
 
 <?php require APPROOT . '/views/components/footer.php'; ?>

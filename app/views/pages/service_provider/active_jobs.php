@@ -1,12 +1,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
 <?php require APPROOT . '/views/popups/service_provider/deactivatepostjob_popup.php'; ?>
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
-    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
-    <!-- Content Area -->
+    <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
     <main class="content-area">
         <?php
         $columns = [

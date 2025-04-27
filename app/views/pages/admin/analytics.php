@@ -6,14 +6,10 @@
     <div class="nav-block"></div>
 </header>
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?> 
     
-    <!-- Content Area -->
     <main class="content-area">
-        <!-- Stats -->
         <div class="stats">
             <div class="card stat-card">
                 <div>
@@ -52,8 +48,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Charts -->
         <div class="charts">
             <div class="card chart-card">
                 <canvas id="registrationsChart"></canvas>
@@ -72,7 +66,6 @@
 </div>
 
 <script>
-    // Pass PHP data to JavaScript
     const analyticsData = {
         registrationStats: <?php echo json_encode($data['registrationStats'] ?? []); ?>,
         jobStats: <?php echo json_encode($data['jobStats'] ?? []); ?>,
@@ -83,5 +76,4 @@
 
 <script src="<?php echo URLROOT; ?>/js/admin/analytics.js"></script>
 
-<!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>

@@ -1,11 +1,8 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php
         $columns = [
@@ -58,8 +55,6 @@
         </div>
     </main>
 </div>
-
-<!-- Footer -->
 
 <script>
     const totalPages = <?php echo $data['totalPages']; ?>;

@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/admin/addReason.css">
 
-<!-- Delete Confirmation Popup -->
 <div class="popup-overlay" id="deleteIndustryPopup">
     <div class="popup-content">
         <button class="close-btn">&times;</button>

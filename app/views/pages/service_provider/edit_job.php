@@ -2,9 +2,8 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/edit_job.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
+
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
     <div class="content-area">
@@ -60,11 +59,6 @@
                         <textarea id="job_benefits" name="jobBenefits"><?php echo $data['job_benifits']; ?></textarea>
                     </div>
                     <span class="form-invalid"><?php echo $data['job_benifits_err']; ?></span>
-
-                    <!-- <div class="form-group">
-                        <label for="job_icon">Job Icon</label>
-                        <input type="file" id="job_icon" name="job_icon">
-                    </div> -->
                 </div>
 
                 <button type="submit" class="submit-btn">Done</button>

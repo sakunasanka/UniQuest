@@ -8,7 +8,6 @@
             <div class="review-form">
                 <h2>Share your experience</h2>
                 <form action="<?php echo URLROOT; ?>/student/updateReview/" id="edit-review-form" method="POST">
-                    <!-- Rating Input -->
                     <div class="rating-stars">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                             <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" 
@@ -17,8 +16,6 @@
                         <?php endfor; ?>
                     </div>
                     <span class="error-msg"><?php echo !empty($data['rating_err']) ? $data['rating_err'] : ''; ?></span>
-
-                    <!-- Comment Input -->
                     <textarea name="comment" placeholder="Share your experiences" required><?php echo $data['comment']?></textarea>
                     <span class="error-msg"><?php echo !empty($data['comment_err']) ? $data['comment_err'] : ''; ?></span>
 

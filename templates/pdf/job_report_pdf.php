@@ -309,7 +309,6 @@
 </head>
 
 <body>
-    <!-- Header -->
     <div class="pdf-header">
         <div class="logo-container">
             <img src="<?= URLROOT ?>/images/UniQuest3.jpg" class="logo" alt="UniQuest Logo">
@@ -320,7 +319,6 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="report-content">
         <div class="content-header">
             <h1 class="content-title">Job Performance Report</h1>
@@ -330,8 +328,6 @@
                 <span>Job ID: <?= $reportData['job']->JobID ?></span>
             </div>
         </div>
-
-        <!-- Job Overview -->
         <div class="section">
             <h2>Job Overview</h2>
             <div class="grid">
@@ -369,8 +365,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Company Information -->
         <div class="section">
             <h2>Company Information</h2>
             <div class="grid">
@@ -412,8 +406,6 @@
                 <?php endif; ?>
             </div>
         </div>
-
-        <!-- Job Details -->
         <div class="section">
             <h2>Job Details</h2>
             <div class="grid">
@@ -438,13 +430,10 @@
             </div>
         </div>
 
-        <!-- Applicant Demographics -->
         <div class="section">
             <h2>Applicant Demographics</h2>
 
             <?php if ($reportData['totalApplicants'] > 0): ?>
-
-                <!-- Gender Chart -->
                 <?php if (!empty($reportData['chartImages']['gender'])): ?>
                     <div class="chart-container">
                         <h3 class="chart-heading">Gender Distribution</h3>
@@ -453,7 +442,6 @@
                 <?php endif; ?>
         </div>
         <div class="section">
-            <!-- Age Chart -->
             <?php if (!empty($reportData['chartImages']['age'])): ?>
                 <div class="chart-container">
                     <h3 class="chart-heading">Age Distribution</h3>
@@ -463,7 +451,6 @@
 
         </div>
         <div class="section">
-            <!-- University Chart -->
             <?php if (!empty($reportData['chartImages']['university'])): ?>
                 <div class="chart-container">
                     <h3 class="chart-heading">University Distribution</h3>
@@ -479,8 +466,6 @@
         <?php endif; ?>
         </div>
 
-
-        <!-- Summary Analysis Section -->
         <div class="section">
             <h2>Summary Analysis</h2>
             <div class="summary-content">
@@ -536,7 +521,6 @@
             </div>
         </div>
 
-        <!-- Recommendations Section -->
         <div class="section">
             <h2>Recommendations</h2>
             <div class="recommendations-content">
@@ -570,7 +554,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="pdf-footer">
         <div>Confidential - For internal use only</div>
         <div class="page-number"></div>

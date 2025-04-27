@@ -1,12 +1,7 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/reports.css">
-
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
-
-    <!-- Content Area -->
     <main class="content-area">
         <div class="report-header">
             <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/reports'">
@@ -56,7 +51,6 @@
                         <button type="submit">Apply</button>
                     </form>
                 </div>
-                <!-- Add more summary cards as needed -->
             </div>
 
             <div class="report-table-container">
@@ -88,7 +82,6 @@
     </main>
 </div>
 
-<!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>
 <script>
 function updateTimeFilter() {
@@ -102,48 +95,3 @@ function updateTimeFilter() {
     }
 }
 </script>
-<!-- 
-<script>
-    function generatePDF() {
-        // Store original styles
-        const originalStyles = {};
-        const styleElements = document.querySelectorAll('style, link[rel="stylesheet"]');
-
-        // Create print-specific styles
-        const printStyle = document.createElement('style');
-        printStyle.innerHTML = `
-        @media print {
-            body * { visibility: hidden; }
-            .content-area, .content-area * { visibility: visible; }
-            .content-area { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                padding: 0; 
-                margin: 0; 
-            }
-            .report-actions, .report-summary { display: none !important; }
-        }
-    `;
-        document.head.appendChild(printStyle);
-
-        // Temporarily hide elements
-        const elementsToHide = document.querySelectorAll('header, footer, .main-container > :not(.content-area)');
-        elementsToHide.forEach(el => {
-            originalStyles[el.id || el.className] = el.style.cssText;
-            el.style.display = 'none';
-        });
-
-        // Print
-        window.print();
-
-        // Restore original state
-        setTimeout(() => {
-            elementsToHide.forEach(el => {
-                el.style.cssText = originalStyles[el.id || el.className];
-            });
-            printStyle.remove();
-        }, 500);
-    }
-</script> -->

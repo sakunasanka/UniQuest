@@ -1,12 +1,10 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
 <?php require APPROOT . '/views/popups/student/deletepostjob_popup.php'; ?>
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
+
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php
         $columns = [

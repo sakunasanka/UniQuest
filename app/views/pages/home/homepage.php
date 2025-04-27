@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/components/home_footer.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<!-- Hero Section -->
 <section class="hero">
     <div class="hero-text">
         <h1>Welcome to UniQuest!</h1>
@@ -36,7 +35,6 @@
     </div>
 </section>
 
-    <!-- Students Section -->
     <section class="students" id="services">
         <h2>For Students <i class="material-icons large-icon">groups</i></h2>
         <p>We simplify opportunities for university students by connecting you with part-time jobs and internships.</p>
@@ -58,7 +56,6 @@
     </div>
     </section>
 
-    <!-- Service Providers Section -->
     <section class="service-providers">
     <h2>For Service Providers <i class="material-icons large-icon">business</i></h2>
     <p>Join UniQuest and gain access to a diverse pool of talented students eager to work and learn.</p>
@@ -82,7 +79,6 @@
 
 </div>
 
-<!-- Footer -->
 <?php require APPROOT . '/views/components/footer.php'; ?>
 <script src="<?php echo URLROOT; ?>/public/js/home/home_scroll.js"></script>
 <script>

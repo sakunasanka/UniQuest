@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/admin/addReason.css">
 
-<!-- Unified Edit Popup -->
 <div class="popup-overlay" id="editItemPopup">
     <div class="popup-content">
         <button class="close-btn">&times;</button>

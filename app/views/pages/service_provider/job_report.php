@@ -23,11 +23,6 @@
         </form>
 
     </div>
-    <!-- Copy this part and above button for every report -->
-
-    <!-- include the report -->
-    <!-- Hidden content for PDF generation -->
-
 
     <div id="visible-content">
         <div class="report-date">

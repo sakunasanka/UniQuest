@@ -6,14 +6,11 @@
     <div class="nav-block"></div>
 </header>
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
+
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?> 
     
-    <!-- Content Area -->
     <main class="content-area">
-        <!-- Stats -->
         <div class="stats">
             <div class="card stat-card">
                 <div>
@@ -45,7 +42,6 @@
             </div>
         </div>
 
-        <!-- Charts -->
         <div class="charts">
             <div class="card chart-card">
                 <canvas id="registrationsChart"></canvas>

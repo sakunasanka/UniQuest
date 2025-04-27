@@ -23,7 +23,6 @@
         </div>
 
         <div class="grid-container">
-            <!-- Jobs Card -->
             <div class="card" onclick="goToJobs()">
                 <span class="material-symbols-outlined yellow-icon"> work </span>
                 <h2>Jobs</h2>
@@ -45,7 +44,6 @@
                 <p class="card-subtext">Job Clicks (Last month)</p>
             </div>
 
-            <!-- Applications Card -->
             <div class="card" onclick="goToApplications()">
                 <span class="material-symbols-outlined pink-icon"> assignment </span>
                 <h2>Applications</h2>
@@ -62,7 +60,6 @@
                 </div>
             </div>
 
-            <!-- Analytics Card -->
             <div class="card" onclick="goToAnalytics()">
                 <span class="material-symbols-outlined indigo-icon"> monitoring </span>
                 <h2>Analytics</h2>
@@ -84,7 +81,6 @@
                 <p class="card-subtext">Company Rating (Last month)</p>
             </div>
 
-            <!-- Reviews Card -->
             <div class="card" onclick="goToReviews()">
                 <span class="material-symbols-outlined teal-icon"> rate_review </span>
                 <h2>Community Reviews</h2>

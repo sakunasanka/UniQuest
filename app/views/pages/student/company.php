@@ -2,13 +2,7 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- Add near your user profile dropdown -->
-    
-
-<!-- Include CSS -->
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/notifications.css">
-
-<!-- Include JavaScript -->
 <script src="<?php echo URLROOT; ?>/js/notifications.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 

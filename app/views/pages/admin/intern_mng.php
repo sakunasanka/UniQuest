@@ -1,12 +1,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 <?php require APPROOT . '/views/popups/admin/activateDeactivateJob.php'; ?>
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <?php
         $columns = [
@@ -25,10 +22,6 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <!-- <button class="add-btn">
-                    <span class="material-symbols-outlined">add</span>
-                    <span class="add-btn-text">Add Intern</span>
-                </button> -->
             </div>
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>

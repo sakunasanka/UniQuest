@@ -10,7 +10,6 @@
                 <h1>Job Applications Dashboard</h1>
                 <div class="header-buttons">
                     <button class="btn-primary" onclick="goToJobPost()">Add New Job</button>
-                    <!-- <button class="btn-secondary">Filter</button> -->
                 </div>
             </div>
 
@@ -48,7 +47,6 @@
                         </div>
                         <div class="job-actions">
 
-                            <!-- Corrected onclick with proper quotes and PHP embedding -->
                             <span class="view-link" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/new_applications/<?php echo $job['jobID']; ?>'">
                                 View Applications <i class="fas fa-chevron-right"></i>
                             </span>

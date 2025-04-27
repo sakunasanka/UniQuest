@@ -2,7 +2,7 @@
 
 
 <div class='search-filter-panel'>
-    <!-- First Row: Sort Option and Search Bar -->
+
     <div class='search-sort-row'>
         <?php
         $industries = [];
@@ -35,7 +35,7 @@
         ?>
     </div>
 
-    <!-- Second Row: Filter Functions (Hidden by Default) -->
+
     <div class='filter-row'>
         <?php
         $filter = Filter::getInstance();

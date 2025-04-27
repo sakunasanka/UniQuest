@@ -8,7 +8,6 @@
             <div class="review-form">
                 <h2>Share your experience</h2>
                 <form action="<?php echo URLROOT ?>/student/addReview" method="POST">
-                    <!-- Rating Input -->
                     <div class="rating-stars">
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                             <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" <?php echo ($data['rating'] == $i) ? 'checked' : ''; ?>>

@@ -3,14 +3,8 @@
 <?php require APPROOT . '/views/popups/student/changePassword.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_Profile.css">
-
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <div class="content-area">
-        <!-- Sidebar -->
         <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
-
-        <!-- Content Area -->
         <div class="profile-container">
             <div class="profile-section">
                 <div class="profile-pic">
@@ -36,7 +30,6 @@
                     <span class="colon">:</span>
                     <span class="kk"><?php echo $data['user']['Email'] ?></span>
                 </div>
-                <!-- contact no -->
                 <div class="info-row">
                     <label>Contact No</label>
                     <span class="colon">:</span>

@@ -3,9 +3,7 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_Profile.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
     <div class="content-area">
         <div class="content-header">
@@ -15,7 +13,6 @@
             </button>
         </div>
 
-        <!-- Content Area -->
         <div class="profile-container">
             <div class="profile-section">
                 <div class="profile-pic">
@@ -38,7 +35,7 @@
                     <span class="colon">:</span>
                     <span class="kk"><?php echo $data['user']['Email'] ?></span>
                 </div>
-                <!-- contact no -->
+
                 <div class="info-row">
                     <label>Contact No</label>
                     <span class="colon">:</span>

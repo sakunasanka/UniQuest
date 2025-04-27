@@ -11,10 +11,6 @@
                     <li>Action taken by a system administrator.</li>
                     <li>Prolonged inactivity on your account.</li>
                 </ul>
-                <!-- <p class="reactivation-note">
-                    To continue using UniQuest, please log in to reactivate your account.
-                    <br><b>Note: If you do not log in within 30 days, your account will be permanently deleted.</b>
-                </p> -->
             </div>
             <a href="<?php echo URLROOT; ?>" class="go-home-btn">Go to Home Page</a>
         </div>

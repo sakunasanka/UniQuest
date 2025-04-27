@@ -2,13 +2,9 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/service_provider/view_profile.css">
 
-<!-- Sidebar and Content Layout -->
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
             <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_verified'">
@@ -81,12 +77,10 @@
                     <?php endif; ?>
                 </div>
                 <div class="btn-row">
-                    <!-- <button class="contact-btn" onclick="">Contact</button> -->
                     <?php require APPROOT . '/views/components/chat-sent.php'; ?>
                 </div>
             </div>
         </div>
-        <!-- File Previews -->
         <?php if ($data['user']['BRCertificate']): ?>
             <div class="view-card file-preview">
                 <div class="detail-row">

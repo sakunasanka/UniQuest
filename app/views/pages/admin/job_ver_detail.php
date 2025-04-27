@@ -1,14 +1,8 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/job_detail.css">
-
-<!-- Sidebar and Content Layout -->
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/adminSidePanel.php'; ?>
-
-    <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
             <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_pending'">
@@ -36,21 +30,10 @@
                 <div class="view-card-info">
                     <div>
                         <h3>Qualifications:</h3>
-                        <!-- <ul>
-                            <li>Age Between 18 - 40</li>
-                            <li>With a valid driver's license</li>
-                            <li>Should own a Motorbike</li>
-                        </ul> -->
                         <?php echo $data['job']->RequiredQualifications ?>
                     </div>
                     <div>
                         <h3>Benefits:</h3>
-                        <!-- <ul>
-                            <li>Highest salary in the industry</li>
-                            <li>Special Extra Allowances</li>
-                            <li>Meals during service hours</li>
-                            <li>Accommodation is provided</li>
-                        </ul> -->
                         <?php echo $data['job']->JobBenefits ?>
                     </div>
                 </div>

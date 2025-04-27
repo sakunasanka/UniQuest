@@ -4,15 +4,10 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/edit_profile.css">
 
-<!-- Sidebar and Content Layout -->
-
-<!-- Sidebar -->
 <div class="content-sub">
     <div class="content-sub-1">
         <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
     </div>
-    <!-- Content Area -->
-    <!-- Sidebar -->
     <div class="prow1">
         <form action="<?php echo URLROOT ?>/student/edit_profile" method="POST" enctype="multipart/form-data">
             <div class="page-wrapper">
@@ -94,13 +89,10 @@
                         </div>
                     </div>
 
-                    <!-- Save Changes button -->
                     <div class="form-row">
                         <div class="form-group">
                             <button type="submit" class="save-button">Save Changes</button>
                             <button type="button" class="cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/user/profile'">Cancel</button>
-                            
-                            <!-- <button type="button" class="change-password-btn" onclick="ToggleChangePasswordForm()">change password</button> -->
                         </div>
                     </div>
                 </div>

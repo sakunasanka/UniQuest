@@ -1,11 +1,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
-    <!-- Sidebar -->
+
     <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <div class="header-text">
             <h1>Accepted Applications</h1>
@@ -20,7 +18,6 @@
                         <th onclick="sortTable(2)">Location</th>
                         <th onclick="sortTable(3)">Date</th>
                         <th onclick="sortTable(4)">Status</th>
-                        <!-- <th class="no-sort">Actions</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -30,11 +27,6 @@
                         <td>Negombo</td>
                         <td>2024/08/16</td>
                         <td><span class="status active">Accepted</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
                     </tr>
 
                     <tr>
@@ -43,11 +35,6 @@
                         <td>Colombo</td>
                         <td>2024/08/15</td>
                         <td><span class="status active">Accepted</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
                     </tr>
                     <tr>
                         <td>Delivery Rider</td>
@@ -55,11 +42,6 @@
                         <td>Galle</td>
                         <td>2024/07/16</td>
                         <td><span class="status active">Accepted</span></td>
-                        <!-- <td class="action">
-                            <span class="material-symbols-outlined action-btn view">
-                                preview
-                            </span>
-                        </td> -->
                 </tbody>
             </table>
             <?php require APPROOT . '/views/components/pagination.php'; ?>

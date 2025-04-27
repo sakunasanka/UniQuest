@@ -66,33 +66,13 @@
     <?php endif; ?>
 
     <div class="content-area">
-        <!-- <div class="tabs-header">
-            <button class="tab" style="border-radius: 10px 0px 0px 10px;" data-path="/UniQuest/jobs">Part Time Jobs</button>
-            <button class="tab" style="border-radius: 0px 0px 0px 0px;" data-path="/UniQuest/internships">Internships</button>
-            <button class="tab" style="border-radius: 0px 10px 10px 0px;" data-path="/UniQuest/companies">Companies</button>
-        </div> -->
         <div class="container">
 
             <?php $columns = [
                 'jobs_create_at' => 'Newest',
-                // 'Rating' => 'Highest Rating',
                 'SalaryRange' => 'Highest Salary'
             ]; ?>
             <?php require APPROOT . '/views/components/searchBar.php'; ?>
-
-
-            <!-- <div class="search-bar-container">
-                <div class="search-bar">
-                    <div class="search-icon">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                    <input type="text" placeholder="Search jobs, internships..." class="search-input">
-                    <div class="filters-button">
-                        <i class="fa-solid fa-filter"></i>
-                        <span>Filters</span>
-                    </div>
-                </div>
-            </div> -->
             <div class="cards-container">
                 <?php if(empty($data['posts'])): ?>
                     <div class="no-results">No results found.</div>

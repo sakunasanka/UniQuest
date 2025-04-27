@@ -33,7 +33,6 @@
                     </div>
                     <div class="form-row">
                         <div class="input-container">
-                            <!-- <label for="email">Email</label> -->
                             <input type="email" name="email" placeholder="Enter Your Company Email" value="<?php echo $data['email']; ?>" required>
                             <span class="error-msg"><?php echo $data['email_err']; ?></span>
                         </div>
@@ -48,11 +47,6 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <!-- <div class="input-center">
-                            <div class="reg">
-                                <span>Do not have an account?</span> <a href="/UniQuest/register"> Register now</a>
-                            </div>
-                        </div> -->
                     </div>
                 </form>
             </div>

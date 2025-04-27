@@ -2,13 +2,7 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/view_details.css">
 
-<!-- Sidebar and Content Layout -->
-<!-- Sidebar and Content Layout -->
-<div class="main-container">
-    <!-- Sidebar -->
     <?php require APPROOT . '/views/components/verificationTeamSidePanel.php'; ?>
-
-    <!-- Content Area -->
     <main class="content-area">
         <div class="content-header">
             <button class="back-btn" onclick="window.location.href='<?php echo URLROOT; ?>/verification_team/user_ver_pending'">
@@ -17,9 +11,7 @@
             </button>
         </div>
 
-        <!-- User Details and File Preview Section -->
         <div class="user-layout">
-            <!-- Left Side: User Details -->
             <div class="user-details">
                 <h2>User Details</h2>
                 <div class="profile-pic">
@@ -129,7 +121,6 @@
                 </div>
             </div>
 
-            <!-- Right Side: File Previews -->
             <div class="file-previews">
                 <h2>File Previews</h2>
                 <div class="detail-row">

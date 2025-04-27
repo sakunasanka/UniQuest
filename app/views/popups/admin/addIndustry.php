@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/popups/admin/addReason.css">
 
-<!-- Popup Overlay -->
 <div class="popup-overlay" id="industryPopup">
     <div class="popup-content">
         <button class="close-btn">&times;</button>

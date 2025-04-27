@@ -3,15 +3,11 @@
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/view_Profile.css">
 
-<!-- Sidebar and Content Layout -->
 <div class="main-container">
     <div class="content-area">
-        <!-- Sidebar -->
         <?php require APPROOT . '/views/components/studentSidePanel.php'; ?>
 
-        <!-- Content Area -->
         <div class="page-wrapper">
-            <!-- Sidebar -->
             <div class="sidebr">
                 <img
                     src="<?php echo empty($data['user']['ProfilePic'])

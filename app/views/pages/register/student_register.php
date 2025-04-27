@@ -23,7 +23,6 @@
             </div>
             <div class="form-section">
                 <form action="<?php echo URLROOT ?>/register/student" method="POST" enctype="multipart/form-data">
-                    <!-- Personal Details -->
                     <h2>Personal Details</h2>
                     <div class="form-row">
                         <div class="input-profile-pic">
@@ -145,7 +144,6 @@
                         </div>
                     </div>
 
-                    <!-- University Details -->
                     <h2>University Details</h2>
                     <div class="form-row">
                         <div class="input-container">
@@ -177,7 +175,6 @@
                         <div class="input-container"></div>
                     </div>
 
-                    <!-- Login Credentials -->
                     <h2>Login Credentials</h2>
                     <div class="form-row">
                         <div class="input-container">

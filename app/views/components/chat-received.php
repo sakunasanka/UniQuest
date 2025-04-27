@@ -8,7 +8,6 @@
     </div>
     <div class="popup-content">
         <div class="messages">
-            <!-- Example messages -->
             <div class="message sent">I need assistance with my account.</div>
             <div class="message received">Hello! How can I help you?</div>
         </div>
@@ -19,7 +18,6 @@
     </div>
 </div>
 
-<!-- Trigger Button -->
 <button id="openPopupBtn" class="open-btn">Contact</button>
 
 

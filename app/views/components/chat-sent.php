@@ -55,7 +55,6 @@
             <input type="hidden" name="sender_id" id="sender_id" value="<?php echo $_SESSION['user_id']; ?>" />
             <input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $data['user']['UserID']; ?>" />
             
-            <!-- Ensure topic and email is always set -->
             <input type="hidden" name="topic" id="topic" value="<?php echo ($data['topic'] ?? 'General Information'); ?>" />
             <input type="hidden" name="email" id="email" value="<?php echo ($data['email'] ?? null); ?>" />
 
@@ -69,8 +68,6 @@
         </form>
     </div>
 </div>
-
-<!-- Trigger Button -->
 
 
 <script type="module" src="<?php echo URLROOT; ?>/public/js/components/chat.js"></script>

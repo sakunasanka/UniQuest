@@ -2,10 +2,9 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
 <div class="main-container">
-    <!-- Sidebar -->
+
     <?php require APPROOT . '/views/components/serviceSidePanel.php'; ?>
 
-    <!-- Content Area -->
     <main class="content-area">
         <h1>Add New Job Post</h1>
         <div class="job-post-form-container">
@@ -98,7 +97,6 @@
                                 <div class="field-col field-col-required">Required Field</div>
                             </div>
 
-                            <!-- Full Name -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="name" name="app_fullname" value="yes" class="field-checkbox">
@@ -112,7 +110,6 @@
                                 </div>
                             </div>
 
-                            <!-- Photo -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="photo" name="app_photo" value="yes" class="field-checkbox">
@@ -126,7 +123,6 @@
                                 </div>
                             </div>
 
-                            <!-- Email -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="email" name="app_email" value="yes" class="field-checkbox">
@@ -140,7 +136,6 @@
                                 </div>
                             </div>
 
-                            <!-- Contact Number -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="contactNo" name="app_contact" value="yes" class="field-checkbox">
@@ -154,7 +149,6 @@
                                 </div>
                             </div>
 
-                            <!-- Address -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="address" name="app_address" value="yes" class="field-checkbox">
@@ -168,7 +162,6 @@
                                 </div>
                             </div>
 
-                            <!-- NIC Number -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="nic-no" name="app_nic" value="yes" class="field-checkbox">
@@ -182,7 +175,6 @@
                                 </div>
                             </div>
 
-                            <!-- NIC Copy -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="nic-copy" name="app_nic_copy" value="yes" class="field-checkbox">
@@ -196,7 +188,6 @@
                                 </div>
                             </div>
 
-                            <!-- Gender -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="gender" name="app_gender" value="yes" class="field-checkbox">
@@ -210,7 +201,6 @@
                                 </div>
                             </div>
 
-                            <!-- Date of Birth -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="dob" name="app_dob" value="yes" class="field-checkbox">
@@ -224,7 +214,6 @@
                                 </div>
                             </div>
 
-                            <!-- Qualifications -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="qualification" name="app_qualifications" value="yes" class="field-checkbox">
@@ -238,7 +227,6 @@
                                 </div>
                             </div>
 
-                            <!-- Experience -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="experience" name="app_experience" value="yes" class="field-checkbox">
@@ -252,7 +240,6 @@
                                 </div>
                             </div>
 
-                            <!-- Skills -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="skills" name="app_skills" value="yes" class="field-checkbox">
@@ -266,7 +253,6 @@
                                 </div>
                             </div>
 
-                            <!-- CV -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="cv" name="app_cv" value="yes" class="field-checkbox">
@@ -280,7 +266,6 @@
                                 </div>
                             </div>
 
-                            <!-- LinkedIn -->
                             <div class="field-row">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="linkedin" name="app_linkedin" value="yes" class="field-checkbox">
@@ -294,7 +279,6 @@
                                 </div>
                             </div>
 
-                            <!-- Custom Field 1 -->
                             <div class="field-row custom-field">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="other1" name="app_other1" value="yes" class="field-checkbox">
@@ -315,7 +299,6 @@
                                 </div>
                             </div>
 
-                            <!-- Custom Field 2 -->
                             <div class="field-row custom-field">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="other2" name="app_other2" value="yes" class="field-checkbox">
@@ -336,7 +319,6 @@
                                 </div>
                             </div>
 
-                            <!-- Custom Field 3 -->
                             <div class="field-row custom-field">
                                 <div class="field-col field-col-include">
                                     <input type="checkbox" id="other3" name="app_other3" value="yes" class="field-checkbox">

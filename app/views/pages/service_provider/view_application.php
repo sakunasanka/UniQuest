@@ -39,9 +39,7 @@
             endif; 
             ?>
 
-        <!-- Application Details Section -->
         <div class="application-details">
-            <!-- Header -->
             <div class="application-header">
                 <div class="applicant-info">
                 <?php if (isset($fields['photo'])): ?>
@@ -67,7 +65,6 @@
                 </div>
             </div>
 
-            <!-- Personal Information -->
             <?php if(isset($fields['email']) || isset($fields['contact']) || isset($fields['address']) || isset($fields['nic']) || isset($fields['gender']) || isset($fields['dob'])):?>
             <div class="personal-info">
                 <h3>Personal Information</h3>
@@ -157,7 +154,6 @@
             </div>
             <?php endif; ?>
 
-            <!-- Professional Information -->
             <?php if(isset($fields['qualifications']) || isset($fields['experience']) || isset($fields['skills'])):?>
             <div class="professional-info">
                 <h3>Professional Information</h3>
@@ -221,7 +217,6 @@
             </div>
             <?php endif; ?>
 
-            <!-- Documents & Links -->
             <?php if(isset($fields['cv']) || isset($fields['nic_copy']) || isset($fields['linkedin']) || isset($fields['other1']) && $data['application']['other1_type'] == 'file' || isset($fields['other2']) && $data['application']['other2_type'] == 'file' || isset($fields['other3']) && $data['application']['other3_type'] == 'file'):?>
             <div class="documents-links">
                 <h3>Documents & Links</h3>
@@ -322,7 +317,6 @@
             </div>
             <?php endif; ?>
 
-            <!-- Other fields section -->
             <?php if((isset($fields['other1']) && $data['application']['other1_type'] != 'file' || isset($fields['other2']) && $data['application']['other2_type'] != 'file' || isset($fields['other3']) && $data['application']['other3_type'] != 'file')):?>
             <div class="other-fields">
                 <h3>Other Fields</h3>
@@ -370,7 +364,6 @@
             </div>
             <?php endif; ?>
 
-            <!-- Footer with Action Buttons -->
             <?php if($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Pending'):?>
                 <div class="actions-section">
                     <div>
