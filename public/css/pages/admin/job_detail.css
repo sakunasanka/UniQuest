@@ -182,6 +182,23 @@ body {
     margin-bottom: 5px;
 }
 
+.view-card-info .form-group span {
+    display: none;
+    color : red;
+}
+
+.view-card-info .form-group {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    padding: 10px;
+    border-radius: 5px;
+    /* min-width: 100px; */
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
 .btn-space-between{
     width: 100vw;
     margin-top: 10px !important;
@@ -235,7 +252,7 @@ body {
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    min-width: 150px;
+    min-width: 100px;
     height: 50px;
     font-size: 1.2em;
 }

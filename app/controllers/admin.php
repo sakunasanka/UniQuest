@@ -1137,47 +1137,47 @@ class Admin extends Controller
     public function reports()
     {
         try {
-            // System Overview Reports
-            $systemHealthMetrics = $this->model('reportModel')->getSystemHealthData();
-            $revenueSubscriptionStats = $this->model('reportModel')->getRevenueData();
-            // $executiveSummary = $this->model('reportModel')->getExecutiveSummaryData();
+            // // System Overview Reports
+            // $systemHealthMetrics = $this->model('reportModel')->getSystemHealthData();
+            // $revenueSubscriptionStats = $this->model('reportModel')->getRevenueData();
+            // // $executiveSummary = $this->model('reportModel')->getExecutiveSummaryData();
 
-            // User Activity Reports
-            $userGrowthTrends = $this->model('reportModel')->getUserGrowthData();
-            // $userActivityByRole = $this->model('reportModel')->getUserActivityByRoleData();
-            $verificationTeamPerformance = $this->model('reportModel')->getVerificationPerformanceData();
+            // // User Activity Reports
+            // $userGrowthTrends = $this->model('reportModel')->getUserGrowthData();
+            // // $userActivityByRole = $this->model('reportModel')->getUserActivityByRoleData();
+            // $verificationTeamPerformance = $this->model('reportModel')->getVerificationPerformanceData();
 
-            // Job Market Reports
-            $jobPostingPerformance = $this->model('reportModel')->getJobPerformanceData();
-            // $jobActivityByCategory = $this->model('reportModel')->getJobActivityByCategoryData();
-            $studentPlacementStats = $this->model('reportModel')->getStudentPlacementData();
+            // // Job Market Reports
+            // $jobPostingPerformance = $this->model('reportModel')->getJobPerformanceData();
+            // // $jobActivityByCategory = $this->model('reportModel')->getJobActivityByCategoryData();
+            // $studentPlacementStats = $this->model('reportModel')->getStudentPlacementData();
 
-            // Complaint & Engagement Reports
-            $complaintResolutionMetrics = $this->model('reportModel')->getComplaintData();
-            $userEngagementBookmarks = $this->model('reportModel')->getBookmarkAnalysisData();
+            // // Complaint & Engagement Reports
+            // $complaintResolutionMetrics = $this->model('reportModel')->getComplaintData();
+            // $userEngagementBookmarks = $this->model('reportModel')->getBookmarkAnalysisData();
 
-            $data = [
-                // System Overview
-                'systemHealth' => $systemHealthMetrics,
-                'revenueStats' => $revenueSubscriptionStats,
-                // 'executiveSummary' => $executiveSummary,
+            // $data = [
+            //     // System Overview
+            //     'systemHealth' => $systemHealthMetrics,
+            //     'revenueStats' => $revenueSubscriptionStats,
+            //     // 'executiveSummary' => $executiveSummary,
 
-                // User Analytics
-                'userGrowth' => $userGrowthTrends,
-                // 'userActivityByType' => $userActivityByRole,
-                'verificationPerformance' => $verificationTeamPerformance,
+            //     // User Analytics
+            //     'userGrowth' => $userGrowthTrends,
+            //     // 'userActivityByType' => $userActivityByRole,
+            //     'verificationPerformance' => $verificationTeamPerformance,
 
-                // Job Analytics
-                'jobPerformance' => $jobPostingPerformance,
-                // 'jobsByCategory' => $jobActivityByCategory,
-                'placementStats' => $studentPlacementStats,
+            //     // Job Analytics
+            //     'jobPerformance' => $jobPostingPerformance,
+            //     // 'jobsByCategory' => $jobActivityByCategory,
+            //     'placementStats' => $studentPlacementStats,
 
-                // Complaint & Engagement
-                'complaintResolution' => $complaintResolutionMetrics,
-                'bookmarkAnalysis' => $userEngagementBookmarks
-            ];
+            //     // Complaint & Engagement
+            //     'complaintResolution' => $complaintResolutionMetrics,
+            //     'bookmarkAnalysis' => $userEngagementBookmarks
+            // ];
 
-            $this->view('pages/admin/reports', $data);
+            $this->view('pages/admin/reports');
         } catch (Exception $e) {
             // TODO: Implement proper error handling
             error_log("Reports Error: " . $e->getMessage());
@@ -1189,7 +1189,7 @@ class Admin extends Controller
     public function viewReport($reportName)
     {
         try {
-            $model = $this->model('ReportModel');
+            $model = $this->model('reportModel');
             $method = 'get' . ucfirst($reportName) . 'Data';
 
             if (!method_exists($model, $method)) {
