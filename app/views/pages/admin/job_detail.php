@@ -1,6 +1,14 @@
 <?php require APPROOT . '/views/components/header.php'; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/admin/job_detail.css">
+<style>
+    .form-group span {
+    display: none;
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+</style>
 
 <!-- Sidebar and Content Layout -->
 <!-- Sidebar and Content Layout -->
@@ -84,6 +92,28 @@
                 </div>
             </div>
         </div>
+        <?php
+        $fields = $data['fields'];
+        if ($fields):
+            foreach ($fields as $fieldName => $fieldConfig):
+                $isRequired = isset($fieldConfig['required']) && $fieldConfig['required'];
+        ?>
+                <div class="form-group">
+                    <label for="<?php echo $fieldName; ?>">
+                        <?php echo $fieldConfig['label']; ?>
+                        <span class="required-asterik" <?php if ($isRequired) echo 'style="display:inline;"'; ?>>*</span>
+                    </label>
+                    <?php if (isset($data['errors'][$fieldName])): ?>
+                        <div class="form-invalid" id="<?php echo $fieldName; ?>" style="color: red;">
+                            <?php echo ($data['errors'][$fieldName]); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+        <?php
+            endforeach;
+        endif;
+        ?>
+
     </main>
 </div>
 
