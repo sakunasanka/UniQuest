@@ -189,43 +189,49 @@ body {
 
 /* Save Changes button */
 .save-button {
-    background-color: #32a852;
-    color: white;
-    padding: 12px 20px;
+    background-color: #299b63;
+    color: #fff;
+    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;  
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    width: 30%;
-    text-align: center;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.3em;
 }
 
 .cancel-button {
-    background-color: #6c757d;
-    color: #fff;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
+    background-color: #f0f0f0; 
+    color: #333; 
+    padding: 10px 20px;
+    border: 2px solid #6c757d; 
+    border-radius: 8px; 
+    font-size: 1.2em; 
     cursor: pointer;
-    width: 30%;
+    min-width: 150px;
+    height: 50px;
     text-align: center;
+    transition: all 0.3s ease; 
 }
 
 .cancel-button:hover {
-    background-color: #5a6268;
+    background-color: #6c757d; 
+    color: #fff; 
+    border-color: #6c757d; 
 }
 
 .change-password-btn{
-    background-color: #32a852;
-    color: white;
-    padding: 12px 20px;
+    background-color: #299b63;
+    color: #fff;
+    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer; 
-    width: 30%;
-    text-align: center;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.3em;
 }
 
 .button-group{
@@ -234,7 +240,7 @@ body {
 }
 
 .save-button:hover {
-    background-color: #038a27; 
+    background-color: #137d4a; 
 }
 
 .changep_password-form-container {
@@ -255,7 +261,7 @@ body {
 }
 
 .change-password-btn:hover {
-    background-color: #038a27;
+    background-color: #137d4a;
 }
 
 .form-container h2 {
@@ -288,6 +294,11 @@ input[type="text"], input[type="email"], input[type="url"], textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+}
+
+input[type="text"], input[type="email"], input[type="url"], textarea :focus {
+    outline: none;
+    border: 2px solid #32a852; /* Green border on focus */
 }
 
 select {
@@ -349,20 +360,27 @@ textarea {
 }
 
 .browse-btn {
-    background-color: #32a852;
-    color: white;
-    border: none;
-    padding: 8px;
-    font-size: 0.9rem;
+    padding: 10px 20px;
+    border: 2px solid #299b63; 
     border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    font-size: 1em;
+    background-color: transparent; 
+    color: #299b63;
+    transition: all 0.3s ease; 
 }
 
 .browse-btn:hover {
-    background-color: #038a27;
+    background-color: #299b63; 
+    color: #fff; 
+    border-color: #299b63; 
+}
+
+.browse-btn:active {
+    background-color: #137d4a;
+    border-color: #137d4a;
+    cursor: pointer; 
 }
 
 .file-content {

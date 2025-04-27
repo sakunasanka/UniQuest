@@ -54,6 +54,26 @@
                         <?php echo $data['job']->JobBenefits ?>
                     </div>
                 </div>
+                <div class="view-card-info" style="gap: 20px; row-gap: 10px;">
+                    <h3 style="width: 100%;">Application Form Structure:</h3>
+                    <?php
+                    $fields = $data['fields'];
+                    if ($fields):
+                        foreach ($fields as $fieldName => $fieldConfig):
+                            $isRequired = isset($fieldConfig['required']) && $fieldConfig['required'];
+                    ?>
+
+                            <div class="form-group">
+                                <label for="<?php echo $fieldName; ?>">
+                                    <?php echo $fieldConfig['label']; ?>
+                                    <span class="required-asterik" <?php if ($isRequired) echo 'style="display:inline;"'; ?>>*</span>
+                                </label>
+                            </div>
+                    <?php
+                        endforeach;
+                    endif;
+                    ?>
+                </div>
                 <div class="btn-row">
                     <?php if ($data['verifyDetails']): ?>
                         <?php if ($data['verifyDetails']->Action == 'Approve'): ?>
@@ -85,16 +105,17 @@
                     <?php endif; ?>
                 </div>
                 <div class="btn-row">
+                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_approve/<?php echo $data['job']->JobID ?>'">Approve</button>
                     <form action="<?php echo URLROOT; ?>/admin/job_ver_reject/<?php echo $data['job']->JobID ?>" method="GET">
                         <select class="reason" name="reason" required <?php if ($data['job']->Status == 'Not Approved') echo 'disabled'; ?>>
-                            <option value="" disabled selected>Select Reason</option>
+                            <option value="" disabled selected>Reason</option>
                             <?php foreach ($data['rejectReasons'] as $reason) : ?>
                                 <option value="<?php echo $reason->ReasonID; ?>"><?php echo $reason->ReasonName; ?></option>
                             <?php endforeach; ?>
                         </select>
                         <button type="submit" class="reject-btn" <?php if ($data['job']->Status == 'Not Approved') echo 'disabled'; ?>>Reject</button>
                     </form>
-                    <button class="approve-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/job_ver_approve/<?php echo $data['job']->JobID ?>'">Approve</button>
+
                 </div>
             </div>
         </div>

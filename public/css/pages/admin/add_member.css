@@ -40,7 +40,7 @@ body {
 }
 
 .add-btn {
-    background-color: #32a852;
+    background-color:#299b63 ;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
@@ -52,7 +52,7 @@ body {
 }
 
 .add-btn:hover {
-    background-color: #038a27;
+    background-color:  #137d4a;
 }
 
 .back-btn {
@@ -137,7 +137,7 @@ form h3 {
 }
 
 .save-btn {
-    background-color: #32a852;
+    background-color:  #299b63;
     padding: 10px 20px;
     border: none;
     border-radius: 10px;
@@ -150,7 +150,7 @@ form h3 {
 }
 
 .save-btn:hover {
-    background-color: #038a27;
+    background-color:  #137d4a;
 }
 
 .error-msg {

@@ -29,15 +29,16 @@ class ReportModel extends Model
             $demographics = [
                 'gender' => $this->getGenderDistribution($jobId),
                 'age' => $this->getAgeDistribution($jobId),
-                'location' => $this->getLocationDistribution($jobId)
+                'university' => $this->getUniversityDistribution($jobId, 5)
             ];
 
-            return [
+            $data = [
                 'job' => $job,
                 'totalApplicants' => $totalApplicants,
                 'applicationRate' => round($applicationRate, 1),
                 'demographics' => $demographics
             ];
+            return $data;
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return null;
@@ -61,30 +62,31 @@ class ReportModel extends Model
     //**************************************view count *********************** *
     private function getJobViews($jobId)
     {
-        $this->db->query("SELECT views FROM job_views WHERE job_id = :jobId");
-        $this->db->bind(':jobId', $jobId);
-        $result = $this->db->single();
-        return $result ? $result->views : 0;
+        try {
+            $this->db->query("SELECT COUNT(*) AS viewCount FROM is_viewed_job WHERE JobID = :jobId");
+            $this->db->bind(':jobId', $jobId);
+            $row = $this->db->single();
+            return $row->viewCount;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
     }
     private function getGenderDistribution($jobId)
     {
         $this->db->query("
-        SELECT 
-            COALESCE(
+            SELECT 
                 CASE 
-                    WHEN s.gender = 'M' THEN 'Male'
-                    WHEN s.gender = 'F' THEN 'Female'
-                    WHEN s.gender IS NULL OR s.gender = '' THEN 'Unknown'
-                    ELSE s.gender 
-                END, 
-                'Unknown'
-            ) as gender,
-            COUNT(*) as count 
-        FROM applications a
-        JOIN student s ON a.user_id = s.StudentID
-        WHERE a.job_id = :jobId
-        GROUP BY gender
-    ");
+                    WHEN s.Gender = 'Male' THEN 'Male'
+                    WHEN s.Gender = 'Female' THEN 'Female'
+                    ELSE 'Unknown'
+                END AS gender,
+                COUNT(*) AS count
+            FROM applications a
+            INNER JOIN student s ON a.user_id = s.StudentID
+            WHERE a.job_id = :jobId
+            GROUP BY gender
+        ");
         $this->db->bind(':jobId', $jobId);
         $results = $this->db->resultSet();
 
@@ -93,7 +95,7 @@ class ReportModel extends Model
         if (!empty($results)) {
             $total = array_sum(array_column($results, 'count'));
             foreach ($results as $row) {
-                $gender = ucfirst(strtolower($row->gender));
+                $gender = $row->gender;
                 $distribution[$gender] = $total > 0 ? round(($row->count / $total) * 100, 1) : 0;
             }
         }
@@ -101,96 +103,120 @@ class ReportModel extends Model
         return $distribution;
     }
 
-    private function getAgeDistribution($jobId)
+
+    public function getAgeDistribution($jobId)
+    {
+        $sql = "SELECT 
+                    FLOOR(DATEDIFF(CURDATE(), student.DOB) / 365.25) AS Age,
+                    COUNT(*) AS Count
+                FROM 
+                    student
+                JOIN 
+                    applications ON student.StudentID = applications.user_id
+                WHERE 
+                    applications.job_id = :jobId
+                    AND student.DOB IS NOT NULL
+                GROUP BY 
+                    Age
+                ORDER BY 
+                    Age";
+
+        $this->db->query($sql);
+        $this->db->bind(':jobId', $jobId);
+        $results = $this->db->resultSet();
+
+        // Format as [age => percentage]
+        $total = array_sum(array_column($results, 'Count'));
+        $distribution = [];
+
+        foreach ($results as $row) {
+            $age = (int)$row->Age;
+            $count = (int)$row->Count;
+            $distribution[$age] = round(($count / $total) * 100, 2);
+        }
+
+        return $distribution;
+    }
+
+
+
+    // private function getLocationDistribution($jobId)
+    // {
+    //     $this->db->query("
+    //     SELECT 
+    //         s.City,
+    //         COUNT(*) as count 
+    //     FROM applications a
+    //     JOIN student s ON a.user_id = s.StudentID
+    //     WHERE a.job_id = :jobId
+    //     GROUP BY s.City
+    //     ");
+    //     $this->db->bind(':jobId', $jobId);
+    //     $results = $this->db->resultSet();
+
+    //     // Initialize with your desired cities
+    //     $distribution = [
+    //         'Colombo' => 0,
+    //         'Kandy' => 0,
+    //         'Galle' => 0,
+    //         'Other' => 0
+    //     ];
+
+    //     if (!empty($results)) {
+    //         $total = array_sum(array_column($results, 'count'));
+
+    //         foreach ($results as $row) {
+    //             $city = ucfirst(strtolower($row->City));
+    //             $percent = $total > 0 ? round(($row->count / $total) * 100, 1) : 0;
+
+    //             if (array_key_exists($city, $distribution)) {
+    //                 $distribution[$city] += $percent;
+    //             } else {
+    //                 $distribution['Other'] += $percent;
+    //             }
+    //         }
+    //     }
+
+    //     // Remove empty categories
+    //     return array_filter($distribution);
+    // }
+
+    private function getUniversityDistribution($jobId, $topN = 5)
     {
         $this->db->query("
         SELECT 
-            TIMESTAMPDIFF(YEAR, s.DOB, CURDATE()) as age,
-            COUNT(*) as count
+            s.University AS university,
+            COUNT(*) AS count
         FROM applications a
-        JOIN student s ON a.user_id = s.StudentID
+        INNER JOIN student s ON a.user_id = s.StudentID
         WHERE a.job_id = :jobId
-        AND s.DOB IS NOT NULL
-        AND s.DOB != '0000-00-00'
-        GROUP BY age
+        GROUP BY s.University
+        ORDER BY count DESC
     ");
         $this->db->bind(':jobId', $jobId);
         $results = $this->db->resultSet();
 
-        // Initialize with your exact desired age categories
-        $distribution = [
-            '18-21' => 0,
-            '22-25' => 0,
-            '26-30' => 0,
-            '31-35' => 0,
-            '36+' => 0
-        ];
+        $distribution = [];
+        $total = array_sum(array_column($results, 'count'));
+        $other = 0;
 
-        if (!empty($results)) {
-            $total = array_sum(array_column($results, 'count'));
+        foreach ($results as $i => $row) {
+            $percent = $total > 0 ? round(($row->count / $total) * 100, 1) : 0;
 
-            foreach ($results as $row) {
-                $age = $row->age;
-                $percent = $total > 0 ? round(($row->count / $total) * 100, 1) : 0;
-
-                if ($age >= 18 && $age <= 21) {
-                    $distribution['18-21'] += $percent;
-                } elseif ($age >= 22 && $age <= 25) {
-                    $distribution['22-25'] += $percent;
-                } elseif ($age >= 26 && $age <= 30) {
-                    $distribution['26-30'] += $percent;
-                } elseif ($age >= 31 && $age <= 35) {
-                    $distribution['31-35'] += $percent;
-                } else {
-                    $distribution['36+'] += $percent;
-                }
+            if ($i < $topN) {
+                $distribution[$row->university] = $percent;
+            } else {
+                $other += $percent;
             }
         }
 
-        // Remove empty categories
-        return array_filter($distribution);
-    }
-
-    private function getLocationDistribution($jobId)
-    {
-        $this->db->query("
-        SELECT 
-            s.City,
-            COUNT(*) as count 
-        FROM applications a
-        JOIN student s ON a.user_id = s.StudentID
-        WHERE a.job_id = :jobId
-        GROUP BY s.City
-    ");
-        $this->db->bind(':jobId', $jobId);
-        $results = $this->db->resultSet();
-
-        // Initialize with your desired cities
-        $distribution = [
-            'Colombo' => 0,
-            'Kandy' => 0,
-            'Galle' => 0,
-            'Other' => 0
-        ];
-
-        if (!empty($results)) {
-            $total = array_sum(array_column($results, 'count'));
-
-            foreach ($results as $row) {
-                $city = ucfirst(strtolower($row->City));
-                $percent = $total > 0 ? round(($row->count / $total) * 100, 1) : 0;
-
-                if (array_key_exists($city, $distribution)) {
-                    $distribution[$city] += $percent;
-                } else {
-                    $distribution['Other'] += $percent;
-                }
-            }
+        if ($other > 0) {
+            $distribution['Other'] = round($other, 1);
         }
 
-        // Remove empty categories
-        return array_filter($distribution);
+        return $distribution;
     }
+
 
     public function getSystemHealthData()
     {
@@ -202,7 +228,7 @@ class ReportModel extends Model
                 (SELECT COUNT(*) FROM jobs WHERE Status = 'Active') AS active_jobs,
                 (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Pending') AS pending_complaints,
                 (SELECT COUNT(DISTINCT CompanyID) FROM jobs) AS companies_with_jobs,
-                (SELECT COUNT(*) FROM applications WHERE status = 'Hired') AS total_hires,
+                (SELECT COUNT(*) FROM applications WHERE status = 'Accepted') AS total_hires,
                 (SELECT COUNT(*) FROM verificationlogs WHERE Action = 'Reject' 
                  AND ActionDate > NOW() - INTERVAL 7 DAY) AS recent_rejections,
                 (SELECT COUNT(*) FROM user_login_activity 
@@ -216,22 +242,44 @@ class ReportModel extends Model
         }
     }
 
-    public function getUserGrowthData()
+    public function getUserGrowthData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-            SELECT 
-                DATE_FORMAT(u.RegisterDate, '%Y-%m') AS month,
-                u.Role,
-                COUNT(*) AS new_users,
-                COUNT(CASE WHEN u.VerifiedBy IS NOT NULL THEN 1 END) AS verified_users,
-                COUNT(CASE WHEN u.Status = 'Active' THEN 1 END) AS active_users,
-                COUNT(CASE WHEN u.Status = 'Pending' THEN 1 END) AS pending_users
-            FROM user u
-            GROUP BY DATE_FORMAT(u.RegisterDate, '%Y-%m'), u.Role
-            ORDER BY month DESC, u.Role
+        SELECT 
+            DATE_FORMAT(u.RegisterDate, '%Y-%m') AS month,
+            u.Role,
+            COUNT(*) AS new_users,
+            COUNT(CASE WHEN u.VerifiedBy IS NOT NULL THEN 1 END) AS verified_users,
+            COUNT(CASE WHEN u.Status = 'Active' THEN 1 END) AS active_users,
+            COUNT(CASE WHEN u.Status = 'Pending' THEN 1 END) AS pending_users
+        FROM user u
+        WHERE 1=1
         ";
+
+            // Add date filtering if provided
+            if ($startDate) {
+                $query .= " AND u.RegisterDate >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND u.RegisterDate <= :endDate";
+            }
+
+            $query .= "
+        GROUP BY DATE_FORMAT(u.RegisterDate, '%Y-%m'), u.Role
+        ORDER BY month DESC, u.Role
+        ";
+
             $this->db->query($query);
+
+            // Bind parameters if dates are provided
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getUserGrowthData: " . $e->getMessage());
@@ -239,25 +287,48 @@ class ReportModel extends Model
         }
     }
 
-    public function getJobPerformanceData()
+    public function getJobPerformanceData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-            SELECT 
-                j.Category,
-                c.CompanyName,
-                COUNT(j.JobID) AS total_jobs,
-                COUNT(a.id) AS total_applications,
-                COUNT(CASE WHEN a.status = 'Hired' THEN 1 END) AS hires,
-                ROUND(COUNT(CASE WHEN a.status = 'Hired' THEN 1 END)*100.0/COUNT(a.id),2) AS hire_rate,
-                AVG(TIMESTAMPDIFF(HOUR, j.create_at, a.created_at)) AS avg_time_to_apply
-            FROM jobs j
-            LEFT JOIN applications a ON j.JobID = a.job_id
-            LEFT JOIN company c ON j.CompanyID = c.CompanyID
-            GROUP BY j.Category, c.CompanyName
-            ORDER BY total_applications DESC
+        SELECT 
+            j.Category,
+            c.CompanyName,
+            COUNT(j.JobID) AS total_jobs,
+            COUNT(a.id) AS total_applications,
+            COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END) AS hires,
+            ROUND(COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END)*100.0/NULLIF(COUNT(a.id), 0), 2) AS hire_rate,
+            AVG(TIMESTAMPDIFF(HOUR, j.PublishDate, a.created_at)) AS avg_time_to_apply
+        FROM jobs j
+        LEFT JOIN applications a ON j.JobID = a.job_id
+        LEFT JOIN company c ON j.CompanyID = c.CompanyID
+        WHERE 1=1
         ";
+
+            // Add date filters if provided
+            if ($startDate) {
+                $query .= " AND j.PublishDate >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND j.PublishDate <= :endDate";
+            }
+
+            $query .= "
+        GROUP BY j.Category, c.CompanyName
+        HAVING COUNT(a.id) > 0
+        ORDER BY total_applications DESC
+        ";
+
             $this->db->query($query);
+
+            // Bind parameters if dates are provided
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getJobPerformanceData: " . $e->getMessage());
@@ -265,11 +336,11 @@ class ReportModel extends Model
         }
     }
 
-    public function getRevenueData()
+    public function getRevenueData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-            SELECT 
+                SELECT 
                 c.subscription_plan,
                 COUNT(DISTINCT c.CompanyID) AS company_count,
                 SUM(CASE WHEN j.Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
@@ -278,15 +349,120 @@ class ReportModel extends Model
                     c.subscription_start_date, 
                     COALESCE(c.subscription_end_date, NOW())
                 )) AS avg_subscription_days,
-                COUNT(DISTINCT j.JobID) AS jobs_per_company
+                COUNT(DISTINCT j.JobID) AS jobs_per_company,
+                SUM(p.amount) AS total_real_revenue
             FROM company c
             LEFT JOIN jobs j ON c.CompanyID = j.CompanyID
-            GROUP BY c.subscription_plan
+            LEFT JOIN payments p ON c.CompanyID = p.user_id AND p.status = 'completed'
+            WHERE 1=1
+            ";
+
+            // Add date filters if provided
+            if ($startDate) {
+                $query .= " AND c.subscription_start_date >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND (c.subscription_start_date <= :endDate OR c.subscription_start_date IS NULL)";
+            }
+
+            $query .= "
+                GROUP BY c.subscription_plan
+                ORDER BY company_count DESC
+                ";
+
+            // die($query);
+            $this->db->query($query);
+
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
+            $data = $this->db->resultSet();
+            // die(var_dump($data));
+            return $data;
+        } catch (PDOException $e) {
+            error_log("Database Error in getRevenueData: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function getStudentPlacementData($startDate = null, $endDate = null)
+    {
+        try {
+            $query = "
+        SELECT 
+            s.University,
+            COUNT(DISTINCT s.StudentID) AS total_students,
+            COUNT(DISTINCT CASE WHEN a.status = 'Accepted' THEN s.StudentID END) AS placed_students,
+            COUNT(DISTINCT a.job_id) AS distinct_jobs,
+            COUNT(DISTINCT c.CompanyName) AS hiring_companies,
+            ROUND(COUNT(DISTINCT CASE WHEN a.status = 'Accepted' THEN s.StudentID END)*100.0/
+                  NULLIF(COUNT(DISTINCT s.StudentID), 0), 2) AS placement_rate
+        FROM student s
+        LEFT JOIN applications a ON s.StudentID = a.user_id
+        LEFT JOIN jobs j ON a.job_id = j.JobID
+        LEFT JOIN company c ON j.CompanyID = c.CompanyID
+        WHERE 1=1
+        ";
+
+            // Add date filters if provided
+            if ($startDate) {
+                $query .= " AND a.created_at >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND a.created_at <= :endDate";
+            }
+
+            $query .= "
+        GROUP BY s.University
+        ORDER BY placement_rate DESC
+        ";
+
+            $this->db->query($query);
+
+            // Bind parameters if dates are provided
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
+            return $this->db->resultSet();
+        } catch (PDOException $e) {
+            error_log("Database Error in getStudentPlacementData: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function getExecutiveSummaryData()
+    {
+        try {
+            $query = "
+            SELECT 
+                (SELECT COUNT(*) FROM user) AS total_users,
+                (SELECT COUNT(*) FROM jobs) AS total_jobs,
+                (SELECT COUNT(*) FROM applications WHERE status = 'Accepted') AS successful_hires,
+                (SELECT COUNT(*) FROM company 
+                WHERE COALESCE(subscription_end_date, NOW()) >= NOW()) AS paying_companies,
+                (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Resolved' 
+                AND ComplainedDate > NOW() - INTERVAL 30 DAY) AS complaints_resolved_30d,
+                (SELECT COUNT(DISTINCT user_id) FROM applications 
+                WHERE status = 'Accepted') AS students_placed,
+                (
+                    SELECT AVG(TIMESTAMPDIFF(HOUR, j.create_at, v.ActionDate))
+                    FROM jobs j
+                    INNER JOIN verificationlogs v 
+                        ON v.EntityID = j.JobID AND v.EntityType = 'Job'
+                ) AS avg_job_approval_time_hours
         ";
             $this->db->query($query);
             return $this->db->resultSet();
         } catch (PDOException $e) {
-            error_log("Database Error in getRevenueData: " . $e->getMessage());
+            error_log("Database Error in getExecutiveSummaryData: " . $e->getMessage());
             return null;
         }
     }
@@ -347,33 +523,6 @@ class ReportModel extends Model
         }
     }
 
-    public function getStudentPlacementData()
-    {
-        try {
-            $query = "
-            SELECT 
-                s.University,
-                COUNT(DISTINCT s.StudentID) AS total_students,
-                COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END) AS placed_students,
-                COUNT(DISTINCT a.job_id) AS distinct_jobs,
-                GROUP_CONCAT(DISTINCT c.CompanyName) AS hiring_companies,
-                ROUND(COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END)*100.0/
-                      COUNT(DISTINCT s.StudentID),2) AS placement_rate
-            FROM student s
-            LEFT JOIN applications a ON s.StudentID = a.user_id
-            LEFT JOIN jobs j ON a.job_id = j.JobID
-            LEFT JOIN company c ON j.CompanyID = c.CompanyID
-            GROUP BY s.University
-            ORDER BY placement_rate DESC
-        ";
-            $this->db->query($query);
-            return $this->db->resultSet();
-        } catch (PDOException $e) {
-            error_log("Database Error in getStudentPlacementData: " . $e->getMessage());
-            return null;
-        }
-    }
-
     public function getBookmarkAnalysisData()
     {
         try {
@@ -396,35 +545,6 @@ class ReportModel extends Model
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getBookmarkAnalysisData: " . $e->getMessage());
-            return null;
-        }
-    }
-
-    public function getExecutiveSummaryData()
-    {
-        try {
-            $query = "
-            SELECT 
-                (SELECT COUNT(*) FROM user) AS total_users,
-                (SELECT COUNT(*) FROM jobs) AS total_jobs,
-                (SELECT COUNT(*) FROM applications WHERE status = 'Hired') AS successful_hires,
-                (SELECT COUNT(*) FROM company 
-                WHERE COALESCE(subscription_end_date, NOW()) >= NOW()) AS paying_companies,
-                (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Resolved' 
-                AND ComplainedDate > NOW() - INTERVAL 30 DAY) AS complaints_resolved_30d,
-                (SELECT COUNT(DISTINCT user_id) FROM applications 
-                WHERE status = 'Hired') AS students_placed,
-                (
-                    SELECT AVG(TIMESTAMPDIFF(HOUR, j.create_at, v.ActionDate))
-                    FROM jobs j
-                    INNER JOIN verificationlogs v 
-                        ON v.EntityID = j.JobID AND v.EntityType = 'Job'
-                ) AS avg_job_approval_time_hours
-        ";
-            $this->db->query($query);
-            return $this->db->resultSet();
-        } catch (PDOException $e) {
-            error_log("Database Error in getExecutiveSummaryData: " . $e->getMessage());
             return null;
         }
     }

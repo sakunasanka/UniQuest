@@ -14,7 +14,7 @@
             "Email" => "Email",
             "Message" => "Message",
             "Date" => "Date",
-            "Status" => "Status",
+            "Status" => "Status By Admin",
             "Actions" => "Actions"
         ];
         ?>

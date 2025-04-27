@@ -28,7 +28,7 @@
         <div class="table-block">
             <div class="content-header">
                 <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
-                <button class="add-btn" onclick="goToPostJob()">
+                <button class="post-btn" onclick="goToPostJob()">
                     <span class="material-symbols-outlined">post_add</span>
                     <span class="add-btn-text">Post Job</span>
                 </button>
@@ -52,9 +52,12 @@
                                     </span>
                                         <span class="tooltiptext view">View</span>
                                     </div>
-
                                     <div class="tooltip">
-                                    <span class="material-symbols-outlined action-btn activate1" onclick="showActivatePostConfirm(<?= $post->JobID ?>)">
+                                    <?php if ($post->Status == 'Deactive'):?>
+                                        <span class="material-symbols-outlined action-btn activate1" onclick="showActivatePostConfirm(<?= $post->JobID ?>)">
+                                    <?php elseif($post->Status == 'Admin-Deactive'):?>   
+                                        <span class="material-symbols-outlined action-btn activate1" onclick="showAdminDeactive()">
+                                    <?php endif;?>         
                                         check_circle
                                     </span>
                                         <span class="tooltiptext activate">Activate</span>
@@ -87,5 +90,9 @@
 <script>
     function goToPostJob() {
         window.location.href = "<?php echo URLROOT; ?>/service_provider/jobpost";
+    }
+
+    function showAdminDeactive() {
+        Flash.show("This job is deactivated by admin. Please contact admin for more information.", "error");
     }
 </script>

@@ -93,24 +93,40 @@
 }
 
 .info-group {
+    display: flex;
+    align-items: center; /* Vertically center label and value */
     margin-bottom: 15px;
 }
 
 .info-group label {
     font-weight: bold;
     color: #555;
-    display: block;
-    margin-bottom: 5px;
+    margin-right: 10px; /* Space between label and vertical line */
+    padding-right: 10px; /* Additional space before the line */
+    position: relative;
+}
+
+/* Vertical line after the label */
+.info-group label::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%; /* Adjust height of the vertical line */
+    width: 1px;
+    background-color: #ccc; /* Color of the vertical line */
 }
 
 .info-group span {
     color: #333;
     line-height: 1.6;
+    padding-left: 10px; /* Space after the vertical line */
 }
 
 /* Skills List */
 .skills-list {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
     gap: 10px;
 }
@@ -182,14 +198,12 @@
 .action-button {
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 8px;
+    margin: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 500;
+    min-width: 150px;
+    height: 50px;
+    font-size: 1.3em;
 }
 
 .reject-button {
@@ -202,12 +216,12 @@
 }
 
 .approve-button {
-    background-color: #4caf50;
+    background-color: #299b63;
     color: #fff;
 }
 
 .approve-button:hover {
-    background-color: #388e3c;
+    background-color: #137d4a;
 }
 
 .not-provided {

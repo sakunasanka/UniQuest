@@ -122,7 +122,7 @@
 
             <p class="form-notice">Please note that once you submit, the application will be directly sent to the recruiter.</p>
             
-            <button type="submit" class="submit-button">SUBMIT</button>
+            <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
 
@@ -190,7 +190,7 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn">View Company</button>
+                    <button onclick="goToCompanyDescription(<?php echo $post->CompanyID; ?>)" class="apply-btn2">View Company</button>
                 </div>
             </div>  
         </div>

@@ -1,21 +1,49 @@
-<?php require APPROOT . '/views/components/header.php'; ?>
+    <?php require APPROOT . '/views/components/header.php'; ?>
 
-<?php if (isset($_GET['pending'])): ?>
-    <div id="pendingVerificationPopup" class="popup-overlay" style="display: none;">
-        <?php require APPROOT . '/views/popups/wait_to_verify_popup.php'; ?>
-    </div>
+    <?php if (isset($_SESSION['load_not_approved']) || isset($_SESSION['load_pending']) || isset($_SESSION['load_deactivate'])): ?>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get the popup element
-            const popup = document.getElementById('pendingVerificationPopup');
+    <?php if (isset($_SESSION['load_not_approved'])): ?>
+        <div id="notApprovedPopup" class="popup-overlay" style="display: none;">
+            <?php require APPROOT . '/views/popups/not_approved.php'; ?>
+        </div>
+    <?php endif; ?>
 
-            // Show the popup
-            if (popup) {
-                popup.style.display = 'block';
-            }
-        });
-    </script>
+    <?php if (isset($_SESSION['load_pending'])): ?> 
+        <div id="pendingVerificationPopup" class="popup-overlay" style="display: none;">
+            <?php require APPROOT . '/views/popups/wait_to_verify_popup.php'; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['load_deactivate'])): ?> 
+        <div id="deactivatePopup" class="popup-overlay" style="display: none;">
+            <?php require APPROOT . '/views/popups/deactivate_popup.php'; ?>
+        </div>    
+    <?php endif; ?>
+
+    <?php 
+    unset($_SESSION['load_not_approved']);
+    unset($_SESSION['load_pending']);
+    unset($_SESSION['load_deactivate']);
+    ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const popup1 = document.getElementById('notApprovedPopup');
+        const popup2 = document.getElementById('pendingVerificationPopup');
+        const popup3 = document.getElementById('deactivatePopup');
+
+        if (popup1) {
+            popup1.style.display = 'block';
+        }
+        if (popup2) {
+            popup2.style.display = 'block';
+        }
+        if (popup3) {
+            popup3.style.display = 'block';
+        }
+    });
+</script>
+
 <?php endif; ?>
 
 <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/pages/student/jobs.css">

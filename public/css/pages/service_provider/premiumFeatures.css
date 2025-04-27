@@ -79,7 +79,7 @@ p {
     display: block;
     width: 100%;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1em;
     border: none;
     margin-top: auto; 
@@ -96,13 +96,23 @@ p {
 }
 
 .upgrade-btn {
-    background-color: #000;
-    color: #fff;
+    border: 2px solid #2D8886; 
+    background-color: transparent; 
+    color: #2D8886;
+    transition: all 0.3s ease; 
     height: 45px; 
 }
 
 .upgrade-btn:hover {
-    background-color: #333;
+    background-color: #2D8886;
+    color: #fff; 
+    border-color: #2D8886; 
+}
+
+.upgrade-btn:active{
+    background-color: #2D8886; 
+    border-color: #2D8886;
+    cursor: pointer; 
 }
 
 .option-bar {

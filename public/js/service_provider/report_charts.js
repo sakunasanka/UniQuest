@@ -1,205 +1,50 @@
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
-    // Ensure analyticsData exists and has proper structure
-    if (!window.analyticsData) {
-        window.analyticsData = {
-            registrationStats: [],
-            jobStats: [],
-            revenueStats: [],
-            loginStats: []
-        };
+    // Check if reportData is available
+    if (typeof reportData === 'undefined') {
+        console.error('Report data is not available');
+        return;
     }
 
-    // Process data for charts
-    const months = processMonthLabels(analyticsData.registrationStats);
-    const registrationData = processRegistrationData(analyticsData.registrationStats);
-    const jobData = processJobData(analyticsData.jobStats);
-    const revenueData = processRevenueData(analyticsData.revenueStats);
-    const loginData = processLoginData(analyticsData.loginStats);
-
-    // Initialize charts only if their containers exist
-    if (document.getElementById('registrationsChart')) {
-        initializeRegistrationsChart(months, registrationData);
+    // Initialize demographic charts
+    if (document.getElementById('genderChart')) {
+        initializeGenderChart(reportData.gender);
     }
     
-    if (document.getElementById('jobListingsChart')) {
-        initializeJobListingsChart(months, jobData);
+    if (document.getElementById('ageChart')) {
+        initializeAgeChart(reportData.age);
     }
     
-    if (document.getElementById('revenueChart')) {
-        initializeRevenueChart(months, revenueData);
-    }
-    
-    if (document.getElementById('loginsChart')) {
-        initializeLoginsChart(loginData);
+    if (document.getElementById('universityChart')) {
+        // Update this to match the new field name if needed
+        // (if you changed from location to university in the backend)
+        initializeUniversityChart(reportData.location);
     }
 
-    // Helper functions
-    function processMonthLabels(stats) {
-        if (!stats || stats.length === 0) return getDefaultMonths(5);
+    // Function to initialize gender distribution chart
+    function initializeGenderChart(data) {
+        const ctx = document.getElementById('genderChart').getContext('2d');
+        const labels = Object.keys(data);
+        const values = Object.values(data);
         
-        return stats.map(item => {
-            const date = new Date(item.month + '-01');
-            return date.toLocaleString('default', { month: 'short' });
-        });
-    }
-
-    function processRegistrationData(stats) {
-        if (!stats || stats.length === 0) {
-            return {
-                students: Array(5).fill(0),
-                companies: Array(5).fill(0)
-            };
-        }
-        
-        return {
-            students: stats.map(item => parseInt(item.students) || 0),
-            companies: stats.map(item => parseInt(item.companies) || 0)
-        };
-    }
-
-    function processJobData(stats) {
-        if (!stats || stats.length === 0) {
-            return {
-                partTime: Array(5).fill(0),
-                internships: Array(5).fill(0)
-            };
-        }
-        
-        return {
-            partTime: stats.map(item => parseInt(item.part_time) || 0),
-            internships: stats.map(item => parseInt(item.internships) || 0)
-        };
-    }
-
-    function processRevenueData(stats) {
-        if (!stats || stats.length === 0) return Array(5).fill(0);
-        
-        return stats.map(item => parseFloat(item.revenue) || 0);
-    }
-
-    function processLoginData(stats) {
-        if (!stats || stats.length === 0) {
-            return {
-                labels: ['Students', 'Companies'],
-                data: [0, 0]
-            };
-        }
-        
-        let studentCount = 0;
-        let companyCount = 0;
-        
-        stats.forEach(item => {
-            if (item.Role === 'Student') {
-                studentCount = parseInt(item.count) || 0;
-            } else if (item.Role === 'Company') {
-                companyCount = parseInt(item.count) || 0;
-            }
-        });
-        
-        return {
-            labels: ['Students', 'Companies'],
-            data: [studentCount, companyCount]
-        };
-    }
-
-    function getDefaultMonths(count) {
-        const months = [];
-        const date = new Date();
-        
-        for (let i = count - 1; i >= 0; i--) {
-            const tempDate = new Date();
-            tempDate.setMonth(date.getMonth() - i);
-            months.push(tempDate.toLocaleString('default', { month: 'short' }));
-        }
-        
-        return months;
-    }
-
-    function initializeRegistrationsChart(months, data) {
-        var ctx = document.getElementById('registrationsChart').getContext('2d');
         new Chart(ctx, {
-            type: 'bar',
+            type: 'pie',
             data: {
-                labels: months,
-                datasets: [
-                    {
-                        label: 'Students',
-                        backgroundColor: 'rgba(72, 207, 173, 0.6)',
-                        data: data.students,
-                    },
-                    {
-                        label: 'Companies',
-                        backgroundColor: 'rgba(45, 156, 128, 0.6)',
-                        data: data.companies,
-                    }
-                ]
-            },
-            options: getChartOptions('Monthly User Registrations')
-        });
-    }
-
-    function initializeJobListingsChart(months, data) {
-        var ctx = document.getElementById('jobListingsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: months,
-                datasets: [
-                    {
-                        label: 'Part Time Jobs',
-                        backgroundColor: 'rgba(72, 207, 173, 0.6)',
-                        data: data.partTime,
-                    },
-                    {
-                        label: 'Internships',
-                        backgroundColor: 'rgba(45, 156, 128, 0.6)',
-                        data: data.internships,
-                    }
-                ]
-            },
-            options: getChartOptions('Job Listings by Type')
-        });
-    }
-
-    function initializeRevenueChart(months, data) {
-        var ctx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: months,
-                datasets: [
-                    {
-                        label: 'Revenue',
-                        backgroundColor: 'rgba(45, 156, 128, 0.6)',
-                        borderColor: 'rgba(45, 156, 128, 0.8)',
-                        data: data,
-                        fill: false,
-                        tension: 0.4,
-                        pointBackgroundColor: 'rgba(72, 207, 173, 1)',
-                        pointBorderColor: 'rgba(45, 156, 128, 0.8)',
-                        pointHoverBackgroundColor: 'rgba(72, 207, 173, 1)',
-                        pointHoverBorderColor: 'rgba(45, 156, 128, 1)',
-                    }
-                ]
-            },
-            options: getChartOptions('Revenue Over the Months', true)
-        });
-    }
-
-    function initializeLoginsChart(data) {
-        var ctx = document.getElementById('loginsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: data.labels,
-                datasets: [
-                    {
-                        label: 'User Logins',
-                        backgroundColor: ['rgba(72, 207, 173, 0.6)', 'rgba(45, 156, 128, 0.6)'],
-                        data: data.data,
-                    }
-                ]
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(201, 203, 207, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(201, 203, 207, 1)'
+                    ],
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
@@ -207,39 +52,167 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'User Logins Breakdown',
+                        text: 'Gender Distribution',
                         font: {
-                            size: 22
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    datalabels: {
+                        formatter: (value) => {
+                            if (value === 0) return '';
+                            return value + '%';
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
                         }
                     }
                 }
-            }
+            },
+            plugins: [ChartDataLabels]
         });
     }
 
-    function getChartOptions(title, isLineChart = false) {
-        return {
-            responsive: true,
-            maintainAspectRatio: false, 
-            plugins: {
-                title: {
-                    display: true,
-                    text: title,
-                    font: {
-                        size: 22
+    // Function to initialize age distribution chart
+    function initializeAgeChart(data) {
+        const ctx = document.getElementById('ageChart').getContext('2d');
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+        
+        // Show a message if no age data is available
+        if (labels.length === 0) {
+            displayNoDataMessage(ctx, 'No age data available');
+            return;
+        }
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Age Distribution',
+                    data: values,
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Age Distribution',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        formatter: (value) => {
+                            if (value === 0) return '';
+                            return value + '%';
+                        },
+                        color: '#000',
+                        anchor: 'end',
+                        align: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        },
+                        max: 100
                     }
                 }
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: isLineChart ? function(value) {
-                            return '$' + value.toLocaleString();
-                        } : undefined
+            plugins: [ChartDataLabels]
+        });
+    }
+
+    // Function to initialize location distribution chart
+    function initializeUniversityChart(data) {
+        const ctx = document.getElementById('universityChart').getContext('2d');
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+    
+        if (labels.length === 0 || (labels.length === 1 && values[0] === 100 && labels[0].toLowerCase() === 'other')) {
+            displayNoDataMessage(ctx, 'No university data available');
+            return;
+        }
+    
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: [
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 205, 86, 0.7)',
+                        'rgba(201, 203, 207, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 205, 86, 1)',
+                        'rgba(201, 203, 207, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'University Distribution', // changed
+                        font: {
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    datalabels: {
+                        formatter: (value) => {
+                            if (value === 0) return '';
+                            return value + '%';
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        }
                     }
                 }
-            }
-        };
+            },
+            plugins: [ChartDataLabels]
+        });
+    }
+    
+    
+    // Helper function to display a message when no data is available
+    function displayNoDataMessage(ctx, message) {
+        // Clear the canvas
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        
+        // Display the message
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#666';
+        ctx.fillText(message, ctx.canvas.width / 2, ctx.canvas.height / 2);
     }
 });

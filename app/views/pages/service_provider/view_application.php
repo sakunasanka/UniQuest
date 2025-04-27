@@ -397,6 +397,13 @@
                     </div>      
                 </div>
 
+                <?php elseif($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Rejected'):?>
+                <div class="actions-section">
+                    <button class="action-button approve-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/approve_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Approve
+                        <i class="fas fa-check-circle"></i> 
+                    </button>
+                </div> 
+                
                 <?php elseif($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Accepted'):?>
                 <div class="actions-section">
                     <button class="action-button reject-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/reject_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Reject
@@ -404,12 +411,7 @@
                     </button>
                 </div>    
 
-                <?php elseif($_SESSION['user_role'] == 'Company' && $data['application']['status'] == 'Rejected'):?>
-                <div class="actions-section">
-                    <button class="action-button approve-button" onclick="window.location.href='<?php echo URLROOT; ?>/service_provider/approve_application/<?php echo $data['application']['id']; ?>/<?php echo $data['application']['jobID']; ?>'">Approve
-                        <i class="fas fa-check-circle"></i> 
-                    </button>
-                </div>    
+                   
             <?php endif; ?>
         </div>
     </div>
