@@ -242,10 +242,12 @@ class Verification_team extends Controller
             $job = $this->model('jobModel')->getJobDetails($jobID);
             $rejectReasons = $this->model('AdminModel')->getReasonsByType('job_reject');
             $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($jobID);
+            $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobID);
             $data = [
                 'job' => $job,
                 'rejectReasons' => $rejectReasons['data'],
                 'verifyDetails' => $verifyDetails,
+                'fields' => $applicationFields
             ];
             $this->view('pages/verification_team/job_ver_detail', $data);
         } catch (Exception $e) {
@@ -258,9 +260,11 @@ class Verification_team extends Controller
         try {
             $job = $this->model('jobModel')->getJobDetails($jobID);
             $verifyDetails = $this->model('AdminModel')->getLastVerificationLog($jobID);
+            $applicationFields = $this->model('M_applicationFields')->getFieldsByJobId($jobID);
             $data = [
                 'job' => $job,
                 'verifyDetails' => $verifyDetails,
+                'fields' => $applicationFields
             ];
             $this->view('pages/verification_team/job_detail', $data);
         } catch (Exception $e) {
