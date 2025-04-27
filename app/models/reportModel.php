@@ -228,7 +228,7 @@ class ReportModel extends Model
                 (SELECT COUNT(*) FROM jobs WHERE Status = 'Active') AS active_jobs,
                 (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Pending') AS pending_complaints,
                 (SELECT COUNT(DISTINCT CompanyID) FROM jobs) AS companies_with_jobs,
-                (SELECT COUNT(*) FROM applications WHERE status = 'Hired') AS total_hires,
+                (SELECT COUNT(*) FROM applications WHERE status = 'Accepted') AS total_hires,
                 (SELECT COUNT(*) FROM verificationlogs WHERE Action = 'Reject' 
                  AND ActionDate > NOW() - INTERVAL 7 DAY) AS recent_rejections,
                 (SELECT COUNT(*) FROM user_login_activity 
@@ -296,9 +296,9 @@ class ReportModel extends Model
             c.CompanyName,
             COUNT(j.JobID) AS total_jobs,
             COUNT(a.id) AS total_applications,
-            COUNT(CASE WHEN a.status = 'Hired' THEN 1 END) AS hires,
-            ROUND(COUNT(CASE WHEN a.status = 'Hired' THEN 1 END)*100.0/NULLIF(COUNT(a.id), 0), 2) AS hire_rate,
-            AVG(TIMESTAMPDIFF(HOUR, j.create_at, a.created_at)) AS avg_time_to_apply
+            COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END) AS hires,
+            ROUND(COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END)*100.0/NULLIF(COUNT(a.id), 0), 2) AS hire_rate,
+            AVG(TIMESTAMPDIFF(HOUR, j.PublishDate, a.created_at)) AS avg_time_to_apply
         FROM jobs j
         LEFT JOIN applications a ON j.JobID = a.job_id
         LEFT JOIN company c ON j.CompanyID = c.CompanyID
@@ -307,14 +307,15 @@ class ReportModel extends Model
 
             // Add date filters if provided
             if ($startDate) {
-                $query .= " AND j.create_at >= :startDate";
+                $query .= " AND j.PublishDate >= :startDate";
             }
             if ($endDate) {
-                $query .= " AND j.create_at <= :endDate";
+                $query .= " AND j.PublishDate <= :endDate";
             }
 
             $query .= "
         GROUP BY j.Category, c.CompanyName
+        HAVING COUNT(a.id) > 0
         ORDER BY total_applications DESC
         ";
 
@@ -339,38 +340,85 @@ class ReportModel extends Model
     {
         try {
             $query = "
-        SELECT 
-            c.subscription_plan,
-            COUNT(DISTINCT c.CompanyID) AS company_count,
-            SUM(CASE WHEN j.Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
-            AVG(TIMESTAMPDIFF(
-                DAY, 
-                c.subscription_start_date, 
-                COALESCE(c.subscription_end_date, NOW())
-            )) AS avg_subscription_days,
-            COUNT(DISTINCT j.JobID) AS jobs_per_company,
-            SUM(CASE 
-                WHEN c.subscription_plan = 'basic' THEN 29.99
-                WHEN c.subscription_plan = 'professional' THEN 99.99
-                WHEN c.subscription_plan = 'enterprise' THEN 299.99
-                ELSE 0
-            END) AS estimated_revenue
-        FROM company c
-        LEFT JOIN jobs j ON c.CompanyID = j.CompanyID
-        WHERE 1=1
-        ";
+                SELECT 
+                c.subscription_plan,
+                COUNT(DISTINCT c.CompanyID) AS company_count,
+                SUM(CASE WHEN j.Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
+                AVG(TIMESTAMPDIFF(
+                    DAY, 
+                    c.subscription_start_date, 
+                    COALESCE(c.subscription_end_date, NOW())
+                )) AS avg_subscription_days,
+                COUNT(DISTINCT j.JobID) AS jobs_per_company,
+                SUM(p.amount) AS total_real_revenue
+            FROM company c
+            LEFT JOIN jobs j ON c.CompanyID = j.CompanyID
+            LEFT JOIN payments p ON c.CompanyID = p.user_id AND p.status = 'completed'
+            WHERE 1=1
+            ";
 
             // Add date filters if provided
             if ($startDate) {
                 $query .= " AND c.subscription_start_date >= :startDate";
             }
             if ($endDate) {
-                $query .= " AND (c.subscription_end_date <= :endDate OR c.subscription_end_date IS NULL)";
+                $query .= " AND (c.subscription_start_date <= :endDate OR c.subscription_start_date IS NULL)";
             }
 
             $query .= "
-        GROUP BY c.subscription_plan
-        ORDER BY company_count DESC
+                GROUP BY c.subscription_plan
+                ORDER BY company_count DESC
+                ";
+
+            // die($query);
+            $this->db->query($query);
+
+            if ($startDate) {
+                $this->db->bind(':startDate', $startDate);
+            }
+            if ($endDate) {
+                $this->db->bind(':endDate', $endDate);
+            }
+
+            $data = $this->db->resultSet();
+            // die(var_dump($data));
+            return $data;
+        } catch (PDOException $e) {
+            error_log("Database Error in getRevenueData: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function getStudentPlacementData($startDate = null, $endDate = null)
+    {
+        try {
+            $query = "
+        SELECT 
+            s.University,
+            COUNT(DISTINCT s.StudentID) AS total_students,
+            COUNT(DISTINCT CASE WHEN a.status = 'Accepted' THEN s.StudentID END) AS placed_students,
+            COUNT(DISTINCT a.job_id) AS distinct_jobs,
+            COUNT(DISTINCT c.CompanyName) AS hiring_companies,
+            ROUND(COUNT(DISTINCT CASE WHEN a.status = 'Accepted' THEN s.StudentID END)*100.0/
+                  NULLIF(COUNT(DISTINCT s.StudentID), 0), 2) AS placement_rate
+        FROM student s
+        LEFT JOIN applications a ON s.StudentID = a.user_id
+        LEFT JOIN jobs j ON a.job_id = j.JobID
+        LEFT JOIN company c ON j.CompanyID = c.CompanyID
+        WHERE 1=1
+        ";
+
+            // Add date filters if provided
+            if ($startDate) {
+                $query .= " AND a.created_at >= :startDate";
+            }
+            if ($endDate) {
+                $query .= " AND a.created_at <= :endDate";
+            }
+
+            $query .= "
+        GROUP BY s.University
+        ORDER BY placement_rate DESC
         ";
 
             $this->db->query($query);
@@ -385,7 +433,36 @@ class ReportModel extends Model
 
             return $this->db->resultSet();
         } catch (PDOException $e) {
-            error_log("Database Error in getRevenueData: " . $e->getMessage());
+            error_log("Database Error in getStudentPlacementData: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function getExecutiveSummaryData()
+    {
+        try {
+            $query = "
+            SELECT 
+                (SELECT COUNT(*) FROM user) AS total_users,
+                (SELECT COUNT(*) FROM jobs) AS total_jobs,
+                (SELECT COUNT(*) FROM applications WHERE status = 'Accepted') AS successful_hires,
+                (SELECT COUNT(*) FROM company 
+                WHERE COALESCE(subscription_end_date, NOW()) >= NOW()) AS paying_companies,
+                (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Resolved' 
+                AND ComplainedDate > NOW() - INTERVAL 30 DAY) AS complaints_resolved_30d,
+                (SELECT COUNT(DISTINCT user_id) FROM applications 
+                WHERE status = 'Accepted') AS students_placed,
+                (
+                    SELECT AVG(TIMESTAMPDIFF(HOUR, j.create_at, v.ActionDate))
+                    FROM jobs j
+                    INNER JOIN verificationlogs v 
+                        ON v.EntityID = j.JobID AND v.EntityType = 'Job'
+                ) AS avg_job_approval_time_hours
+        ";
+            $this->db->query($query);
+            return $this->db->resultSet();
+        } catch (PDOException $e) {
+            error_log("Database Error in getExecutiveSummaryData: " . $e->getMessage());
             return null;
         }
     }
@@ -446,56 +523,6 @@ class ReportModel extends Model
         }
     }
 
-    public function getStudentPlacementData($startDate = null, $endDate = null)
-    {
-        try {
-            $query = "
-        SELECT 
-            s.University,
-            COUNT(DISTINCT s.StudentID) AS total_students,
-            COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END) AS placed_students,
-            COUNT(DISTINCT a.job_id) AS distinct_jobs,
-            GROUP_CONCAT(DISTINCT c.CompanyName SEPARATOR ', ') AS hiring_companies,
-            ROUND(COUNT(DISTINCT CASE WHEN a.status = 'Hired' THEN s.StudentID END)*100.0/
-                  NULLIF(COUNT(DISTINCT s.StudentID), 0), 2) AS placement_rate
-        FROM student s
-        LEFT JOIN applications a ON s.StudentID = a.user_id
-        LEFT JOIN jobs j ON a.job_id = j.JobID
-        LEFT JOIN company c ON j.CompanyID = c.CompanyID
-        WHERE 1=1
-        ";
-
-            // Add date filters if provided
-            if ($startDate) {
-                $query .= " AND a.created_at >= :startDate";
-            }
-            if ($endDate) {
-                $query .= " AND a.created_at <= :endDate";
-            }
-
-            $query .= "
-        GROUP BY s.University
-        ORDER BY placement_rate DESC
-        ";
-
-            $this->db->query($query);
-
-            // Bind parameters if dates are provided
-            if ($startDate) {
-                $this->db->bind(':startDate', $startDate);
-            }
-            if ($endDate) {
-                $this->db->bind(':endDate', $endDate);
-            }
-
-            return $this->db->resultSet();
-        } catch (PDOException $e) {
-            error_log("Database Error in getStudentPlacementData: " . $e->getMessage());
-            return null;
-        }
-    }
-
-
     public function getBookmarkAnalysisData()
     {
         try {
@@ -518,35 +545,6 @@ class ReportModel extends Model
             return $this->db->resultSet();
         } catch (PDOException $e) {
             error_log("Database Error in getBookmarkAnalysisData: " . $e->getMessage());
-            return null;
-        }
-    }
-
-    public function getExecutiveSummaryData()
-    {
-        try {
-            $query = "
-            SELECT 
-                (SELECT COUNT(*) FROM user) AS total_users,
-                (SELECT COUNT(*) FROM jobs) AS total_jobs,
-                (SELECT COUNT(*) FROM applications WHERE status = 'Hired') AS successful_hires,
-                (SELECT COUNT(*) FROM company 
-                WHERE COALESCE(subscription_end_date, NOW()) >= NOW()) AS paying_companies,
-                (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Resolved' 
-                AND ComplainedDate > NOW() - INTERVAL 30 DAY) AS complaints_resolved_30d,
-                (SELECT COUNT(DISTINCT user_id) FROM applications 
-                WHERE status = 'Hired') AS students_placed,
-                (
-                    SELECT AVG(TIMESTAMPDIFF(HOUR, j.create_at, v.ActionDate))
-                    FROM jobs j
-                    INNER JOIN verificationlogs v 
-                        ON v.EntityID = j.JobID AND v.EntityType = 'Job'
-                ) AS avg_job_approval_time_hours
-        ";
-            $this->db->query($query);
-            return $this->db->resultSet();
-        } catch (PDOException $e) {
-            error_log("Database Error in getExecutiveSummaryData: " . $e->getMessage());
             return null;
         }
     }
