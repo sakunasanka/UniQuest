@@ -122,7 +122,7 @@
 
             <p class="form-notice">Please note that once you submit, the application will be directly sent to the recruiter.</p>
             
-            <button type="submit" class="submit-button">SUBMIT</button>
+            <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
 
