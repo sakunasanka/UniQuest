@@ -36,8 +36,8 @@
                     <p><?= count($data['reportData']) ?></p>
                 </div>
                 
-                <div class="time-period-filter">
-                    <form id="timeFilterForm"  class = "timeFilterForm "method="get">
+                <div class="time-period-filter" style="<?php echo ($data['reportSlug'] == 'SystemHealth' || $data['reportSlug'] == 'ExecutiveSummary') ? 'display: none;' : '' ?>">
+                    <form id="timeFilterForm" class = "timeFilterForm" method="get">
                         <select name="timePeriod" id="timePeriod" onchange="updateTimeFilter()">
                             <option value="all" <?= $data['timePeriod'] === 'all' ? 'selected' : '' ?>>All Time</option>
                             <option value="1month" <?= $data['timePeriod'] === '1month' ? 'selected' : '' ?>>Last 1 Month</option>

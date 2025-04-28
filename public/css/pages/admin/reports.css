@@ -68,8 +68,8 @@ body {
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    min-width: 150px;
-    height: 50px;
+    min-width: 100px;
+    height: 40px;
     font-size: 1.2em;
 }
 
@@ -206,8 +206,8 @@ body {
     border-radius: 8px;
     margin: 5px;
     cursor: pointer;
-    min-width: 150px;
-    height: 50px;
+    min-width: 100px;
+    height: 40px;
     font-size: 1.3em;
     background-color: #299b63;
     color: #fff;
@@ -249,13 +249,13 @@ body {
 
 .summary-card h3 {
     margin: 0 0 5px 0;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     color: #666;
 }
 
 .summary-card p {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
     color: #333;
 }

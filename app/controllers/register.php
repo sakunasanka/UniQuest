@@ -373,7 +373,7 @@ class Register extends Controller
                     ];
 
                     // Load view
-                    $this->view('pages/register/send_verification_comp', $data);
+                    $this->view('pages/register/send_verification_stu', $data);
                 }
             } else {
                 // Init data
@@ -383,7 +383,7 @@ class Register extends Controller
                 ];
 
                 // Load view
-                $this->view('pages/register/send_verification_comp', $data);
+                $this->view('pages/register/send_verification_stu', $data);
             }
         } else {
             // Init data
@@ -393,7 +393,7 @@ class Register extends Controller
             ];
 
             // Load view
-            $this->view('pages/register/send_verification_comp', $data);
+            $this->view('pages/register/send_verification_stu', $data);
         }
     }
 

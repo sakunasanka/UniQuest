@@ -24,7 +24,7 @@ class M_jobpost extends Model
 
     public function getJobsByCompanyId($id)
     {
-        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id ORDER BY PublishDate DESC');
+        $this->db->query('SELECT * FROM v_jobs WHERE CompanyID = :company_id AND Status IN ("Active", "Deactive", "Pending") ORDER BY PublishDate DESC');
         $this->db->bind(':company_id', $id);
         return $this->db->resultSet();
     }
@@ -83,7 +83,7 @@ class M_jobpost extends Model
             // Define base conditions
             $conditions = [
                 ['CompanyID', '=', $_SESSION['user_id']],
-                ['Status', 'IN', ['Pending', 'Edited']]
+                ['Status', '=', 'Edited']
             ];
 
             // Add search condition if a search term is provided
@@ -208,30 +208,20 @@ class M_jobpost extends Model
         $this->db->query('
             UPDATE jobs 
             SET 
-                Title = :job_name, 
                 Description = :job_description, 
-                DistrictID = :job_district,
-                CityID = :job_city,
                 JobBenefits = :job_benifits, 
                 RequiredQualifications = :required_skills, 
-                SalaryRange = :salary_range,
-                SalaryType = :salary_type,
-                Status = :status
+                SalaryRange = :salary_range
             WHERE 
-               JobID = :job_id 
+               JobID = :job_id;
         ');
 
         // Bind the values from $data array
-        $this->db->bind(':job_name', $data['job_name']);
         $this->db->bind(':job_description', $data['job_description']);
-        $this->db->bind(':job_district', $data['job_district']);
-        $this->db->bind(':job_city', $data['job_city']);
         $this->db->bind(':job_benifits', $data['job_benifits']);
         $this->db->bind(':required_skills', $data['required_skills']);
         $this->db->bind(':salary_range', $data['salary_range']);
-        $this->db->bind(':salary_type', $data['salary_type']);
         $this->db->bind(':job_id', $data['job_id']);
-        $this->db->bind(':status', $data['status']);
 
         // Execute and return the result
         return $this->db->execute();
