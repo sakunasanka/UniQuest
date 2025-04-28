@@ -291,18 +291,18 @@ class ReportModel extends Model
     {
         try {
             $query = "
-        SELECT 
-            j.Category,
-            c.CompanyName,
-            COUNT(j.JobID) AS total_jobs,
-            COUNT(a.id) AS total_applications,
-            COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END) AS hires,
-            ROUND(COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END)*100.0/NULLIF(COUNT(a.id), 0), 2) AS hire_rate,
-            AVG(TIMESTAMPDIFF(HOUR, j.PublishDate, a.created_at)) AS avg_time_to_apply
-        FROM jobs j
-        LEFT JOIN applications a ON j.JobID = a.job_id
-        LEFT JOIN company c ON j.CompanyID = c.CompanyID
-        WHERE 1=1
+            SELECT 
+                j.Category,
+                c.CompanyName,
+                COUNT(j.JobID) AS total_jobs,
+                COUNT(a.id) AS total_applications,
+                COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END) AS hires,
+                ROUND(COUNT(CASE WHEN a.status = 'Accepted' THEN 1 END) * 100.0 / NULLIF(COUNT(a.id), 0), 2) AS hire_rate,
+                ROUND(AVG(TIMESTAMPDIFF(HOUR, j.PublishDate, a.created_at)), 2) AS avg_time_to_apply_hours
+            FROM jobs j
+            LEFT JOIN applications a ON j.JobID = a.job_id
+            LEFT JOIN company c ON j.CompanyID = c.CompanyID
+            WHERE 1=1
         ";
 
             // Add date filters if provided
@@ -314,9 +314,9 @@ class ReportModel extends Model
             }
 
             $query .= "
-        GROUP BY j.Category, c.CompanyName
-        HAVING COUNT(a.id) > 0
-        ORDER BY total_applications DESC
+            GROUP BY j.Category, c.CompanyName
+            HAVING COUNT(a.id) > 0
+            ORDER BY total_applications DESC
         ";
 
             $this->db->query($query);
@@ -336,26 +336,41 @@ class ReportModel extends Model
         }
     }
 
+
     public function getRevenueData($startDate = null, $endDate = null)
     {
         try {
             $query = "
-                SELECT 
+            SELECT 
                 c.subscription_plan,
                 COUNT(DISTINCT c.CompanyID) AS company_count,
-                SUM(CASE WHEN j.Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
+                SUM(COALESCE(j.active_jobs, 0)) AS active_jobs,
                 AVG(TIMESTAMPDIFF(
                     DAY, 
                     c.subscription_start_date, 
                     COALESCE(c.subscription_end_date, NOW())
                 )) AS avg_subscription_days,
-                COUNT(DISTINCT j.JobID) AS jobs_per_company,
-                SUM(p.amount) AS total_real_revenue
+                SUM(COALESCE(j.total_jobs, 0)) AS jobs_per_company,
+                SUM(COALESCE(p.total_amount, 0)) AS total_real_revenue
             FROM company c
-            LEFT JOIN jobs j ON c.CompanyID = j.CompanyID
-            LEFT JOIN payments p ON c.CompanyID = p.user_id AND p.status = 'completed'
+            LEFT JOIN (
+                SELECT 
+                    CompanyID, 
+                    SUM(CASE WHEN Status = 'Active' THEN 1 ELSE 0 END) AS active_jobs,
+                    COUNT(JobID) AS total_jobs
+                FROM jobs
+                GROUP BY CompanyID
+            ) j ON c.CompanyID = j.CompanyID
+            LEFT JOIN (
+                SELECT 
+                    user_id, 
+                    SUM(amount) AS total_amount
+                FROM payments
+                WHERE status = 'completed'
+                GROUP BY user_id
+            ) p ON c.CompanyID = p.user_id
             WHERE 1=1
-            ";
+        ";
 
             // Add date filters if provided
             if ($startDate) {
@@ -366,11 +381,10 @@ class ReportModel extends Model
             }
 
             $query .= "
-                GROUP BY c.subscription_plan
-                ORDER BY company_count DESC
-                ";
+            GROUP BY c.subscription_plan
+            ORDER BY company_count DESC
+        ";
 
-            // die($query);
             $this->db->query($query);
 
             if ($startDate) {
@@ -381,13 +395,13 @@ class ReportModel extends Model
             }
 
             $data = $this->db->resultSet();
-            // die(var_dump($data));
             return $data;
         } catch (PDOException $e) {
             error_log("Database Error in getRevenueData: " . $e->getMessage());
             return null;
         }
     }
+
 
     public function getStudentPlacementData($startDate = null, $endDate = null)
     {
@@ -447,17 +461,22 @@ class ReportModel extends Model
                 (SELECT COUNT(*) FROM jobs) AS total_jobs,
                 (SELECT COUNT(*) FROM applications WHERE status = 'Accepted') AS successful_hires,
                 (SELECT COUNT(*) FROM company 
-                WHERE COALESCE(subscription_end_date, NOW()) >= NOW()) AS paying_companies,
-                (SELECT COUNT(*) FROM complaint_jobs WHERE Status = 'Resolved' 
-                AND ComplainedDate > NOW() - INTERVAL 30 DAY) AS complaints_resolved_30d,
-                (SELECT COUNT(DISTINCT user_id) FROM applications 
-                WHERE status = 'Accepted') AS students_placed,
-                (
+                    WHERE COALESCE(subscription_end_date, NOW()) >= NOW()
+                ) AS paying_companies,
+                (SELECT COUNT(*) FROM complaint_jobs 
+                    WHERE Status = 'Resolved' 
+                    AND ComplainedDate > NOW() - INTERVAL 30 DAY
+                ) AS complaints_resolved_30d,
+                (SELECT COUNT(DISTINCT user_id) 
+                    FROM applications 
+                    WHERE status = 'Accepted'
+                ) AS students_placed,
+                ROUND((
                     SELECT AVG(TIMESTAMPDIFF(HOUR, j.create_at, v.ActionDate))
                     FROM jobs j
                     INNER JOIN verificationlogs v 
                         ON v.EntityID = j.JobID AND v.EntityType = 'Job'
-                ) AS avg_job_approval_time_hours
+                ), 2) AS avg_job_approval_time_hours
         ";
             $this->db->query($query);
             return $this->db->resultSet();
@@ -466,6 +485,7 @@ class ReportModel extends Model
             return null;
         }
     }
+
 
 
     public function getComplaintData()

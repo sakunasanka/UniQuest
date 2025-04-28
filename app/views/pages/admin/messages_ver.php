@@ -23,7 +23,8 @@
 
         <div class="table-block">
             <div class="content-header">
-                <?php require APPROOT . '/views/components/tableSearchBar.php'; ?>
+                <?php 
+                // require APPROOT . '/views/components/tableSearchBar.php'; ?>
             </div>
             <table>
                 <?php require APPROOT . '/views/components/adminTableheader.php'; ?>

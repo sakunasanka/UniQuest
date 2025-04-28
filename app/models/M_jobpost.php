@@ -211,9 +211,9 @@ class M_jobpost extends Model
                 Description = :job_description, 
                 JobBenefits = :job_benifits, 
                 RequiredQualifications = :required_skills, 
-                SalaryRange = :salary_range,
+                SalaryRange = :salary_range
             WHERE 
-               JobID = :job_id 
+               JobID = :job_id;
         ');
 
         // Bind the values from $data array
