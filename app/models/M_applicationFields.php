@@ -336,11 +336,12 @@ class M_applicationFields extends Model
                         SELECT j.jobID 
                         FROM jobs j 
                         WHERE j.CompanyID = :user_id
-                          AND j.verifiedBy IS NOT NULL
+                        AND j.verifiedBy IS NOT NULL
                     )
-                GROUP BY weeks.week_start
+                GROUP BY weeks.week_start, weeks.week_label
                 ORDER BY weeks.week_start DESC;
-            ");
+");
+
 
             // Bind the user ID
             $this->db->bind(':user_id', $_SESSION['user_id']);
@@ -739,7 +740,8 @@ class M_applicationFields extends Model
         }
     }
 
-    public function getApplicationCountForJob($jobID) {
+    public function getApplicationCountForJob($jobID)
+    {
         try {
             $this->db->query("SELECT ApplicationCount FROM v_jobs WHERE v_jobs.JobID = :jobID");
             $this->db->bind(':jobID', $jobID);
@@ -751,7 +753,8 @@ class M_applicationFields extends Model
         }
     }
 
-    public function getMostAppliedJob() {
+    public function getMostAppliedJob()
+    {
         try {
             $this->db->query("SELECT job_id, COUNT(*) as ApplicationCount FROM applications GROUP BY job_id ORDER BY ApplicationCount DESC LIMIT 1");
             $row = $this->db->single();
@@ -760,8 +763,7 @@ class M_applicationFields extends Model
             $this->db->bind(':jobID', $row->job_id);
             $job = $this->db->single();
             return $job;
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
         }
