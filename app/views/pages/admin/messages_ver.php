@@ -10,6 +10,7 @@
             "Topic" => "Topic",
             "Email" => "Email",
             "Message" => "Message",
+            "Contact" => "Contact",
             "Date" => "Date",
             "Status" => "Status",
             "Actions" => "Actions"
@@ -35,6 +36,7 @@
                                 <td><?php echo $message->topic ?></td>
                                 <td><?php echo $message->user_email ?></td>
                                 <td><?php echo $message->message ?></td>
+                                <td><?php echo $message->contact ?></td>
                                 <td><?php echo $message->created_at ?></td>
                                 <td><span class="status <?php echo $message->read_status ?>"><?php echo $message->read_status ?></span></td>
                                 <td class="action">

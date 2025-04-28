@@ -25,6 +25,11 @@
                     <label for="message">Message:</label>
                     <textarea id="message" name="message" placeholder="Message" required><?php echo $data['message']; ?></textarea>
                     <span class="error-message"><?php echo $data['message_err']; ?></span>
+
+                    <label for="email">Contact No:</label>
+                    <input type="text" id="contact" name="contact" placeholder="Enter Your Contact Number">
+                    <span ><?php echo $data['contact_err']; ?></span>
+
                     
                     <button type="submit">Send</button>
                 </form>

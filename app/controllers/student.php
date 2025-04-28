@@ -59,18 +59,20 @@ class Student extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            // Data for the contact form
+            
             $data = [
                 'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
+                'contact' => trim($_POST['contact'] ?? ''),
 
                 'email_err' => '',
                 'topic_err' => '',
-                'message_err' => ''
+                'message_err' => '',
+                'contact_err' => ''
             ];
 
-            // Validation checks
+          
             if (empty($data['email'])) {
                 $data['email_err'] = 'Please enter your email';
             }
@@ -84,11 +86,18 @@ class Student extends Controller
                 $data['message_err'] = 'Please enter your message';
             }
 
-            // Ensure no errors before submitting
-            if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['contact'])){
+                $data['contact_err'] = 'Please enter your contact number';
+            }
+
+            if (!(Validator::isValidContactNo($data['contact']))){
+                $data['contact_err'] = 'Please enter a valid contact number';
+            }
+
+            
+            if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err']) && empty($data['contact_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
 
-                    //send notification for each admin
                     $admins = $this->model->getAdminIds();
                     foreach ($admins as $admin) {
                         notifyMessageToAdminFromStudent($admin->AdminID, $data['message'], $_SESSION['user_id'], $_SESSION['user_name']);
@@ -104,14 +113,16 @@ class Student extends Controller
                 $this->view('pages/student/contact_admin', $data);
             }
         } else {
-            // Initialize default data for the view on GET request
+            
             $data = [
                 'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
+                'cotact' => '',
                 'email_err' => '',
                 'topic_err' => '',
                 'message_err' => '',
+                'contact_err' => ''
             ];
 
             $this->view('pages/student/contact_admin', $data);

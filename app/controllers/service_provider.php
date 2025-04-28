@@ -84,10 +84,13 @@ class Service_provider extends Controller
                 'email' => trim($_POST['email'] ?? ''),
                 'topic' => trim($_POST['topic'] ?? ''),
                 'message' => trim($_POST['message'] ?? ''),
+                'contact' => trim($POST['contact']?? ''),
 
                 'email_err' => '',
                 'topic_err' => '',
-                'message_err' => ''
+                'message_err' => '',
+                'contact_err' => ''
+
             ];
 
             // Validation checks
@@ -103,8 +106,17 @@ class Service_provider extends Controller
                 $data['message_err'] = 'Please enter your message';
             }
 
+            if (empty($data['contact'])){
+                $data['contact_err'] = 'Please enter your contact number';
+            }
+
+            if (!(Validator::isValidContactNo($data['contact']))){
+                $data['contact_err'] = 'Please enter a valid contact number';
+            }
+
+
             // Ensure no errors before submitting
-            if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err'])) {
+            if (empty($data['email_err'])  && empty($data['topic_err']) && empty($data['message_err']) && empty($data['contact_err'])) {
                 if ($this->model('ContactModel')->sendMessage($data)) {
 
                     //send notification for each admin
@@ -122,14 +134,15 @@ class Service_provider extends Controller
                 $this->view('pages/service_provider/contact_admin', $data);
             }
         } else {
-            // Initialize default data for the view on GET request
+            
             $data = [
                 'email' => isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '',
                 'topic' => '',
                 'message' => '',
                 'email_err' => '',
                 'topic_err' => '',
-                'message_err' => ''
+                'message_err' => '',
+                'contact_err' => ''
             ];
 
             $this->view('pages/service_provider/contact_admin', $data);

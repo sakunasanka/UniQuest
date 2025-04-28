@@ -1414,29 +1414,29 @@ class Admin extends Controller
 
     public function messages_stu($userID = null)
     {
-        // Check if a user ID was submitted via POST
+        
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
 
-        // Fetch all student messages
+        
         $messages_stu = $this->model('ContactModel')->getMessagesStu();
 
-        // Initialize data with the message list
+        
         $data = [
             'messages_stu' => $messages_stu,
         ];
 
-        // Check if we need to load chat data only if userID is valid AND form was submitted
+        
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
 
-        // If we should load chat data, add the additional info
+        
         if ($loadChatData) {
-            // Ensure session user ID exists before accessing
+            
             if (!isset($_SESSION['user_id'])) {
                 die("Unauthorized access. Please log in.");
             }
-            // Fetch user details and chat messages
+            
             $data['userID'] = $userID;
             $data['user'] = $this->model->getUserDetails($userID);
             $data['sender_id'] = $_SESSION['user_id'];
@@ -1451,29 +1451,29 @@ class Admin extends Controller
 
     public function messages_com($userID = null)
     {
-        // Check if a user ID was submitted via POST
+        
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
 
-        // Fetch all student messages
+        
         $messages_com = $this->model('ContactModel')->getMessagesCom();
 
-        // Initialize data with the message list
+        
         $data = [
             'messages_com' => $messages_com,
         ];
 
-        // Check if we need to load chat data only if userID is valid AND form was submitted
+        
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
 
-        // If we should load chat data, add the additional info
+        
         if ($loadChatData) {
-            // Ensure session user ID exists before accessing
+            
             if (!isset($_SESSION['user_id'])) {
                 die("Unauthorized access. Please log in.");
             }
-            // Fetch user details and chat messages
+            
             $data['userID'] = $userID;
             $data['user'] = $this->model->getUserDetails($userID);
             $data['sender_id'] = $_SESSION['user_id'];
@@ -1489,29 +1489,29 @@ class Admin extends Controller
 
     public function messages_ver($userID = null)
     {
-        // Check if a user ID was submitted via POST
+        
         if (isset($_POST['selectedUserID'])) {
             $userID = $_POST['selectedUserID'];
         }
 
-        // Fetch all student messages
+       
         $messages_ver = $this->model('ContactModel')->getMessagesVer();
 
-        // Initialize data with the message list
+        
         $data = [
             'messages_ver' => $messages_ver,
         ];
 
-        // Check if we need to load chat data only if userID is valid AND form was submitted
+        
         $loadChatData = !empty($userID) && isset($_POST['selectedUserID']);
 
-        // If we should load chat data, add the additional info
+        
         if ($loadChatData) {
-            // Ensure session user ID exists before accessing
+            
             if (!isset($_SESSION['user_id'])) {
                 die("Unauthorized access. Please log in.");
             }
-            // Fetch user details and chat messages
+            
             $data['userID'] = $userID;
             $data['user'] = $this->model->getUserDetails($userID);
             $data['sender_id'] = $_SESSION['user_id'];
@@ -1524,31 +1524,31 @@ class Admin extends Controller
         $this->view('pages/admin/messages_ver', $data);
     }
 
-    // In AdminController.php
+    
     public function fetchMessageDetails($id)
     {
-        // Check if the user has the right role and permissions
+        
         if (!isset($_SESSION['user_role'])) {
             http_response_code(401);
             echo json_encode(['error' => 'Unauthorized']);
             return;
         }
 
-        // Get the database connection
+       
         $db = $this->model('ContactModel');
 
-        // Fetch the message details by ID
+       
         $message = $db->getMessageById($id);
 
         if ($message) {
             http_response_code(200);
-            echo json_encode($message); // Send message as JSON
+            echo json_encode($message); 
         } else {
             http_response_code(404);
             echo json_encode(['error' => 'Message not found']);
         }
         $this->view('pages/admin/messages/messageview');
-        //correct this line
+       
     }
 
     public function editMessage($messageId)
@@ -1559,7 +1559,7 @@ class Admin extends Controller
 
             if (!empty($newMessage)) {
                 $chatModel = $this->model('chatModel');
-                $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+                $senderId = $_SESSION['user_id']; 
 
                 if ($chatModel->editMessage($messageId, $newMessage, $senderId)) {
                     echo json_encode(['success' => true]);
@@ -1577,7 +1577,7 @@ class Admin extends Controller
     public function deleteMessage($messageId)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $senderId = $_SESSION['user_id']; // Get the sender's ID from session
+            $senderId = $_SESSION['user_id']; 
 
             if ($this->model('chatModel')->deleteMessage($messageId, $senderId)) {
                 Redirect::to(URLROOT . '/admin/user_detail');
