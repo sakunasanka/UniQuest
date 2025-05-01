@@ -17,7 +17,6 @@ This project was developed as part of our second-year group project at the Unive
 - **Frontend:** HTML, CSS, JavaScript
 - **Backend:** PHP
 - **Database:** MySQL
-- **Other tools:** Bootstrap, jQuery, AJAX
 
 ## 👥 Team Members
 
