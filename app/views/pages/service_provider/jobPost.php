@@ -69,7 +69,17 @@
                                     <option value="" disabled selected>Select City</option>
                                 </select>
                             </div>
+
                             <span class="form-invalid"><?php echo $data['job_location_err']; ?></span>
+                            <label for="jobcountry" >Job country:</label>
+                            <input type="text" id="jobcountry" name="job_country" placeholder="Job_country" value="<?php echo isset($data['job_country']) ? $data['job_country'] : ''; ?>">
+                            
+
+                            
+
+                            <span class="form-invalid"><?php echo $data['job_country_err']; ?></span>
+
+
 
                             <label for="jobType" class="required">Job Type:</label>
                             <div class="employment-types">

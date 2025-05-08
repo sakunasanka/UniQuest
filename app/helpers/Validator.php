@@ -18,6 +18,11 @@ class Validator
     {
         return preg_match('/^[0][0-9]{9}$/', $mobile);
     }
+    public static function isValidcountry($country): bool
+    {
+        return preg_match('/^[a-zA-Z\s]{10}$/', $country);
+    }
+
 
     //validate the name
     public static function isValidName($name): bool

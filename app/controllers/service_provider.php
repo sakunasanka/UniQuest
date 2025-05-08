@@ -1048,6 +1048,7 @@ class Service_provider extends Controller
                 'status' => 'Pending',
                 'job_district' => trim($_POST['job_district'] ?? ''),
                 'job_city' => trim($_POST['job_city'] ?? ''),
+                'job_country'=>trim($_POST['job_country'] ?? ''),
                 'districts' => $this->model('AdminModel')->getDistricts()['data'], // Fetch districts from the model
                 'cities' => [], // Initialize cities as an empty array
 
@@ -1059,7 +1060,8 @@ class Service_provider extends Controller
                 'salary_range_err' => '',
                 'salary_type_err' => '',
                 'Description_err' => '',
-                'publish_date_err' => ''
+                'publish_date_err' => '',
+                'job_country_err'=>''
             ];
 
             // Validate date - not in the past and not more than 7 days in the future
@@ -1075,7 +1077,7 @@ class Service_provider extends Controller
                 }
             }
 
-            // validation for other fields
+           
             if (empty($data['job_name'])) {
                 $data['job_name_err'] = 'Please enter job name';
             }
@@ -1085,6 +1087,11 @@ class Service_provider extends Controller
             if (empty($data['job_category'])) {
                 $data['job_category_err'] = 'Please enter job category';
             }
+           
+            $validationResponse = Validator::isValidcountry($data['job_country']);
+                if (!$validationResponse['is_valid']) {
+                    $data['job_country_err']='please enter ten character text';
+                }
 
             if (
                 empty($data['job_name_err']) &&
@@ -1095,8 +1102,10 @@ class Service_provider extends Controller
                 empty($data['salary_range_err']) &&
                 empty($data['salary_type_err']) &&
                 empty($data['Description_err']) &&
-                empty($data['publish_date_err'])
+                empty($data['publish_date_err'])&&
+                empty($data['job_country_err'])
             ) {
+                
                 if ($this->model('M_jobpost')->create($data)) {
                     $jobId = $this->model('M_jobpost')->getLatestJobId();
                     $job = $this->model('M_jobpost')->getpostbyid($jobId);
@@ -1135,6 +1144,7 @@ class Service_provider extends Controller
                 'salary_range' => '',
                 'salary_type' => '',
                 'Description' => '',
+                'job_country' => '',
                 'publish_date' => $publishDate,
                 'job_district' => '', // Default value for job district
                 'job_city' => '', // Default value for job city
@@ -1146,6 +1156,7 @@ class Service_provider extends Controller
                 'job_location_err' => '',
                 'job_category_err' => '',
                 'adress_err' => '',
+                'job_country_err'=>'',
                 'required_skills_err' => '',
                 'salary_range_err' => '',
                 'salary_type_err' => '',

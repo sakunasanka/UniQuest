@@ -174,11 +174,11 @@ class M_jobpost extends Model
     {
         $this->db->query('
             INSERT INTO jobs 
-            (Title, Description, DistrictID, CityID, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status) 
+            (Title, Description, DistrictID, CityID, Category, JobBenefits, RequiredQualifications, SalaryRange, SalaryType, CompanyID, PublishDate, Status,country) 
             VALUES 
-            (:job_name, :Description, :job_district, :job_city, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status)
+            (:job_name, :Description, :job_district, :job_city, :job_category, :job_benifits, :required_skills, :salary_range, :salary_type, :company_id, :publish_date, :status,:job_country)
         ');
-
+        
         // Bind the values from $data array
         $this->db->bind(':job_name', $data['job_name']);
         $this->db->bind(':Description', $data['Description']);
@@ -192,6 +192,7 @@ class M_jobpost extends Model
         $this->db->bind(':company_id', $_SESSION['user_id']);
         $this->db->bind(':publish_date', $data['publish_date']);
         $this->db->bind(':status', $data['status']);
+        $this->db->bind(':job_country', $data['job_country']);
 
         // Execute and return the result
         return $this->db->execute();
